@@ -1,0 +1,35 @@
+{
+  "name": "@wivity/mpas-github-bridge",
+  "version": "0.1.0",
+  "description": "MPAS bridge for the official GitHub MCP server — routes all actions through the Credential Adapter",
+  "type": "module",
+  "private": true,
+  "license": "Apache-2.0",
+  "bin": {
+    "mpas-github-bridge": "./dist/src/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.0",
+    "jose": "^6.0.11",
+    "json-canonicalize": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.2"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "upstream": {
+    "name": "github/github-mcp-server",
+    "version": "v1.5.0",
+    "package": "ghcr.io/github/github-mcp-server:v1.5.0"
+  }
+}

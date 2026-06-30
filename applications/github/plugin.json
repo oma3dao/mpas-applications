@@ -1,0 +1,592 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:github",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:apps:github",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall"
+  },
+  "credentialRequirements": [
+    {
+      "type": "oauthToken",
+      "requiredCapabilities": [
+        "repo",
+        "issues.write",
+        "pull_requests.write",
+        "contents.write",
+        "notifications.read"
+      ],
+      "description": "GitHub Personal Access Token or OAuth token with appropriate repository access."
+    }
+  ],
+  "operations": [
+    {
+      "name": "add_issue_comment",
+      "description": "Add a comment to a specific issue in a GitHub repository.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "add_issue_comment" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "issue_number", "body"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "issue_number": { "type": "number" },
+              "body": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "add_pull_request_review_comment_to_pending_review",
+      "description": "Add a comment to a pending pull request review.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "add_pull_request_review_comment_to_pending_review" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "pullNumber", "path", "body", "subjectType"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "pullNumber": { "type": "number" },
+              "path": { "type": "string" },
+              "body": { "type": "string" },
+              "subjectType": { "type": "string", "enum": ["FILE", "LINE"] },
+              "line": { "type": "number" },
+              "side": { "type": "string", "enum": ["LEFT", "RIGHT"] },
+              "startLine": { "type": "number" },
+              "startSide": { "type": "string", "enum": ["LEFT", "RIGHT"] }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "assign_copilot_to_issue",
+      "description": "Assign Copilot to a specific issue in a GitHub repository.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "assign_copilot_to_issue" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "issueNumber"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "issueNumber": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create_and_submit_pull_request_review",
+      "description": "Create and submit a review for a pull request.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "create_and_submit_pull_request_review" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "pullNumber", "body", "event"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "pullNumber": { "type": "number" },
+              "body": { "type": "string" },
+              "event": { "type": "string", "enum": ["APPROVE", "REQUEST_CHANGES", "COMMENT"] },
+              "commitID": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create_branch",
+      "description": "Create a new branch in a GitHub repository.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "create_branch" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "branch"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "branch": { "type": "string" },
+              "from_branch": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create_issue",
+      "description": "Create a new issue in a GitHub repository.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "create_issue" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "title"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "title": { "type": "string" },
+              "body": { "type": "string" },
+              "assignees": { "type": "array", "items": { "type": "string" } },
+              "labels": { "type": "array", "items": { "type": "string" } },
+              "milestone": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create_or_update_file",
+      "description": "Create or update a single file in a GitHub repository.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "create_or_update_file" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "path", "content", "message", "branch"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "path": { "type": "string" },
+              "content": { "type": "string" },
+              "message": { "type": "string" },
+              "branch": { "type": "string" },
+              "sha": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create_pending_pull_request_review",
+      "description": "Create a pending review for a pull request.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "create_pending_pull_request_review" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "pullNumber"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "pullNumber": { "type": "number" },
+              "commitID": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create_pull_request",
+      "description": "Create a new pull request in a GitHub repository.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "create_pull_request" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "title", "head", "base"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "title": { "type": "string" },
+              "head": { "type": "string" },
+              "base": { "type": "string" },
+              "body": { "type": "string" },
+              "draft": { "type": "boolean" },
+              "maintainer_can_modify": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create_repository",
+      "description": "Create a new GitHub repository in your account.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "create_repository" },
+          "arguments": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "private": { "type": "boolean" },
+              "autoInit": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "delete_file",
+      "description": "Delete a file from a GitHub repository.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "delete_file" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "path", "message", "branch"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "path": { "type": "string" },
+              "message": { "type": "string" },
+              "branch": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "delete_pending_pull_request_review",
+      "description": "Delete the requester's latest pending pull request review.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "delete_pending_pull_request_review" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "pullNumber"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "pullNumber": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "fork_repository",
+      "description": "Fork a GitHub repository to your account or specified organization.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "fork_repository" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "organization": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "merge_pull_request",
+      "description": "Merge a pull request in a GitHub repository.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "merge_pull_request" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "pullNumber"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "pullNumber": { "type": "number" },
+              "commit_title": { "type": "string" },
+              "commit_message": { "type": "string" },
+              "merge_method": { "type": "string", "enum": ["merge", "squash", "rebase"] }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "push_files",
+      "description": "Push multiple files to a GitHub repository in a single commit.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "push_files" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "branch", "files", "message"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "branch": { "type": "string" },
+              "files": { "type": "array", "items": { "type": "object", "required": ["path", "content"], "properties": { "path": { "type": "string" }, "content": { "type": "string" } } } },
+              "message": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "request_copilot_review",
+      "description": "Request a GitHub Copilot code review for a pull request.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "request_copilot_review" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "pullNumber"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "pullNumber": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "submit_pending_pull_request_review",
+      "description": "Submit the requester's latest pending pull request review.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "submit_pending_pull_request_review" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "pullNumber", "event"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "pullNumber": { "type": "number" },
+              "event": { "type": "string", "enum": ["APPROVE", "REQUEST_CHANGES", "COMMENT"] },
+              "body": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "update_issue",
+      "description": "Update an existing issue in a GitHub repository.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "update_issue" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "issue_number"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "issue_number": { "type": "number" },
+              "title": { "type": "string" },
+              "body": { "type": "string" },
+              "state": { "type": "string", "enum": ["open", "closed"] },
+              "labels": { "type": "array", "items": { "type": "string" } },
+              "assignees": { "type": "array", "items": { "type": "string" } },
+              "milestone": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "update_pull_request",
+      "description": "Update an existing pull request in a GitHub repository.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "update_pull_request" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "pullNumber"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "pullNumber": { "type": "number" },
+              "title": { "type": "string" },
+              "body": { "type": "string" },
+              "state": { "type": "string", "enum": ["open", "closed"] },
+              "base": { "type": "string" },
+              "maintainer_can_modify": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "update_pull_request_branch",
+      "description": "Update the branch of a pull request with the latest changes from the base branch.",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": ["name", "arguments"],
+        "properties": {
+          "name": { "const": "update_pull_request_branch" },
+          "arguments": {
+            "type": "object",
+            "required": ["owner", "repo", "pullNumber"],
+            "properties": {
+              "owner": { "type": "string" },
+              "repo": { "type": "string" },
+              "pullNumber": { "type": "number" },
+              "expectedHeadSha": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  ],
+  "policySuggestions": [
+    {
+      "description": "Merging pull requests is high impact and should require maintainer approval.",
+      "impact": "high",
+      "match": {
+        "conditions": [
+          { "source": "executionPayload", "path": "/name", "op": "eq", "value": "merge_pull_request" }
+        ]
+      },
+      "suggestedRequirement": {
+        "kind": "approvalThreshold",
+        "eligibleSignerRole": "maintainer",
+        "minimumThreshold": 1,
+        "decision": "approve"
+      }
+    },
+    {
+      "description": "Deleting files is destructive and should require maintainer approval.",
+      "impact": "high",
+      "match": {
+        "conditions": [
+          { "source": "executionPayload", "path": "/name", "op": "eq", "value": "delete_file" }
+        ]
+      },
+      "suggestedRequirement": {
+        "kind": "approvalThreshold",
+        "eligibleSignerRole": "maintainer",
+        "minimumThreshold": 1,
+        "decision": "approve"
+      }
+    },
+    {
+      "description": "Creating repositories is a high-trust action.",
+      "impact": "high",
+      "match": {
+        "conditions": [
+          { "source": "executionPayload", "path": "/name", "op": "eq", "value": "create_repository" }
+        ]
+      },
+      "suggestedRequirement": {
+        "kind": "approvalThreshold",
+        "eligibleSignerRole": "admin",
+        "minimumThreshold": 1,
+        "decision": "approve"
+      }
+    },
+    {
+      "description": "Pushing files directly to a branch bypasses PR review.",
+      "impact": "high",
+      "match": {
+        "conditions": [
+          { "source": "executionPayload", "path": "/name", "op": "eq", "value": "push_files" }
+        ]
+      },
+      "suggestedRequirement": {
+        "kind": "approvalThreshold",
+        "eligibleSignerRole": "maintainer",
+        "minimumThreshold": 1,
+        "decision": "approve"
+      }
+    },
+    {
+      "description": "Forking a repository copies all code to another location.",
+      "impact": "medium",
+      "match": {
+        "conditions": [
+          { "source": "executionPayload", "path": "/name", "op": "eq", "value": "fork_repository" }
+        ]
+      },
+      "suggestedRequirement": {
+        "kind": "approvalThreshold",
+        "eligibleSignerRole": "maintainer",
+        "minimumThreshold": 1,
+        "decision": "approve"
+      }
+    }
+  ]
+}

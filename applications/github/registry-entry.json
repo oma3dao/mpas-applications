@@ -1,0 +1,27 @@
+{
+  "version": "1",
+  "application": {
+    "name": "GitHub",
+    "description": "MPAS-protected GitHub repository management via the official GitHub MCP server.",
+    "applicationDid": "did:web:wivity.com:apps:github",
+    "website": "https://github.com"
+  },
+  "native": false,
+  "protocol": "mcp",
+  "upstream": {
+    "name": "Official GitHub MCP Server",
+    "repository": "https://github.com/github/github-mcp-server",
+    "package": "ghcr.io/github/github-mcp-server:v1.5.0"
+  },
+  "plugin": {
+    "repository": "https://github.com/wivity/mpas-applications/blob/main/applications/github/plugin.json",
+    "pluginDid": "did:web:wivity.com:plugins:github"
+  },
+  "publisher": {
+    "name": "Wivity",
+    "githubOrg": "wivity",
+    "publisherDid": "did:web:wivity.com",
+    "repository": "https://github.com/wivity/mpas-applications"
+  },
+  "status": "beta"
+}
