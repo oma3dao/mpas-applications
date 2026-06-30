@@ -15,7 +15,8 @@
   },
   "plugin": {
     "repository": "https://github.com/wivity/mpas-applications/blob/main/applications/github/plugin.json",
-    "pluginDid": "did:web:wivity.com:plugins:github"
+    "pluginDid": "did:web:wivity.com:plugins:github",
+    "artifactDid": "did:artifact:bafkreigl7euurvkc2neqcqfaqs7niw27rmp4z3blgbcbm4rojuzlabh2je"
   },
   "publisher": {
     "name": "Wivity",

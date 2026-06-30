@@ -74,6 +74,58 @@ Agent
   → Application API
 ```
 
+## Artifact DID
+
+Each application's `registry-entry.json` includes an `artifactDid` — a content-addressable identifier derived from the canonical JSON of its `plugin.json`. The MPAS Credential Adapter validates this hash at startup and rejects a mismatch.
+
+See the full method specification: [did:artifact Method Spec](https://oma3dao.github.io/omatrust-docs/specification/did-artifact-method-spec.html)
+
+### How to compute
+
+**Via the OMA Trust UI (recommended):**
+
+1. Go to https://test.app.omatrust.org/publish/security-assessment
+2. Upload the application's `plugin.json`
+3. Copy the computed `did:artifact:` value (no need to submit the form)
+4. Add it to `registry-entry.json` under `plugin.artifactDid`
+
+**Using `@oma3/omatrust` (Node.js):**
+
+```ts
+import { artifactDidFromJson } from "@oma3/omatrust/identity";
+import { readFileSync } from "fs";
+
+const plugin = readFileSync("applications/github/plugin.json", "utf-8");
+const did = await artifactDidFromJson(plugin);
+console.log(did);
+// did:artifact:bafkreigl7euurvkc2neqcqfaqs7niw27rmp4z3blgbcbm4rojuzlabh2je
+```
+
+**Algorithm (manual implementation):**
+
+1. Canonicalize the plugin JSON per [RFC 8785](https://datatracker.ietf.org/doc/html/rfc8785) (JSON Canonicalization Scheme)
+2. SHA-256 hash the resulting bytes
+3. Create a CIDv1 with raw codec (`0x55`) and the SHA-256 multihash
+4. Encode as base32lower
+5. Prefix with `did:artifact:`
+
+### When does it change?
+
+Any modification to `plugin.json` — adding/removing operations, changing schemas, updating metadata — produces a different canonical form and therefore a different hash. When you update `plugin.json`, you **must** recompute and update the `artifactDid` in both `registry-entry.json` and any deployment configs that reference it.
+
+### Deployment config usage
+
+When writing a deployment config for the Credential Adapter, include the `artifactDid` in the `plugin` section:
+
+```json
+{
+  "plugin": {
+    "pluginDid": "did:web:wivity.com:plugins:github",
+    "artifactDid": "did:artifact:bafkreigl7euurvkc2neqcqfaqs7niw27rmp4z3blgbcbm4rojuzlabh2je"
+  }
+}
+```
+
 ## Specifications
 
 Applications conform to the MPAS protocol:
