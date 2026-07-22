@@ -1,19 +1,20 @@
 {
-  "application": "github",
-  "displayName": "GitHub",
-  "upstream": {
-    "name": "Official GitHub MCP Server",
-    "repository": "https://github.com/github/github-mcp-server",
-    "package": "ghcr.io/github/github-mcp-server",
-    "version": "v1.5.0",
-    "protocol": "mcp",
-    "transport": "stdio"
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "github-mcp-server",
+    "version": "v1.6.0"
   },
-  "bridge": {
-    "publisher": "wivity",
-    "repository": "https://github.com/wivity/mpas-applications",
-    "version": "0.1.0"
-  },
-  "generatedAt": "2026-06-30T00:00:00.000Z",
-  "generatedBy": "manual"
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "docker",
+    "run",
+    "-i",
+    "--rm",
+    "-e",
+    "GITHUB_PERSONAL_ACCESS_TOKEN",
+    "ghcr.io/github/github-mcp-server"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-22T21:16:22.246Z"
 }

@@ -1,68 +1,183 @@
 {
-  "metadata": {
-    "upstream": "github/github-mcp-server",
-    "version": "v1.5.0",
-    "classifiedAt": "2026-06-30T00:00:00.000Z",
-    "classificationMethod": "manual",
-    "highImpactVerbs": ["delete", "merge", "create", "update", "push", "fork", "assign", "submit", "request", "mark", "manage", "dismiss"],
-    "notes": "When in doubt, classified as high_impact. Read-only tools (get_*, list_*, search_*) are low_impact."
-  },
-  "classifications": {
-    "add_issue_comment": "high_impact",
-    "add_pull_request_review_comment_to_pending_review": "high_impact",
-    "assign_copilot_to_issue": "high_impact",
-    "create_and_submit_pull_request_review": "high_impact",
-    "create_branch": "high_impact",
-    "create_issue": "high_impact",
-    "create_or_update_file": "high_impact",
-    "create_pending_pull_request_review": "high_impact",
-    "create_pull_request": "high_impact",
-    "create_repository": "high_impact",
-    "delete_file": "high_impact",
-    "delete_pending_pull_request_review": "high_impact",
-    "dismiss_notification": "low_impact",
-    "fork_repository": "high_impact",
-    "get_code_scanning_alert": "low_impact",
-    "get_commit": "low_impact",
-    "get_file_contents": "low_impact",
-    "get_issue": "low_impact",
-    "get_issue_comments": "low_impact",
-    "get_me": "low_impact",
-    "get_notification_details": "low_impact",
-    "get_pull_request": "low_impact",
-    "get_pull_request_comments": "low_impact",
-    "get_pull_request_diff": "low_impact",
-    "get_pull_request_files": "low_impact",
-    "get_pull_request_reviews": "low_impact",
-    "get_pull_request_status": "low_impact",
-    "get_secret_scanning_alert": "low_impact",
-    "get_tag": "low_impact",
-    "list_branches": "low_impact",
-    "list_code_scanning_alerts": "low_impact",
-    "list_commits": "low_impact",
-    "list_issues": "low_impact",
-    "list_notifications": "low_impact",
-    "list_pull_requests": "low_impact",
-    "list_secret_scanning_alerts": "low_impact",
-    "list_tags": "low_impact",
-    "manage_notification_subscription": "low_impact",
-    "manage_repository_notification_subscription": "low_impact",
-    "mark_all_notifications_read": "low_impact",
-    "merge_pull_request": "high_impact",
-    "push_files": "high_impact",
-    "request_copilot_review": "high_impact",
-    "search_code": "low_impact",
-    "search_issues": "low_impact",
-    "search_repositories": "low_impact",
-    "search_users": "low_impact",
-    "submit_pending_pull_request_review": "high_impact",
-    "update_issue": "high_impact",
-    "update_pull_request": "high_impact",
-    "update_pull_request_branch": "high_impact"
-  },
-  "summary": {
-    "total": 51,
-    "high_impact": 20,
-    "low_impact": 31
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": true,
+  "operations": {
+    "add_comment_to_pending_review": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "add_issue_comment": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "add_reply_to_pull_request_comment": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "assign_copilot_to_issue": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "create_branch": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "create_or_update_file": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "create_pull_request": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "create_repository": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "delete_file": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "fork_repository": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_commit": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_file_contents": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_label": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_latest_release": {
+      "impact": "high",
+      "rationale": "name-heuristic"
+    },
+    "get_me": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_release_by_tag": {
+      "impact": "high",
+      "rationale": "name-heuristic"
+    },
+    "get_tag": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_team_members": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_teams": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "issue_read": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "issue_write": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_branches": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_commits": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_issue_fields": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_issue_types": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_issues": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_pull_requests": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_releases": {
+      "impact": "high",
+      "rationale": "name-heuristic"
+    },
+    "list_repository_collaborators": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_tags": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "merge_pull_request": {
+      "impact": "high",
+      "rationale": "name-heuristic"
+    },
+    "pull_request_read": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "pull_request_review_write": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "push_files": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "request_copilot_review": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "search_code": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "search_commits": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "search_issues": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "search_pull_requests": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "search_repositories": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "search_users": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "sub_issue_write": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "update_pull_request": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "update_pull_request_branch": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    }
   }
 }
