@@ -1,9 +1,10 @@
 {
   "version": "1",
   "application": {
-    "name": "github",
-    "description": "MPAS-protected github via github-mcp-server. PLACEHOLDER: review before submitting.",
-    "applicationDid": "did:web:github.example"
+    "name": "GitHub MCP MPAS Bridge Server",
+    "description": "MPAS-protected bridge for the official GitHub MCP Server.",
+    "applicationDid": "did:web:wivity.com:applications:github-mcp-server",
+    "website": "https://github.com/github/github-mcp-server"
   },
   "native": false,
   "protocol": "mcp",
@@ -15,12 +16,14 @@
     }
   },
   "plugin": {
-    "repository": "PLACEHOLDER: URL to the published plugin.json",
-    "artifactDid": "did:artifact:bafkreie573to7wlvxeltxixk7ozvhhmgpijueq7hyo66osdbr23dcnjtjq"
+    "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/github/plugin.json",
+    "pluginDid": "did:web:wivity.com:plugins:github-mcp-server",
+    "artifactDid": "did:artifact:bafkreigiavzc5ekvnpgplvbteqwossucrhc4hg3af2hck3tyuqrrdf2roe"
   },
   "publisher": {
-    "name": "PLACEHOLDER",
-    "githubOrg": "PLACEHOLDER"
+    "name": "Wivity",
+    "githubOrg": "wivity",
+    "publisherDid": "did:web:wivity.com"
   },
   "status": "beta"
 }

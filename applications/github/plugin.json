@@ -1,15 +1,28 @@
 {
   "version": "1",
   "type": "MpasApplicationPlugin",
-  "pluginDid": "did:web:PLACEHOLDER",
+  "pluginDid": "did:web:wivity.com:plugins:github-mcp-server",
   "pluginVersion": "1.0.0",
-  "publisherDid": "did:web:PLACEHOLDER",
-  "applicationDid": "did:web:github.example",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:github-mcp-server",
   "executionProfile": {
     "id": "did:web:profiles.oma3.org:mcp",
     "format": "mcp.toolsCall"
   },
-  "credentialRequirements": [],
+  "credentialRequirements": [
+    {
+      "type": "fineGrainedPersonalAccessToken",
+      "requiredCapabilities": [
+        "administration:write",
+        "contents:write",
+        "issues:write",
+        "pull_requests:write",
+        "workflows:write",
+        "metadata:read"
+      ],
+      "description": "GitHub fine-grained personal access token scoped to the required resource owner and repositories. Administration write supports repository creation and forks; Contents and Workflows write support file and branch changes; Issues and Pull requests write support the governed issue, review, and merge operations. Metadata read is included automatically by GitHub. Copilot operations additionally require an eligible Copilot plan and repository access."
+    }
+  ],
   "operations": {
     "add_comment_to_pending_review": {
       "description": "Add review comment to the requester's latest pending pull request review. A pending review needs to already exist to call this (check with the user if not sure).",
