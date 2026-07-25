@@ -31,13 +31,26 @@ When listing upstream sources, use the best available option for building a brid
 
 ---
 
-## Tier 1 — MVP and Highest Priority
+## Tier 1 — Databases, MVP, and Highest Priority
 
-| Application    | Upstream                       | Upstream Source                                                                 | Status     | Notes                                                                                       |
-| :------------- | :----------------------------- | :------------------------------------------------------------------------------ | :--------- | :------------------------------------------------------------------------------------------ |
-| GitHub         | Official GitHub MCP Server     | [github/github-mcp-server](https://github.com/github/github-mcp-server)        | 📋 Planned | MVP target. Most-installed MCP server. Go, open source. High-impact: merge, delete, deploy  |
-| Slack          | Slack MCP Server               | [modelcontextprotocol/servers/slack](https://github.com/modelcontextprotocol/servers/tree/main/src/slack) | 📋 Planned | Heavily used by agents. High-impact: post messages, invite users. TypeScript, open source   |
-| Kubernetes     | Kubernetes MCP Server          | [stormforge-llc/mcp-k8s-go](https://github.com/stormforge-llc/mcp-k8s-go)     | 📋 Planned | 1,188+ downloads. Extreme blast radius: cluster admin, resource deletion, scaling           |
+Database bridges are the immediate priority because repositories often already have native
+review workflows, while production databases commonly expose irreversible mutations to a
+single credential. Provider control-plane tools and direct database data-plane tools are
+separate MPAS surfaces and should be bridged independently.
+
+| Application          | Upstream                       | Upstream Source                                                                 | Status         | Notes                                                                                       |
+| :------------------- | :----------------------------- | :------------------------------------------------------------------------------ | :------------- | :------------------------------------------------------------------------------------------ |
+| PostgreSQL           | Reference PostgreSQL MCP Server | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers/tree/main/src/postgres) | 🚧 In Progress | Generic data-plane bridge. Protect arbitrary SQL, DDL, migrations, and destructive writes  |
+| Supabase             | Official Supabase MCP Server   | [supabase/mcp](https://github.com/supabase/mcp)                                | 🚧 In Progress | Popular hosted Postgres platform. Protect SQL, migrations, branches, auth, storage, and project operations |
+| Neon                 | Official Neon MCP Server       | [neondatabase/mcp-server-neon](https://github.com/neondatabase/mcp-server-neon) | 🚧 In Progress | Protect SQL, migrations, project/branch deletion, resets, and credential changes            |
+| MongoDB              | Official MongoDB MCP Server    | [mongodb-js/mongodb-mcp-server](https://github.com/mongodb-js/mongodb-mcp-server) | 🚧 In Progress | Document database and Atlas control plane. Protect drops, deletes, index changes, and cluster operations |
+| PlanetScale          | Official PlanetScale MCP Server | [planetscale/mcp-server](https://github.com/planetscale/mcp-server)           | 🚧 In Progress | MySQL/Postgres provider with explicit write-query tools. Protect writes, DDL, and branch operations |
+| Firebase / Firestore | Official Firebase MCP Server   | [firebase/firebase-tools](https://github.com/firebase/firebase-tools)          | 🚧 In Progress | Protect Firestore/Realtime Database writes plus project, rules, auth, and service operations |
+| Upstash              | Official Upstash MCP Server    | [upstash/mcp-server](https://github.com/upstash/mcp-server)                    | 🚧 In Progress | Serverless Redis and data services. Protect flush/delete, database lifecycle, and credential operations |
+| Railway              | Official Railway MCP Server    | [railwayapp/cli](https://github.com/railwayapp/cli)                            | 🚧 In Progress | Control-plane bridge for projects, services, environments, deployments, variables, volumes, and backups; direct DB access uses the matching database bridge |
+| GitHub               | Official GitHub MCP Server     | [github/github-mcp-server](https://github.com/github/github-mcp-server)        | 📋 Planned     | MVP target. Most-installed MCP server. Go, open source. High-impact: merge, delete, deploy  |
+| Slack                | Slack MCP Server               | [modelcontextprotocol/servers/slack](https://github.com/modelcontextprotocol/servers/tree/main/src/slack) | 📋 Planned | Heavily used by agents. High-impact: post messages, invite users. TypeScript, open source   |
+| Kubernetes           | Kubernetes MCP Server          | [stormforge-llc/mcp-k8s-go](https://github.com/stormforge-llc/mcp-k8s-go)     | 📋 Planned     | 1,188+ downloads. Extreme blast radius: cluster admin, resource deletion, scaling           |
 
 ## Tier 2 — High Impact Infrastructure and Finance
 
@@ -45,7 +58,6 @@ When listing upstream sources, use the best available option for building a brid
 | :------------------ | :------------------------ | :------------------------------------------------------------------------------------------------------ | :--------- | :---------------------------------------------------------------------------------- |
 | Terraform           | Terraform MCP Server      | [hashicorp/terraform-mcp-server](https://github.com/hashicorp/terraform-mcp-server)                    | 📋 Planned | 1,062+ downloads. Infra-as-code changes have massive blast radius                   |
 | Linear              | Linear MCP Server         | [jerhadf/linear-mcp-server](https://github.com/jerhadf/linear-mcp-server)                              | 📋 Planned | Popular with AI agents/startups. TypeScript, open source. Run via npx               |
-| PostgreSQL/Supabase | PostgreSQL MCP Server     | [modelcontextprotocol/servers/postgres](https://github.com/modelcontextprotocol/servers/tree/main/src/postgres) | 📋 Planned | High agent adoption. High-impact: DROP, schema changes, data deletion               |
 | Stripe              | Stripe Agent Toolkit      | [stripe/agent-toolkit](https://github.com/stripe/agent-toolkit)                                        | 📋 Planned | Financial transactions. TypeScript, open source                                     |
 
 ## Tier 3 — Enterprise Tools
@@ -85,6 +97,25 @@ The following MCP servers are heavily used but don't wrap a third-party API. The
 - **Shell/Terminal** — local command execution
 - **Playwright/Browser** — local browser automation
 - **Context7** — read-only documentation fetching
+
+## Database Bridge Security Requirements
+
+Database and database-platform bridges must:
+
+- Bind approvals to the exact MCP server, tool name, canonical arguments, target project,
+  environment, database, branch, and schema.
+- Treat arbitrary SQL, DDL, migrations, bulk writes, deletes, drops, truncates, restores,
+  branch resets, project/service deletion, backup deletion, and credential rotation as
+  high-impact actions.
+- Preserve the upstream MCP tool interface where one exists. Provider-specific extensions
+  must use separate, explicitly versioned tools.
+- Never return database passwords, resolved connection URLs, API tokens, or other reusable
+  credentials to the proposer. Secret substitution happens only inside the credential adapter.
+- Ensure the proposer cannot bypass MPAS through shell environment variables, `.env` files,
+  provider CLIs, database clients, browser sessions, tunnels, or unrestricted outbound network
+  access.
+- Record enough pre-execution state and post-execution evidence to identify the exact target
+  and result without logging secret values or unrestricted production data.
 
 ---
 
