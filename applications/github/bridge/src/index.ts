@@ -420,17 +420,38 @@ function errorResult(code: string, message: string, structuredContent?: object):
   };
 }
 
-function indeterminateResult(response: AdapterResponse): ToolCallResult {
+interface DiagnosticAdapterResponse extends AdapterResponse {
+  context?: {
+    diagnostic?: {
+      code: string;
+      phase?: string;
+      transport?: string;
+      message?: string;
+    };
+  };
+}
+
+function indeterminateResult(response: DiagnosticAdapterResponse): ToolCallResult {
+  const diagnostic = response.context?.diagnostic;
+  const diagnosticMessage = diagnostic?.message ? ` ${diagnostic.message}` : "";
+  const diagnosticText = diagnostic
+    ? `INDETERMINATE (${diagnostic.code}).${diagnosticMessage}`
+    : "INDETERMINATE.";
   return {
     isError: true,
     content: [
       {
         type: "text",
-        text: "INDETERMINATE: Execution was dispatched but the outcome could not be confirmed. Do not automatically retry with the same actionId; reconcile out of band and submit a new Action Envelope if needed.",
+        text: [
+          `${diagnosticText} Execution was dispatched but the outcome could not be confirmed.`,
+          "Do not automatically retry with the same actionId.",
+          "Reconcile out of band and submit a new Action Envelope if needed.",
+        ].join(" "),
       },
     ],
     structuredContent: {
       status: "indeterminate",
+      ...(diagnostic ? { diagnostic } : {}),
       executionReceipt: response.executionReceipt,
     },
   };
