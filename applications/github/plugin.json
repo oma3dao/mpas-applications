@@ -2,12 +2,13 @@
   "version": "1",
   "type": "MpasApplicationPlugin",
   "pluginDid": "did:web:wivity.com:plugins:github-mcp-server",
-  "pluginVersion": "1.0.0",
+  "pluginVersion": "0.1.0",
   "publisherDid": "did:web:wivity.com",
   "applicationDid": "did:web:wivity.com:applications:github-mcp-server",
   "executionProfile": {
     "id": "did:web:profiles.oma3.org:mcp",
-    "format": "mcp.toolsCall"
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2024-11-05"
   },
   "credentialRequirements": [
     {

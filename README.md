@@ -65,14 +65,24 @@ You can also build an application manually following the same folder structure.
 
 ## How the Bridge Works
 
-For any existing MCP server, the generated bridge acts as a drop-in replacement. Agents see the same tools, but high-impact actions are intercepted for MPAS approval before being forwarded upstream.
+For any existing MCP server, the generated bridge preserves the upstream tool names and input schemas. Agents call the same tools with the same arguments, but high-impact actions are intercepted for MPAS approval before being forwarded upstream.
 
 ```
 Agent
-  → Generated MPAS Bridge (drop-in replacement)
+  → Generated MPAS Bridge (tool-input compatible)
+  → Credential Adapter (Verifier)
   → Original MCP Server
   → Application API
 ```
+
+A bridge is **tool-input compatible, not a transparent drop-in**. Multi-party approval is asynchronous, so an approval-gated call cannot return the upstream result on the original request. Per the [MPAS MCP Proposer Bridge Client Interface Profile](https://github.com/oma3dao/mpas/blob/main/specs/mpas-profile-mcp-proposer-bridge-client.md), a bridge differs from its upstream server by:
+
+- appending a standard MPAS notice to tool descriptions;
+- adding the reserved `mpas_wait_for_action_result` tool;
+- returning `MpasBridgeDeferredResult` instead of a native result when approvals are required, and
+- requiring the client to retrieve the eventual result through the wait tool.
+
+Native results are relayed verbatim whenever one exists. Agent integrations must understand the profile even when they already understand the upstream server.
 
 ## Artifact DID
 
