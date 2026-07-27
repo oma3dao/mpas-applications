@@ -51,6 +51,7 @@ separate MPAS surfaces and should be bridged independently.
 | GitHub               | Official GitHub MCP Server     | [github/github-mcp-server](https://github.com/github/github-mcp-server)        | 📋 Planned     | MVP target. Most-installed MCP server. Go, open source. High-impact: merge, delete, deploy  |
 | Slack                | Slack MCP Server               | [modelcontextprotocol/servers/slack](https://github.com/modelcontextprotocol/servers/tree/main/src/slack) | 📋 Planned | Heavily used by agents. High-impact: post messages, invite users. TypeScript, open source   |
 | Kubernetes           | Kubernetes MCP Server          | [stormforge-llc/mcp-k8s-go](https://github.com/stormforge-llc/mcp-k8s-go)     | 📋 Planned     | 1,188+ downloads. Extreme blast radius: cluster admin, resource deletion, scaling           |
+| Coinbase             | Coinbase MCP Server            | TBD                                                                            | 📋 Planned     | Financial/crypto actions                                                                    |
 
 ## Tier 2 — High Impact Infrastructure and Finance
 
@@ -77,7 +78,6 @@ separate MPAS surfaces and should be bridged independently.
 | CircleCI          | CircleCI MCP Server   | TBD             | 📋 Planned | CI/CD pipeline control           |
 | Bitbucket         | Bitbucket MCP Server  | TBD             | 📋 Planned | Source control                   |
 | Microsoft Teams   | Teams MCP Server      | TBD             | 📋 Planned | Enterprise messaging             |
-| Coinbase          | Coinbase MCP Server   | TBD             | 📋 Planned | Financial/crypto actions         |
 
 ## Tier 5 — Social and Publishing
 
