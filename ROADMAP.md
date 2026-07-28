@@ -46,9 +46,9 @@ separate MPAS surfaces and should be bridged independently.
 | MongoDB              | Official MongoDB MCP Server    | [mongodb-js/mongodb-mcp-server](https://github.com/mongodb-js/mongodb-mcp-server) | ✅ Done | Document database and Atlas control plane. Protect drops, deletes, index changes, and cluster operations |
 | PlanetScale          | Official PlanetScale MCP Server | [planetscale/mcp-server](https://github.com/planetscale/mcp-server)           | ✅ Done | MySQL/Postgres provider with explicit write-query tools. Protect writes, DDL, and branch operations |
 | Firebase / Firestore | Official Firebase MCP Server   | [firebase/firebase-tools](https://github.com/firebase/firebase-tools)          | ✅ Done | Protect Firestore/Realtime Database writes plus project, rules, auth, and service operations |
-| Upstash              | Official Upstash MCP Server    | [upstash/mcp-server](https://github.com/upstash/mcp-server)                    | 🚧 In Progress | Serverless Redis and data services. Protect flush/delete, database lifecycle, and credential operations |
+| Upstash              | Official Upstash MCP Server    | [upstash/mcp-server](https://github.com/upstash/mcp-server)                    | ✅ Done | Serverless Redis and data services. Protect flush/delete, database lifecycle, and credential operations |
 | Railway              | Official Railway MCP Server    | [railwayapp/cli](https://github.com/railwayapp/cli)                            | 🚧 In Progress | Control-plane bridge for projects, services, environments, deployments, variables, volumes, and backups; direct DB access uses the matching database bridge |
-| GitHub               | Official GitHub MCP Server     | [github/github-mcp-server](https://github.com/github/github-mcp-server)        | ✅ Done        | Experimental alpha plugin and bridge. High-impact operations include merge, delete, and repository writes |
+| GitHub               | Official GitHub MCP Server     | [github/github-mcp-server](https://github.com/github/github-mcp-server)        | 📋 Planned     | MVP target. Most-installed MCP server. Go, open source. High-impact: merge, delete, deploy  |
 | Slack                | Slack MCP Server               | [modelcontextprotocol/servers/slack](https://github.com/modelcontextprotocol/servers/tree/main/src/slack) | 📋 Planned | Heavily used by agents. High-impact: post messages, invite users. TypeScript, open source   |
 | Kubernetes           | Kubernetes MCP Server          | [stormforge-llc/mcp-k8s-go](https://github.com/stormforge-llc/mcp-k8s-go)     | 📋 Planned     | 1,188+ downloads. Extreme blast radius: cluster admin, resource deletion, scaling           |
 
@@ -128,7 +128,7 @@ To add an application to the roadmap:
 
 To build an application:
 
-1. Use the [bridge generator](https://github.com/oma3dao/mpas/tree/main/bridge-generator) to generate the plugin, bridge, and supporting artifacts.
+1. Use the builder in [`tool/`](tool/) to generate the plugin, bridge, and tests.
 2. Output lands in `applications/<name>/`.
 3. Open a PR for review.
 4. Update the status in this file to 🚧 In Progress or ✅ Done.
