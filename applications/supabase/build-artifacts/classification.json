@@ -1,0 +1,123 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "apply_migration": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "confirm_cost": {
+      "impact": "low",
+      "rationale": "Governed: records explicit user acknowledgment of a quoted project or branch cost but does not itself create the resource."
+    },
+    "create_branch": {
+      "impact": "high",
+      "rationale": "Governed: creates a billable database branch and applies the production migration history."
+    },
+    "create_project": {
+      "impact": "high",
+      "rationale": "Governed: creates a billable hosted project in the selected organization and region."
+    },
+    "delete_branch": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "deploy_edge_function": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "execute_sql": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "generate_typescript_types": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_advisors": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_cost": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_edge_function": {
+      "impact": "high",
+      "rationale": "Governed: retrieves deployed application source that can contain sensitive implementation details."
+    },
+    "get_logs": {
+      "impact": "high",
+      "rationale": "Governed: production service logs can contain sensitive data, identifiers, and application output."
+    },
+    "get_organization": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_project": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_project_url": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_publishable_keys": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_branches": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_edge_functions": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_extensions": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_migrations": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_organizations": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_projects": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_tables": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "merge_branch": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "pause_project": {
+      "impact": "high",
+      "rationale": "Governed: pauses a hosted project and disrupts database and API availability."
+    },
+    "rebase_branch": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "reset_branch": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "restore_project": {
+      "impact": "high",
+      "rationale": "Governed: restores a hosted project and changes its operational state."
+    },
+    "search_docs": {
+      "impact": "medium",
+      "rationale": "Pass-through: searches public Supabase documentation and does not access operator resources or mutate external state."
+    }
+  }
+}

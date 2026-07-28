@@ -1,0 +1,30 @@
+{
+  "version": "1",
+  "application": {
+    "name": "Supabase MCP MPAS Bridge Server",
+    "description": "MPAS-protected bridge for the official Supabase MCP Server.",
+    "applicationDid": "did:web:wivity.com:applications:supabase-mcp-server",
+    "website": "https://github.com/supabase-community/supabase-mcp"
+  },
+  "native": false,
+  "protocol": "mcp",
+  "upstream": {
+    "name": "supabase",
+    "protocolVersion": "2024-11-05",
+    "toolSurface": {
+      "alg": "sha-256",
+      "value": "x37T0hoDYs67TEZMuSovfyQjXB6oIIYBDqyO9jFYU3Q"
+    }
+  },
+  "plugin": {
+    "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/supabase/plugin.json",
+    "pluginDid": "did:web:wivity.com:plugins:supabase-mcp-server",
+    "artifactDid": "did:artifact:bafkreiaoqeupv653763i4do7br7avdzq2ptunrku4pluitjffti72r32lm"
+  },
+  "publisher": {
+    "name": "Wivity",
+    "githubOrg": "wivity",
+    "publisherDid": "did:web:wivity.com"
+  },
+  "status": "beta"
+}
