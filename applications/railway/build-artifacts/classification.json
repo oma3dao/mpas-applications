@@ -1,0 +1,195 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "add_reference_variable": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "connect_service_source": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "create_bucket": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "create_environment": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "create_project": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "create_service": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "create_tcp_proxy": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "create_volume": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "delete_domain": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "deploy": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "deploy_template": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "disconnect_service_source": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "docs_fetch": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "docs_search": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "domain_status": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "environment_status": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "generate_domain": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "get_logs": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "get_service_config": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "get_tcp_proxy": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "http_error_rate": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "http_requests": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "http_response_time": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "link_environment": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "link_service": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "list_deployments": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "list_domains": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "list_projects": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "list_services": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "list_tcp_proxies": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "list_variables": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "list_workspaces": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "private_network_status": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "private_network_update": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "remove_bucket": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "remove_service": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "remove_tcp_proxy": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "remove_volume": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "retry_domain_certificate": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "scale_service": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "search_templates": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "service_metrics": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "set_variables": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "update_domain": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "update_service": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "update_volume": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "whoami": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    }
+  }
+}
