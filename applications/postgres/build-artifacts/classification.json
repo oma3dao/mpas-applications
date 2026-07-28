@@ -1,0 +1,11 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "query": {
+      "impact": "high",
+      "rationale": "Governed: although the reference server runs queries in a read-only transaction, arbitrary SQL can expose unrestricted production data and must be bound to the exact database and statement."
+    }
+  }
+}

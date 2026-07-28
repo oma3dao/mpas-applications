@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "example-servers/postgres",
+    "version": "0.1.0"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "node",
+    "/Users/mpas1/Projects/mcp-targets/postgres/node_modules/@modelcontextprotocol/server-postgres/dist/index.js",
+    "postgresql://localhost/mydb"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-28T18:42:16.606Z"
+}

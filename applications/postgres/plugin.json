@@ -1,0 +1,50 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:postgres-mcp-server",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:postgres-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2024-11-05"
+  },
+  "credentialRequirements": [
+    {
+      "type": "postgresConnectionString",
+      "requiredCapabilities": [
+        "database:connect",
+        "query:execute"
+      ],
+      "description": "PostgreSQL connection string supplied only within the credential adapter and scoped to the intended database and least-privileged database role. The reusable connection string must never be returned to the proposer."
+    }
+  ],
+  "operations": {
+    "query": {
+      "description": "Run a read-only SQL query",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "query"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "sql": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
