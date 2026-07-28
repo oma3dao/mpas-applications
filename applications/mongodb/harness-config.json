@@ -1,0 +1,18 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "node",
+    "args": [
+      "/Users/mpas1/Projects/mcp-targets/mongodb/node_modules/mongodb-mcp-server/dist/esm/index.js"
+    ],
+    "env": {
+      "MDB_MCP_CONNECTION_STRING": "{{credential:mongodbConnectionString}}"
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}
