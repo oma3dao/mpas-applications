@@ -1,0 +1,18 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "node",
+    "args": [
+      "/Users/mpas1/Projects/mcp-targets/neon/neon-env-stdio.mjs"
+    ],
+    "env": {
+      "NEON_API_KEY": "{{credential:neonApiKey}}"
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}

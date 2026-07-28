@@ -1,0 +1,99 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "complete_database_migration": {
+      "impact": "critical",
+      "rationale": "Governed: can apply tested migration changes to the main branch and remove temporary resources."
+    },
+    "complete_query_tuning": {
+      "impact": "critical",
+      "rationale": "Governed: can merge query-tuning schema changes into the main branch or discard the tuning branch."
+    },
+    "create_branch": {
+      "impact": "high",
+      "rationale": "Governed: creates a database branch and associated compute/storage resources."
+    },
+    "create_project": {
+      "impact": "high",
+      "rationale": "Governed: creates a hosted Neon project with billable database resources."
+    },
+    "delete_branch": {
+      "impact": "critical",
+      "rationale": "name-heuristic"
+    },
+    "delete_project": {
+      "impact": "critical",
+      "rationale": "name-heuristic"
+    },
+    "describe_branch": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "describe_project": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "describe_table_schema": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "explain_sql_statement": {
+      "impact": "high",
+      "rationale": "Governed: EXPLAIN ANALYZE executes the supplied statement and can expose production query data."
+    },
+    "get_connection_string": {
+      "impact": "critical",
+      "rationale": "Governed: resolves a reusable database credential; deployments must prevent the resolved secret from reaching the proposer."
+    },
+    "get_database_tables": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_branch_computes": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_organizations": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_projects": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_shared_projects": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_slow_queries": {
+      "impact": "high",
+      "rationale": "Governed: retrieves production query text and performance telemetry that can contain sensitive values."
+    },
+    "prepare_database_migration": {
+      "impact": "high",
+      "rationale": "Governed: creates a temporary branch and executes generated DDL for later promotion."
+    },
+    "prepare_query_tuning": {
+      "impact": "high",
+      "rationale": "Governed: creates a temporary branch and may apply generated indexes or schema changes."
+    },
+    "provision_neon_auth": {
+      "impact": "high",
+      "rationale": "Governed: provisions authentication infrastructure and a third-party Stack Auth integration."
+    },
+    "reset_from_parent": {
+      "impact": "critical",
+      "rationale": "Governed: resets a branch to its parent and can discard all branch-local data and schema changes."
+    },
+    "run_sql": {
+      "impact": "critical",
+      "rationale": "Governed: executes arbitrary SQL, including writes, DDL, destructive statements, and sensitive reads."
+    },
+    "run_sql_transaction": {
+      "impact": "critical",
+      "rationale": "Governed: executes an arbitrary multi-statement SQL transaction with write and destructive capability."
+    }
+  }
+}
