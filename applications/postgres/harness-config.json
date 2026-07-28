@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "node",
+    "args": [
+      "/Users/mpas1/Projects/mcp-targets/postgres/node_modules/@modelcontextprotocol/server-postgres/dist/index.js",
+      "postgresql://localhost/mydb"
+    ]
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}

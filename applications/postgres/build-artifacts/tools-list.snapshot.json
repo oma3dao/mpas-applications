@@ -1,0 +1,22 @@
+{
+  "version": "1",
+  "type": "McpToolsListSnapshot",
+  "toolSurface": {
+    "alg": "sha-256",
+    "value": "_zfKzzpCg2fQPCguGRVA7Uhhs80ONHJX_UkA7gpNEV4"
+  },
+  "tools": [
+    {
+      "name": "query",
+      "description": "Run a read-only SQL query",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sql": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ]
+}
