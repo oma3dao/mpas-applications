@@ -1,0 +1,2714 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:railway-mcp-server",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:railway-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2024-11-05"
+  },
+  "credentialRequirements": [
+    {
+      "type": "railwayApiToken",
+      "requiredCapabilities": [
+        "projects:read",
+        "projects:write",
+        "services:write",
+        "deployments:write",
+        "variables:write",
+        "storage:write",
+        "networking:write",
+        "logs:read"
+      ],
+      "description": "Railway API token supplied only within the credential adapter and scoped to the intended workspace and projects. The reusable token and environment-variable values must never be returned to the proposer."
+    }
+  ],
+  "operations": {
+    "add_reference_variable": {
+      "description": "Set reference variables on a service. Each variable value must be a Railway reference expression starting with '${{' (e.g. '${{ Postgres.DATABASE_URL }}').",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "add_reference_variable"
+          },
+          "arguments": {
+            "$defs": {
+              "ReferenceVariable": {
+                "properties": {
+                  "name": {
+                    "description": "Variable name.",
+                    "type": "string"
+                  },
+                  "value": {
+                    "description": "Reference value (must start with \"${{\").",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "type": "object"
+              }
+            },
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "variables": {
+                "description": "Variables to set, each with a name and a reference value starting with \"${{\".",
+                "items": {
+                  "$ref": "#/$defs/ReferenceVariable"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "variables"
+            ],
+            "title": "AddReferenceVariableParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "connect_service_source": {
+      "description": "Connect an existing Railway service to a GitHub repo or Docker image. For GitHub repos, this enables Railway-managed deployment triggers when the project has GitHub App access.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "connect_service_source"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "branch": {
+                "default": null,
+                "description": "Git branch to deploy when source_repo is set. Defaults to the repo default branch when Railway can see it.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "source_image": {
+                "default": null,
+                "description": "Docker image to connect (e.g. \"nginx:latest\").",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "source_repo": {
+                "default": null,
+                "description": "GitHub repo to connect, in owner/repo format.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "ConnectServiceSourceParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_bucket": {
+      "description": "Create a new object storage bucket in a Railway environment. Default region is sjc. Returns the bucket ID and name.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_bucket"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "default": null,
+                "description": "Optional name for the bucket.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "region": {
+                "default": null,
+                "description": "Region: sjc, iad, ams, or sin (default: sjc).",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "CreateBucketParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_environment": {
+      "description": "Create a new environment in a Railway project. Optionally fork from an existing environment.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_environment"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "name": {
+                "description": "The name for the new environment.",
+                "type": "string"
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "source_environment_id": {
+                "default": null,
+                "description": "Source environment ID to fork from.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "title": "CreateEnvironmentParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_project": {
+      "description": "Create a new Railway project. Returns the project ID and the default environment ID.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_project"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "description": {
+                "default": null,
+                "description": "Optional description for the project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "description": "The name for the new project.",
+                "type": "string"
+              },
+              "workspace_id": {
+                "default": null,
+                "description": "Workspace ID to create the project in. If omitted, uses the user's personal workspace.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "title": "CreateProjectParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_service": {
+      "description": "Create a new service in a Railway project. Optionally connect a GitHub repo or Docker image.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_service"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "branch": {
+                "default": null,
+                "description": "Git branch to deploy when source_repo is set. Defaults to the repo default branch when Railway can see it.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "default": null,
+                "description": "Name for the new service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "source_image": {
+                "default": null,
+                "description": "Docker image to use (e.g. \"nginx:latest\").",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "source_repo": {
+                "default": null,
+                "description": "GitHub repo to connect (e.g. \"owner/repo\").",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "CreateServiceParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_tcp_proxy": {
+      "description": "Create a public TCP proxy for a Railway service application port. Only one TCP proxy is allowed per service instance.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_tcp_proxy"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "application_port": {
+                "description": "Application port to expose through the TCP proxy.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "application_port"
+            ],
+            "title": "CreateTcpProxyParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_volume": {
+      "description": "Create a persistent volume and attach it to a service at the given mount path.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_volume"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "mount_path": {
+                "description": "Mount path for the volume (e.g. \"/data\").",
+                "type": "string"
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "mount_path"
+            ],
+            "title": "CreateVolumeParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "delete_domain": {
+      "description": "Delete a custom or service domain by domain name, URL, or domain ID. This is irreversible. Returns a preview first.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "delete_domain"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "domain": {
+                "description": "Domain name, URL, or domain ID.",
+                "type": "string"
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "domain"
+            ],
+            "title": "DeleteDomainParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "deploy": {
+      "description": "Deploy code from a directory to Railway. Creates a tarball, uploads it, and starts a deployment. Returns the deployment ID and URLs. Use get_logs to monitor progress.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "deploy"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "message": {
+                "default": null,
+                "description": "Message to attach to the deployment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "path": {
+                "default": null,
+                "description": "Path to the directory to deploy. Defaults to current directory.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the linked service or backboard auto-creates one.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "DeployParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "deploy_template": {
+      "description": "Deploy a Railway template by its code (e.g. 'postgres', 'redis'). Returns the workflow ID to track deployment progress.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "deploy_template"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "template_code": {
+                "description": "Template code to deploy (e.g. \"postgres\", \"redis\").",
+                "type": "string"
+              }
+            },
+            "required": [
+              "template_code"
+            ],
+            "title": "DeployTemplateParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "disconnect_service_source": {
+      "description": "Disconnect an existing Railway service from its current source.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "disconnect_service_source"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "ServiceParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "docs_fetch": {
+      "description": "Fetch the full markdown content of a Railway documentation page. Accepts a docs URL (e.g. https://docs.railway.com/guides/getting-started) or a slug (e.g. guides/getting-started). Use docs_search first to find the right page.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "docs_fetch"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "url": {
+                "description": "The documentation page URL (e.g. \"https://docs.railway.com/guides/getting-started\") or slug (e.g. \"guides/getting-started\").",
+                "type": "string"
+              }
+            },
+            "required": [
+              "url"
+            ],
+            "title": "DocsFetchParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "docs_search": {
+      "description": "Search Railway documentation by keyword. Returns a list of matching page URLs. Use docs_fetch to read the full content of a specific page.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "docs_search"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "query": {
+                "description": "Search query to find Railway documentation pages.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "title": "DocsSearchParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "domain_status": {
+      "description": "Show status for a service or custom domain by domain name, URL, or domain ID. Includes DNS records, verification status, certificate status/errors, sync status, and target port.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "domain_status"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "domain": {
+                "description": "Domain name, URL, or domain ID.",
+                "type": "string"
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "domain"
+            ],
+            "title": "DomainStatusParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "environment_status": {
+      "description": "Get the deployment status of all services in a Railway environment. Returns a table of service name, status, replica count, and latest deploy time.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "environment_status"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "EnvironmentStatusParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "generate_domain": {
+      "description": "Add a domain to a service. If 'domain' is provided, creates a custom domain and returns required DNS records. If omitted, generates a Railway service domain (or returns existing domains).",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "generate_domain"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "domain": {
+                "default": null,
+                "description": "Custom domain to add (e.g. \"api.example.com\"). If omitted, generates a Railway service domain.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "port": {
+                "default": null,
+                "description": "Target port for the domain.",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "GenerateDomainParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_logs": {
+      "description": "Get build, deploy, or HTTP logs for a service's deployment. Set log_type to 'build', 'deploy', or 'http'. Supports filtering by level/search for build/deploy logs, and method/status/path/request_id for HTTP logs. If no deployment_id is provided, uses the latest deployment.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_logs"
+          },
+          "arguments": {
+            "$defs": {
+              "LogType": {
+                "enum": [
+                  "build",
+                  "deploy",
+                  "http"
+                ],
+                "type": "string"
+              }
+            },
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "deployment_id": {
+                "default": null,
+                "description": "Specific deployment ID to get logs for. If omitted, uses the latest deployment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "level": {
+                "default": null,
+                "description": "Filter by log level: \"error\", \"warn\", or \"info\" (for build/deploy logs).",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "lines": {
+                "default": null,
+                "description": "Number of log lines to return (default: 100).",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "log_type": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/LogType"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Type of logs: \"build\", \"deploy\", or \"http\" (default: \"deploy\")."
+              },
+              "method": {
+                "default": null,
+                "description": "Filter HTTP logs by request method: GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS (requires log_type: \"http\").",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "path": {
+                "default": null,
+                "description": "Filter HTTP logs by request path, e.g. \"/api/users\" (requires log_type: \"http\").",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "request_id": {
+                "default": null,
+                "description": "Filter HTTP logs by request ID (requires log_type: \"http\").",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "search": {
+                "default": null,
+                "description": "Search string to filter logs (for build/deploy logs).",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "since": {
+                "default": null,
+                "description": "Start time filter. Supports relative (\"30m\", \"2h\", \"1d\") or ISO 8601 format.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "default": null,
+                "description": "Filter HTTP logs by status code. Accepts: exact (200), comparison (>=400), or range (500..599) (requires log_type: \"http\").",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "until": {
+                "default": null,
+                "description": "End time filter. Supports relative (\"30m\", \"2h\", \"1d\") or ISO 8601 format.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "GetLogsParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_service_config": {
+      "description": "Get the current configuration of a service instance including source, build config, start command, and variable count.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_service_config"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "GetServiceConfigParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_tcp_proxy": {
+      "description": "Get details for one public TCP proxy by ID, domain, endpoint, proxy port, or application port.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_tcp_proxy"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "proxy": {
+                "description": "TCP proxy ID, domain, endpoint, proxy port, or application port.",
+                "type": "string"
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "proxy"
+            ],
+            "title": "TcpProxySelectorParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "http_error_rate": {
+      "description": "Get the HTTP error rate (4xx + 5xx) as a percentage of total requests from recent HTTP logs.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "http_error_rate"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "deployment_id": {
+                "default": null,
+                "description": "Specific deployment ID. If omitted, uses the latest deployment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "lines": {
+                "default": null,
+                "description": "Number of log entries to sample (default: 200).",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "HttpObservabilityParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "http_requests": {
+      "description": "Get HTTP request counts grouped by status code bucket (2xx/3xx/4xx/5xx) from recent HTTP logs.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "http_requests"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "deployment_id": {
+                "default": null,
+                "description": "Specific deployment ID. If omitted, uses the latest deployment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "lines": {
+                "default": null,
+                "description": "Number of log entries to sample (default: 200).",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "HttpObservabilityParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "http_response_time": {
+      "description": "Get HTTP response time percentiles (p50/p90/p95/p99) in milliseconds from recent HTTP logs.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "http_response_time"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "deployment_id": {
+                "default": null,
+                "description": "Specific deployment ID. If omitted, uses the latest deployment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "lines": {
+                "default": null,
+                "description": "Number of log entries to sample (default: 200).",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "HttpObservabilityParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "link_environment": {
+      "description": "Switch the linked environment for the current project directory. If no environment_id or environment_name is provided, lists available environments. Preserves the existing service link.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "link_environment"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID to link. If omitted along with environment_name, lists available environments.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "environment_name": {
+                "default": null,
+                "description": "The environment name to link. Alternative to environment_id.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "LinkEnvironmentParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "link_service": {
+      "description": "Link a service to the current project directory for the CLI. If no service_id or service_name is provided, lists available services. Uses a fresh config to write the link.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "link_service"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID to link. If omitted along with service_name, lists available services.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_name": {
+                "default": null,
+                "description": "The service name to link. Alternative to service_id.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "LinkServiceParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "list_deployments": {
+      "description": "List recent deployments for a service. Returns deployment IDs, status, timestamps, and commit hashes. If no IDs are provided, uses the currently linked project/service/environment.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "list_deployments"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "limit": {
+                "default": null,
+                "description": "Maximum number of deployments to return (default: 20).",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "ListDeploymentsParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "list_domains": {
+      "description": "List service and custom domains for a service. Returns domain, type, ID, target port, and sync status.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "list_domains"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "ServiceParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "list_projects": {
+      "description": "List all projects in the user's Railway account, grouped by workspace. Returns project names and IDs.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "list_projects"
+          },
+          "arguments": {
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "list_services": {
+      "description": "List all services in a Railway project. If no project_id is provided, uses the currently linked project.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "list_services"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "project_id": {
+                "default": null,
+                "description": "The project ID to use. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "ProjectParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "list_tcp_proxies": {
+      "description": "List public TCP proxies for a Railway service. Returns endpoint, ID, proxy port, application port, and sync status.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "list_tcp_proxies"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "ServiceParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "list_variables": {
+      "description": "List all environment variables for a service. Returns KEY=VALUE pairs. If no IDs are provided, uses the currently linked project/service/environment.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "list_variables"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "ServiceParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "list_workspaces": {
+      "description": "List all Railway workspaces available to the current user. Returns workspace names, IDs, team IDs, and project counts. Use the workspace ID with create_project.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "list_workspaces"
+          },
+          "arguments": {
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "private_network_status": {
+      "description": "Get private networking status for a service. Returns full hostname, short name, network name/ID, sync status, address family, and private IPs. If network is omitted, returns all private networks in the environment.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "private_network_status"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "network": {
+                "default": null,
+                "description": "Private network name, ID, or DNS name. If omitted, status returns all networks.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "PrivateNetworkParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "private_network_update": {
+      "description": "Update the private networking endpoint name for a service. Name must be the short prefix without the .internal suffix. If network is omitted, uses the only private network or the network named railway.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "private_network_update"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "description": "Endpoint name prefix, without the .internal suffix.",
+                "type": "string"
+              },
+              "network": {
+                "default": null,
+                "description": "Private network name, ID, or DNS name. If omitted, uses the only network or the network named \"railway\".",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "title": "UpdatePrivateNetworkParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "remove_bucket": {
+      "description": "Remove an object storage bucket from a Railway environment. This is irreversible. Returns a preview first.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "remove_bucket"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "bucket_id": {
+                "description": "The bucket ID to remove.",
+                "type": "string"
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "bucket_id"
+            ],
+            "title": "RemoveBucketParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "remove_service": {
+      "description": "Remove a service from a Railway project. This is irreversible. Returns a preview first.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "remove_service"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "RemoveServiceParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "remove_tcp_proxy": {
+      "description": "Remove a public TCP proxy by ID, domain, endpoint, proxy port, or application port. This is irreversible and returns a preview first.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "remove_tcp_proxy"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "proxy": {
+                "description": "TCP proxy ID, domain, endpoint, proxy port, or application port.",
+                "type": "string"
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "proxy"
+            ],
+            "title": "RemoveTcpProxyParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "remove_volume": {
+      "description": "Remove a persistent volume by ID. This is irreversible. Returns a preview first.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "remove_volume"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "volume_id": {
+                "description": "The volume ID to remove.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "volume_id"
+            ],
+            "title": "RemoveVolumeParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "retry_domain_certificate": {
+      "description": "Retry failed TLS certificate issuance for a custom domain by domain name, URL, or domain ID. Custom domains only. Returns updated status after readback.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "retry_domain_certificate"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "domain": {
+                "description": "Domain name, URL, or domain ID.",
+                "type": "string"
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "domain"
+            ],
+            "title": "DomainStatusParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "scale_service": {
+      "description": "Scale one service across Railway deploy regions using friendly region names or region IDs. Provide replicas as a map, e.g. {\"eu-west\": 2, \"us-east\": 1}. Maximum 50 total replicas across regions.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "scale_service"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "replicas": {
+                "additionalProperties": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "description": "Map of friendly region names or region IDs to replica counts, e.g. {\"eu-west\": 2, \"us-east\": 1}. Maximum 50 total replicas across regions.",
+                "type": "object"
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "replicas"
+            ],
+            "title": "ScaleServiceParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "search_templates": {
+      "description": "Search for Railway templates using Railway's backend-ranked template search. Returns matching templates with their codes.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "search_templates"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "after": {
+                "default": null,
+                "description": "Cursor from pageInfo.endCursor for fetching the next page.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "category": {
+                "default": null,
+                "description": "Optional template category filter.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "limit": {
+                "default": null,
+                "description": "Maximum number of templates to return. Defaults to 5.",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "query": {
+                "description": "Search query to send to Railway template search.",
+                "type": "string"
+              },
+              "verified": {
+                "default": null,
+                "description": "Optional verification-state filter.",
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "title": "SearchTemplatesParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "service_metrics": {
+      "description": "Get CPU and memory (or other) metrics for a service. Returns recent data points and average values for the specified time window.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "service_metrics"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "hours_back": {
+                "default": null,
+                "description": "Number of hours back to query (default: 1).",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "measurements": {
+                "default": null,
+                "description": "Metrics to fetch: CPU_USAGE, MEMORY_USAGE_GB, DISK_USAGE_GB, NETWORK_RX_GB, NETWORK_TX_GB. Defaults to CPU_USAGE and MEMORY_USAGE_GB.",
+                "items": {
+                  "type": "string"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "sample_rate_seconds": {
+                "default": null,
+                "description": "Sample rate in seconds (default: 60).",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "title": "ServiceMetricsParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "set_variables": {
+      "description": "Set one or more environment variables on a service. Pass variables as a JSON object mapping names to values. Triggers a redeploy unless skip_deploys is true.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "set_variables"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "skip_deploys": {
+                "default": null,
+                "description": "If true, skip triggering redeploys after setting variables.",
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "variables": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Map of variable names to values to set.",
+                "type": "object"
+              }
+            },
+            "required": [
+              "variables"
+            ],
+            "title": "SetVariablesParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "update_domain": {
+      "description": "Update a custom or service domain by domain name, URL, or domain ID. Supports target port changes for both domain types and Railway service-domain renames via new_domain. Port must be from 1 to 65535. Returns updated status after readback.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "update_domain"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "domain": {
+                "description": "Domain name, URL, or domain ID.",
+                "type": "string"
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "new_domain": {
+                "default": null,
+                "description": "Rename a Railway-provided service domain. Accepts a full service domain or host label.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "port": {
+                "default": null,
+                "description": "Target port for the domain. Must be from 1 to 65535.",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "domain"
+            ],
+            "title": "UpdateDomainParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "update_service": {
+      "description": "Update service instance settings such as build command, start command, health check, sleep mode, root directory, cron schedule, Dockerfile path, restart policy, pre-deploy command, Railway config file, and watch patterns. Use scale_service for replicas and regions.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "update_service"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "build_command": {
+                "default": null,
+                "description": "Build command override.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cron_schedule": {
+                "default": null,
+                "description": "Cron schedule expression (e.g. \"0 */5 * * *\").",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "dockerfile_path": {
+                "default": null,
+                "description": "Path to the Dockerfile (e.g. \"Dockerfile.prod\").",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID or name. If omitted, uses the currently linked environment.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "health_check_path": {
+                "default": null,
+                "description": "Health check path (e.g. \"/health\").",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "healthcheck_timeout": {
+                "default": null,
+                "description": "Health check timeout in milliseconds.",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "num_replicas": {
+                "default": null,
+                "description": "Legacy single-region replica count. Prefer scale_service for replica changes.",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "pre_deploy_command": {
+                "default": null,
+                "description": "Commands to run before deploying (e.g. database migrations).",
+                "items": {
+                  "type": "string"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
+              "project_id": {
+                "default": null,
+                "description": "The project ID. If omitted, uses the currently linked project.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "railway_config_file": {
+                "default": null,
+                "description": "Path to the Railway config file.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "region": {
+                "default": null,
+                "description": "Legacy deploy region ID. Prefer scale_service for region replica changes.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "restart_policy_max_retries": {
+                "default": null,
+                "description": "Maximum number of restart retries (used with ON_FAILURE restart policy).",
+                "format": "int64",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "restart_policy_type": {
+                "default": null,
+                "description": "Restart policy type: \"ALWAYS\", \"ON_FAILURE\", or \"NEVER\".",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "root_directory": {
+                "default": null,
+                "description": "Root directory for the build.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID or name. If omitted, uses the currently linked service.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "sleep_application": {
+                "default": null,
+                "description": "Whether to sleep the service when inactive.",
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "start_command": {
+                "default": null,
+                "description": "Start command override.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "watch_patterns": {
+                "default": null,
+                "description": "File watch patterns that trigger deploys.",
+                "items": {
+                  "type": "string"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            },
+            "title": "UpdateServiceParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "update_volume": {
+      "description": "Update a volume's name or mount path. Provide environment_id and service_id when updating mount_path.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "update_volume"
+          },
+          "arguments": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "environment_id": {
+                "default": null,
+                "description": "The environment ID (required when updating mount_path).",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "mount_path": {
+                "default": null,
+                "description": "New mount path.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "default": null,
+                "description": "New name for the volume.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "service_id": {
+                "default": null,
+                "description": "The service ID (used when updating mount_path).",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "volume_id": {
+                "description": "The volume ID to update.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "volume_id"
+            ],
+            "title": "UpdateVolumeParams",
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "whoami": {
+      "description": "Check Railway authentication status and return the current user",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "whoami"
+          },
+          "arguments": {
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

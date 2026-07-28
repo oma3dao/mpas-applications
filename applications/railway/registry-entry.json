@@ -1,0 +1,29 @@
+{
+  "version": "1",
+  "application": {
+    "name": "Railway MCP MPAS Bridge Server",
+    "description": "MPAS-protected bridge for the official Railway CLI MCP Server.",
+    "applicationDid": "did:web:wivity.com:applications:railway-mcp-server"
+  },
+  "native": false,
+  "protocol": "mcp",
+  "upstream": {
+    "name": "railway",
+    "protocolVersion": "2024-11-05",
+    "toolSurface": {
+      "alg": "sha-256",
+      "value": "2grqAIw94nut062Bz16X73--5vldaWmuIOTevojoDQc"
+    }
+  },
+  "plugin": {
+    "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/railway/plugin.json",
+    "pluginDid": "did:web:wivity.com:plugins:railway-mcp-server",
+    "artifactDid": "did:artifact:bafkreiaskxicavzjeg277nnv2zfo6f4a4gsddz3hbk4u7ku5s3qo4crf7e"
+  },
+  "publisher": {
+    "name": "Wivity",
+    "githubOrg": "wivity",
+    "publisherDid": "did:web:wivity.com"
+  },
+  "status": "beta"
+}
