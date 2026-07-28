@@ -1,0 +1,19 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "node",
+    "args": [
+      "/Users/mpas1/Projects/mcp-targets/firebase/node_modules/firebase-tools/lib/bin/firebase.js",
+      "mcp"
+    ],
+    "env": {
+      "FIREBASE_TOKEN": "{{credential:firebaseToken}}"
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}
