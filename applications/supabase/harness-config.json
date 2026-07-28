@@ -1,0 +1,18 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "node",
+    "args": [
+      "/Users/mpas1/Projects/mcp-targets/supabase/node_modules/@supabase/mcp-server-supabase/dist/transports/stdio.js"
+    ],
+    "env": {
+      "SUPABASE_ACCESS_TOKEN": "{{credential:supabasePersonalAccessToken}}"
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}

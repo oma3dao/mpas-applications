@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "supabase",
+    "version": "0.9.0"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "node",
+    "/Users/mpas1/Projects/mcp-targets/supabase/node_modules/@supabase/mcp-server-supabase/dist/transports/stdio.js"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-28T18:58:24.700Z"
+}
