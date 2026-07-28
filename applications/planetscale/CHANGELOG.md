@@ -12,3 +12,5 @@ Record manual review decisions and regenerations here.
   medium impact.
 - Added adapter-side PlanetScale OAuth token substitution; no credential value
   is included in the package.
+- Finalized the reviewed classification artifact so it matches the operative
+  plugin policy, including high impact for `execute_write_query`.
