@@ -1,0 +1,139 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "box_agent_run": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "box_exec": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "box_logs": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "box_manage": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "box_preview": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "box_runs": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "box_snapshots": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "qstash_dlq_get": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "qstash_dlq_list": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "qstash_get_user_token": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "qstash_logs_get": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "qstash_logs_list": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "qstash_publish_message": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "qstash_schedules_list": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "qstash_schedules_manage": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "redis_database_create_new": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "redis_database_delete": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "redis_database_get_details": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "redis_database_get_statistics": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "redis_database_list_backups": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "redis_database_list_databases": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "redis_database_manage_backup": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "redis_database_reset_password": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "redis_database_run_redis_commands": {
+      "impact": "critical",
+      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+    },
+    "redis_database_set_daily_backup": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "redis_database_update_regions": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "util_dates_to_timestamps": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "util_timestamps_to_date": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "workflow_dlq_get": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "workflow_dlq_list": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "workflow_dlq_manage": {
+      "impact": "high",
+      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+    },
+    "workflow_logs_get": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    },
+    "workflow_logs_list": {
+      "impact": "medium",
+      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+    }
+  }
+}

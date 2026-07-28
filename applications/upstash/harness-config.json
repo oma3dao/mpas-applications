@@ -1,0 +1,23 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "node",
+    "args": [
+      "/Users/mpas1/Projects/mcp-targets/upstash/node_modules/@upstash/mcp-server/dist/index.js",
+      "--email",
+      "{{credential:upstashEmail}}",
+      "--api-key",
+      "{{credential:upstashApiKey}}"
+    ],
+    "env": {
+      "UPSTASH_EMAIL": "{{credential:upstashEmail}}",
+      "UPSTASH_API_KEY": "{{credential:upstashApiKey}}"
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}
