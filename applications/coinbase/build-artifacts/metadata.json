@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "payments-mcp",
+    "version": "1.0.0"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "node",
+    "/Users/mpas1/.payments-mcp/bundle.js"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-28T00:12:49.352Z"
+}

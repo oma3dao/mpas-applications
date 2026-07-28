@@ -1,0 +1,59 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "bazaar_get_resource_details": {
+      "impact": "low",
+      "rationale": "Reviewed as pass-through: read-only marketplace metadata lookup; no payment or wallet mutation."
+    },
+    "bazaar_list": {
+      "impact": "low",
+      "rationale": "Reviewed as pass-through: read-only marketplace listing; no payment or wallet mutation."
+    },
+    "bazaar_search": {
+      "impact": "low",
+      "rationale": "Reviewed as pass-through: read-only marketplace search; no payment or wallet mutation."
+    },
+    "check_session_status": {
+      "impact": "low",
+      "rationale": "Reviewed as pass-through: reads authentication state without changing the session."
+    },
+    "get_wallet_address": {
+      "impact": "low",
+      "rationale": "Reviewed as pass-through: reads public wallet addresses without moving funds."
+    },
+    "get_wallet_balance": {
+      "impact": "low",
+      "rationale": "Reviewed as pass-through: reads wallet balances without moving funds."
+    },
+    "make_http_request_with_x402": {
+      "impact": "critical",
+      "rationale": "Governed: can automatically make an irreversible USDC payment to an external service."
+    },
+    "send": {
+      "impact": "critical",
+      "rationale": "Governed: executes an irreversible on-chain token transfer to a recipient."
+    },
+    "show_wallet_app": {
+      "impact": "low",
+      "rationale": "Reviewed as pass-through: displays the local wallet interface without changing wallet state."
+    },
+    "sign_in_with_email": {
+      "impact": "medium",
+      "rationale": "Governed: initiates an authentication flow and sends a verification code to an external email address."
+    },
+    "trade": {
+      "impact": "critical",
+      "rationale": "Governed: executes an on-chain token swap with financial and slippage risk."
+    },
+    "verify_email_otp": {
+      "impact": "high",
+      "rationale": "Governed: completes authentication and establishes access to wallet capabilities."
+    },
+    "x402_discover_payment_requirements": {
+      "impact": "low",
+      "rationale": "Reviewed as pass-through: discovers price and payment requirements without making a payment."
+    }
+  }
+}
