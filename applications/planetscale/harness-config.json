@@ -1,0 +1,19 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "npx",
+    "args": [
+      "tsx",
+      "./src/server.ts"
+    ],
+    "env": {
+      "PLANETSCALE_OAUTH2_ACCESS_TOKEN": "{{credential:planetScaleOAuthAccessToken}}"
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}

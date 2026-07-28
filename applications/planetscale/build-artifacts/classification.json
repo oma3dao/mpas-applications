@@ -1,0 +1,27 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": true,
+  "operations": {
+    "execute_read_query": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "execute_write_query": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_insights": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_cluster_sizes": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "search_documentation": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    }
+  }
+}
