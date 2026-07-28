@@ -1,0 +1,27 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "execute_read_query": {
+      "impact": "medium",
+      "rationale": "Reviewed: read-only SQL can expose production data and is governed at medium impact."
+    },
+    "execute_write_query": {
+      "impact": "high",
+      "rationale": "Reviewed: executes INSERT, UPDATE, DELETE, and DDL against the selected database; destructive queries require exact-argument approval."
+    },
+    "get_insights": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads query-performance telemetry without mutating the database."
+    },
+    "list_cluster_sizes": {
+      "impact": "medium",
+      "rationale": "Reviewed: lists available cluster SKUs without changing infrastructure."
+    },
+    "search_documentation": {
+      "impact": "medium",
+      "rationale": "Reviewed: searches PlanetScale documentation without changing provider resources."
+    }
+  }
+}

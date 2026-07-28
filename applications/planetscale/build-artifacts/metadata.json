@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "mcp-server",
+    "version": "0.0.0"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "npx",
+    "tsx",
+    "./src/server.ts"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-28T19:23:21.147Z"
+}
