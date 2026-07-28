@@ -1,0 +1,457 @@
+{
+  "version": "1",
+  "type": "McpToolsListSnapshot",
+  "toolSurface": {
+    "alg": "sha-256",
+    "value": "kyqEzyMm8y3WcEYf2ZOyc1IUAunsnPM0ERmIDiF4F-8"
+  },
+  "tools": [
+    {
+      "name": "bazaar_get_resource_details",
+      "title": "Get bazaar resource details",
+      "description": "Get full details for a specific bazaar service: endpoint URL, description, payment cost, network, scheme, and request/response schemas (when available). Call this before make_x402_request to know what to send and what it will cost. Returns the full resource object: endpoint URL, description, payment requirements (cost, network, scheme), and request/response schemas where available.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "string",
+            "format": "uri",
+            "description": "The resource URL to get full details for"
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "bazaar_list",
+      "title": "List bazaar resources",
+      "description": "Browse all available paid API services in the bazaar marketplace. Returns summary info per resource (URL, description, price, network, scheme). Pass full=true to get complete details for all resources including schemas, but note this response may be very large and could exceed token limits. For single resource details, bazaar_get_resource_details() is more focused. Defaults to \"base\" mainnet; specify network parameter for other networks (base-sepolia, polygon).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "enum": [
+              "base",
+              "base-sepolia",
+              "polygon",
+              "solana",
+              "solana-devnet"
+            ],
+            "description": "Filter by blockchain network. Defaults to \"base\" (mainnet)."
+          },
+          "full": {
+            "type": "boolean",
+            "description": "If true, returns complete details for all resources including schemas, payment requirements, and metadata. If false or omitted, returns summary information only (resource name, description, price, network, quality score)."
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "bazaar_search",
+      "title": "Search bazaar resources",
+      "description": "Search the bazaar marketplace by keyword or description. Returns the best-matching paid API services. Use this to discover services before calling bazaar_get_resource_details or make_x402_request. Uses vector search to surface the most semantically relevant resources. By default only searches mainnet resources (Base, Polygon, Solana); set includeTestnets=true to also include testnet resources. Use the network parameter to filter by a specific chain. Use this instead of bazaar_list when looking for a specific type of service. Supports additional filters: scheme (exact, upto, batch-settlement, auth-capture), maxUsdPrice (max USD cost, e.g. 0.01), asset (asset address), payTo (recipient address), extensions (e.g. outputSchema).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Search query to find matching bazaar resources"
+          },
+          "limit": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 20,
+            "description": "Maximum number of results to return (1–20). Defaults to 20."
+          },
+          "network": {
+            "type": "string",
+            "enum": [
+              "base",
+              "base-sepolia",
+              "polygon",
+              "solana",
+              "solana-devnet"
+            ],
+            "description": "Filter results to a specific blockchain network."
+          },
+          "includeTestnets": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, includes testnet resources (Base Sepolia, Solana Devnet) in results. Defaults to false (mainnet only)."
+          },
+          "scheme": {
+            "type": "string",
+            "enum": [
+              "exact",
+              "upto",
+              "batch-settlement",
+              "auth-capture"
+            ],
+            "description": "Filter by payment scheme: \"exact\", \"upto\", \"batch-settlement\", or \"auth-capture\"."
+          },
+          "maxUsdPrice": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Maximum price in USD (e.g. 0.01 filters to resources costing ≤ $0.01)."
+          },
+          "asset": {
+            "type": "string",
+            "description": "Filter by payment asset address."
+          },
+          "payTo": {
+            "type": "string",
+            "description": "Filter by recipient wallet address (case-insensitive for EVM)."
+          },
+          "extensions": {
+            "type": "string",
+            "description": "Filter by extension type (e.g. \"bazaar\", \"outputSchema\")."
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "check_session_status",
+      "title": "Check session authentication status",
+      "description": "Check whether the user is signed in. Returns current auth state and what to do next if sign-in is required. Call this first if any wallet operation fails with an authentication error. Use this at the start of conversations to understand authentication state and get guidance on how to help users. IMPORTANT: If the user is not signed in, you MUST immediately call show_wallet_app to help them sign in.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "get_wallet_address",
+      "title": "Get wallet address",
+      "description": "Get the user's wallet address. Optionally specify a chain (e.g., 'base', 'solana') to get the address for that specific network. Returns both EVM (Base) and Solana addresses by default. Specify chain parameter to get a single network address only.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "chain": {
+            "type": "string",
+            "enum": [
+              "base",
+              "base-sepolia",
+              "polygon",
+              "solana",
+              "solana-devnet"
+            ],
+            "description": "Blockchain network: base, base-sepolia, polygon, solana, solana-devnet. If omitted, returns both EVM and Solana addresses."
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_wallet_balance",
+      "title": "Get wallet balance",
+      "description": "Get the user's token balances. Filter by assets (e.g., ['USDC', 'ETH']) or by chain. Returns balances across all supported chains by default. By default returns balances across all mainnet chains (Base: USDC, ETH; Polygon: USDC, POL; Solana: USDC, SOL). Specify the chain parameter to query a single network (base, base-sepolia, polygon, solana, solana-devnet). Amounts are returned in both atomic units (raw field) and formatted display format.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "assets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Assets to query. Base: usdc, eth. Polygon: usdc, pol. Solana: usdc, sol. Also accepts 0x addresses on EVM chains. Omit for chain-appropriate defaults."
+          },
+          "chain": {
+            "type": "string",
+            "enum": [
+              "base",
+              "base-sepolia",
+              "polygon",
+              "solana",
+              "solana-devnet",
+              "all"
+            ],
+            "default": "all",
+            "description": "Blockchain network: base, base-sepolia, polygon, solana, solana-devnet, or \"all\" for every mainnet chain. Defaults to \"all\"."
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "make_http_request_with_x402",
+      "title": "Make HTTP request with x402 payment",
+      "description": "Call a paid API endpoint with automatic USDC payment. For bazaar services, call bazaar_get_resource_details first to get the schema and costs. For non-bazaar endpoints, call discover_x402_payment_requirements first. If the endpoint requires parameters, ask the user to provide them — pass them in body (POST/PUT/PATCH) or queryParams (GET). Payment amounts are in USDC atomic units (6 decimals). 1,000,000 atomic units = $1.00 USDC. Use preferredNetwork to force payment settlement on a specific chain (e.g., \"solana\" to pay via Solana instead of EVM). Use preferredScheme to choose exact, upto, batch-settlement, or auth-capture when the endpoint advertises multiple schemes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "baseURL": {
+            "type": "string",
+            "format": "uri"
+          },
+          "path": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "PATCH"
+            ]
+          },
+          "queryParams": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "body": {},
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Optional custom HTTP headers to include in the request"
+          },
+          "correlationId": {
+            "type": "string",
+            "description": "Optional correlation ID to group related x402 operations together"
+          },
+          "maxAmountPerRequest": {
+            "type": "number",
+            "description": "Optional max amount per request in USDC atomic units (1000000 = $1.00)"
+          },
+          "paymentRequirements": {
+            "type": "array",
+            "description": "Optional payment requirements from discovery endpoint - when provided, skips initial 402 discovery"
+          },
+          "preferredNetwork": {
+            "type": "string",
+            "enum": [
+              "base",
+              "base-sepolia",
+              "solana",
+              "solana-devnet"
+            ],
+            "description": "Force payment settlement on a specific network. When an endpoint supports multiple networks (e.g., both EVM and Solana), this selects the matching payment requirement. Without this, the first available requirement is used."
+          },
+          "preferredScheme": {
+            "type": "string",
+            "enum": [
+              "exact",
+              "upto",
+              "batch-settlement",
+              "auth-capture"
+            ],
+            "description": "Force a payment scheme when the endpoint advertises multiple options. Supported values: \"exact\", \"upto\", \"batch-settlement\", \"auth-capture\"."
+          },
+          "extensions": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "Pre-fetched PaymentRequired extensions (e.g., bazaar resource details). Takes precedence over extensions returned by live discovery; discovery still runs unless paymentRequirements is also provided."
+          }
+        },
+        "required": [
+          "baseURL",
+          "path",
+          "method"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "send",
+      "title": "Send transaction",
+      "description": "Send USDC, ETH, or SOL to a recipient. Accepts Ethereum addresses (0x...), ENS names (e.g. vitalik.eth), or Solana addresses. Amount must be in atomic units: USDC $1 = 1,000,000 | ETH 1 = 10^18 | SOL 1 = 10^9. Subject to the user's configured spending limits. Supports ENS names (e.g., vitalik.eth) and hex addresses (0x...). Transactions are subject to spending limits set in the wallet app. Supported chains: base (default), base-sepolia, polygon, solana, solana-devnet. IMPORTANT: This executes a real financial transaction. Only call this tool when the user has explicitly requested to send tokens, with a clear recipient and amount. Always confirm the recipient address, asset, and amount with the user before calling.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "recipient": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Recipient address (0x... for EVM, Base58 for Solana) or ENS domain"
+          },
+          "amountAtomic": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Amount in the asset's atomic units. USDC: 6 decimals (1000000 = $1.00). ETH: 18 decimals (wei). SOL: 9 decimals (lamports)"
+          },
+          "asset": {
+            "type": "string",
+            "default": "USDC",
+            "description": "Asset to send: USDC (default), ETH, SOL"
+          },
+          "chain": {
+            "type": "string",
+            "enum": [
+              "base",
+              "base-sepolia",
+              "polygon",
+              "solana",
+              "solana-devnet"
+            ],
+            "default": "base",
+            "description": "Blockchain network: base, base-sepolia, polygon, solana, solana-devnet (default: base)."
+          }
+        },
+        "required": [
+          "recipient",
+          "amountAtomic"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "show_wallet_app",
+      "title": "Show wallet app",
+      "description": "Shows the user the wallet interface. Call this immediately whenever the user is not signed in or when authentication errors occur. This allows the user to sign in to their Coinbase account to enable payment and wallet operations.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "sign_in_with_email",
+      "title": "Sign in with email",
+      "description": "Start email sign-in by sending a 6-digit verification code to the provided email address. Returns a flowId needed to complete sign-in via verify_email_otp. After calling this, ask the user for the 6-digit code from their email, then call verify_email_otp.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "trade",
+      "title": "Execute token swap",
+      "description": "Swap between tokens on EVM chains. Supports USDC↔ETH on Base and USDC↔POL on Polygon. Solana swaps are not supported. Amount is in atomic units based on the token decimals. Supported token aliases on Base: usdc, eth. On Polygon: usdc, pol. You can also use contract addresses (0x...). Amount can be human-readable (e.g., \"$1.00\", \"0.50\") or in atomic units. Supported chains: base (default), base-sepolia, polygon. IMPORTANT: This executes a real token swap on-chain. Only call this tool when the user has explicitly requested a trade or swap, with clear token pair and amount. Always confirm the trade details with the user before calling.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "fromToken": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Source token: alias (usdc, eth on Base; usdc, pol on Polygon) or contract address (0x...)"
+          },
+          "toToken": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Destination token: alias (usdc, eth on Base; usdc, pol on Polygon) or contract address (0x...)"
+          },
+          "fromAmount": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Amount to swap in human-readable format (e.g., \"$1.00\", \"0.50\") or atomic units"
+          },
+          "chain": {
+            "type": "string",
+            "default": "base",
+            "description": "Blockchain network: base, base-sepolia, polygon (default: base)."
+          },
+          "slippageBps": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 500,
+            "default": 100,
+            "description": "Slippage tolerance in basis points (100 = 1%, max: 500 = 5%, default: 100)"
+          }
+        },
+        "required": [
+          "fromToken",
+          "toToken",
+          "fromAmount"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "verify_email_otp",
+      "title": "Verify email OTP",
+      "description": "Complete email sign-in by submitting the 6-digit code the user received. Requires the flowId returned by sign_in_with_email. Use the flowId from sign_in_with_email and the 6-digit code the user received.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "flowId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "otp": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 6,
+            "pattern": "^\\d{6}$"
+          }
+        },
+        "required": [
+          "flowId",
+          "otp"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "x402_discover_payment_requirements",
+      "title": "Discover x402 payment requirements",
+      "description": "Check what a non-bazaar x402 endpoint costs and accepts, without making a payment. Use this for arbitrary x402 URLs before calling make_x402_request. For bazaar services, prefer bazaar_get_resource_details which also includes schemas and metadata. Payment requirements return maxAmountRequired in USDC atomic units (6 decimals). 1000000 atomic units = $1.00 USDC.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "baseURL": {
+            "type": "string",
+            "format": "uri"
+          },
+          "path": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "PATCH"
+            ]
+          },
+          "queryParams": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "body": {}
+        },
+        "required": [
+          "baseURL",
+          "path",
+          "method"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    }
+  ]
+}
