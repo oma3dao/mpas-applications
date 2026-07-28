@@ -1,8 +1,17 @@
 # mpas-applications
 
-MPAS application plugins, bridges, and the builder tool that generates them.
+> [!WARNING]
+> **Experimental alpha.** These MPAS integrations are not production-ready or
+> independently audited. Breaking changes are expected. GitHub is the only
+> application currently implemented; other integrations are planned.
 
-This repository contains both the toolchain for generating MPAS-compatible bridges from existing MCP servers and the generated application artifacts themselves.
+MPAS application plugins, bridges, and supporting artifacts contributed by
+their publishers.
+
+The protocol specifications, SDK, reference Credential Adapter, and
+development-time bridge generator live in
+[`oma3dao/mpas`](https://github.com/oma3dao/mpas). This repository contains
+the generated and reviewed application-specific artifacts.
 
 ## Structure
 
@@ -12,39 +21,19 @@ mpas-applications/
   ROADMAP.md
   LICENSE
 
-  tool/                          # The bridge builder toolchain
-    package.json
-    src/
-      discovery/
-      classification/
-      plugin-generator/
-      registry-entry-generator/
-      bridge-generator/
-      test-harness/
-    templates/
-      bridge-typescript/
-      plugin/
-      test-suite/
-
-  docs/                          # Project history and feature plans
-    features/
-      v1-bridge-builder/
-        plan.md                  # v1 product plan and architecture
-
-  applications/                  # Generated and contributed applications
+  applications/                  # Contributed application artifacts
     github/
       plugin.json
-      descriptor.md
-      discovery/
+      registry-entry.json
+      harness-config.json
+      build-artifacts/
         tools-list.snapshot.json
         metadata.json
+        classification.json
       bridge/
         package.json
         src/
-        tests/
-      classification.json
-    slack/
-      ...
+        tsconfig.json
 ```
 
 ## Roadmap
@@ -53,15 +42,18 @@ See [ROADMAP.md](ROADMAP.md) for the full list of planned, in-progress, and comp
 
 ## How Applications Are Created
 
-The `tool/` directory contains the bridge builder, which:
+The development-time
+[MPAS bridge generator](https://github.com/oma3dao/mpas/tree/main/bridge-generator):
 
 1. Connects to an upstream MCP server and discovers its tools.
-2. Classifies tools by risk level (read, low-write, high-impact, admin).
-3. Generates an MPAS Application Plugin and bridge server.
-4. Generates compatibility and approval tests.
-5. Writes the output to `applications/<name>/` for human review.
+2. Captures the discovered tool surface for review.
+3. Generates an MPAS Application Plugin, registry entry, harness
+   configuration, and bridge server.
+4. Writes static artifacts that can be reviewed and contributed under
+   `applications/<name>/`.
 
-You can also build an application manually following the same folder structure.
+Application publishers review and maintain their contributed artifacts. An
+application can also be built manually if it conforms to the MPAS profiles.
 
 ## How the Bridge Works
 
@@ -108,7 +100,7 @@ import { readFileSync } from "fs";
 const plugin = readFileSync("applications/github/plugin.json", "utf-8");
 const did = await artifactDidFromJson(plugin);
 console.log(did);
-// did:artifact:bafkreigl7euurvkc2neqcqfaqs7niw27rmp4z3blgbcbm4rojuzlabh2je
+// did:artifact:bafkreihxqwuv2u7qkznavq3ca6747u23ofpxvj7x7zs6repf3z6vykk3zq
 ```
 
 **Algorithm (manual implementation):**
@@ -130,8 +122,8 @@ When writing a deployment config for the Credential Adapter, include the `artifa
 ```json
 {
   "plugin": {
-    "pluginDid": "did:web:wivity.com:plugins:github",
-    "artifactDid": "did:artifact:bafkreigl7euurvkc2neqcqfaqs7niw27rmp4z3blgbcbm4rojuzlabh2je"
+    "pluginDid": "did:web:wivity.com:plugins:github-mcp-server",
+    "artifactDid": "did:artifact:bafkreihxqwuv2u7qkznavq3ca6747u23ofpxvj7x7zs6repf3z6vykk3zq"
   }
 }
 ```
@@ -140,18 +132,25 @@ When writing a deployment config for the Credential Adapter, include the `artifa
 
 Applications conform to the MPAS protocol:
 
-- [mpas-specification.md](https://github.com/oma3dao/mpas-docs/blob/main/specification/mpas-specification.md) — Core protocol
-- [mpas-profile-application-plugin.md](https://github.com/oma3dao/mpas-docs/blob/main/specification/mpas-profile-application-plugin.md) — Application Plugin Profile
-- [mpas-profile-mcp.md](https://github.com/oma3dao/mpas-docs/blob/main/specification/mpas-profile-mcp.md) — MCP Profile
+- [MPAS Core Specification](https://github.com/oma3dao/mpas/blob/main/specs/mpas-specification.md)
+- [Application Plugin Profile](https://github.com/oma3dao/mpas/blob/main/specs/mpas-profile-application-plugin.md)
+- [MCP Execution Profile](https://github.com/oma3dao/mpas/blob/main/specs/mpas-profile-mcp.md)
+- [MCP Proposer Bridge Client Interface Profile](https://github.com/oma3dao/mpas/blob/main/specs/mpas-profile-mcp-proposer-bridge-client.md)
 
 ## Related Repositories
 
 | Repository | Description |
 | --- | --- |
-| [oma3dao/mpas-docs](https://github.com/oma3dao/mpas-docs) | MPAS specification documents |
-| [oma3dao/mpas-sdk](https://github.com/oma3dao/mpas-sdk) | SDK packages including the MCP Bridge |
-| [wivity/mpas-tools](https://github.com/wivity/mpas-tools) | Other MPAS tooling |
+| [oma3dao/mpas](https://github.com/oma3dao/mpas) | MPAS specifications, SDK, bridge generator, reference implementation, and conformance model |
 
-## License
+## License and participation
 
-Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
+Software and other contributions to this repository are licensed under the
+[Apache License 2.0](LICENSE).
+
+By submitting material for inclusion in this repository, contributors agree
+that it may be distributed under the Apache License 2.0.
+
+Final OMA3 Specifications are separately governed by
+[OMA3's Intellectual Property Rights Policy](https://www.oma3.org/intellectual-property-rights-policy)
+and applicable OMA3 review and approval processes.
