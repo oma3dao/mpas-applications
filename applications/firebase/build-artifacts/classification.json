@@ -1,0 +1,83 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "developerknowledge_answer_query": {
+      "impact": "medium",
+      "rationale": "Reviewed: generates a grounded answer from Google developer documentation without changing Firebase resources."
+    },
+    "developerknowledge_get_documents": {
+      "impact": "medium",
+      "rationale": "Reviewed: retrieves developer documentation without changing Firebase resources."
+    },
+    "developerknowledge_search_documents": {
+      "impact": "medium",
+      "rationale": "Reviewed: searches developer documentation without changing Firebase resources."
+    },
+    "firebase_create_android_sha": {
+      "impact": "high",
+      "rationale": "Reviewed: changes the trusted certificate configuration of the selected Android app."
+    },
+    "firebase_create_app": {
+      "impact": "high",
+      "rationale": "Reviewed: creates an app registration in the selected Firebase project."
+    },
+    "firebase_create_project": {
+      "impact": "high",
+      "rationale": "Reviewed: creates a new Firebase project and associated provider resources."
+    },
+    "firebase_deploy": {
+      "impact": "high",
+      "rationale": "Reviewed: deploys project resources, code, configuration, and security rules from firebase.json."
+    },
+    "firebase_deploy_status": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads the status of an existing deployment job without changing it."
+    },
+    "firebase_get_environment": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads the current CLI/MCP environment and active target."
+    },
+    "firebase_get_project": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads metadata for the active Firebase project."
+    },
+    "firebase_get_sdk_config": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads SDK configuration for a registered Firebase app."
+    },
+    "firebase_get_security_rules": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads deployed security rules without modifying them."
+    },
+    "firebase_init": {
+      "impact": "high",
+      "rationale": "Reviewed: initializes services and may overwrite workspace configuration that is later deployed."
+    },
+    "firebase_list_apps": {
+      "impact": "medium",
+      "rationale": "Reviewed: lists app registrations in the active project."
+    },
+    "firebase_list_projects": {
+      "impact": "medium",
+      "rationale": "Reviewed: lists projects accessible to the authenticated principal."
+    },
+    "firebase_login": {
+      "impact": "high",
+      "rationale": "Reviewed: changes the authenticated Firebase CLI principal."
+    },
+    "firebase_logout": {
+      "impact": "high",
+      "rationale": "Reviewed: clears the authenticated Firebase CLI principal."
+    },
+    "firebase_read_resources": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads or lists firebase:// resources without mutation."
+    },
+    "firebase_update_environment": {
+      "impact": "high",
+      "rationale": "Reviewed: changes the active project, account, project directory, or terms acceptance used by later operations."
+    }
+  }
+}

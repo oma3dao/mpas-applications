@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "firebase",
+    "version": "0.3.0"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "node",
+    "/Users/mpas1/Projects/mcp-targets/firebase/node_modules/firebase-tools/lib/bin/firebase.js",
+    "mcp"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-28T23:37:31.277Z"
+}
