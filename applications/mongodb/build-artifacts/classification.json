@@ -1,0 +1,123 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "aggregate": {
+      "impact": "high",
+      "rationale": "Governed: arbitrary collection aggregation can return unrestricted production document data."
+    },
+    "aggregate-db": {
+      "impact": "high",
+      "rationale": "Governed: arbitrary database aggregation can access multiple collections and expose production data."
+    },
+    "atlas-local-connect-deployment": {
+      "impact": "high",
+      "rationale": "name-heuristic"
+    },
+    "atlas-local-create-deployment": {
+      "impact": "high",
+      "rationale": "name-heuristic"
+    },
+    "atlas-local-delete-deployment": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "atlas-local-list-deployments": {
+      "impact": "high",
+      "rationale": "name-heuristic"
+    },
+    "collection-indexes": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "collection-schema": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "collection-storage-size": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "connect": {
+      "impact": "critical",
+      "rationale": "Governed: changes the active deployment and credential-bound target; connection strings must remain inside the credential adapter."
+    },
+    "count": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "create-collection": {
+      "impact": "high",
+      "rationale": "Governed: creates persistent database schema/storage state."
+    },
+    "create-index": {
+      "impact": "high",
+      "rationale": "Governed: changes collection indexes and can materially affect availability and performance."
+    },
+    "db-stats": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "delete-many": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "drop-collection": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "drop-database": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "drop-index": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "explain": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "export": {
+      "impact": "high",
+      "rationale": "Governed: exports arbitrary query or aggregation results and can exfiltrate production data."
+    },
+    "find": {
+      "impact": "high",
+      "rationale": "Governed: arbitrary filters and projections can return unrestricted production document data."
+    },
+    "insert-many": {
+      "impact": "high",
+      "rationale": "Governed: performs bulk document insertion and can create substantial persistent state."
+    },
+    "list-collections": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list-databases": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list-knowledge-sources": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "mongodb-logs": {
+      "impact": "high",
+      "rationale": "Governed: server logs can contain sensitive data, identifiers, topology, and operational details."
+    },
+    "rename-collection": {
+      "impact": "high",
+      "rationale": "Governed: renames a collection and changes application-visible database structure."
+    },
+    "search-knowledge": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "update-many": {
+      "impact": "high",
+      "rationale": "Governed: performs bulk document updates against an arbitrary filter."
+    }
+  }
+}
