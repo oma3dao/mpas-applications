@@ -2,6 +2,33 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-07-29 — Narrowed the governed surface to mutations
+
+- Reduced `plugin.json` from 33 operations to 17. The dropped tools are log,
+  listing, and statistics reads across Redis, QStash, Workflow, and Box
+  (`box_logs`, `qstash_dlq_*`, `qstash_logs_*`, `qstash_schedules_list`,
+  `redis_database_get_details`, `redis_database_get_statistics`,
+  `redis_database_list_backups`, `redis_database_list_databases`,
+  `workflow_dlq_get`, `workflow_dlq_list`, `workflow_logs_*`), plus
+  `util_dates_to_timestamps` and `util_timestamps_to_date`, which are pure
+  local date conversions that touch no account at all.
+- Kept `qstash_get_user_token` at critical even though `bridge/src/index.ts`
+  already refuses it. That block protects only this proposer implementation;
+  `plugin.json` is consumed by the Credential Adapter, and removing the
+  operation would route it as pass-through for any other proposer and return
+  a live `QSTASH_TOKEN`.
+- Kept `box_preview` at high because it mints public URLs for services running
+  inside a box, with `basic_auth` / `bearer_token` as opt-in flags. This is
+  the publish-to-the-internet case governance exists for; it is high rather
+  than critical because a preview can be deleted.
+- Kept `box_runs` at low. Its `list` and `get` actions are reads; only
+  `cancel` mutates, and a cancelled run can simply be started again, so the
+  action is recoverable and does not warrant routine approval.
+- Kept `redis_database_set_daily_backup` at high — disabling backups is a
+  quiet, deferred loss of recoverability rather than a visible failure.
+- Recomputed `plugin.artifactDid` in `registry-entry.json`, which was also
+  stale against the previous `plugin.json`.
+
 ## 0.1.0
 
 - Captured and governed all 33 tools from `@upstash/mcp-server` 0.2.4.

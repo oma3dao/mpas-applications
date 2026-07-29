@@ -67,7 +67,7 @@
     },
     "add_labels": {
       "description": "Add labels to a thread. Takes label TYPE ids (lt_…) from list_label_types. Labels already on the thread (see get_thread) don't need re-adding.",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -106,7 +106,7 @@
     },
     "add_labels_to_thread": {
       "description": "Add labels to a thread",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -144,7 +144,7 @@
     },
     "assign_thread": {
       "description": "Assign a thread to a user",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -179,7 +179,7 @@
     },
     "change_thread_priority": {
       "description": "Change the priority of a thread",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -216,7 +216,7 @@
     },
     "change_thread_status_to_todo": {
       "description": "Change thread status to Todo with optional status detail. Use this instead of mark_thread_todo when you need to set a specific status detail.",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -301,7 +301,7 @@
     },
     "create_customer_event": {
       "description": "Create a custom event on a customer timeline",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -532,7 +532,7 @@
     },
     "create_label_type": {
       "description": "Create a new label type",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -566,7 +566,7 @@
     },
     "create_note": {
       "description": "Create an internal note on a thread (not visible to customer)",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -610,7 +610,7 @@
     },
     "create_snippet": {
       "description": "Create a new snippet (canned response)",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -691,7 +691,7 @@
     },
     "create_thread_event": {
       "description": "Create a custom event on a thread timeline",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -786,7 +786,7 @@
     },
     "create_webhook": {
       "description": "Create a new webhook target",
-      "impact": "high",
+      "impact": "critical",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -829,7 +829,7 @@
     },
     "delete_autoresponder": {
       "description": "Delete an autoresponder",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -949,7 +949,7 @@
     },
     "delete_help_center_article": {
       "description": "Delete a help center article",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -979,7 +979,7 @@
     },
     "delete_help_center_article_group": {
       "description": "Delete an article group",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1009,7 +1009,7 @@
     },
     "delete_knowledge_source": {
       "description": "Delete a knowledge source",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1039,7 +1039,7 @@
     },
     "delete_note": {
       "description": "Delete an internal note from a thread",
-      "impact": "critical",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1069,7 +1069,7 @@
     },
     "delete_snippet": {
       "description": "Delete a snippet",
-      "impact": "critical",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1159,7 +1159,7 @@
     },
     "delete_tier": {
       "description": "Delete a support tier",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1189,7 +1189,7 @@
     },
     "delete_webhook": {
       "description": "Delete a webhook target",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1217,39 +1217,9 @@
         "additionalProperties": false
       }
     },
-    "download_attachment": {
-      "description": "Download a thread attachment (attachment IDs appear in get_thread timeline entries) to a local temp file and return its path. Images (customer screenshots/recordings thumbnails) can then be viewed with the Read tool.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "download_attachment"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "attachment_id": {
-                "description": "The attachment ID from a timeline entry",
-                "type": "string"
-              }
-            },
-            "required": [
-              "attachment_id"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
     "generate_help_center_article": {
       "description": "Auto-generate a help center article from a support thread using AI",
-      "impact": "medium",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1282,268 +1252,9 @@
         "additionalProperties": false
       }
     },
-    "get_customer": {
-      "description": "Get detailed customer information by ID",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "get_customer"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "customer_id": {
-                "description": "The customer ID",
-                "type": "string"
-              }
-            },
-            "required": [
-              "customer_id"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "get_help_center": {
-      "description": "Get details of a specific help center",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "get_help_center"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "help_center_id": {
-                "description": "The help center ID",
-                "type": "string"
-              }
-            },
-            "required": [
-              "help_center_id"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "get_help_center_article": {
-      "description": "Get a specific help center article by ID",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "get_help_center_article"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "article_id": {
-                "description": "The article ID",
-                "type": "string"
-              }
-            },
-            "required": [
-              "article_id"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "get_help_center_article_by_slug": {
-      "description": "Get a help center article by its URL slug",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "get_help_center_article_by_slug"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "help_center_id": {
-                "description": "The help center ID",
-                "type": "string"
-              },
-              "slug": {
-                "description": "The article slug (URL-friendly identifier)",
-                "type": "string"
-              }
-            },
-            "required": [
-              "help_center_id",
-              "slug"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "get_help_center_article_group": {
-      "description": "Get a specific article group by ID",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "get_help_center_article_group"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "group_id": {
-                "description": "The article group ID",
-                "type": "string"
-              }
-            },
-            "required": [
-              "group_id"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "get_help_center_index": {
-      "description": "Get the navigation index/structure of a help center",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "get_help_center_index"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "help_center_id": {
-                "description": "The help center ID",
-                "type": "string"
-              }
-            },
-            "required": [
-              "help_center_id"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "get_queue_stats": {
-      "description": "Get a quick overview of the support queue with counts by status",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "get_queue_stats"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {}
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "get_thread": {
-      "description": "Get detailed thread information including conversation timeline",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "get_thread"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "thread_id": {
-                "description": "The thread ID to fetch",
-                "type": "string"
-              }
-            },
-            "required": [
-              "thread_id"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "get_workspace": {
-      "description": "Get current workspace information",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "get_workspace"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {}
-          }
-        },
-        "additionalProperties": false
-      }
-    },
     "link_thread_to_linear": {
       "description": "Link a Plain support thread to a Linear issue for tracking",
-      "impact": "high",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1581,363 +1292,6 @@
         "additionalProperties": false
       }
     },
-    "list_autoresponders": {
-      "description": "List all autoresponders",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "list_autoresponders"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {}
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "list_customer_groups": {
-      "description": "List all customer groups",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "list_customer_groups"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "limit": {
-                "description": "Number of groups to return",
-                "default": 50,
-                "type": "number",
-                "minimum": 1,
-                "maximum": 100
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "list_help_center_article_groups": {
-      "description": "List article groups (categories) in a help center",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "list_help_center_article_groups"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "help_center_id": {
-                "description": "The help center ID",
-                "type": "string"
-              }
-            },
-            "required": [
-              "help_center_id"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "list_help_center_articles": {
-      "description": "List articles in a help center",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "list_help_center_articles"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "help_center_id": {
-                "description": "The help center ID",
-                "type": "string"
-              },
-              "limit": {
-                "description": "Number of articles to return",
-                "default": 25,
-                "type": "number",
-                "minimum": 1,
-                "maximum": 100
-              }
-            },
-            "required": [
-              "help_center_id"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "list_help_centers": {
-      "description": "List all help centers in the workspace",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "list_help_centers"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "limit": {
-                "description": "Number of help centers to return",
-                "default": 25,
-                "type": "number",
-                "minimum": 1,
-                "maximum": 50
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "list_label_types": {
-      "description": "List the workspace's active label types — the label kinds that can be applied to threads with add_labels. Returns id (lt_…), name, icon.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "list_label_types"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {}
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "list_snippets": {
-      "description": "List all snippets (canned responses)",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "list_snippets"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "limit": {
-                "description": "Number of snippets to return",
-                "default": 50,
-                "type": "number",
-                "minimum": 1,
-                "maximum": 100
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "list_thread_field_schemas": {
-      "description": "List all custom thread field schemas",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "list_thread_field_schemas"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {}
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "list_threads": {
-      "description": "List support threads with optional filters. Note: statusDetail (CREATED, NEW_REPLY, etc.) is not available in list results - use get_thread for that.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "list_threads"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "status": {
-                "description": "Filter by thread status",
-                "default": "todo",
-                "type": "string",
-                "enum": [
-                  "todo",
-                  "snoozed",
-                  "done"
-                ]
-              },
-              "limit": {
-                "description": "Number of threads to return",
-                "default": 25,
-                "type": "number",
-                "minimum": 1,
-                "maximum": 100
-              },
-              "priorities": {
-                "description": "Filter by priority levels (0=urgent, 1=high, 2=normal, 3=low)",
-                "type": "array",
-                "items": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 3
-                }
-              },
-              "is_assigned": {
-                "description": "Filter by assignment status (true=assigned, false=unassigned)",
-                "type": "boolean"
-              },
-              "assigned_to_user": {
-                "description": "Filter by assigned user IDs",
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "list_tiers": {
-      "description": "List all support tiers",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "list_tiers"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {}
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "list_users": {
-      "description": "List workspace users",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "list_users"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "limit": {
-                "description": "Number of users to return",
-                "default": 50,
-                "type": "number",
-                "minimum": 1,
-                "maximum": 100
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "list_webhooks": {
-      "description": "List all webhook targets",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "list_webhooks"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {}
-          }
-        },
-        "additionalProperties": false
-      }
-    },
     "mark_customer_as_spam": {
       "description": "Mark a customer as spam",
       "impact": "medium",
@@ -1970,7 +1324,7 @@
     },
     "mark_thread_done": {
       "description": "Mark a support thread as done/resolved",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -2000,7 +1354,7 @@
     },
     "mark_thread_todo": {
       "description": "Mark a support thread as todo (re-open it)",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -2068,7 +1422,7 @@
     },
     "remove_labels": {
       "description": "Remove labels from a thread. Takes label INSTANCE ids (l_…, the `id` field of get_thread's labels) — NOT label type ids.",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -2102,7 +1456,7 @@
     },
     "remove_labels_from_thread": {
       "description": "Remove labels from a thread",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -2171,36 +1525,6 @@
             "required": [
               "thread_id",
               "text"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "search_customers": {
-      "description": "Search for customers by email",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "search_customers"
-          },
-          "arguments": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "email": {
-                "description": "Email address to search for",
-                "type": "string"
-              }
-            },
-            "required": [
-              "email"
             ]
           }
         },
@@ -2288,7 +1612,7 @@
     },
     "snooze_thread": {
       "description": "Snooze a support thread. Use WAITING_FOR_CUSTOMER (no duration) to snooze until customer replies, or WAITING_FOR_DURATION with duration_seconds for time-based snooze.",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -2340,7 +1664,7 @@
     },
     "unassign_thread": {
       "description": "Remove assignment from a thread",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -2579,7 +1903,7 @@
     },
     "update_snippet": {
       "description": "Update an existing snippet",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -2617,7 +1941,7 @@
     },
     "update_thread_title": {
       "description": "Update the title of a thread",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -2652,7 +1976,7 @@
     },
     "update_webhook": {
       "description": "Update a webhook target",
-      "impact": "high",
+      "impact": "critical",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -2882,7 +2206,7 @@
     },
     "upsert_thread_field": {
       "description": "Set a custom field value on a thread",
-      "impact": "medium",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [

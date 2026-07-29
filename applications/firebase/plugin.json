@@ -24,99 +24,6 @@
     }
   ],
   "operations": {
-    "developerknowledge_answer_query": {
-      "description": "Use answer_query to get a grounded answer to a query about Google developer products. This tool has limited quota. This tool will synthesize information from the corpus to generate an answer to the query. answer_query grounds answers using the same corpus as search_documents. \nThis tool returns the generated answer_text and a list of document names (references) used to generate the answer. Use get_documents with the document names to fetch the entire document content if needed.\n\nIf you get a 429 out of quota error, use search_documents instead.\n",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "developerknowledge_answer_query"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "query": {
-                "description": "Required. The query to answer.",
-                "type": "string"
-              }
-            },
-            "required": [
-              "query"
-            ],
-            "description": "Request message for AnswerQuery."
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "developerknowledge_get_documents": {
-      "description": "Use this tool to retrieve the full content of a single document or up to 20 documents in a single call. The document names should be obtained from the `parent` field of results from a call to the `search_documents` tool. Set the `names` parameter to a list of document names.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "developerknowledge_get_documents"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "names": {
-                "description": "Required. The names of the documents to retrieve, as returned by search_documents. A maximum of 20 documents can be retrieved in one call. The documents are returned in the same order as the `names` in the request. Format: `documents/{uri_without_scheme}` Example: `documents/docs.cloud.google.com/storage/docs/creating-buckets`",
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              }
-            },
-            "required": [
-              "names"
-            ],
-            "description": "Request schema for get_documents."
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "developerknowledge_search_documents": {
-      "description": "Use this tool to find documentation about Google developer products. The documents contain official APIs, code snippets, release notes, best practices, guides, debugging info, and more. It covers the following products and domains:\n\n\n* ADK: adk.dev\n\n* Android: developer.android.com\n\n* Apigee: docs.apigee.com\n\n* Chrome: developer.chrome.com\n\n* Dart: dart.dev\n\n* Firebase: firebase.google.com\n\n* Flutter: docs.flutter.dev\n\n* Fuchsia: fuchsia.dev\n\n* Gemini CLI: geminicli.com\n\n* Go: go.dev\n\n* Google AI: ai.google.dev\n\n* Google Antigravity: antigravity.google\n\n* Google Cloud: cloud.google.com & docs.cloud.google.com\n\n* Google Developers, Ads, Search, Google Maps, Youtube: developers.google.com\n\n* Google Home: developers.home.google.com\n\n* Google Maps Platform: mapsplatform.google.com\n\n* TensorFlow: www.tensorflow.org\n\n* Web: web.dev\n\n\nThis tool returns chunks of text, names, and URLs for matching documents. If the returned chunks are not detailed enough to answer the user's question, use `get_documents` with the `parent` from this tool's output to retrieve the full document content.\n",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "developerknowledge_search_documents"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "query": {
-                "description": "Required. The raw query string provided by the user, such as \"How to create a Cloud Storage bucket?\".",
-                "type": "string"
-              }
-            },
-            "required": [
-              "query"
-            ],
-            "description": "Request schema for search_documents. Use the query field to search for related Google developer documentation."
-          }
-        },
-        "additionalProperties": false
-      }
-    },
     "firebase_create_android_sha": {
       "description": "Use this to add the specified SHA certificate hash to the specified Firebase Android App.",
       "impact": "high",
@@ -254,7 +161,7 @@
     },
     "firebase_deploy": {
       "description": "Deploy resources to your Firebase project, based on the contents of firebase.json.",
-      "impact": "high",
+      "impact": "critical",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -273,144 +180,6 @@
                 "type": "string"
               }
             }
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "firebase_deploy_status": {
-      "description": "Check the status of a background deployment job using its Job ID.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "firebase_deploy_status"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "jobId": {
-                "type": "string",
-                "description": "The Job ID returned by the deploy tool"
-              }
-            },
-            "required": [
-              "jobId"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "firebase_get_environment": {
-      "description": "Use this to retrieve the current Firebase **environment** configuration for the Firebase CLI and Firebase MCP server, including current authenticated user, project directory, active Firebase Project, and more. All tools require the user to be authenticated, but not all information is required for all tools. Pay attention to the tool requirements for which pieces of information are required.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "firebase_get_environment"
-          },
-          "arguments": {
-            "type": "object"
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "firebase_get_project": {
-      "description": "Use this to retrieve information about the currently active Firebase Project.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "firebase_get_project"
-          },
-          "arguments": {
-            "type": "object"
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "firebase_get_sdk_config": {
-      "description": "Use this to retrieve the Firebase configuration information for a Firebase App. You must specify EITHER a platform OR the Firebase App ID for a Firebase App registered in the currently active Firebase Project.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "firebase_get_sdk_config"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "platform": {
-                "description": "The platform for which you want config. One of 'platform' or 'app_id' must be provided.",
-                "type": "string",
-                "enum": [
-                  "ios",
-                  "android",
-                  "web"
-                ]
-              },
-              "app_id": {
-                "description": "The specific app ID to fetch. One of 'platform' or 'app_id' must be provided.",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "firebase_get_security_rules": {
-      "description": "Use this to retrieve the security rules for a specified Firebase service. If there are multiple instances of that service in the product, the rules for the default instance are returned.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "firebase_get_security_rules"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "firestore",
-                  "rtdb",
-                  "storage"
-                ],
-                "description": "The service to get rules for."
-              }
-            },
-            "required": [
-              "type"
-            ]
           }
         },
         "additionalProperties": false
@@ -604,73 +373,9 @@
         "additionalProperties": false
       }
     },
-    "firebase_list_apps": {
-      "description": "Use this to retrieve a list of the Firebase Apps registered in the currently active Firebase project. Firebase Apps can be iOS, Android, or Web.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "firebase_list_apps"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "platform": {
-                "description": "the specific platform to list (omit to list all platforms)",
-                "type": "string",
-                "enum": [
-                  "ios",
-                  "android",
-                  "web",
-                  "all"
-                ]
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "firebase_list_projects": {
-      "description": "Use this to retrieve a list of Firebase Projects that the signed-in user has access to.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "firebase_list_projects"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "page_size": {
-                "default": 20,
-                "description": "the number of projects to list per page (defaults to 1000)",
-                "type": "number",
-                "minimum": 1
-              },
-              "page_token": {
-                "description": "the page token to start listing from",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      }
-    },
     "firebase_login": {
       "description": "Use this to sign the user into the Firebase CLI and Firebase MCP server. This requires a Google Account, and sign in is required to create and work with Firebase Projects.",
-      "impact": "high",
+      "impact": "critical",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -696,7 +401,7 @@
     },
     "firebase_logout": {
       "description": "Use this to sign the user out of the Firebase CLI and Firebase MCP server.",
-      "impact": "high",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -720,38 +425,9 @@
         "additionalProperties": false
       }
     },
-    "firebase_read_resources": {
-      "description": "Use this to read the contents of `firebase://` resources or list available resources",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "firebase_read_resources"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "uris": {
-                "description": "list of resource uris to read. each must start with `firebase://` prefix. omit to list all available resources",
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      }
-    },
     "firebase_update_environment": {
       "description": "Use this to update environment config for the Firebase CLI and Firebase MCP server, such as project directory, active project, active user account, accept terms of service, and more. Use `firebase_get_environment` to see the currently configured environment.",
-      "impact": "high",
+      "impact": "critical",
       "executionPayloadSchema": {
         "type": "object",
         "required": [

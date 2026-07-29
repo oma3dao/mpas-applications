@@ -19,7 +19,7 @@
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/supabase/plugin.json",
     "pluginDid": "did:web:wivity.com:plugins:supabase-mcp-server",
-    "artifactDid": "did:artifact:bafkreiaoqeupv653763i4do7br7avdzq2ptunrku4pluitjffti72r32lm"
+    "artifactDid": "did:artifact:bafkreif76kknwfqazefefm2wqx6oqx56ux3fn67kfif7giral6vyuv2zue"
   },
   "publisher": {
     "name": "Wivity",

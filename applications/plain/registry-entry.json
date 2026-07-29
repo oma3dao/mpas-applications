@@ -18,7 +18,7 @@
   },
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/plain/plugin.json",
-    "artifactDid": "did:artifact:bafkreidnbhai4yumtejxvmb7wre26dy42hnxx7q72legl6hrns4ccrgnme",
+    "artifactDid": "did:artifact:bafkreifj3twmtrjkrouwe7drbiivwodemtismevbij2vmgdwhoax7k3bp4",
     "pluginDid": "did:web:wivity.com:plugins:plain-mcp-server"
   },
   "publisher": {

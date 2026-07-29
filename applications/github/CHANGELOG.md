@@ -2,6 +2,28 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-07-29 — Normalized impact grading
+
+- No membership change. The governed surface was already narrowed to the 16
+  mutating tools during the initial review, and it matches the rule now
+  applied across every application in this repository: reads are pass-through,
+  state changes are governed.
+- Regraded six operations so that a given impact level means the same thing
+  here as in the other bridges:
+  - `add_issue_comment` and `add_reply_to_pull_request_comment` low → medium.
+    Both publish under the account's identity to a repository that is often
+    public. `add_comment_to_pending_review` stays low because a pending review
+    comment is not visible until the review is submitted.
+  - `assign_copilot_to_issue` and `request_copilot_review` high → medium. Both
+    invoke an automated reviewer and consume quota; neither changes repository
+    contents directly.
+  - `fork_repository` high → medium. A fork copies a repository the caller can
+    already read into their own namespace and leaves the source untouched.
+- Left `delete_file` at critical, and `create_or_update_file`, `push_files`,
+  `create_repository`, and `merge_pull_request` at high.
+- Recomputed `plugin.artifactDid` in `registry-entry.json`. Note that this
+  supersedes the value quoted as an example in the repository README.
+
 ## 2026-07-27 — Regenerated for the asynchronous client profile
 
 Regenerated `bridge/src/` against `@oma3/mpas@0.1.0-alpha.2`, which implements

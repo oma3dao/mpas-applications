@@ -111,7 +111,7 @@
     },
     "add_issue_comment": {
       "description": "Add a comment and/or reaction to a specific issue or issue comment in a GitHub repository. Use this tool with pull requests as well (in this case pass pull request number as issue_number), but only if user is not asking specifically to add or react to review comments. At least one of body or reaction is required.",
-      "impact": "low",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -175,7 +175,7 @@
     },
     "add_reply_to_pull_request_comment": {
       "description": "Add a reply and/or reaction to an existing pull request comment. This can create a new comment linked as a reply to the specified comment, add an emoji reaction to the specified comment, or do both. At least one of body or reaction is required.",
-      "impact": "low",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -239,7 +239,7 @@
     },
     "assign_copilot_to_issue": {
       "description": "Assign Copilot to a specific issue in a GitHub repository.\n\nThis tool can help with the following outcomes:\n- a Pull Request created with source code changes to resolve the issue\n\n\nMore information can be found at:\n- https://docs.github.com/en/copilot/using-github-copilot/using-copilot-coding-agent-to-work-on-tasks/about-assigning-tasks-to-copilot\n",
-      "impact": "high",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -515,7 +515,7 @@
     },
     "fork_repository": {
       "description": "Fork a GitHub repository to your account or specified organization",
-      "impact": "high",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -892,7 +892,7 @@
     },
     "request_copilot_review": {
       "description": "Request a GitHub Copilot code review for a pull request. Use this for automated feedback on pull requests, usually before requesting a human reviewer.",
-      "impact": "high",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [

@@ -18,7 +18,7 @@
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/upstash/plugin.json",
     "pluginDid": "did:web:wivity.com:plugins:upstash-mcp-server",
-    "artifactDid": "did:artifact:bafkreibicimvmbmr2s5dznjug5c5ev2bpze7lyna6wgwm5bmwahp4sd4v4"
+    "artifactDid": "did:artifact:bafkreibku6c27fsu6zsk5th5g6tfrg46me2gstcyz5apfrrsmgkhaycp7y"
   },
   "publisher": {
     "name": "Wivity",
