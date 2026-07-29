@@ -1,0 +1,30 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "/Users/mpas1/Projects/mcp-targets/x-twitter/.venv/bin/x-twitter-mcp-server",
+    "args": [],
+    "env": {
+      "TWITTER_API_KEY": "{{credential:xApiKey}}",
+      "TWITTER_API_SECRET": "{{credential:xApiSecret}}",
+      "TWITTER_ACCESS_TOKEN": "{{credential:xAccessToken}}",
+      "TWITTER_ACCESS_TOKEN_SECRET": "{{credential:xAccessTokenSecret}}",
+      "TWITTER_BEARER_TOKEN": "{{credential:xBearerToken}}",
+      "TWITTER_OAUTH2_USER_ACCESS_TOKEN": "{{credential:xOAuth2UserAccessToken}}"
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": [
+      "*"
+    ],
+    "addedTools": [
+      "mpas_wait_for_action_result"
+    ],
+    "outputSchemaUnions": [
+      "*"
+    ],
+    "note": "Profile-defined client-interface differences per the MPAS MCP Proposer Bridge Client Interface Profile: every tool description gains the standard MPAS notice, the reserved result tool is added, and advertised output schemas union the upstream schema with the profile result objects. Upstream tool names and input schemas remain exact."
+  }
+}

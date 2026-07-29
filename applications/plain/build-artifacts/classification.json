@@ -1,0 +1,335 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "add_customer_to_groups": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "add_labels": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "add_labels_to_thread": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "assign_thread": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "change_thread_priority": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "change_thread_status_to_todo": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "create_autoresponder": {
+      "impact": "high",
+      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+    },
+    "create_customer_event": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "create_customer_group": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "create_help_center": {
+      "impact": "high",
+      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+    },
+    "create_help_center_article_group": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "create_knowledge_source": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "create_label_type": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "create_note": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "create_snippet": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "create_thread": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "create_thread_event": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "create_tier": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "create_webhook": {
+      "impact": "high",
+      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+    },
+    "delete_autoresponder": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "delete_company": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "delete_customer": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "delete_help_center": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "delete_help_center_article": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "delete_help_center_article_group": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "delete_knowledge_source": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "delete_note": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "delete_snippet": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "delete_tenant": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "delete_thread": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "delete_tier": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "delete_webhook": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+    },
+    "download_attachment": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "generate_help_center_article": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "get_customer": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "get_help_center": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "get_help_center_article": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "get_help_center_article_by_slug": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "get_help_center_article_group": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "get_help_center_index": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "get_queue_stats": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "get_thread": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "get_workspace": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "link_thread_to_linear": {
+      "impact": "high",
+      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+    },
+    "list_autoresponders": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "list_customer_groups": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "list_help_center_article_groups": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "list_help_center_articles": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "list_help_centers": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "list_label_types": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "list_snippets": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "list_thread_field_schemas": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "list_threads": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "list_tiers": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "list_users": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "list_webhooks": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "mark_customer_as_spam": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "mark_thread_done": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "mark_thread_todo": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "remove_customer_from_groups": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "remove_labels": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "remove_labels_from_thread": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "reply_to_thread": {
+      "impact": "high",
+      "rationale": "reviewed: sends an external communication to a customer and creates reputational and support-commitment risk"
+    },
+    "search_customers": {
+      "impact": "medium",
+      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+    },
+    "send_chat": {
+      "impact": "high",
+      "rationale": "reviewed: sends an external communication to a customer and creates reputational and support-commitment risk"
+    },
+    "send_email": {
+      "impact": "high",
+      "rationale": "reviewed: sends an external communication to a customer and creates reputational and support-commitment risk"
+    },
+    "snooze_thread": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "unassign_thread": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "unmark_customer_as_spam": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "update_help_center": {
+      "impact": "high",
+      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+    },
+    "update_help_center_article_group": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "update_help_center_custom_domain": {
+      "impact": "high",
+      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+    },
+    "update_help_center_index": {
+      "impact": "high",
+      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+    },
+    "update_snippet": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "update_thread_title": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "update_webhook": {
+      "impact": "high",
+      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+    },
+    "upsert_company": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "upsert_customer": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "upsert_help_center_article": {
+      "impact": "high",
+      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+    },
+    "upsert_tenant": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "upsert_thread_field": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    },
+    "verify_help_center_custom_domain": {
+      "impact": "medium",
+      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+    }
+  }
+}

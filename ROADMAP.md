@@ -67,6 +67,7 @@ separate MPAS surfaces and should be bridged independently.
 | Jira / Confluence  | Atlassian MCP Server      | [atlassian/atlassian-mcp-server](https://github.com/atlassian/atlassian-mcp-server)                                 | 📋 Planned | Remote endpoint only. OAuth required. Lower MCP adoption than expected |
 | GitLab             | GitLab MCP Server         | [gitlab-org/editor-extensions/gitlab-mcp-server](https://gitlab.com/gitlab-org/editor-extensions/gitlab-mcp-server) | 📋 Planned | TypeScript, open source                                       |
 | AWS                | AWS MCP Servers           | [awslabs/mcp](https://github.com/awslabs/mcp)                                                                      | 📋 Planned | Python, open source. Multiple servers (CDK, docs, etc.)       |
+| Plain              | Plain.com MCP Server      | [tellahq/plain-mcp](https://github.com/tellahq/plain-mcp)                                                          | 🚧 In Progress | Customer support platform. Protect customer communications, records, help centers, automations, and webhooks |
 
 ## Tier 4 — Broader Ecosystem
 
@@ -82,7 +83,7 @@ separate MPAS surfaces and should be bridged independently.
 
 | Application  | Upstream             | Upstream Source | Status     | Notes                  |
 | :----------- | :------------------- | :-------------- | :--------- | :--------------------- |
-| X/Twitter    | X MCP Server         | TBD             | 📋 Planned | Social publishing      |
+| X/Twitter    | X (Twitter) MCP Server | [rafaljanicki/x-twitter-mcp-server](https://github.com/rafaljanicki/x-twitter-mcp-server) | 🚧 In Progress | Official X API v2 integration. Protect public publishing, deletion, engagement, and account-context reads |
 | LinkedIn     | LinkedIn MCP Server  | TBD             | 📋 Planned | Professional publishing |
 | YouTube      | YouTube MCP Server   | TBD             | 📋 Planned | Content publishing     |
 

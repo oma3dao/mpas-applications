@@ -1,0 +1,30 @@
+{
+  "version": "1",
+  "application": {
+    "name": "Plain MCP MPAS Bridge Server",
+    "description": "MPAS-protected bridge for the Plain.com customer support MCP Server.",
+    "applicationDid": "did:web:wivity.com:applications:plain-mcp-server",
+    "website": "https://github.com/tellahq/plain-mcp"
+  },
+  "native": false,
+  "protocol": "mcp",
+  "upstream": {
+    "name": "plain-mcp",
+    "protocolVersion": "2024-11-05",
+    "toolSurface": {
+      "alg": "sha-256",
+      "value": "FhtJig5lHnoXDQbEd1hq8DMLcAaINOOTMX-ZRS4pDpc"
+    }
+  },
+  "plugin": {
+    "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/plain/plugin.json",
+    "artifactDid": "did:artifact:bafkreidnbhai4yumtejxvmb7wre26dy42hnxx7q72legl6hrns4ccrgnme",
+    "pluginDid": "did:web:wivity.com:plugins:plain-mcp-server"
+  },
+  "publisher": {
+    "name": "Wivity",
+    "githubOrg": "wivity",
+    "publisherDid": "did:web:wivity.com"
+  },
+  "status": "beta"
+}

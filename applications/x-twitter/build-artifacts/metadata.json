@@ -1,0 +1,14 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "TwitterMCPServer",
+    "version": "3.4.5"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "/Users/mpas1/Projects/mcp-targets/x-twitter/.venv/bin/x-twitter-mcp-server"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-29T07:03:14.121Z"
+}
