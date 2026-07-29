@@ -1,0 +1,30 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "npx",
+    "args": [
+      "--yes",
+      "bun@1.3.14",
+      "run",
+      "/Users/mpas1/Projects/mcp-targets/plain/src/index.ts"
+    ],
+    "env": {
+      "PLAIN_API_KEY": "{{credential:plainApiKey}}"
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": [
+      "*"
+    ],
+    "addedTools": [
+      "mpas_wait_for_action_result"
+    ],
+    "outputSchemaUnions": [
+      "*"
+    ],
+    "note": "Profile-defined client-interface differences per the MPAS MCP Proposer Bridge Client Interface Profile: every tool description gains the standard MPAS notice, the reserved result tool is added, and advertised output schemas union the upstream schema with the profile result objects. Upstream tool names and input schemas remain exact."
+  }
+}

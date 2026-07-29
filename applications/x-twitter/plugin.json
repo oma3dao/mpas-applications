@@ -1,0 +1,1064 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:x-twitter-mcp-server",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:x-twitter-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2024-11-05"
+  },
+  "credentialRequirements": [
+    {
+      "type": "xApiCredential",
+      "requiredCapabilities": [
+        "tweets:read",
+        "tweets:write",
+        "users:read",
+        "likes:write",
+        "bookmarks:read",
+        "bookmarks:write"
+      ],
+      "description": "X API credentials supplied only within the credential adapter and scoped to the intended X application and user account. API keys, secrets, access tokens, and bearer tokens must never be returned to the proposer. Bookmark operations additionally require an OAuth 2.0 user access token."
+    }
+  ],
+  "operations": {
+    "bookmark_tweet": {
+      "description": "Adds the tweet to bookmarks",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "bookmark_tweet"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "tweet_id": {
+                "type": "string",
+                "description": "The ID of the tweet to bookmark."
+              },
+              "folder_id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The ID of the bookmark folder to add the tweet to. (Currently not supported by Tweepy v2 client, will be ignored)."
+              }
+            },
+            "required": [
+              "tweet_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_poll_tweet": {
+      "description": "Create a tweet with a poll",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_poll_tweet"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "The question or text for the poll."
+              },
+              "choices": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "description": "A list of poll choices (2-4 choices, each max 25 characters)."
+              },
+              "duration_minutes": {
+                "type": "integer",
+                "description": "Duration of the poll in minutes (min 5, max 10080 (7 days))."
+              }
+            },
+            "required": [
+              "text",
+              "choices",
+              "duration_minutes"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "delete_all_bookmarks": {
+      "description": "DESTRUCTIVE AND IRREVERSIBLE: Permanently deletes ALL bookmarks one by one. This cannot be undone. Always confirm explicitly with the user before calling this tool.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "delete_all_bookmarks"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "delete_bookmark": {
+      "description": "Removes the tweet from bookmarks",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "delete_bookmark"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "tweet_id": {
+                "type": "string",
+                "description": "The ID of the tweet to remove from bookmarks."
+              }
+            },
+            "required": [
+              "tweet_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "delete_tweet": {
+      "description": "Delete a tweet by its ID",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "delete_tweet"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "tweet_id": {
+                "type": "string",
+                "description": "The ID of the tweet to delete."
+              }
+            },
+            "required": [
+              "tweet_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "favorite_tweet": {
+      "description": "Favorites a tweet",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "favorite_tweet"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "tweet_id": {
+                "type": "string",
+                "description": "The ID of the tweet to favorite (like)."
+              }
+            },
+            "required": [
+              "tweet_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_bookmarks": {
+      "description": "Retrieves the authenticated user's bookmarked tweets. Requires Basic access tier or higher.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_bookmarks"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "count": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": 100,
+                "description": "Number of bookmarks to retrieve per page.\nDefault 100. Min 1, Max 100."
+              },
+              "cursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Pagination token for fetching the next page of\nresults (pass the next_token from a previous response's meta)."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_highlights_tweets": {
+      "description": "Retrieves highlighted tweets from a user's timeline (simulated)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_highlights_tweets"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "user_id": {
+                "type": "string",
+                "description": "The ID of the user whose highlights are to be fetched."
+              },
+              "count": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": 100,
+                "description": "Number of tweets to retrieve. Default 100. Min 5, Max 100 for get_users_tweets."
+              },
+              "cursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Pagination token for fetching the next set of results."
+              }
+            },
+            "required": [
+              "user_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_latest_timeline": {
+      "description": "Get tweets from your home timeline (Following)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_latest_timeline"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "count": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": 100,
+                "description": "Number of tweets to retrieve. Default 100. Min 5, Max 100 for get_home_timeline."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_timeline": {
+      "description": "Get tweets from your home timeline (For You)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_timeline"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "count": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": 100,
+                "description": "Number of tweets to retrieve. Default 100. Min 5, Max 100 for get_home_timeline."
+              },
+              "seen_tweet_ids": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "List of tweet IDs already seen by the user, to potentially influence timeline results. (Note: Tweepy's get_home_timeline doesn't directly support this, this arg is for future use or custom logic)."
+              },
+              "cursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Pagination token for fetching the next set of results."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_trends": {
+      "description": "Retrieves trending topics on Twitter",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_trends"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "category": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Filter trends by category (e.g., 'Sports', 'News'). Currently not directly supported by `get_place_trends` for worldwide, will filter locally if provided."
+              },
+              "count": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": 50,
+                "description": "Number of trending topics to retrieve. Default 50. Max 50 (as per Twitter API v1.1 default)."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_tweet_details": {
+      "description": "Get detailed information about a specific tweet",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_tweet_details"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "tweet_id": {
+                "type": "string",
+                "description": "The ID of the tweet to fetch."
+              }
+            },
+            "required": [
+              "tweet_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_user_by_id": {
+      "description": "Fetches a user by ID",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_user_by_id"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "user_id": {
+                "type": "string",
+                "description": "The ID of the user to look up."
+              }
+            },
+            "required": [
+              "user_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_user_by_screen_name": {
+      "description": "Fetches a user by screen name",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_user_by_screen_name"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "screen_name": {
+                "type": "string",
+                "description": "The screen name/username of the user."
+              }
+            },
+            "required": [
+              "screen_name"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_user_followers": {
+      "description": "Retrieves a list of followers for a given user",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_user_followers"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "user_id": {
+                "type": "string",
+                "description": "The user ID whose followers are to be retrieved."
+              },
+              "count": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": 100,
+                "description": "The number of followers to retrieve per page. Default is 100. Max is 100 for V2 API."
+              },
+              "cursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A pagination token for fetching the next set of results."
+              }
+            },
+            "required": [
+              "user_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_user_followers_you_know": {
+      "description": "Retrieves a list of common followers (simulated)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_user_followers_you_know"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "user_id": {
+                "type": "string",
+                "description": "The user ID to check for common followers."
+              },
+              "count": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": 100,
+                "description": "The number of followers to retrieve and check. Default is 100."
+              },
+              "cursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A pagination token for fetching the user's followers."
+              }
+            },
+            "required": [
+              "user_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_user_following": {
+      "description": "Retrieves users the given user is following",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_user_following"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "user_id": {
+                "type": "string",
+                "description": "The user ID whose following list is to be retrieved."
+              },
+              "count": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": 100,
+                "description": "The number of users to retrieve per page. Default is 100. Max is 100 for V2 API."
+              },
+              "cursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A pagination token for fetching the next set of results."
+              }
+            },
+            "required": [
+              "user_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_user_mentions": {
+      "description": "Get tweets mentioning a specific user",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_user_mentions"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "user_id": {
+                "type": "string",
+                "description": "The ID of the user whose mentions are to be retrieved."
+              },
+              "count": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": 100,
+                "description": "Number of mentions to retrieve. Default 100. Min 5, Max 100 for get_users_mentions."
+              },
+              "cursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Pagination token for fetching the next set of results."
+              }
+            },
+            "required": [
+              "user_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_user_profile": {
+      "description": "Get detailed profile information for a user",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_user_profile"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "user_id": {
+                "type": "string",
+                "description": "The ID of the user to look up."
+              }
+            },
+            "required": [
+              "user_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "get_user_subscriptions": {
+      "description": "Retrieves a list of users to which the specified user is subscribed (uses following as proxy)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "get_user_subscriptions"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "user_id": {
+                "type": "string",
+                "description": "The user ID whose subscriptions (following list) are to be retrieved."
+              },
+              "count": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": 100,
+                "description": "The number of users to retrieve per page. Default is 100."
+              },
+              "cursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A pagination token for fetching the next set of results."
+              }
+            },
+            "required": [
+              "user_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "post_tweet": {
+      "description": "Post a tweet with optional media, reply, and tags",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "post_tweet"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "The text content of the tweet. Max 280 characters."
+              },
+              "media_paths": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A list of local file paths to media (images, videos) to be uploaded and attached."
+              },
+              "reply_to": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "The ID of the tweet to reply to."
+              },
+              "tags": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "A list of hashtags (without '#') to append to the tweet."
+              }
+            },
+            "required": [
+              "text"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "search_twitter": {
+      "description": "Search Twitter with a query",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "search_twitter"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "The search query. Supports operators like #hashtag, from:user, etc."
+              },
+              "product": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": "Top",
+                "description": "Sorting preference. 'Top' for relevancy (default), 'Latest' for recency."
+              },
+              "count": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": 100,
+                "description": "Number of tweets to retrieve. Default 100. Min 10, Max 100 for search_recent_tweets."
+              },
+              "cursor": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Pagination token (next_token) for fetching the next set of results."
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "unfavorite_tweet": {
+      "description": "Unfavorites a tweet",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "unfavorite_tweet"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "tweet_id": {
+                "type": "string",
+                "description": "The ID of the tweet to unfavorite (unlike)."
+              }
+            },
+            "required": [
+              "tweet_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "vote_on_poll": {
+      "description": "Vote on a poll (mocked)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "vote_on_poll"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "tweet_id": {
+                "type": "string",
+                "description": "The ID of the tweet containing the poll."
+              },
+              "choice": {
+                "type": "string",
+                "description": "The choice to vote for (must exactly match one of the poll options)."
+              }
+            },
+            "required": [
+              "tweet_id",
+              "choice"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

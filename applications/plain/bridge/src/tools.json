@@ -1,0 +1,1859 @@
+[
+  {
+    "name": "list_help_centers",
+    "description": "List all help centers in the workspace",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "limit": {
+          "description": "Number of help centers to return",
+          "default": 25,
+          "type": "number",
+          "minimum": 1,
+          "maximum": 50
+        }
+      }
+    }
+  },
+  {
+    "name": "get_help_center",
+    "description": "Get details of a specific help center",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "help_center_id": {
+          "description": "The help center ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "help_center_id"
+      ]
+    }
+  },
+  {
+    "name": "create_help_center",
+    "description": "Create a new help center",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "public_name": {
+          "description": "Public-facing name of the help center",
+          "type": "string"
+        },
+        "internal_name": {
+          "description": "Internal name for the help center",
+          "type": "string"
+        },
+        "subdomain": {
+          "description": "Subdomain for the help center (e.g., 'help' for help.plain.com)",
+          "type": "string"
+        },
+        "type": {
+          "description": "Help center type",
+          "default": "STANDALONE",
+          "type": "string",
+          "enum": [
+            "STANDALONE",
+            "EMBEDDED"
+          ]
+        },
+        "description": {
+          "description": "Description of the help center",
+          "type": "string"
+        }
+      },
+      "required": [
+        "public_name",
+        "internal_name",
+        "subdomain"
+      ]
+    }
+  },
+  {
+    "name": "update_help_center",
+    "description": "Update an existing help center",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "help_center_id": {
+          "description": "The help center ID to update",
+          "type": "string"
+        },
+        "public_name": {
+          "description": "New public-facing name",
+          "type": "string"
+        },
+        "internal_name": {
+          "description": "New internal name",
+          "type": "string"
+        },
+        "description": {
+          "description": "New description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "help_center_id"
+      ]
+    }
+  },
+  {
+    "name": "delete_help_center",
+    "description": "Delete a help center",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "help_center_id": {
+          "description": "The help center ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "help_center_id"
+      ]
+    }
+  },
+  {
+    "name": "update_help_center_custom_domain",
+    "description": "Set a custom domain for a help center",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "help_center_id": {
+          "description": "The help center ID",
+          "type": "string"
+        },
+        "custom_domain_name": {
+          "description": "The custom domain name (e.g., 'help.example.com') or null to remove",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "help_center_id",
+        "custom_domain_name"
+      ]
+    }
+  },
+  {
+    "name": "verify_help_center_custom_domain",
+    "description": "Verify DNS ownership of a custom domain for a help center",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "help_center_id": {
+          "description": "The help center ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "help_center_id"
+      ]
+    }
+  },
+  {
+    "name": "list_help_center_articles",
+    "description": "List articles in a help center",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "help_center_id": {
+          "description": "The help center ID",
+          "type": "string"
+        },
+        "limit": {
+          "description": "Number of articles to return",
+          "default": 25,
+          "type": "number",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "help_center_id"
+      ]
+    }
+  },
+  {
+    "name": "get_help_center_article",
+    "description": "Get a specific help center article by ID",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "article_id": {
+          "description": "The article ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "article_id"
+      ]
+    }
+  },
+  {
+    "name": "get_help_center_article_by_slug",
+    "description": "Get a help center article by its URL slug",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "help_center_id": {
+          "description": "The help center ID",
+          "type": "string"
+        },
+        "slug": {
+          "description": "The article slug (URL-friendly identifier)",
+          "type": "string"
+        }
+      },
+      "required": [
+        "help_center_id",
+        "slug"
+      ]
+    }
+  },
+  {
+    "name": "upsert_help_center_article",
+    "description": "Create or update a help center article",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "help_center_id": {
+          "description": "The help center ID",
+          "type": "string"
+        },
+        "title": {
+          "description": "Article title",
+          "type": "string"
+        },
+        "content_html": {
+          "description": "Article content in HTML format",
+          "type": "string"
+        },
+        "description": {
+          "description": "Article description/summary (required)",
+          "type": "string"
+        },
+        "slug": {
+          "description": "URL-friendly slug (auto-generated if not provided)",
+          "type": "string"
+        },
+        "status": {
+          "description": "Article status",
+          "default": "DRAFT",
+          "type": "string",
+          "enum": [
+            "DRAFT",
+            "PUBLISHED"
+          ]
+        },
+        "article_id": {
+          "description": "Article ID to update (omit to create new)",
+          "type": "string"
+        },
+        "group_id": {
+          "description": "Article group ID to place article in",
+          "type": "string"
+        }
+      },
+      "required": [
+        "help_center_id",
+        "title",
+        "content_html",
+        "description"
+      ]
+    }
+  },
+  {
+    "name": "delete_help_center_article",
+    "description": "Delete a help center article",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "article_id": {
+          "description": "The article ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "article_id"
+      ]
+    }
+  },
+  {
+    "name": "generate_help_center_article",
+    "description": "Auto-generate a help center article from a support thread using AI",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID to generate article from",
+          "type": "string"
+        },
+        "help_center_id": {
+          "description": "The help center ID to create the article in",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thread_id",
+        "help_center_id"
+      ]
+    }
+  },
+  {
+    "name": "list_help_center_article_groups",
+    "description": "List article groups (categories) in a help center",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "help_center_id": {
+          "description": "The help center ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "help_center_id"
+      ]
+    }
+  },
+  {
+    "name": "get_help_center_article_group",
+    "description": "Get a specific article group by ID",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "group_id": {
+          "description": "The article group ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "group_id"
+      ]
+    }
+  },
+  {
+    "name": "create_help_center_article_group",
+    "description": "Create a new article group (category) in a help center",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "help_center_id": {
+          "description": "The help center ID",
+          "type": "string"
+        },
+        "name": {
+          "description": "Group name",
+          "type": "string"
+        },
+        "slug": {
+          "description": "URL-friendly slug (auto-generated if not provided)",
+          "type": "string"
+        },
+        "parent_id": {
+          "description": "Parent group ID for nested groups",
+          "type": "string"
+        }
+      },
+      "required": [
+        "help_center_id",
+        "name"
+      ]
+    }
+  },
+  {
+    "name": "update_help_center_article_group",
+    "description": "Update an article group",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "group_id": {
+          "description": "The article group ID to update",
+          "type": "string"
+        },
+        "name": {
+          "description": "New group name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "group_id"
+      ]
+    }
+  },
+  {
+    "name": "delete_help_center_article_group",
+    "description": "Delete an article group",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "group_id": {
+          "description": "The article group ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "group_id"
+      ]
+    }
+  },
+  {
+    "name": "get_help_center_index",
+    "description": "Get the navigation index/structure of a help center",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "help_center_id": {
+          "description": "The help center ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "help_center_id"
+      ]
+    }
+  },
+  {
+    "name": "update_help_center_index",
+    "description": "Update the navigation index/structure of a help center",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "help_center_id": {
+          "description": "The help center ID",
+          "type": "string"
+        },
+        "hash": {
+          "description": "Current hash from get_help_center_index (for optimistic locking)",
+          "type": "string"
+        },
+        "index": {
+          "description": "Ordered list of index items",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "description": "Item type",
+                "type": "string",
+                "enum": [
+                  "ARTICLE",
+                  "ARTICLE_GROUP"
+                ]
+              },
+              "id": {
+                "description": "Item ID",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ]
+          }
+        }
+      },
+      "required": [
+        "help_center_id",
+        "hash",
+        "index"
+      ]
+    }
+  },
+  {
+    "name": "create_knowledge_source",
+    "description": "Create a knowledge source for AI to reference",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the knowledge source",
+          "type": "string"
+        },
+        "url": {
+          "description": "URL of the knowledge source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "url"
+      ]
+    }
+  },
+  {
+    "name": "delete_knowledge_source",
+    "description": "Delete a knowledge source",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "knowledge_source_id": {
+          "description": "The knowledge source ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "knowledge_source_id"
+      ]
+    }
+  },
+  {
+    "name": "upsert_customer",
+    "description": "Create or update a customer",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "email": {
+          "description": "Customer email address",
+          "type": "string"
+        },
+        "full_name": {
+          "description": "Customer full name",
+          "type": "string"
+        },
+        "short_name": {
+          "description": "Customer short/display name",
+          "type": "string"
+        },
+        "external_id": {
+          "description": "External system ID for the customer",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email"
+      ]
+    }
+  },
+  {
+    "name": "delete_customer",
+    "description": "Delete a customer",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "description": "The customer ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id"
+      ]
+    }
+  },
+  {
+    "name": "mark_customer_as_spam",
+    "description": "Mark a customer as spam",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "description": "The customer ID to mark as spam",
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id"
+      ]
+    }
+  },
+  {
+    "name": "unmark_customer_as_spam",
+    "description": "Remove spam marking from a customer",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "description": "The customer ID to unmark as spam",
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id"
+      ]
+    }
+  },
+  {
+    "name": "get_customer",
+    "description": "Get detailed customer information by ID",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "description": "The customer ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id"
+      ]
+    }
+  },
+  {
+    "name": "create_customer_event",
+    "description": "Create a custom event on a customer timeline",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "description": "The customer ID",
+          "type": "string"
+        },
+        "title": {
+          "description": "Event title",
+          "type": "string"
+        },
+        "components": {
+          "description": "Event components to display",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "description": "Component type",
+                "type": "string",
+                "enum": [
+                  "TEXT",
+                  "BADGE"
+                ]
+              },
+              "text": {
+                "description": "Component text content",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "text"
+            ]
+          }
+        }
+      },
+      "required": [
+        "customer_id",
+        "title",
+        "components"
+      ]
+    }
+  },
+  {
+    "name": "create_thread",
+    "description": "Create a new support thread for a customer",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "description": "The customer ID",
+          "type": "string"
+        },
+        "title": {
+          "description": "Thread title",
+          "type": "string"
+        },
+        "description": {
+          "description": "Thread description",
+          "type": "string"
+        },
+        "priority": {
+          "description": "Priority: 0=urgent, 1=high, 2=normal, 3=low",
+          "default": 2,
+          "type": "number",
+          "minimum": 0,
+          "maximum": 3
+        }
+      },
+      "required": [
+        "customer_id",
+        "title"
+      ]
+    }
+  },
+  {
+    "name": "assign_thread",
+    "description": "Assign a thread to a user",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "The user ID to assign to",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thread_id",
+        "user_id"
+      ]
+    }
+  },
+  {
+    "name": "unassign_thread",
+    "description": "Remove assignment from a thread",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thread_id"
+      ]
+    }
+  },
+  {
+    "name": "change_thread_priority",
+    "description": "Change the priority of a thread",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID",
+          "type": "string"
+        },
+        "priority": {
+          "description": "New priority: 0=urgent, 1=high, 2=normal, 3=low",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 3
+        }
+      },
+      "required": [
+        "thread_id",
+        "priority"
+      ]
+    }
+  },
+  {
+    "name": "update_thread_title",
+    "description": "Update the title of a thread",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID",
+          "type": "string"
+        },
+        "title": {
+          "description": "New thread title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thread_id",
+        "title"
+      ]
+    }
+  },
+  {
+    "name": "delete_thread",
+    "description": "Permanently delete a thread",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thread_id"
+      ]
+    }
+  },
+  {
+    "name": "create_thread_event",
+    "description": "Create a custom event on a thread timeline",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID",
+          "type": "string"
+        },
+        "title": {
+          "description": "Event title",
+          "type": "string"
+        },
+        "components": {
+          "description": "Event components to display",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "description": "Component type",
+                "type": "string",
+                "enum": [
+                  "TEXT",
+                  "BADGE"
+                ]
+              },
+              "text": {
+                "description": "Component text content",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "text"
+            ]
+          }
+        }
+      },
+      "required": [
+        "thread_id",
+        "title",
+        "components"
+      ]
+    }
+  },
+  {
+    "name": "list_label_types",
+    "description": "List the workspace's active label types — the label kinds that can be applied to threads with add_labels. Returns id (lt_…), name, icon.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "create_label_type",
+    "description": "Create a new label type",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Label name",
+          "type": "string"
+        },
+        "icon": {
+          "description": "Label icon (emoji)",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  {
+    "name": "add_labels_to_thread",
+    "description": "Add labels to a thread",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID",
+          "type": "string"
+        },
+        "label_type_ids": {
+          "description": "Label type IDs to add",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "thread_id",
+        "label_type_ids"
+      ]
+    }
+  },
+  {
+    "name": "remove_labels_from_thread",
+    "description": "Remove labels from a thread",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID",
+          "type": "string"
+        },
+        "label_type_ids": {
+          "description": "Label type IDs to remove",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "thread_id",
+        "label_type_ids"
+      ]
+    }
+  },
+  {
+    "name": "upsert_company",
+    "description": "Create or update a company",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Company name",
+          "type": "string"
+        },
+        "domain": {
+          "description": "Company domain (e.g., example.com)",
+          "type": "string"
+        },
+        "external_id": {
+          "description": "External system ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  {
+    "name": "delete_company",
+    "description": "Delete a company",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "company_id": {
+          "description": "The company ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "company_id"
+      ]
+    }
+  },
+  {
+    "name": "upsert_tenant",
+    "description": "Create or update a tenant",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "description": "Tenant identifier (unique)",
+          "type": "string"
+        },
+        "name": {
+          "description": "Tenant name",
+          "type": "string"
+        },
+        "external_id": {
+          "description": "External system ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "identifier",
+        "name"
+      ]
+    }
+  },
+  {
+    "name": "delete_tenant",
+    "description": "Delete a tenant",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "tenant_id": {
+          "description": "The tenant ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id"
+      ]
+    }
+  },
+  {
+    "name": "list_snippets",
+    "description": "List all snippets (canned responses)",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "limit": {
+          "description": "Number of snippets to return",
+          "default": 50,
+          "type": "number",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    }
+  },
+  {
+    "name": "create_snippet",
+    "description": "Create a new snippet (canned response)",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Snippet name/shortcut",
+          "type": "string"
+        },
+        "text": {
+          "description": "Snippet text content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "text"
+      ]
+    }
+  },
+  {
+    "name": "update_snippet",
+    "description": "Update an existing snippet",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "snippet_id": {
+          "description": "The snippet ID to update",
+          "type": "string"
+        },
+        "name": {
+          "description": "New snippet name",
+          "type": "string"
+        },
+        "text": {
+          "description": "New snippet text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "snippet_id"
+      ]
+    }
+  },
+  {
+    "name": "delete_snippet",
+    "description": "Delete a snippet",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "snippet_id": {
+          "description": "The snippet ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "snippet_id"
+      ]
+    }
+  },
+  {
+    "name": "list_webhooks",
+    "description": "List all webhook targets",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "create_webhook",
+    "description": "Create a new webhook target",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "url": {
+          "description": "Webhook URL endpoint",
+          "type": "string"
+        },
+        "event_types": {
+          "description": "Event types to subscribe to (e.g., 'thread.created', 'thread.status_transitioned')",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "is_enabled": {
+          "description": "Whether webhook is enabled",
+          "default": true,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "url",
+        "event_types"
+      ]
+    }
+  },
+  {
+    "name": "update_webhook",
+    "description": "Update a webhook target",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "webhook_id": {
+          "description": "The webhook target ID",
+          "type": "string"
+        },
+        "url": {
+          "description": "New webhook URL",
+          "type": "string"
+        },
+        "event_types": {
+          "description": "New event types to subscribe to",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "is_enabled": {
+          "description": "Whether webhook is enabled",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "webhook_id"
+      ]
+    }
+  },
+  {
+    "name": "delete_webhook",
+    "description": "Delete a webhook target",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "webhook_id": {
+          "description": "The webhook target ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "webhook_id"
+      ]
+    }
+  },
+  {
+    "name": "list_users",
+    "description": "List workspace users",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "limit": {
+          "description": "Number of users to return",
+          "default": 50,
+          "type": "number",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    }
+  },
+  {
+    "name": "get_workspace",
+    "description": "Get current workspace information",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "send_email",
+    "description": "Send a new email to a customer (starts a new thread)",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "description": "The customer ID",
+          "type": "string"
+        },
+        "subject": {
+          "description": "Email subject",
+          "type": "string"
+        },
+        "text_content": {
+          "description": "Plain text email content",
+          "type": "string"
+        },
+        "html_content": {
+          "description": "HTML email content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id",
+        "subject",
+        "text_content"
+      ]
+    }
+  },
+  {
+    "name": "send_chat",
+    "description": "Send a chat message to a customer",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "description": "The customer ID",
+          "type": "string"
+        },
+        "text": {
+          "description": "Chat message text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id",
+        "text"
+      ]
+    }
+  },
+  {
+    "name": "list_autoresponders",
+    "description": "List all autoresponders",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "create_autoresponder",
+    "description": "Create a new autoresponder",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Autoresponder name",
+          "type": "string"
+        },
+        "text_content": {
+          "description": "Autoresponder message text",
+          "type": "string"
+        },
+        "markdown_content": {
+          "description": "Markdown version of the message",
+          "type": "string"
+        },
+        "is_enabled": {
+          "description": "Whether autoresponder is enabled",
+          "default": true,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "text_content"
+      ]
+    }
+  },
+  {
+    "name": "delete_autoresponder",
+    "description": "Delete an autoresponder",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "autoresponder_id": {
+          "description": "The autoresponder ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "autoresponder_id"
+      ]
+    }
+  },
+  {
+    "name": "list_tiers",
+    "description": "List all support tiers",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "create_tier",
+    "description": "Create a new support tier",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Tier name",
+          "type": "string"
+        },
+        "color": {
+          "description": "Tier color (hex code)",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  {
+    "name": "delete_tier",
+    "description": "Delete a support tier",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "tier_id": {
+          "description": "The tier ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tier_id"
+      ]
+    }
+  },
+  {
+    "name": "list_customer_groups",
+    "description": "List all customer groups",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "limit": {
+          "description": "Number of groups to return",
+          "default": 50,
+          "type": "number",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    }
+  },
+  {
+    "name": "create_customer_group",
+    "description": "Create a new customer group",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Group name",
+          "type": "string"
+        },
+        "key": {
+          "description": "Unique group key",
+          "type": "string"
+        },
+        "color": {
+          "description": "Group color (hex code)",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "key"
+      ]
+    }
+  },
+  {
+    "name": "add_customer_to_groups",
+    "description": "Add a customer to one or more groups",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "description": "The customer ID",
+          "type": "string"
+        },
+        "group_ids": {
+          "description": "Customer group IDs to add customer to",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "customer_id",
+        "group_ids"
+      ]
+    }
+  },
+  {
+    "name": "remove_customer_from_groups",
+    "description": "Remove a customer from one or more groups",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "description": "The customer ID",
+          "type": "string"
+        },
+        "group_ids": {
+          "description": "Customer group IDs to remove customer from",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "customer_id",
+        "group_ids"
+      ]
+    }
+  },
+  {
+    "name": "list_thread_field_schemas",
+    "description": "List all custom thread field schemas",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "upsert_thread_field",
+    "description": "Set a custom field value on a thread",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID",
+          "type": "string"
+        },
+        "key": {
+          "description": "Field key (must match a thread field schema key)",
+          "type": "string"
+        },
+        "value": {
+          "description": "Field value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thread_id",
+        "key",
+        "value"
+      ]
+    }
+  },
+  {
+    "name": "delete_note",
+    "description": "Delete an internal note from a thread",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "note_id": {
+          "description": "The note ID to delete",
+          "type": "string"
+        }
+      },
+      "required": [
+        "note_id"
+      ]
+    }
+  },
+  {
+    "name": "list_threads",
+    "description": "List support threads with optional filters. Note: statusDetail (CREATED, NEW_REPLY, etc.) is not available in list results - use get_thread for that.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "Filter by thread status",
+          "default": "todo",
+          "type": "string",
+          "enum": [
+            "todo",
+            "snoozed",
+            "done"
+          ]
+        },
+        "limit": {
+          "description": "Number of threads to return",
+          "default": 25,
+          "type": "number",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "priorities": {
+          "description": "Filter by priority levels (0=urgent, 1=high, 2=normal, 3=low)",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 3
+          }
+        },
+        "is_assigned": {
+          "description": "Filter by assignment status (true=assigned, false=unassigned)",
+          "type": "boolean"
+        },
+        "assigned_to_user": {
+          "description": "Filter by assigned user IDs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "get_thread",
+    "description": "Get detailed thread information including conversation timeline",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID to fetch",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thread_id"
+      ]
+    }
+  },
+  {
+    "name": "add_labels",
+    "description": "Add labels to a thread. Takes label TYPE ids (lt_…) from list_label_types. Labels already on the thread (see get_thread) don't need re-adding.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID to label",
+          "type": "string"
+        },
+        "label_type_ids": {
+          "description": "Label TYPE ids (lt_…) from list_label_types",
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "thread_id",
+        "label_type_ids"
+      ]
+    }
+  },
+  {
+    "name": "remove_labels",
+    "description": "Remove labels from a thread. Takes label INSTANCE ids (l_…, the `id` field of get_thread's labels) — NOT label type ids.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "label_ids": {
+          "description": "Label instance ids (l_…) from get_thread's labels array",
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "label_ids"
+      ]
+    }
+  },
+  {
+    "name": "download_attachment",
+    "description": "Download a thread attachment (attachment IDs appear in get_thread timeline entries) to a local temp file and return its path. Images (customer screenshots/recordings thumbnails) can then be viewed with the Read tool.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "attachment_id": {
+          "description": "The attachment ID from a timeline entry",
+          "type": "string"
+        }
+      },
+      "required": [
+        "attachment_id"
+      ]
+    }
+  },
+  {
+    "name": "search_customers",
+    "description": "Search for customers by email",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "email": {
+          "description": "Email address to search for",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email"
+      ]
+    }
+  },
+  {
+    "name": "get_queue_stats",
+    "description": "Get a quick overview of the support queue with counts by status",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "reply_to_thread",
+    "description": "Reply to a support thread. The reply will be sent to the customer via the original channel (email, chat, etc.)",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID to reply to",
+          "type": "string"
+        },
+        "text": {
+          "description": "The plain text content of the reply",
+          "type": "string"
+        },
+        "markdown": {
+          "description": "Optional markdown-formatted content (will be used for rich display if supported)",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thread_id",
+        "text"
+      ]
+    }
+  },
+  {
+    "name": "mark_thread_done",
+    "description": "Mark a support thread as done/resolved",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID to mark as done",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thread_id"
+      ]
+    }
+  },
+  {
+    "name": "mark_thread_todo",
+    "description": "Mark a support thread as todo (re-open it)",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID to mark as todo",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thread_id"
+      ]
+    }
+  },
+  {
+    "name": "change_thread_status_to_todo",
+    "description": "Change thread status to Todo with optional status detail. Use this instead of mark_thread_todo when you need to set a specific status detail.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID",
+          "type": "string"
+        },
+        "status_detail": {
+          "description": "Status detail: CREATED (Needs first response), IN_PROGRESS (Investigating), NEW_REPLY (Needs next response), THREAD_LINK_UPDATED (Close the loop), THREAD_DISCUSSION_RESOLVED (Discussion resolved)",
+          "type": "string",
+          "enum": [
+            "CREATED",
+            "IN_PROGRESS",
+            "NEW_REPLY",
+            "THREAD_LINK_UPDATED",
+            "THREAD_DISCUSSION_RESOLVED"
+          ]
+        }
+      },
+      "required": [
+        "thread_id"
+      ]
+    }
+  },
+  {
+    "name": "snooze_thread",
+    "description": "Snooze a support thread. Use WAITING_FOR_CUSTOMER (no duration) to snooze until customer replies, or WAITING_FOR_DURATION with duration_seconds for time-based snooze.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID to snooze",
+          "type": "string"
+        },
+        "duration_seconds": {
+          "description": "Duration to snooze in seconds. Required for WAITING_FOR_DURATION, omit for WAITING_FOR_CUSTOMER.",
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 60,
+              "maximum": 5184000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status_detail": {
+          "description": "WAITING_FOR_CUSTOMER: snooze until customer replies (no duration). WAITING_FOR_DURATION: snooze for specified duration.",
+          "type": "string",
+          "enum": [
+            "WAITING_FOR_CUSTOMER",
+            "WAITING_FOR_DURATION"
+          ]
+        }
+      },
+      "required": [
+        "thread_id",
+        "status_detail"
+      ]
+    }
+  },
+  {
+    "name": "create_note",
+    "description": "Create an internal note on a thread (not visible to customer)",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The thread ID to add the note to",
+          "type": "string"
+        },
+        "customer_id": {
+          "description": "The customer ID associated with the thread",
+          "type": "string"
+        },
+        "text": {
+          "description": "The note content. Rendered as markdown, so you can use headings, lists, and blockquotes. To embed a copy-paste-ready draft reply, format it as a blockquote (prefix every line with '> ', including blank lines between paragraphs) so it renders as one quoted block and keeps its line breaks when copied.",
+          "type": "string"
+        },
+        "markdown": {
+          "description": "Optional explicit markdown override; defaults to `text`",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thread_id",
+        "customer_id",
+        "text"
+      ]
+    }
+  },
+  {
+    "name": "link_thread_to_linear",
+    "description": "Link a Plain support thread to a Linear issue for tracking",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "thread_id": {
+          "description": "The Plain thread ID to link",
+          "type": "string"
+        },
+        "linear_issue_id": {
+          "description": "The Linear issue ID (e.g., 'TEL-123' or the UUID)",
+          "type": "string"
+        },
+        "linear_issue_url": {
+          "description": "The full Linear issue URL (e.g., 'https://linear.app/tella/issue/TEL-123')",
+          "type": "string"
+        }
+      },
+      "required": [
+        "thread_id",
+        "linear_issue_id",
+        "linear_issue_url"
+      ]
+    }
+  }
+]

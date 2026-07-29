@@ -1,0 +1,103 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "bookmark_tweet": {
+      "impact": "medium",
+      "rationale": "reviewed: mutates account engagement or bookmark state with limited blast radius"
+    },
+    "create_poll_tweet": {
+      "impact": "high",
+      "rationale": "reviewed: public publishing changes the account public record and may create material reputational impact"
+    },
+    "delete_all_bookmarks": {
+      "impact": "medium",
+      "rationale": "reviewed: mutates account engagement or bookmark state with limited blast radius"
+    },
+    "delete_bookmark": {
+      "impact": "medium",
+      "rationale": "reviewed: mutates account engagement or bookmark state with limited blast radius"
+    },
+    "delete_tweet": {
+      "impact": "critical",
+      "rationale": "reviewed: permanently removes published account content and is not reliably reversible"
+    },
+    "favorite_tweet": {
+      "impact": "medium",
+      "rationale": "reviewed: mutates account engagement or bookmark state with limited blast radius"
+    },
+    "get_bookmarks": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_highlights_tweets": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_latest_timeline": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_timeline": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_trends": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_tweet_details": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_user_by_id": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_user_by_screen_name": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_user_followers": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_user_followers_you_know": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_user_following": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_user_mentions": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_user_profile": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "get_user_subscriptions": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "post_tweet": {
+      "impact": "high",
+      "rationale": "reviewed: public publishing changes the account public record and may create material reputational impact"
+    },
+    "search_twitter": {
+      "impact": "medium",
+      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+    },
+    "unfavorite_tweet": {
+      "impact": "medium",
+      "rationale": "reviewed: mutates account engagement or bookmark state with limited blast radius"
+    },
+    "vote_on_poll": {
+      "impact": "medium",
+      "rationale": "reviewed: mutates account engagement or bookmark state with limited blast radius"
+    }
+  }
+}
