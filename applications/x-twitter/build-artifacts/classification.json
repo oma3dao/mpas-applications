@@ -12,8 +12,8 @@
       "rationale": "reviewed: public publishing changes the account public record and may create material reputational impact"
     },
     "delete_all_bookmarks": {
-      "impact": "medium",
-      "rationale": "reviewed: mutates account engagement or bookmark state with limited blast radius"
+      "impact": "critical",
+      "rationale": "reviewed: permanently deletes every bookmark in the account and cannot be undone"
     },
     "delete_bookmark": {
       "impact": "medium",

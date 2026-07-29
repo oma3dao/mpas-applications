@@ -112,7 +112,7 @@
     },
     "delete_all_bookmarks": {
       "description": "DESTRUCTIVE AND IRREVERSIBLE: Permanently deletes ALL bookmarks one by one. This cannot be undone. Always confirm explicitly with the user before calling this tool.",
-      "impact": "medium",
+      "impact": "critical",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
