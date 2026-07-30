@@ -2,8 +2,10 @@
 
 > [!WARNING]
 > **Experimental alpha.** These MPAS integrations are not production-ready or
-> independently audited. Breaking changes are expected. GitHub is the only
-> application currently implemented; other integrations are planned.
+> independently audited. Breaking changes are expected. The presence of an
+> application in this repository means that its plugin and bridge artifacts
+> have been contributed; it does not mean that the integration is suitable for
+> production use or has been independently validated.
 
 MPAS application plugins, bridges, and supporting artifacts contributed by
 their publishers.
@@ -12,6 +14,26 @@ The protocol specifications, SDK, reference Credential Adapter, and
 development-time bridge generator live in
 [`oma3dao/mpas`](https://github.com/oma3dao/mpas). This repository contains
 the generated and reviewed application-specific artifacts.
+
+## Current Applications
+
+The repository currently contains experimental artifacts for:
+
+- Coinbase
+- Firebase
+- GitHub
+- MongoDB
+- Neon
+- Plain
+- PlanetScale
+- PostgreSQL
+- Railway
+- Supabase
+- Upstash
+- X (Twitter)
+
+See [ROADMAP.md](ROADMAP.md) for completion criteria, priorities, and planned
+applications.
 
 ## Structure
 
@@ -22,7 +44,7 @@ mpas-applications/
   LICENSE
 
   applications/                  # Contributed application artifacts
-    github/
+    <application>/
       plugin.json
       registry-entry.json
       harness-config.json
