@@ -1,0 +1,123 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "coinbase_balance": {
+      "impact": "medium",
+      "rationale": "Reviewed: read-only account balance data; governed for exact schema validation and deployment policy."
+    },
+    "coinbase_convert_execute": {
+      "impact": "critical",
+      "rationale": "Reviewed: executes a quoted currency conversion and moves funds."
+    },
+    "coinbase_convert_get": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads conversion status without moving funds."
+    },
+    "coinbase_convert_quote": {
+      "impact": "medium",
+      "rationale": "Reviewed: produces a non-executing conversion quote."
+    },
+    "coinbase_env": {
+      "impact": "medium",
+      "rationale": "Reviewed: reports configured environment metadata without returning private-key material."
+    },
+    "coinbase_fees": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads the account fee tier and trading volume."
+    },
+    "coinbase_help": {
+      "impact": "medium",
+      "rationale": "Reviewed: returns local command documentation only."
+    },
+    "coinbase_orders_cancel": {
+      "impact": "high",
+      "rationale": "Reviewed: changes live order state and releases reserved funds; partial batch outcomes are possible."
+    },
+    "coinbase_orders_close_position": {
+      "impact": "critical",
+      "rationale": "Reviewed: submits a market order to flatten all or part of a live position."
+    },
+    "coinbase_orders_create": {
+      "impact": "critical",
+      "rationale": "Reviewed: places a live order that can immediately spend or dispose of assets."
+    },
+    "coinbase_orders_edit": {
+      "impact": "critical",
+      "rationale": "Reviewed: modifies the price or size of a live order and changes market exposure."
+    },
+    "coinbase_orders_fills": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads historical trade executions and fees."
+    },
+    "coinbase_orders_get": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads a single order's state and fills."
+    },
+    "coinbase_orders_list": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads order history and open-order state."
+    },
+    "coinbase_orders_preview": {
+      "impact": "medium",
+      "rationale": "Reviewed: estimates execution, fees, and slippage without placing an order."
+    },
+    "coinbase_portfolios_create": {
+      "impact": "high",
+      "rationale": "Reviewed: creates a new account portfolio and changes account organization."
+    },
+    "coinbase_portfolios_delete": {
+      "impact": "critical",
+      "rationale": "Reviewed: irreversibly deletes an empty portfolio."
+    },
+    "coinbase_portfolios_edit": {
+      "impact": "high",
+      "rationale": "Reviewed: renames a portfolio and changes account organization."
+    },
+    "coinbase_portfolios_get": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads portfolio balances, positions, allocation, and PnL."
+    },
+    "coinbase_portfolios_list": {
+      "impact": "medium",
+      "rationale": "Reviewed: lists portfolio identifiers and metadata."
+    },
+    "coinbase_products_best_bid_ask": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads public best-bid and best-ask market data."
+    },
+    "coinbase_products_book": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads public order-book market data."
+    },
+    "coinbase_products_candles": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads public historical candle market data."
+    },
+    "coinbase_products_get": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads public product metadata and pricing."
+    },
+    "coinbase_products_list": {
+      "impact": "medium",
+      "rationale": "Reviewed: lists public tradable products."
+    },
+    "coinbase_products_ticker": {
+      "impact": "medium",
+      "rationale": "Reviewed: reads public recent-trade and bid/ask market data."
+    },
+    "coinbase_set_env": {
+      "impact": "critical",
+      "rationale": "Reviewed: changes the CLI execution environment used by later operations and therefore the credential/target context."
+    },
+    "coinbase_template": {
+      "impact": "medium",
+      "rationale": "Reviewed: returns a local request template without sending an API request."
+    },
+    "coinbase_transfer": {
+      "impact": "critical",
+      "rationale": "Reviewed: moves assets between portfolios."
+    }
+  }
+}

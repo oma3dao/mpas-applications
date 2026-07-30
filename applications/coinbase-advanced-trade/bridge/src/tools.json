@@ -1,0 +1,806 @@
+[
+  {
+    "name": "coinbase_env",
+    "description": "Show the active environment and configured environments.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "coinbase_set_env",
+    "description": "Switch the active environment.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Environment name"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_template",
+    "description": "Get a full request body example for a command, ready to copy and modify.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "resource": {
+          "type": "string",
+          "description": "Resource name (e.g. \"orders\"). Omit for top-level actions like balance, transfer, fees."
+        },
+        "action": {
+          "type": "string",
+          "description": "Action name (e.g. \"create\", \"balance\")"
+        }
+      },
+      "required": [
+        "action"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_help",
+    "description": "Get detailed help for a command: field descriptions, query parameters, and usage.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "resource": {
+          "type": "string",
+          "description": "Resource name (e.g. \"orders\"). Omit for top-level actions like balance, transfer, fees."
+        },
+        "action": {
+          "type": "string",
+          "description": "Action name (e.g. \"create\", \"balance\")"
+        }
+      },
+      "required": [
+        "action"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_convert_quote",
+    "description": "POST /convert/quote — Quotes a currency conversion (e.g. stablecoin pairs), returning rate, fees, and a quote id. Read-only preview — pass the id to convert_execute to commit; quotes expire, so execute promptly. (3 fields, 3 required)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Source currency",
+          "example": "USDC"
+        },
+        "to": {
+          "type": "string",
+          "description": "Target currency",
+          "example": "USD"
+        },
+        "amount": {
+          "type": "string",
+          "description": "Amount to convert",
+          "example": "100.00"
+        }
+      },
+      "required": [
+        "from",
+        "to",
+        "amount"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_convert_execute",
+    "description": "POST /convert/execute/{quote_id} — Executes a previously quoted conversion using the quote id from convert_quote. This moves funds at the quoted rate — always get a fresh quote first, since quotes expire. The from/to currencies must match the original quote. (2 fields, 2 required)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "quote_id": {
+          "type": "string",
+          "description": "Quote ID from convert quote response"
+        },
+        "from": {
+          "type": "string",
+          "description": "Source currency",
+          "example": "USDC"
+        },
+        "to": {
+          "type": "string",
+          "description": "Target currency",
+          "example": "USD"
+        }
+      },
+      "required": [
+        "quote_id",
+        "from",
+        "to"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_convert_get",
+    "description": "GET /convert/get/{quote_id} — Check status of a conversion by quote ID.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "quote_id": {
+          "type": "string",
+          "description": "Quote ID"
+        },
+        "from": {
+          "type": "string",
+          "description": "Source currency"
+        },
+        "to": {
+          "type": "string",
+          "description": "Target currency"
+        }
+      },
+      "required": [
+        "quote_id",
+        "from",
+        "to"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_orders_list",
+    "description": "GET /orders — Lists orders with optional filters by status, product, side, and time range. Read-only. Use status=OPEN to find resting orders that can be edited or cancelled.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Filter by status"
+        },
+        "product_ids": {
+          "type": "string",
+          "description": "Filter by product (e.g. BTC-USD). Comma-separated for multiple."
+        },
+        "side": {
+          "type": "string",
+          "description": "Filter by side",
+          "enum": [
+            "BUY",
+            "SELL"
+          ]
+        },
+        "product_type": {
+          "type": "string",
+          "description": "Filter by product type",
+          "enum": [
+            "SPOT",
+            "FUTURE"
+          ]
+        },
+        "start": {
+          "type": "string",
+          "description": "Start date (RFC 3339 with timezone, e.g. 2024-01-01T00:00:00Z)",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "description": "End date (RFC 3339 with timezone, e.g. 2024-12-31T23:59:59Z)",
+          "format": "date-time"
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Results per page"
+        },
+        "cursor": {
+          "type": "string",
+          "description": "Pagination cursor"
+        }
+      }
+    }
+  },
+  {
+    "name": "coinbase_orders_create",
+    "description": "POST /orders — Places a live order — executes immediately and moves funds (market buy spends quote currency; sell disposes of base). Preview with orders_preview first to estimate fees, fill price, and slippage. (14 fields, 3 required) (one of: base_size, quote_size)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "description": "Trading pair",
+          "example": "BTC-USD"
+        },
+        "side": {
+          "type": "string",
+          "description": "BUY or SELL",
+          "enum": [
+            "BUY",
+            "SELL"
+          ],
+          "example": "BUY"
+        },
+        "type": {
+          "type": "string",
+          "description": "market = fill now; limit = fill at price or better; stop_limit = limit triggered at stop_price",
+          "enum": [
+            "market",
+            "limit",
+            "stop_limit"
+          ],
+          "example": "market"
+        },
+        "quote_size": {
+          "type": "string",
+          "description": "Quote currency amount (e.g. spend $100 USD). Market buy only. Mutually exclusive with base_size.",
+          "example": "100.00"
+        },
+        "base_size": {
+          "type": "string",
+          "description": "Base currency amount (e.g. buy 0.001 BTC). Any side/type.",
+          "example": "0.001"
+        },
+        "limit_price": {
+          "type": "string",
+          "description": "Limit price (limit/stop_limit orders)",
+          "example": "65000.00"
+        },
+        "stop_price": {
+          "type": "string",
+          "description": "Stop price (stop_limit orders)",
+          "example": "60000.00"
+        },
+        "stop_direction": {
+          "type": "string",
+          "description": "up = trigger when price rises above stop_price. down = trigger when falls below.",
+          "enum": [
+            "up",
+            "down"
+          ],
+          "example": "down"
+        },
+        "post_only": {
+          "type": "boolean",
+          "description": "Post-only mode (limit orders). Rejects if would take liquidity."
+        },
+        "time_in_force": {
+          "type": "string",
+          "description": "GTC=good til cancelled. IOC=immediate or cancel. FOK=fill or kill.",
+          "enum": [
+            "GTC",
+            "IOC",
+            "FOK",
+            "GTD"
+          ],
+          "example": "GTC"
+        },
+        "end_time": {
+          "type": "string",
+          "description": "Expiry time for GTD orders (RFC 3339). Required when time_in_force=GTD.",
+          "format": "date-time",
+          "example": "2024-12-31T23:59:59Z"
+        },
+        "reduce_only": {
+          "type": "boolean",
+          "description": "Only reduce existing position. Rejects if would increase exposure."
+        },
+        "portfolio_id": {
+          "type": "string",
+          "description": "Scopes the order to a specific portfolio (defaults to auth-scoped portfolio)"
+        },
+        "client_order_id": {
+          "type": "string",
+          "description": "Idempotency key (auto-generated if omitted)"
+        }
+      },
+      "required": [
+        "product_id",
+        "side",
+        "type"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_orders_preview",
+    "description": "POST /orders/preview — Estimate fees, fill price, and slippage without executing. (8 fields, 3 required) (one of: base_size, quote_size)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "description": "Trading pair (e.g. BTC-USD)",
+          "example": "BTC-USD"
+        },
+        "side": {
+          "type": "string",
+          "description": "BUY or SELL",
+          "enum": [
+            "BUY",
+            "SELL"
+          ],
+          "example": "BUY"
+        },
+        "type": {
+          "type": "string",
+          "description": "market = fill now; limit = fill at price or better; stop_limit = limit triggered at stop_price",
+          "enum": [
+            "market",
+            "limit",
+            "stop_limit"
+          ],
+          "example": "market"
+        },
+        "quote_size": {
+          "type": "string",
+          "description": "Quote currency amount (e.g. spend $100 USD). Mutually exclusive with base_size.",
+          "example": "100.00"
+        },
+        "base_size": {
+          "type": "string",
+          "description": "Base currency amount (e.g. 0.001 BTC). Mutually exclusive with quote_size.",
+          "example": "0.001"
+        },
+        "limit_price": {
+          "type": "string",
+          "description": "Limit price (for limit/stop_limit previews)",
+          "example": "65000.00"
+        },
+        "stop_price": {
+          "type": "string",
+          "description": "Stop price (for stop_limit previews)",
+          "example": "60000.00"
+        },
+        "stop_direction": {
+          "type": "string",
+          "description": "up = trigger when price rises above stop_price. down = trigger when falls below.",
+          "enum": [
+            "up",
+            "down"
+          ],
+          "example": "down"
+        }
+      },
+      "required": [
+        "product_id",
+        "side",
+        "type"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_orders_edit",
+    "description": "POST /orders/edit — Atomically update an open order's price or size without cancelling. Avoids the cancel+replace exposure window. (3 fields, 1 required)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "order_id": {
+          "type": "string",
+          "description": "Order to edit"
+        },
+        "base_size": {
+          "type": "string",
+          "description": "New base size",
+          "example": "0.002"
+        },
+        "limit_price": {
+          "type": "string",
+          "description": "New limit price",
+          "example": "64000.00"
+        }
+      },
+      "required": [
+        "order_id"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_orders_get",
+    "description": "GET /orders/{order_id} — Retrieves the full status and fill details of a single order by ID. Read-only. Use after creating an order to confirm execution.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "order_id": {
+          "type": "string",
+          "description": "Order ID"
+        }
+      },
+      "required": [
+        "order_id"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_orders_cancel",
+    "description": "POST /orders/cancel — Cancels one or more open orders by ID. Removes resting orders from the book so reserved funds are released; already-filled portions are unaffected. Returns per-order success so a partial batch can fail. (1 fields, 1 required)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "order_ids": {
+          "type": "array",
+          "description": "Order IDs to cancel"
+        }
+      },
+      "required": [
+        "order_ids"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_orders_close_position",
+    "description": "POST /orders/close-position — Places a market order to flatten an open position for a product, moving funds immediately. Omit size for a full close or set it for a partial close. Preview the equivalent order first if fee or slippage impact matters. (3 fields, 2 required)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "client_order_id": {
+          "type": "string",
+          "description": "Idempotency key"
+        },
+        "product_id": {
+          "type": "string",
+          "description": "Product to close",
+          "example": "BTC-PERP"
+        },
+        "size": {
+          "type": "string",
+          "description": "Partial close size (omit for full close)",
+          "example": "0.001"
+        }
+      },
+      "required": [
+        "client_order_id",
+        "product_id"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_orders_fills",
+    "description": "GET /orders/fills — Lists individual trade executions (fills) with commissions and maker/taker indicator, filterable by product, order, side, and time range. Read-only. Use this to reconcile actual fill prices and fees paid.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "product_ids": {
+          "type": "string",
+          "description": "Filter by product (e.g. BTC-USD)"
+        },
+        "order_ids": {
+          "type": "string",
+          "description": "Filter by order ID"
+        },
+        "start": {
+          "type": "string",
+          "description": "Start time (RFC 3339 with timezone, e.g. 2024-01-01T00:00:00Z)",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "description": "End time (RFC 3339 with timezone, e.g. 2024-12-31T23:59:59Z)",
+          "format": "date-time"
+        },
+        "side": {
+          "type": "string",
+          "description": "Filter by side",
+          "enum": [
+            "BUY",
+            "SELL"
+          ]
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Results per page"
+        },
+        "cursor": {
+          "type": "string",
+          "description": "Pagination cursor"
+        }
+      }
+    }
+  },
+  {
+    "name": "coinbase_portfolios_list",
+    "description": "GET /portfolios — Lists all portfolios on the account, including their UUIDs and types. Read-only. Use this to find the portfolio_id needed for orders, transfers, and balance queries.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "portfolio_type": {
+          "type": "string",
+          "description": "Filter by type (DEFAULT, CONSUMER, INTX)"
+        }
+      }
+    }
+  },
+  {
+    "name": "coinbase_portfolios_create",
+    "description": "POST /portfolios — Creates a new named portfolio for segregating funds and positions. Does not move any funds; use transfer afterward to fund it. (1 fields, 1 required)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Portfolio name",
+          "example": "agent-1"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_portfolios_get",
+    "description": "GET /portfolios/{portfolio_id} — Returns portfolio metadata, balances, and positions.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "portfolio_id": {
+          "type": "string",
+          "description": "Portfolio UUID"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency for balance denomination"
+        }
+      },
+      "required": [
+        "portfolio_id"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_portfolios_edit",
+    "description": "PUT /portfolios/{portfolio_id} — Renames an existing portfolio. Metadata-only change; does not affect balances or positions. (1 fields)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "portfolio_id": {
+          "type": "string",
+          "description": "Portfolio UUID"
+        },
+        "name": {
+          "type": "string",
+          "description": "New portfolio name"
+        }
+      },
+      "required": [
+        "portfolio_id"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_portfolios_delete",
+    "description": "DELETE /portfolios/{portfolio_id} — Permanently deletes a portfolio. The portfolio must be empty first — transfer out any remaining funds and close all positions before deleting. The DEFAULT portfolio cannot be deleted.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "portfolio_id": {
+          "type": "string",
+          "description": "Portfolio UUID"
+        }
+      },
+      "required": [
+        "portfolio_id"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_products_list",
+    "description": "GET /products — Lists tradable products and their current price and 24h stats, optionally filtered by symbol or type. Read-only. Use to discover valid product_id values before placing orders.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "Filter products by symbol, matches base or quote side (e.g. USD, BTC). For a specific product use `get` (e.g. BTC-USD). Pagination ignored when set.",
+          "pattern": "^[A-Za-z0-9]+$"
+        },
+        "product_type": {
+          "type": "string",
+          "description": "Product type filter",
+          "enum": [
+            "SPOT",
+            "FUTURE"
+          ]
+        },
+        "product_ids": {
+          "type": "string",
+          "description": "Comma-separated product IDs"
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Results per page"
+        },
+        "cursor": {
+          "type": "string",
+          "description": "Pagination cursor"
+        }
+      }
+    }
+  },
+  {
+    "name": "coinbase_products_get",
+    "description": "GET /products/{product_id} — Returns full details for a single product, including price and trading increments/min sizes. Read-only. Use base_increment and base_min_size to size orders that the exchange will accept.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "description": "Product ID (e.g. BTC-USD)"
+        }
+      },
+      "required": [
+        "product_id"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_products_ticker",
+    "description": "GET /products/{product_id}/ticker — Returns recent trades plus the current best bid and ask for a product. Read-only. Use for a quick spot price snapshot before previewing or placing an order.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "description": "Trading pair (e.g. BTC-USD)"
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Number of trades. Defaults to 100."
+        }
+      },
+      "required": [
+        "product_id"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_products_book",
+    "description": "GET /products/{product_id}/book — Returns the bid/ask order book (price levels and sizes) for a product. Read-only. Use to gauge available liquidity and likely slippage before sizing a market order.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "description": "Product ID"
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Number of levels"
+        }
+      },
+      "required": [
+        "product_id"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_products_candles",
+    "description": "GET /products/{product_id}/candles — Returns historical OHLCV candles for a product at a chosen granularity and time range. Read-only. Use for price history and technical analysis.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "description": "Trading pair (e.g. BTC-USD)"
+        },
+        "start": {
+          "type": "string",
+          "description": "Start time (RFC 3339, e.g. 2024-01-01T00:00:00Z). Defaults to 60 candles before end.",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "description": "End time (RFC 3339, e.g. 2024-01-01T00:00:00Z). Defaults to now.",
+          "format": "date-time"
+        },
+        "granularity": {
+          "type": "string",
+          "description": "Candle interval: 1m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 1d. Defaults to 1h.",
+          "enum": [
+            "1m",
+            "5m",
+            "15m",
+            "30m",
+            "1h",
+            "2h",
+            "4h",
+            "6h",
+            "1d"
+          ]
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Max candles"
+        }
+      },
+      "required": [
+        "product_id"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_products_best_bid_ask",
+    "description": "GET /products/best-bid-ask — Returns best bid and ask for one or more products in a single call.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "product_ids": {
+          "type": "string",
+          "description": "Comma-separated product IDs (e.g. BTC-USD,ETH-USD)"
+        }
+      }
+    }
+  },
+  {
+    "name": "coinbase_balance",
+    "description": "GET /balance — Lists account balances across currencies, showing available funds and amounts on hold. Read-only. Use before trading or transferring to confirm available funds; available_balance excludes funds held by open orders.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "portfolio_id": {
+          "type": "string",
+          "description": "Filter by portfolio"
+        },
+        "show_zero": {
+          "type": "boolean",
+          "description": "Include zero-balance accounts (default false)"
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Results per page"
+        },
+        "cursor": {
+          "type": "string",
+          "description": "Pagination cursor"
+        }
+      }
+    }
+  },
+  {
+    "name": "coinbase_transfer",
+    "description": "POST /transfer — Moves funds of a single currency from one portfolio to another. This executes immediately and moves money — verify the source has sufficient available balance first. Both portfolio UUIDs come from portfolios_list. (4 fields, 4 required)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "description": "Amount to transfer",
+          "example": "100.00"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency",
+          "example": "USD"
+        },
+        "from": {
+          "type": "string",
+          "description": "Source portfolio UUID",
+          "example": "d17b3486-..."
+        },
+        "to": {
+          "type": "string",
+          "description": "Target portfolio UUID",
+          "example": "a44ef7a8-..."
+        }
+      },
+      "required": [
+        "amount",
+        "currency",
+        "from",
+        "to"
+      ]
+    }
+  },
+  {
+    "name": "coinbase_fees",
+    "description": "GET /fees — Fee tier, maker/taker rates, and 30-day volume.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "product_type": {
+          "type": "string",
+          "description": "Filter by product type",
+          "enum": [
+            "SPOT",
+            "FUTURE"
+          ]
+        }
+      }
+    }
+  }
+]
