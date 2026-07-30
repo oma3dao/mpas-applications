@@ -61,6 +61,9 @@ separate MPAS surfaces and should be bridged independently.
 | Stripe              | Stripe Agent Toolkit      | [stripe/agent-toolkit](https://github.com/stripe/agent-toolkit)                                        | 📋 Planned | Financial transactions. TypeScript, open source                                     |
 | Coinbase Agentic Wallet | Coinbase Payments MCP | [coinbase/payments-mcp](https://github.com/coinbase/payments-mcp)                                      | ✅ Done | Agentic Wallet, x402 payments, Bazaar discovery, wallet authentication, token sends, and trades |
 | Coinbase Advanced Trade | Coinbase CLI MCP Server | [Coinbase CLI](https://docs.cdp.coinbase.com/coinbase-cli/skill.md)                                 | 🚧 In Progress | Local stdio server for portfolios, accounts, orders, trades, conversions, and transfers; CDP API credentials required |
+| Kraken              | Kraken MCP Server         | [oilst/kraken-mcp](https://github.com/oilst/kraken-mcp)                                                | 💡 Requested | Crypto exchange access. Protect order placement, cancellation, withdrawals, and other account mutations |
+| Robinhood Crypto    | Robinhood Crypto MCP Server | [rohitsingh-iitd/robinhood-mcp-server](https://github.com/rohitsingh-iitd/robinhood-mcp-server)      | 💡 Requested | Brokerage and crypto trading. Protect orders, transfers, and account-level mutations |
+| Fastly              | Official Fastly MCP Server | [fastly/mcp](https://github.com/fastly/mcp)                                                            | 💡 Requested | CDN control plane. Protect service configuration, deployments, purges, and security changes |
 
 ## Tier 3 — Enterprise Tools
 
