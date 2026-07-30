@@ -6,12 +6,13 @@ To request a new application or volunteer to build one, open a PR updating this 
 
 ## Status Key
 
-| Status       | Meaning                                  |
-| :----------- | :--------------------------------------- |
-| ✅ Done      | Plugin and bridge merged                 |
-| 🚧 In Progress | Actively being built                  |
-| 📋 Planned   | Prioritized, not yet started             |
-| 💡 Requested | Community-requested, not yet prioritized |
+| Status | Meaning |
+| :----- | :------ |
+| 🟢 In Production | Deployed and available for production use |
+| ✅ Tested | Bridge implementation is complete and validated, but production availability is not claimed |
+| 🚧 In Development | Actively being built |
+| 📋 Planned | Prioritized, not yet started |
+| 💡 Requested | Requested, not yet prioritized |
 
 ## Prioritization Criteria
 
@@ -31,63 +32,65 @@ When listing upstream sources, use the best available option for building a brid
 
 ---
 
-## Tier 1 — Databases, MVP, and Highest Priority
+## Development
 
-Database bridges are the immediate priority because repositories often already have native
-review workflows, while production databases commonly expose irreversible mutations to a
-single credential. Provider control-plane tools and direct database data-plane tools are
-separate MPAS surfaces and should be bridged independently.
+Developer infrastructure is the largest segment. Database provider control planes and direct
+database data planes are separate MPAS surfaces and should be bridged independently.
 
-| Application          | Upstream                       | Upstream Source                                                                 | Status         | Notes                                                                                       |
-| :------------------- | :----------------------------- | :------------------------------------------------------------------------------ | :------------- | :------------------------------------------------------------------------------------------ |
-| PostgreSQL           | Reference PostgreSQL MCP Server | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers/tree/main/src/postgres) | ✅ Done | Generic data-plane bridge. Protect arbitrary SQL, DDL, migrations, and destructive writes  |
-| Supabase             | Official Supabase MCP Server   | [supabase/mcp](https://github.com/supabase/mcp)                                | ✅ Done | Popular hosted Postgres platform. Protect SQL, migrations, branches, auth, storage, and project operations |
-| Neon                 | Official Neon MCP Server       | [neondatabase/mcp-server-neon](https://github.com/neondatabase/mcp-server-neon) | ✅ Done | Protect SQL, migrations, project/branch deletion, resets, and credential changes            |
-| MongoDB              | Official MongoDB MCP Server    | [mongodb-js/mongodb-mcp-server](https://github.com/mongodb-js/mongodb-mcp-server) | ✅ Done | Document database and Atlas control plane. Protect drops, deletes, index changes, and cluster operations |
-| PlanetScale          | Official PlanetScale MCP Server | [planetscale/mcp-server](https://github.com/planetscale/mcp-server)           | ✅ Done | MySQL/Postgres provider with explicit write-query tools. Protect writes, DDL, and branch operations |
-| Firebase / Firestore | Official Firebase MCP Server   | [firebase/firebase-tools](https://github.com/firebase/firebase-tools)          | ✅ Done | Protect Firestore/Realtime Database writes plus project, rules, auth, and service operations |
-| Upstash              | Official Upstash MCP Server    | [upstash/mcp-server](https://github.com/upstash/mcp-server)                    | ✅ Done | Serverless Redis and data services. Protect flush/delete, database lifecycle, and credential operations |
-| Railway              | Official Railway MCP Server    | [railwayapp/cli](https://github.com/railwayapp/cli)                            | ✅ Done | Control-plane bridge for projects, services, environments, deployments, variables, volumes, and backups; direct DB access uses the matching database bridge |
-| GitHub               | Official GitHub MCP Server     | [github/github-mcp-server](https://github.com/github/github-mcp-server)        | 📋 Planned     | MVP target. Most-installed MCP server. Go, open source. High-impact: merge, delete, deploy  |
-| Slack                | Slack MCP Server               | [modelcontextprotocol/servers/slack](https://github.com/modelcontextprotocol/servers/tree/main/src/slack) | 📋 Planned | Heavily used by agents. High-impact: post messages, invite users. TypeScript, open source   |
-| Kubernetes           | Kubernetes MCP Server          | [stormforge-llc/mcp-k8s-go](https://github.com/stormforge-llc/mcp-k8s-go)     | 📋 Planned     | 1,188+ downloads. Extreme blast radius: cluster admin, resource deletion, scaling           |
+| Application | Upstream | Upstream Source | Status | Notes |
+| :---------- | :------- | :-------------- | :----- | :---- |
+| GitHub | Official GitHub MCP Server | [github/github-mcp-server](https://github.com/github/github-mcp-server) | 🟢 In Production | Protect merges, branch deletion, releases, and other repository mutations |
+| PostgreSQL | Reference PostgreSQL MCP Server | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers/tree/main/src/postgres) | ✅ Tested | Generic data-plane bridge. Protect SQL, DDL, migrations, and destructive writes |
+| Supabase | Official Supabase MCP Server | [supabase/mcp](https://github.com/supabase/mcp) | ✅ Tested | Protect SQL, migrations, branches, auth, storage, and project operations |
+| Neon | Official Neon MCP Server | [neondatabase/mcp-server-neon](https://github.com/neondatabase/mcp-server-neon) | ✅ Tested | Protect SQL, migrations, project and branch deletion, resets, and credential changes |
+| MongoDB | Official MongoDB MCP Server | [mongodb-js/mongodb-mcp-server](https://github.com/mongodb-js/mongodb-mcp-server) | ✅ Tested | Protect drops, deletes, index changes, and Atlas cluster operations |
+| PlanetScale | Official PlanetScale MCP Server | [planetscale/mcp-server](https://github.com/planetscale/mcp-server) | ✅ Tested | Protect writes, DDL, and database branch operations |
+| Firebase / Firestore | Official Firebase MCP Server | [firebase/firebase-tools](https://github.com/firebase/firebase-tools) | ✅ Tested | Protect database writes plus project, rules, auth, and service operations |
+| Upstash | Official Upstash MCP Server | [upstash/mcp-server](https://github.com/upstash/mcp-server) | ✅ Tested | Protect flush/delete, database lifecycle, and credential operations |
+| Railway | Official Railway MCP Server | [railwayapp/cli](https://github.com/railwayapp/cli) | ✅ Tested | Protect projects, services, deployments, variables, volumes, and backups |
+| Fastly | Official Fastly MCP Server | [fastly/mcp](https://github.com/fastly/mcp) | 💡 Requested | Protect service configuration, deployments, purges, and security changes |
+| Vercel | Vercel MCP Server | TBD | 💡 Requested | Protect projects, deployments, domains, environment variables, and team settings |
+| AWS | AWS MCP Servers | [awslabs/mcp](https://github.com/awslabs/mcp) | 📋 Planned | Multiple servers covering cloud infrastructure and developer workflows |
+| Kubernetes | Kubernetes MCP Server | [stormforge-llc/mcp-k8s-go](https://github.com/stormforge-llc/mcp-k8s-go) | 📋 Planned | Protect cluster administration, resource deletion, and scaling |
+| Terraform | Terraform MCP Server | [hashicorp/terraform-mcp-server](https://github.com/hashicorp/terraform-mcp-server) | 📋 Planned | Infrastructure changes have a large blast radius |
+| GitLab | GitLab MCP Server | [gitlab-org/editor-extensions/gitlab-mcp-server](https://gitlab.com/gitlab-org/editor-extensions/gitlab-mcp-server) | 📋 Planned | Protect source control and CI/CD mutations |
+| Linear | Linear MCP Server | [jerhadf/linear-mcp-server](https://github.com/jerhadf/linear-mcp-server) | 📋 Planned | Protect issue, project, and workspace mutations |
+| Jira / Confluence | Atlassian MCP Server | [atlassian/atlassian-mcp-server](https://github.com/atlassian/atlassian-mcp-server) | 📋 Planned | Remote endpoint only; protect project and knowledge-base mutations |
+| Asana | Asana MCP Server | TBD | 📋 Planned | Protect project and task mutations |
+| CircleCI | CircleCI MCP Server | TBD | 📋 Planned | Protect CI/CD pipeline control |
+| Bitbucket | Bitbucket MCP Server | TBD | 📋 Planned | Protect source control and pipeline mutations |
 
-## Tier 2 — High Impact Infrastructure and Finance
+## Communications
 
-| Application         | Upstream                  | Upstream Source                                                                                         | Status     | Notes                                                                               |
-| :------------------ | :------------------------ | :------------------------------------------------------------------------------------------------------ | :--------- | :---------------------------------------------------------------------------------- |
-| Terraform           | Terraform MCP Server      | [hashicorp/terraform-mcp-server](https://github.com/hashicorp/terraform-mcp-server)                    | 📋 Planned | 1,062+ downloads. Infra-as-code changes have massive blast radius                   |
-| Linear              | Linear MCP Server         | [jerhadf/linear-mcp-server](https://github.com/jerhadf/linear-mcp-server)                              | 📋 Planned | Popular with AI agents/startups. TypeScript, open source. Run via npx               |
-| Stripe              | Stripe Agent Toolkit      | [stripe/agent-toolkit](https://github.com/stripe/agent-toolkit)                                        | 📋 Planned | Financial transactions. TypeScript, open source                                     |
-| Coinbase Agentic Wallet | Coinbase Payments MCP | [coinbase/payments-mcp](https://github.com/coinbase/payments-mcp)                                      | ✅ Done | Agentic Wallet, x402 payments, Bazaar discovery, wallet authentication, token sends, and trades |
-| Coinbase Advanced Trade | Coinbase CLI MCP Server | [Coinbase CLI](https://docs.cdp.coinbase.com/coinbase-cli/skill.md)                                 | 🚧 In Progress | Local stdio server for portfolios, accounts, orders, trades, conversions, and transfers; CDP API credentials required |
+This segment covers marketing, customer communications, collaboration, and publishing.
 
-## Tier 3 — Enterprise Tools
+| Application | Upstream | Upstream Source | Status | Notes |
+| :---------- | :------- | :-------------- | :----- | :---- |
+| Plain | Plain.com MCP Server | [tellahq/plain-mcp](https://github.com/tellahq/plain-mcp) | 🚧 In Development | Protect customer communications, records, help centers, automations, and webhooks |
+| X / Twitter | X (Twitter) MCP Server | [rafaljanicki/x-twitter-mcp-server](https://github.com/rafaljanicki/x-twitter-mcp-server) | 🚧 In Development | Protect public publishing, deletion, engagement, and account-context reads |
+| Slack | Slack MCP Server | [modelcontextprotocol/servers/slack](https://github.com/modelcontextprotocol/servers/tree/main/src/slack) | 📋 Planned | Protect messages, invitations, and workspace mutations |
+| HubSpot | HubSpot MCP Server | TBD | 💡 Requested | Protect CRM, marketing, sales, and customer communication workflows |
+| Klaviyo | Klaviyo MCP Server | TBD | 💡 Requested | Protect campaigns, flows, audiences, and customer messaging |
+| beehiiv | beehiiv MCP Server | TBD | 💡 Requested | Protect newsletter publishing, automations, audiences, and subscriptions |
+| Gmail | Gmail MCP Server | TBD | 💡 Requested | Protect sending, deleting, labeling, and account-level email operations |
+| Outlook | Outlook MCP Server | TBD | 💡 Requested | Protect email, calendar, contact, and mailbox operations |
+| Discord | Discord MCP Server | TBD | 📋 Planned | Protect community messages, roles, channels, and moderation |
+| Microsoft Teams | Teams MCP Server | TBD | 📋 Planned | Protect enterprise messaging and collaboration actions |
+| LinkedIn | LinkedIn MCP Server | TBD | 📋 Planned | Protect professional publishing and engagement |
+| YouTube | YouTube MCP Server | TBD | 📋 Planned | Protect content publishing and channel management |
 
-| Application        | Upstream                  | Upstream Source                                                                                                     | Status     | Notes                                                         |
-| :----------------- | :------------------------ | :------------------------------------------------------------------------------------------------------------------ | :--------- | :------------------------------------------------------------ |
-| Jira / Confluence  | Atlassian MCP Server      | [atlassian/atlassian-mcp-server](https://github.com/atlassian/atlassian-mcp-server)                                 | 📋 Planned | Remote endpoint only. OAuth required. Lower MCP adoption than expected |
-| GitLab             | GitLab MCP Server         | [gitlab-org/editor-extensions/gitlab-mcp-server](https://gitlab.com/gitlab-org/editor-extensions/gitlab-mcp-server) | 📋 Planned | TypeScript, open source                                       |
-| AWS                | AWS MCP Servers           | [awslabs/mcp](https://github.com/awslabs/mcp)                                                                      | 📋 Planned | Python, open source. Multiple servers (CDK, docs, etc.)       |
-| Plain              | Plain.com MCP Server      | [tellahq/plain-mcp](https://github.com/tellahq/plain-mcp)                                                          | 🚧 In Progress | Customer support platform. Protect customer communications, records, help centers, automations, and webhooks |
+## Trading
 
-## Tier 4 — Broader Ecosystem
+This segment covers exchanges, brokerage, payments, and other financial transaction surfaces.
 
-| Application       | Upstream              | Upstream Source | Status     | Notes                            |
-| :---------------- | :-------------------- | :-------------- | :--------- | :------------------------------- |
-| Discord           | Discord MCP Server    | TBD             | 📋 Planned | Community management actions     |
-| Asana             | Asana MCP Server      | TBD             | 📋 Planned | Project management               |
-| CircleCI          | CircleCI MCP Server   | TBD             | 📋 Planned | CI/CD pipeline control           |
-| Bitbucket         | Bitbucket MCP Server  | TBD             | 📋 Planned | Source control                   |
-| Microsoft Teams   | Teams MCP Server      | TBD             | 📋 Planned | Enterprise messaging             |
-
-## Tier 5 — Social and Publishing
-
-| Application  | Upstream             | Upstream Source | Status     | Notes                  |
-| :----------- | :------------------- | :-------------- | :--------- | :--------------------- |
-| X/Twitter    | X (Twitter) MCP Server | [rafaljanicki/x-twitter-mcp-server](https://github.com/rafaljanicki/x-twitter-mcp-server) | 🚧 In Progress | Official X API v2 integration. Protect public publishing, deletion, engagement, and account-context reads |
-| LinkedIn     | LinkedIn MCP Server  | TBD             | 📋 Planned | Professional publishing |
-| YouTube      | YouTube MCP Server   | TBD             | 📋 Planned | Content publishing     |
+| Application | Upstream | Upstream Source | Status | Notes |
+| :---------- | :------- | :-------------- | :----- | :---- |
+| Coinbase Agentic Wallet | Coinbase Payments MCP | [coinbase/payments-mcp](https://github.com/coinbase/payments-mcp) | ✅ Tested | Protect wallet authentication, token sends, payments, transfers, and trades |
+| Coinbase Advanced Trade | Coinbase CLI MCP Server | [Coinbase CLI](https://docs.cdp.coinbase.com/coinbase-cli/skill.md) | 🚧 In Development | Protect portfolios, accounts, orders, trades, conversions, and transfers |
+| Kraken | Kraken MCP Server | [oilst/kraken-mcp](https://github.com/oilst/kraken-mcp) | 💡 Requested | Protect orders, cancellations, withdrawals, and other account mutations |
+| Robinhood Crypto | Robinhood Crypto MCP Server | [rohitsingh-iitd/robinhood-mcp-server](https://github.com/rohitsingh-iitd/robinhood-mcp-server) | 💡 Requested | Protect brokerage and crypto orders, transfers, and account mutations |
+| Alpaca | Official Alpaca MCP Server | [alpacahq/alpaca-mcp-server](https://github.com/alpacahq/alpaca-mcp-server) | 💡 Requested | Protect equity and crypto orders, cancellations, positions, and account mutations |
+| Stripe | Stripe Agent Toolkit | [stripe/agent-toolkit](https://github.com/stripe/agent-toolkit) | 📋 Planned | Protect payments, refunds, transfers, subscriptions, and account mutations |
 
 ---
 
@@ -125,7 +128,7 @@ Database and database-platform bridges must:
 
 To add an application to the roadmap:
 
-1. Open a PR adding a row to the appropriate tier (or create a new tier).
+1. Open a PR adding a row to the appropriate segment (or propose a new segment).
 2. Include the application name, upstream MCP server repo/URL, and why it matters.
 3. Set the status to 💡 Requested.
 
@@ -134,4 +137,5 @@ To build an application:
 1. Use the builder in [`tool/`](tool/) to generate the plugin, bridge, and tests.
 2. Output lands in `applications/<name>/`.
 3. Open a PR for review.
-4. Update the status in this file to 🚧 In Progress or ✅ Done.
+4. Update the status in this file as the bridge moves through 🚧 In Development,
+   ✅ Tested, and 🟢 In Production.
