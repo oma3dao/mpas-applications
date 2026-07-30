@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "coinbase",
+    "version": "0.0.4"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "coinbase",
+    "mcp"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-30T01:14:54.880Z"
+}

@@ -59,6 +59,8 @@ separate MPAS surfaces and should be bridged independently.
 | Terraform           | Terraform MCP Server      | [hashicorp/terraform-mcp-server](https://github.com/hashicorp/terraform-mcp-server)                    | 📋 Planned | 1,062+ downloads. Infra-as-code changes have massive blast radius                   |
 | Linear              | Linear MCP Server         | [jerhadf/linear-mcp-server](https://github.com/jerhadf/linear-mcp-server)                              | 📋 Planned | Popular with AI agents/startups. TypeScript, open source. Run via npx               |
 | Stripe              | Stripe Agent Toolkit      | [stripe/agent-toolkit](https://github.com/stripe/agent-toolkit)                                        | 📋 Planned | Financial transactions. TypeScript, open source                                     |
+| Coinbase Agentic Wallet | Coinbase Payments MCP | [coinbase/payments-mcp](https://github.com/coinbase/payments-mcp)                                      | ✅ Done | Agentic Wallet, x402 payments, Bazaar discovery, wallet authentication, token sends, and trades |
+| Coinbase Advanced Trade | Coinbase CLI MCP Server | [Coinbase CLI](https://docs.cdp.coinbase.com/coinbase-cli/skill.md)                                 | 🚧 In Progress | Local stdio server for portfolios, accounts, orders, trades, conversions, and transfers; CDP API credentials required |
 
 ## Tier 3 — Enterprise Tools
 
