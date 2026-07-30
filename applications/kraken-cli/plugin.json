@@ -1,0 +1,3106 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:kraken-cli-mcp-server",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:kraken-cli-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2024-11-05"
+  },
+  "credentialRequirements": [
+    {
+      "type": "krakenSpotApiKey",
+      "requiredCapabilities": [
+        "account:read",
+        "orders:write",
+        "funding:write",
+        "earn:write",
+        "subaccounts:write"
+      ],
+      "description": "Kraken Spot API key scoped to the intended account and minimum required permissions. The Credential Adapter must retain it and must never disclose it to the proposer."
+    },
+    {
+      "type": "krakenSpotApiSecret",
+      "requiredCapabilities": [
+        "account:read",
+        "orders:write",
+        "funding:write",
+        "earn:write",
+        "subaccounts:write"
+      ],
+      "description": "Secret paired with the scoped Kraken Spot API key. It must remain inside the Credential Adapter and must never be disclosed to the proposer."
+    },
+    {
+      "type": "krakenFuturesApiKey",
+      "requiredCapabilities": [
+        "futures:read",
+        "futures:trade",
+        "futures:transfer"
+      ],
+      "description": "Optional Kraken Futures API key scoped to the intended futures account and minimum required permissions. The Credential Adapter must retain it and must never disclose it to the proposer."
+    },
+    {
+      "type": "krakenFuturesApiSecret",
+      "requiredCapabilities": [
+        "futures:read",
+        "futures:trade",
+        "futures:transfer"
+      ],
+      "description": "Optional secret paired with the Kraken Futures API key. It must remain inside the Credential Adapter and must never be disclosed to the proposer."
+    }
+  ],
+  "operations": {
+    "kraken_auth_show": {
+      "description": "Show configured API key (secret is masked)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_auth_show"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_auth_test": {
+      "description": "Test authentication by calling the Balance endpoint",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_auth_test"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_balance": {
+      "description": "Get all cash balances",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_balance"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_closed_orders": {
+      "description": "Get closed orders",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_closed_orders"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "cl_ord_id": {
+                "description": "Filter by client order ID",
+                "type": "string"
+              },
+              "closetime": {
+                "description": "Which time to use (open, close, both)",
+                "type": "string"
+              },
+              "consolidate_taker": {
+                "description": "Consolidate trades by individual taker trades",
+                "type": "boolean"
+              },
+              "end": {
+                "description": "End unix timestamp or order tx ID (inclusive)",
+                "type": "string"
+              },
+              "offset": {
+                "description": "Result offset for pagination",
+                "type": "string"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              },
+              "start": {
+                "description": "Start unix timestamp or order tx ID (exclusive)",
+                "type": "string"
+              },
+              "trades": {
+                "description": "Include trades",
+                "type": "boolean"
+              },
+              "userref": {
+                "description": "User reference filter",
+                "type": "string"
+              },
+              "without_count": {
+                "description": "Omit page count from result (faster for large histories)",
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_credit_lines": {
+      "description": "Get credit line details (VIP only)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_credit_lines"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_deposit_addresses": {
+      "description": "Get deposit addresses",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_deposit_addresses"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "amount": {
+                "description": "Amount to deposit (required for Bitcoin Lightning)",
+                "type": "string"
+              },
+              "asset": {
+                "type": "string"
+              },
+              "asset_class": {
+                "description": "Asset class (currency or tokenized_asset for xstocks)",
+                "type": "string"
+              },
+              "method": {
+                "type": "string"
+              },
+              "new": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "asset",
+              "method"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_deposit_methods": {
+      "description": "Get deposit methods for an asset",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_deposit_methods"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "asset": {
+                "type": "string"
+              },
+              "asset_class": {
+                "description": "Asset class (currency or tokenized_asset for xstocks)",
+                "type": "string"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              }
+            },
+            "required": [
+              "asset"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_deposit_status": {
+      "description": "Get deposit status",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_deposit_status"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "asset": {
+                "type": "string"
+              },
+              "asset_class": {
+                "description": "Asset class (currency or tokenized_asset for xstocks)",
+                "type": "string"
+              },
+              "cursor": {
+                "description": "Enable pagination (true/false) or cursor for next page",
+                "type": "string"
+              },
+              "end": {
+                "description": "End timestamp (deposits after this are excluded)",
+                "type": "string"
+              },
+              "limit": {
+                "description": "Number of results per page",
+                "type": "string"
+              },
+              "method": {
+                "type": "string"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              },
+              "start": {
+                "description": "Start timestamp (deposits before this are excluded)",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_earn_allocate": {
+      "description": "[DANGEROUS: requires human confirmation] Allocate funds to an earn strategy",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_earn_allocate"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "amount": {
+                "description": "Amount to allocate",
+                "type": "string"
+              },
+              "strategy_id": {
+                "description": "Strategy ID",
+                "type": "string"
+              }
+            },
+            "required": [
+              "strategy_id",
+              "amount",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_earn_allocate_status": {
+      "description": "Check allocation status",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_earn_allocate_status"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "strategy_id": {
+                "description": "Strategy ID",
+                "type": "string"
+              }
+            },
+            "required": [
+              "strategy_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_earn_allocations": {
+      "description": "Get current allocations",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_earn_allocations"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "ascending": {
+                "description": "Sort ascending (default: descending)",
+                "type": "boolean"
+              },
+              "converted_asset": {
+                "description": "Secondary currency to express allocation value (default: USD)",
+                "type": "string"
+              },
+              "hide_zero_allocations": {
+                "description": "Omit strategies with zero allocations",
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_earn_deallocate": {
+      "description": "[DANGEROUS: requires human confirmation] Deallocate funds from an earn strategy",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_earn_deallocate"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "amount": {
+                "description": "Amount to deallocate",
+                "type": "string"
+              },
+              "strategy_id": {
+                "description": "Strategy ID",
+                "type": "string"
+              }
+            },
+            "required": [
+              "strategy_id",
+              "amount",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_earn_deallocate_status": {
+      "description": "Check deallocation status",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_earn_deallocate_status"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "strategy_id": {
+                "description": "Strategy ID",
+                "type": "string"
+              }
+            },
+            "required": [
+              "strategy_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_earn_strategies": {
+      "description": "List available earn strategies",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_earn_strategies"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "ascending": {
+                "description": "Sort ascending (default: descending)",
+                "type": "boolean"
+              },
+              "asset": {
+                "description": "Filter by asset",
+                "type": "string"
+              },
+              "cursor": {
+                "description": "Cursor for next page of results",
+                "type": "string"
+              },
+              "limit": {
+                "description": "Number of items per page",
+                "type": "string"
+              },
+              "lock_type": {
+                "description": "Filter by lock type (flex, bonded, timed, instant). Can specify multiple",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_export_delete": {
+      "description": "Delete export report",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_export_delete"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "report_id": {
+                "description": "Report ID",
+                "type": "string"
+              }
+            },
+            "required": [
+              "report_id"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_export_report": {
+      "description": "Request an export report",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_export_report"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "description": {
+                "description": "Description for the export",
+                "type": "string"
+              },
+              "endtm": {
+                "description": "UNIX timestamp for report end time (default: now)",
+                "type": "string"
+              },
+              "fields": {
+                "description": "Comma-delimited list of fields to include (default: all)",
+                "type": "string"
+              },
+              "format": {
+                "default": "CSV",
+                "description": "File format (CSV or TSV)",
+                "type": "string"
+              },
+              "report": {
+                "description": "Type of data to export (trades or ledgers)",
+                "type": "string"
+              },
+              "starttm": {
+                "description": "UNIX timestamp for report start time (default: 1st of current month)",
+                "type": "string"
+              }
+            },
+            "required": [
+              "report",
+              "description"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_export_retrieve": {
+      "description": "[DANGEROUS: requires human confirmation] Download export report",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_export_retrieve"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "output_file": {
+                "description": "Output file path",
+                "type": "string"
+              },
+              "report_id": {
+                "description": "Report ID",
+                "type": "string"
+              }
+            },
+            "required": [
+              "report_id",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_export_status": {
+      "description": "Check export report status",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_export_status"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "report": {
+                "description": "Report type (trades or ledgers)",
+                "type": "string"
+              }
+            },
+            "required": [
+              "report"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_extended_balance": {
+      "description": "Get extended balances (balance, credit, credit_used, hold_trade)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_extended_balance"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_accounts": {
+      "description": "Get futures account/wallet info (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_accounts"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_assignment_programs": {
+      "description": "Get current assignment programs (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_assignment_programs"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_batch_order": {
+      "description": "[DANGEROUS: requires human confirmation] Place a batch of futures orders (auth required)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_batch_order"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "orders_json": {
+                "description": "Orders as JSON array or path to JSON file (prefix with @)",
+                "type": "string"
+              }
+            },
+            "required": [
+              "orders_json",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_cancel": {
+      "description": "[DANGEROUS: requires human confirmation] Cancel a futures order by order_id or client order id (auth required)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_cancel"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "cli_ord_id": {
+                "description": "Client order ID",
+                "type": "string"
+              },
+              "order_id": {
+                "description": "Exchange order ID",
+                "type": "string"
+              }
+            },
+            "required": [
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_cancel_after": {
+      "description": "[DANGEROUS: requires human confirmation] Dead man's switch: cancel all orders after timeout (auth required)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_cancel_after"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "timeout": {
+                "description": "Timeout in seconds (0 to disable)",
+                "type": "string"
+              }
+            },
+            "required": [
+              "timeout",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_cancel_all": {
+      "description": "[DANGEROUS: requires human confirmation] Cancel all futures orders (auth required)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_cancel_all"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "symbol": {
+                "description": "Filter by symbol",
+                "type": "string"
+              }
+            },
+            "required": [
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_edit_order": {
+      "description": "[DANGEROUS: requires human confirmation] Edit an existing futures order (auth required)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_edit_order"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "order_id": {
+                "description": "Order ID to edit",
+                "type": "string"
+              },
+              "price": {
+                "description": "New limit price",
+                "type": "string"
+              },
+              "size": {
+                "description": "New order size",
+                "type": "string"
+              },
+              "stop_price": {
+                "description": "New stop price",
+                "type": "string"
+              }
+            },
+            "required": [
+              "order_id",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_fee_schedule_volumes": {
+      "description": "Get fee schedule volumes (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_fee_schedule_volumes"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_fills": {
+      "description": "Get recent fills (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_fills"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "since": {
+                "description": "Filter since this timestamp",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_history_account_log_csv": {
+      "description": "Download account log as CSV (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_history_account_log_csv"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "before": {
+                "description": "Filter before this timestamp",
+                "type": "string"
+              },
+              "since": {
+                "description": "Filter since this timestamp",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_history_executions": {
+      "description": "Get execution history (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_history_executions"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "before": {
+                "description": "Filter before this timestamp",
+                "type": "string"
+              },
+              "since": {
+                "description": "Filter since this timestamp",
+                "type": "string"
+              },
+              "sort": {
+                "description": "Sort order (asc or desc)",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_history_orders": {
+      "description": "Get order history (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_history_orders"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "before": {
+                "description": "Filter before this timestamp",
+                "type": "string"
+              },
+              "since": {
+                "description": "Filter since this timestamp",
+                "type": "string"
+              },
+              "sort": {
+                "description": "Sort order (asc or desc)",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_history_triggers": {
+      "description": "Get trigger history (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_history_triggers"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "before": {
+                "description": "Filter before this timestamp",
+                "type": "string"
+              },
+              "since": {
+                "description": "Filter since this timestamp",
+                "type": "string"
+              },
+              "sort": {
+                "description": "Sort order (asc or desc)",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_leverage": {
+      "description": "Get current leverage preference (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_leverage"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "symbol": {
+                "description": "Filter by symbol (omit for all)",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_notifications": {
+      "description": "Get notifications (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_notifications"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_open_orders": {
+      "description": "Get open futures orders (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_open_orders"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_order_buy": {
+      "description": "[DANGEROUS: requires human confirmation] Place a buy order",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_order_buy"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "client_order_id": {
+                "description": "Client order ID for correlation",
+                "type": "string"
+              },
+              "price": {
+                "description": "Limit price",
+                "type": "string"
+              },
+              "reduce_only": {
+                "description": "Reduce-only flag",
+                "type": "boolean"
+              },
+              "size": {
+                "description": "Order size",
+                "type": "string"
+              },
+              "stop_price": {
+                "description": "Stop price (for stop and take-profit orders)",
+                "type": "string"
+              },
+              "symbol": {
+                "description": "Futures symbol",
+                "type": "string"
+              },
+              "trailing_stop_deviation_unit": {
+                "description": "Trailing stop deviation unit (percent or quote_currency)",
+                "type": "string"
+              },
+              "trailing_stop_max_deviation": {
+                "description": "Trailing stop max deviation",
+                "type": "string"
+              },
+              "trigger_signal": {
+                "description": "Trigger signal: mark, index, or last",
+                "enum": [
+                  "mark",
+                  "index",
+                  "last"
+                ],
+                "type": "string"
+              },
+              "type": {
+                "default": "limit",
+                "description": "Order type",
+                "enum": [
+                  "limit",
+                  "post",
+                  "market",
+                  "stop",
+                  "take-profit",
+                  "ioc",
+                  "trailing-stop",
+                  "fok"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "symbol",
+              "size",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_order_sell": {
+      "description": "[DANGEROUS: requires human confirmation] Place a sell order",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_order_sell"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "client_order_id": {
+                "description": "Client order ID for correlation",
+                "type": "string"
+              },
+              "price": {
+                "description": "Limit price",
+                "type": "string"
+              },
+              "reduce_only": {
+                "description": "Reduce-only flag",
+                "type": "boolean"
+              },
+              "size": {
+                "description": "Order size",
+                "type": "string"
+              },
+              "stop_price": {
+                "description": "Stop price (for stop and take-profit orders)",
+                "type": "string"
+              },
+              "symbol": {
+                "description": "Futures symbol",
+                "type": "string"
+              },
+              "trailing_stop_deviation_unit": {
+                "description": "Trailing stop deviation unit (percent or quote_currency)",
+                "type": "string"
+              },
+              "trailing_stop_max_deviation": {
+                "description": "Trailing stop max deviation",
+                "type": "string"
+              },
+              "trigger_signal": {
+                "description": "Trigger signal: mark, index, or last",
+                "enum": [
+                  "mark",
+                  "index",
+                  "last"
+                ],
+                "type": "string"
+              },
+              "type": {
+                "default": "limit",
+                "description": "Order type",
+                "enum": [
+                  "limit",
+                  "post",
+                  "market",
+                  "stop",
+                  "take-profit",
+                  "ioc",
+                  "trailing-stop",
+                  "fok"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "symbol",
+              "size",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_order_status": {
+      "description": "Get status of orders by ID (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_order_status"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "order_ids": {
+                "description": "Order ID to query",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "order_ids"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_pnl_preferences": {
+      "description": "Get PnL preferences (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_pnl_preferences"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_positions": {
+      "description": "Get open futures positions (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_positions"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_set_leverage": {
+      "description": "Set leverage preference for a symbol (auth required)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_set_leverage"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "leverage": {
+                "description": "Max leverage value (omit to use cross margin)",
+                "type": "string"
+              },
+              "symbol": {
+                "description": "Futures symbol",
+                "type": "string"
+              }
+            },
+            "required": [
+              "symbol"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_set_pnl_preference": {
+      "description": "Set PnL preference for a symbol (auth required)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_set_pnl_preference"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "preference": {
+                "description": "PnL preference asset (e.g. USD)",
+                "type": "string"
+              },
+              "symbol": {
+                "description": "Futures symbol (e.g. PF_XBTUSD)",
+                "type": "string"
+              }
+            },
+            "required": [
+              "symbol",
+              "preference"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_set_subaccount_status": {
+      "description": "[DANGEROUS: requires human confirmation] Set trading-enabled for a subaccount (auth required)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_set_subaccount_status"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "subaccount_uid": {
+                "description": "Subaccount UID",
+                "type": "string"
+              },
+              "trading_enabled": {
+                "description": "Enable or disable trading (true/false, yes/no, 1/0)",
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "subaccount_uid",
+              "trading_enabled",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_subaccount_status": {
+      "description": "Get trading-enabled status for a subaccount (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_subaccount_status"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "subaccount_uid": {
+                "description": "Subaccount UID",
+                "type": "string"
+              }
+            },
+            "required": [
+              "subaccount_uid"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_subaccounts": {
+      "description": "Get subaccounts (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_subaccounts"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_transfer": {
+      "description": "[DANGEROUS: requires human confirmation] Transfer funds between spot and futures wallets (auth required)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_transfer"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "amount": {
+                "description": "Amount",
+                "type": "string"
+              },
+              "currency": {
+                "description": "Currency (e.g. USD, XBT)",
+                "type": "string"
+              }
+            },
+            "required": [
+              "amount",
+              "currency",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_transfers": {
+      "description": "Get futures transfer history (auth required)",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_transfers"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_unwind_queue": {
+      "description": "Get unwind queue (auth required)",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_unwind_queue"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_futures_wallet_transfer": {
+      "description": "[DANGEROUS: requires human confirmation] Transfer between wallets (auth required)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_futures_wallet_transfer"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "amount": {
+                "description": "Amount to transfer",
+                "type": "string"
+              },
+              "from_account": {
+                "description": "Source account",
+                "type": "string"
+              },
+              "to_account": {
+                "description": "Destination account",
+                "type": "string"
+              },
+              "unit": {
+                "description": "Currency unit (e.g. USD, XBT)",
+                "type": "string"
+              }
+            },
+            "required": [
+              "from_account",
+              "to_account",
+              "unit",
+              "amount",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_ledgers": {
+      "description": "Get ledger entries",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_ledgers"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "asset": {
+                "description": "Filter by asset or comma-delimited list of assets",
+                "type": "string"
+              },
+              "asset_class": {
+                "description": "Filter by asset class",
+                "type": "string"
+              },
+              "end": {
+                "description": "Ending unix timestamp or ledger ID (inclusive)",
+                "type": "string"
+              },
+              "ledger_type": {
+                "description": "Type of ledger to retrieve",
+                "type": "string"
+              },
+              "offset": {
+                "description": "Result offset for pagination",
+                "type": "string"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              },
+              "start": {
+                "description": "Starting unix timestamp or ledger ID (exclusive)",
+                "type": "string"
+              },
+              "without_count": {
+                "description": "Omit count from result (faster for large ledgers)",
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_open_orders": {
+      "description": "Get open orders",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_open_orders"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "cl_ord_id": {
+                "description": "Filter by client order ID",
+                "type": "string"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              },
+              "trades": {
+                "description": "Include trades",
+                "type": "boolean"
+              },
+              "userref": {
+                "description": "User reference filter",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_order_amend": {
+      "description": "[DANGEROUS: requires human confirmation] Amend a live order in-place (preserves queue priority and identifiers)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_order_amend"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "cl_ord_id": {
+                "description": "Client order ID of the order to amend (either --txid or --cl-ord-id required)",
+                "type": "string"
+              },
+              "deadline": {
+                "description": "RFC3339 deadline (min now()+2s, max now()+60s)",
+                "type": "string"
+              },
+              "display_qty": {
+                "description": "New display quantity for iceberg orders (min 1/15 of remaining quantity)",
+                "type": "string"
+              },
+              "limit_price": {
+                "description": "New limit price (supports +/- relative and % suffix)",
+                "type": "string"
+              },
+              "order_qty": {
+                "description": "New order quantity in base asset",
+                "type": "string"
+              },
+              "pair": {
+                "description": "Trading pair (required for non-crypto pairs, e.g. xstocks)",
+                "type": "string"
+              },
+              "post_only": {
+                "description": "Reject amend if limit price change would cause immediate match",
+                "type": "boolean"
+              },
+              "trigger_price": {
+                "description": "New trigger price for triggered order types (supports +/- relative and % suffix)",
+                "type": "string"
+              },
+              "txid": {
+                "description": "Kraken transaction ID of the order to amend (either txid or --cl-ord-id required)",
+                "type": "string"
+              }
+            },
+            "required": [
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_order_batch": {
+      "description": "[DANGEROUS: requires human confirmation] Submit batch orders from a JSON file (2-15 orders)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_order_batch"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "asset_class": {
+                "description": "Asset class (required for non-crypto pairs, e.g. tokenized_asset for xstocks)",
+                "type": "string"
+              },
+              "deadline": {
+                "description": "RFC3339 deadline for the batch to reach the matching engine",
+                "type": "string"
+              },
+              "json_file": {
+                "description": "Path to JSON file containing order array",
+                "type": "string"
+              },
+              "pair": {
+                "description": "Asset pair (overrides pair from JSON; required if not in JSON)",
+                "type": "string"
+              },
+              "validate": {
+                "description": "Validate only (do not submit)",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "json_file",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_order_buy": {
+      "description": "[DANGEROUS: requires human confirmation] Place a buy order",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_order_buy"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "asset_class": {
+                "description": "Asset class (required for non-crypto pairs, e.g. tokenized_asset for xstocks)",
+                "type": "string"
+              },
+              "cl_ord_id": {
+                "description": "Client order ID (mutually exclusive with userref)",
+                "type": "string"
+              },
+              "close_ordertype": {
+                "description": "Conditional close order type (limit, stop-loss, take-profit, stop-loss-limit, take-profit-limit)",
+                "type": "string"
+              },
+              "close_price": {
+                "description": "Conditional close order price",
+                "type": "string"
+              },
+              "close_price2": {
+                "description": "Conditional close order secondary price",
+                "type": "string"
+              },
+              "deadline": {
+                "description": "RFC3339 deadline for the order to reach the matching engine",
+                "type": "string"
+              },
+              "displayvol": {
+                "description": "Display volume for iceberg orders (visible portion in the order book)",
+                "type": "string"
+              },
+              "expire_time": {
+                "description": "Expire time",
+                "type": "string"
+              },
+              "leverage": {
+                "description": "Leverage",
+                "type": "string"
+              },
+              "oflags": {
+                "description": "Order flags (comma-delimited: post, fcib, fciq, nompp, viqc)",
+                "type": "string"
+              },
+              "pair": {
+                "description": "Trading pair (e.g. XBTUSD)",
+                "type": "string"
+              },
+              "price": {
+                "description": "Price (required for non-market orders)",
+                "type": "string"
+              },
+              "price2": {
+                "description": "Limit price for stop-loss-limit, take-profit-limit, and trailing-stop-limit orders",
+                "type": "string"
+              },
+              "reduce_only": {
+                "description": "Reduce-only flag",
+                "type": "boolean"
+              },
+              "start_time": {
+                "description": "Start time",
+                "type": "string"
+              },
+              "stptype": {
+                "description": "Self-trade prevention type (cancel-newest, cancel-oldest, cancel-both)",
+                "type": "string"
+              },
+              "timeinforce": {
+                "description": "Time-in-force (GTC, IOC, GTD)",
+                "type": "string"
+              },
+              "trigger": {
+                "description": "Price signal for triggered orders (last or index). Applies to stop-loss, stop-loss-limit, take-profit, take-profit-limit, trailing-stop, trailing-stop-limit",
+                "type": "string"
+              },
+              "type": {
+                "default": "limit",
+                "description": "Order type (market, limit, iceberg, stop-loss, take-profit, stop-loss-limit, take-profit-limit, trailing-stop, trailing-stop-limit, settle-position)",
+                "type": "string"
+              },
+              "userref": {
+                "description": "User reference ID (signed 32-bit integer, for tagging groups of orders)",
+                "type": "string"
+              },
+              "validate": {
+                "description": "Validate only (do not submit)",
+                "type": "boolean"
+              },
+              "volume": {
+                "description": "Order volume",
+                "type": "string"
+              }
+            },
+            "required": [
+              "pair",
+              "volume",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_order_cancel": {
+      "description": "[DANGEROUS: requires human confirmation] Cancel an open order by txid, userref, or client order ID",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_order_cancel"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "cl_ord_id": {
+                "description": "Cancel by client order ID instead of txid",
+                "type": "string"
+              },
+              "txids": {
+                "description": "Transaction ID(s) or userref (comma-separated for multiple)",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_order_cancel_after": {
+      "description": "[DANGEROUS: requires human confirmation] Dead man's switch — cancel all orders after timeout",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_order_cancel_after"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "timeout": {
+                "description": "Timeout in seconds (0 to disable)",
+                "type": "string"
+              }
+            },
+            "required": [
+              "timeout",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_order_cancel_all": {
+      "description": "[DANGEROUS: requires human confirmation] Cancel all open orders",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_order_cancel_all"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_order_cancel_batch": {
+      "description": "[DANGEROUS: requires human confirmation] Cancel a batch of orders (max 50 total across txids and cl-ord-ids)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_order_cancel_batch"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "cl_ord_ids": {
+                "description": "Client order IDs to cancel (up to 50 total combined with txids)",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "txids": {
+                "description": "Transaction IDs or user references (up to 50)",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_order_edit": {
+      "description": "[DANGEROUS: requires human confirmation] Edit (cancel+replace) an order",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_order_edit"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "pair": {
+                "description": "Trading pair",
+                "type": "string"
+              },
+              "price": {
+                "description": "New price",
+                "type": "string"
+              },
+              "txid": {
+                "description": "Transaction ID of the order to edit",
+                "type": "string"
+              },
+              "volume": {
+                "description": "New volume",
+                "type": "string"
+              }
+            },
+            "required": [
+              "txid",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_order_sell": {
+      "description": "[DANGEROUS: requires human confirmation] Place a sell order",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_order_sell"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "asset_class": {
+                "description": "Asset class (required for non-crypto pairs, e.g. tokenized_asset for xstocks)",
+                "type": "string"
+              },
+              "cl_ord_id": {
+                "description": "Client order ID (mutually exclusive with userref)",
+                "type": "string"
+              },
+              "close_ordertype": {
+                "description": "Conditional close order type",
+                "type": "string"
+              },
+              "close_price": {
+                "description": "Conditional close order price",
+                "type": "string"
+              },
+              "close_price2": {
+                "description": "Conditional close order secondary price",
+                "type": "string"
+              },
+              "deadline": {
+                "description": "RFC3339 deadline for the order to reach the matching engine",
+                "type": "string"
+              },
+              "displayvol": {
+                "description": "Display volume for iceberg orders",
+                "type": "string"
+              },
+              "expire_time": {
+                "description": "Expire time",
+                "type": "string"
+              },
+              "leverage": {
+                "description": "Leverage",
+                "type": "string"
+              },
+              "oflags": {
+                "description": "Order flags (comma-delimited: post, fcib, fciq, nompp, viqc)",
+                "type": "string"
+              },
+              "pair": {
+                "description": "Trading pair",
+                "type": "string"
+              },
+              "price": {
+                "description": "Price",
+                "type": "string"
+              },
+              "price2": {
+                "description": "Limit price for stop-loss-limit, take-profit-limit, and trailing-stop-limit orders",
+                "type": "string"
+              },
+              "reduce_only": {
+                "description": "Reduce-only flag",
+                "type": "boolean"
+              },
+              "start_time": {
+                "description": "Start time",
+                "type": "string"
+              },
+              "stptype": {
+                "description": "Self-trade prevention type (cancel-newest, cancel-oldest, cancel-both)",
+                "type": "string"
+              },
+              "timeinforce": {
+                "description": "Time-in-force",
+                "type": "string"
+              },
+              "trigger": {
+                "description": "Price signal for triggered orders (last or index)",
+                "type": "string"
+              },
+              "type": {
+                "default": "limit",
+                "description": "Order type (market, limit, iceberg, stop-loss, take-profit, stop-loss-limit, take-profit-limit, trailing-stop, trailing-stop-limit, settle-position)",
+                "type": "string"
+              },
+              "userref": {
+                "description": "User reference ID (signed 32-bit integer)",
+                "type": "string"
+              },
+              "validate": {
+                "description": "Validate only",
+                "type": "boolean"
+              },
+              "volume": {
+                "description": "Order volume",
+                "type": "string"
+              }
+            },
+            "required": [
+              "pair",
+              "volume",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_positions": {
+      "description": "Get open margin positions",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_positions"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "consolidation": {
+                "description": "Consolidate positions by market/pair",
+                "type": "string"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              },
+              "show_pnl": {
+                "description": "Include P&L calculations",
+                "type": "boolean"
+              },
+              "txid": {
+                "description": "Filter by TXIDs",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_query_ledgers": {
+      "description": "Query specific ledger entries",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_query_ledgers"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "ids": {
+                "description": "Ledger IDs (comma-delimited, up to 20)",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              },
+              "trades": {
+                "description": "Include trades related to position in output",
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_query_orders": {
+      "description": "Query specific orders",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_query_orders"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "consolidate_taker": {
+                "description": "Consolidate taker trades",
+                "type": "boolean"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              },
+              "trades": {
+                "description": "Include trades",
+                "type": "boolean"
+              },
+              "txids": {
+                "description": "Transaction IDs (comma-delimited, up to 50)",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "userref": {
+                "description": "User reference filter",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_query_trades": {
+      "description": "Query specific trades",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_query_trades"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              },
+              "trades": {
+                "description": "Include trades related to position in output",
+                "type": "boolean"
+              },
+              "txids": {
+                "description": "Transaction IDs (comma-delimited, up to 20)",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_subaccount_create": {
+      "description": "Create a new subaccount",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_subaccount_create"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "email": {
+                "description": "Email address for the subaccount",
+                "type": "string"
+              },
+              "username": {
+                "description": "Username for the subaccount",
+                "type": "string"
+              }
+            },
+            "required": [
+              "username",
+              "email"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_subaccount_transfer": {
+      "description": "[DANGEROUS: requires human confirmation] Transfer funds between accounts",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_subaccount_transfer"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "amount": {
+                "description": "Amount to transfer",
+                "type": "string"
+              },
+              "asset": {
+                "description": "Asset to transfer",
+                "type": "string"
+              },
+              "asset_class": {
+                "description": "Asset class (currency or tokenized_asset for xstocks)",
+                "type": "string"
+              },
+              "from": {
+                "description": "IIBAN of the source account",
+                "type": "string"
+              },
+              "to": {
+                "description": "IIBAN of the destination account",
+                "type": "string"
+              }
+            },
+            "required": [
+              "asset",
+              "amount",
+              "from",
+              "to",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_trade_balance": {
+      "description": "Get margin/equity trade balance",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_trade_balance"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "asset": {
+                "description": "Base asset (default: ZUSD)",
+                "type": "string"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_trades_history": {
+      "description": "Get trade history",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_trades_history"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "consolidate_taker": {
+                "description": "Consolidate trades by individual taker trades",
+                "type": "boolean"
+              },
+              "end": {
+                "description": "Ending unix timestamp or trade tx ID (inclusive)",
+                "type": "string"
+              },
+              "ledgers": {
+                "description": "Include related ledger IDs for each trade (slower)",
+                "type": "boolean"
+              },
+              "offset": {
+                "description": "Result offset for pagination",
+                "type": "string"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              },
+              "start": {
+                "description": "Starting unix timestamp or trade tx ID (exclusive)",
+                "type": "string"
+              },
+              "trade_type": {
+                "description": "Trade type filter (all, any position, closed position, closing position, no position)",
+                "type": "string"
+              },
+              "trades": {
+                "description": "Include trades related to position in output",
+                "type": "boolean"
+              },
+              "without_count": {
+                "description": "Omit count from result (faster for large histories)",
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_wallet_transfer": {
+      "description": "[DANGEROUS: requires human confirmation] Transfer between wallets",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_wallet_transfer"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "amount": {
+                "description": "Amount",
+                "type": "string"
+              },
+              "asset": {
+                "description": "Asset",
+                "type": "string"
+              },
+              "from": {
+                "description": "Source wallet",
+                "type": "string"
+              },
+              "to": {
+                "description": "Destination wallet",
+                "type": "string"
+              }
+            },
+            "required": [
+              "asset",
+              "amount",
+              "from",
+              "to",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_withdraw": {
+      "description": "[DANGEROUS: requires human confirmation] Make a withdrawal",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_withdraw"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "address": {
+                "description": "Crypto address to confirm it matches the key",
+                "type": "string"
+              },
+              "amount": {
+                "description": "Amount to withdraw",
+                "type": "string"
+              },
+              "asset": {
+                "description": "Asset being withdrawn",
+                "type": "string"
+              },
+              "asset_class": {
+                "description": "Asset class (currency or tokenized_asset for xstocks)",
+                "type": "string"
+              },
+              "key": {
+                "description": "Withdrawal key name, as set up on your account",
+                "type": "string"
+              },
+              "max_fee": {
+                "description": "Max fee — fails if processed fee exceeds this",
+                "type": "string"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              }
+            },
+            "required": [
+              "asset",
+              "key",
+              "amount",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_withdrawal_addresses": {
+      "description": "Get withdrawal addresses",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_withdrawal_addresses"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "asset": {
+                "type": "string"
+              },
+              "asset_class": {
+                "description": "Asset class (currency or tokenized_asset for xstocks)",
+                "type": "string"
+              },
+              "key": {
+                "description": "Find address by withdrawal key name",
+                "type": "string"
+              },
+              "method": {
+                "description": "Filter by withdrawal method",
+                "type": "string"
+              },
+              "verified": {
+                "description": "Filter by verification status",
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_withdrawal_cancel": {
+      "description": "[DANGEROUS: requires human confirmation] Cancel a pending withdrawal",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_withdrawal_cancel"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "acknowledged": {
+                "description": "Set to true to confirm you intend to execute this operation.",
+                "type": "boolean"
+              },
+              "asset": {
+                "description": "Asset being withdrawn",
+                "type": "string"
+              },
+              "refid": {
+                "description": "Withdrawal reference ID",
+                "type": "string"
+              }
+            },
+            "required": [
+              "asset",
+              "refid",
+              "acknowledged"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_withdrawal_info": {
+      "description": "Get withdrawal fee info",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_withdrawal_info"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "amount": {
+                "type": "string"
+              },
+              "asset": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "asset",
+              "key",
+              "amount"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_withdrawal_methods": {
+      "description": "Get withdrawal methods",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_withdrawal_methods"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "asset": {
+                "type": "string"
+              },
+              "asset_class": {
+                "description": "Asset class (currency or tokenized_asset for xstocks)",
+                "type": "string"
+              },
+              "network": {
+                "description": "Filter by network",
+                "type": "string"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kraken_withdrawal_status": {
+      "description": "Get withdrawal status",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "kraken_withdrawal_status"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "asset": {
+                "type": "string"
+              },
+              "asset_class": {
+                "description": "Asset class (currency or tokenized_asset for xstocks)",
+                "type": "string"
+              },
+              "cursor": {
+                "description": "Enable pagination (true/false) or cursor for next page",
+                "type": "string"
+              },
+              "end": {
+                "description": "End timestamp (withdrawals after this are excluded)",
+                "type": "string"
+              },
+              "limit": {
+                "description": "Number of results per page",
+                "type": "string"
+              },
+              "method": {
+                "description": "Filter by withdrawal method name",
+                "type": "string"
+              },
+              "rebase_multiplier": {
+                "description": "Rebase multiplier for xstocks data (rebased or base)",
+                "type": "string"
+              },
+              "start": {
+                "description": "Start timestamp (withdrawals before this are excluded)",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

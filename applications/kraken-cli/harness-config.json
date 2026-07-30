@@ -1,0 +1,23 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "/Users/mpas1/Projects/mcp-targets/kraken-cli/bin/kraken-cli-aarch64-apple-darwin/kraken",
+    "args": [
+      "mcp",
+      "-s",
+      "all"
+    ],
+    "env": [
+      "KRAKEN_API_KEY",
+      "KRAKEN_API_SECRET",
+      "KRAKEN_FUTURES_API_KEY",
+      "KRAKEN_FUTURES_API_SECRET"
+    ]
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}

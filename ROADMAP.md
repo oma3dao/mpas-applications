@@ -87,7 +87,7 @@ This segment covers exchanges, brokerage, payments, and other financial transact
 | :---------- | :------- | :-------------- | :----- | :---- |
 | Coinbase Agentic Wallet | Coinbase Payments MCP | [coinbase/payments-mcp](https://github.com/coinbase/payments-mcp) | ✅ Tested | Protect wallet authentication, token sends, payments, transfers, and trades |
 | Coinbase Advanced Trade | Coinbase CLI MCP Server | [Coinbase CLI](https://docs.cdp.coinbase.com/coinbase-cli/skill.md) | 🚧 In Development | Protect portfolios, accounts, orders, trades, conversions, and transfers |
-| Kraken | Kraken MCP Server | [oilst/kraken-mcp](https://github.com/oilst/kraken-mcp) | 💡 Requested | Protect orders, cancellations, withdrawals, and other account mutations |
+| Kraken | Official Kraken CLI MCP Server | [krakenfx/kraken-cli](https://github.com/krakenfx/kraken-cli) | 🚧 In Development | Protect spot and futures orders, withdrawals, wallet transfers, earn allocations, and subaccount mutations |
 | Robinhood Crypto | Robinhood Crypto MCP Server | [rohitsingh-iitd/robinhood-mcp-server](https://github.com/rohitsingh-iitd/robinhood-mcp-server) | 💡 Requested | Protect brokerage and crypto orders, transfers, and account mutations |
 | Alpaca | Official Alpaca MCP Server | [alpacahq/alpaca-mcp-server](https://github.com/alpacahq/alpaca-mcp-server) | ✅ Tested | Protect stock, crypto, and option orders; cancellations; liquidation; option exercise; and account mutations |
 | Stripe | Stripe Agent Toolkit | [stripe/agent-toolkit](https://github.com/stripe/agent-toolkit) | 📋 Planned | Protect payments, refunds, transfers, subscriptions, and account mutations |

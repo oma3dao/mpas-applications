@@ -1,0 +1,431 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "kraken_assets": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_auth_show": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_auth_test": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_balance": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_closed_orders": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_credit_lines": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_deposit_addresses": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_deposit_methods": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_deposit_status": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_earn_allocate": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_earn_allocate_status": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_earn_allocations": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_earn_deallocate": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_earn_deallocate_status": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_earn_strategies": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_export_delete": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: changes live account, trading, report, or risk configuration state."
+    },
+    "kraken_export_report": {
+      "impact": "high",
+      "rationale": "Reviewed governed operation: creates an account-data export with privacy and operational consequences."
+    },
+    "kraken_export_retrieve": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_export_status": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_extended_balance": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_accounts": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_assignment_programs": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_batch_order": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_futures_cancel": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_futures_cancel_after": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_futures_cancel_all": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_futures_edit_order": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_futures_fee_schedule_volumes": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_feeschedules": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_futures_fills": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_historical_funding_rates": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_futures_history": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_futures_history_account_log_csv": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_history_executions": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_history_orders": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_history_triggers": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_instrument_status": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_futures_instruments": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_futures_leverage": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_notifications": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_open_orders": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_order_buy": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_futures_order_sell": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_futures_order_status": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_orderbook": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_futures_pnl_preferences": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_positions": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_set_leverage": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: changes live account, trading, report, or risk configuration state."
+    },
+    "kraken_futures_set_pnl_preference": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: changes live account, trading, report, or risk configuration state."
+    },
+    "kraken_futures_set_subaccount_status": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_futures_subaccount_status": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_subaccounts": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_ticker": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_futures_tickers": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_futures_trading_instruments": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_futures_transfer": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_futures_transfers": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_unwind_queue": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_futures_wallet_transfer": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_ledgers": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_ohlc": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_open_orders": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_order_amend": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_order_batch": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_order_buy": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_order_cancel": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_order_cancel_after": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_order_cancel_all": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_order_cancel_batch": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_order_edit": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_order_sell": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_orderbook": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_orderbook_grouped": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_orderbook_l3": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_pairs": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_paper_balance": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: local paper-trading simulation only; it cannot place live orders or move real funds."
+    },
+    "kraken_paper_buy": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: local paper-trading simulation only; it cannot place live orders or move real funds."
+    },
+    "kraken_paper_cancel": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: local paper-trading simulation only; it cannot place live orders or move real funds."
+    },
+    "kraken_paper_cancel_all": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: local paper-trading simulation only; it cannot place live orders or move real funds."
+    },
+    "kraken_paper_history": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: local paper-trading simulation only; it cannot place live orders or move real funds."
+    },
+    "kraken_paper_init": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: local paper-trading simulation only; it cannot place live orders or move real funds."
+    },
+    "kraken_paper_orders": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: local paper-trading simulation only; it cannot place live orders or move real funds."
+    },
+    "kraken_paper_reset": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: local paper-trading simulation only; it cannot place live orders or move real funds."
+    },
+    "kraken_paper_sell": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: local paper-trading simulation only; it cannot place live orders or move real funds."
+    },
+    "kraken_paper_status": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: local paper-trading simulation only; it cannot place live orders or move real funds."
+    },
+    "kraken_positions": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_query_ledgers": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_query_orders": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_query_trades": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_server_time": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_spreads": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_status": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_subaccount_create": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: changes live account, trading, report, or risk configuration state."
+    },
+    "kraken_subaccount_transfer": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_ticker": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_trade_balance": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_trades": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_trades_history": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_volume": {
+      "impact": "low",
+      "rationale": "Reviewed pass-through: public market/reference data with no account access or external mutation."
+    },
+    "kraken_wallet_transfer": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_withdraw": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_withdrawal_addresses": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_withdrawal_cancel": {
+      "impact": "critical",
+      "rationale": "Reviewed governed operation: places, changes, cancels, transfers, allocates, withdraws, or otherwise mutates live financial/account state."
+    },
+    "kraken_withdrawal_info": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_withdrawal_methods": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    },
+    "kraken_withdrawal_status": {
+      "impact": "medium",
+      "rationale": "Reviewed governed operation: reads private Kraken account, order, trade, funding, or authentication state using CA-held credentials."
+    }
+  }
+}

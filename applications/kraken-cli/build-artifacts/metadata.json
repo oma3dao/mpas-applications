@@ -1,0 +1,17 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "kraken-cli",
+    "version": "0.3.2"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "/Users/mpas1/Projects/mcp-targets/kraken-cli/bin/kraken-cli-aarch64-apple-darwin/kraken",
+    "mcp",
+    "-s",
+    "all"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-30T21:35:27.520Z"
+}
