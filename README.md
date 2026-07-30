@@ -15,25 +15,10 @@ development-time bridge generator live in
 [`oma3dao/mpas`](https://github.com/oma3dao/mpas). This repository contains
 the generated and reviewed application-specific artifacts.
 
-## Current Applications
+## Applications
 
-The repository currently contains experimental artifacts for:
-
-- Coinbase
-- Firebase
-- GitHub
-- MongoDB
-- Neon
-- Plain
-- PlanetScale
-- PostgreSQL
-- Railway
-- Supabase
-- Upstash
-- X (Twitter)
-
-See [ROADMAP.md](ROADMAP.md) for completion criteria, priorities, and planned
-applications.
+See [ROADMAP.md](ROADMAP.md) for the current list of completed, in-progress,
+and planned applications.
 
 ## Structure
 
@@ -57,10 +42,6 @@ mpas-applications/
         src/
         tsconfig.json
 ```
-
-## Roadmap
-
-See [ROADMAP.md](ROADMAP.md) for the full list of planned, in-progress, and completed applications. To request a new application or volunteer to build one, open a PR updating the roadmap.
 
 ## How Applications Are Created
 
