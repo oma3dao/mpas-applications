@@ -1,0 +1,1078 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:alpaca-mcp-server",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:alpaca-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2024-11-05"
+  },
+  "credentialRequirements": [
+    {
+      "type": "alpacaApiKey",
+      "requiredCapabilities": [
+        "trading:read",
+        "trading:trade",
+        "market-data:read"
+      ],
+      "description": "Alpaca Trading API key scoped to the intended account and trading environment. The Credential Adapter must retain it and execute the official Alpaca MCP server; credentials must never be disclosed to the proposer."
+    },
+    {
+      "type": "alpacaApiSecret",
+      "requiredCapabilities": [
+        "trading:read",
+        "trading:trade",
+        "market-data:read"
+      ],
+      "description": "Secret paired with the scoped Alpaca Trading API key. It must remain inside the Credential Adapter and must never be disclosed to the proposer."
+    }
+  ],
+  "operations": {
+    "add_asset_to_watchlist_by_id": {
+      "description": "Add an asset by symbol to a specific watchlist.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "add_asset_to_watchlist_by_id"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "watchlist_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "watchlist id"
+              },
+              "symbol": {
+                "type": "string",
+                "description": "the symbol name to add to the watchlist"
+              }
+            },
+            "required": [
+              "watchlist_id"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "cancel_all_orders": {
+      "description": "Cancel all open orders.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "cancel_all_orders"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {},
+            "required": []
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "cancel_order_by_id": {
+      "description": "Cancel a specific order by its ID.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "cancel_order_by_id"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "order_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "order id"
+              }
+            },
+            "required": [
+              "order_id"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "close_all_positions": {
+      "description": "Closes all open positions by placing sell orders for each. If the market is closed, the sell orders will remain queued and execute at the next market open.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "close_all_positions"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "cancel_orders": {
+                "type": "boolean",
+                "description": "If true is specified, cancel all open orders before liquidating all positions."
+              }
+            },
+            "required": []
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "close_position": {
+      "description": "Closes a specific position for a single symbol by placing a sell order. If the market is closed, the sell order will remain queued and execute at the next market open.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "close_position"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "qty": {
+                "type": "number",
+                "description": "the number of shares to liquidate. Can accept up to 9 decimal points. Cannot work with percentage"
+              },
+              "percentage": {
+                "type": "number",
+                "description": "percentage of position to liquidate. Must be between 0 and 100. Would only sell fractional if position is originally fractional. Can accept up to 9 decimal points. Cannot work with qty"
+              },
+              "symbol_or_asset_id": {
+                "type": "string",
+                "description": "symbol or assetId"
+              }
+            },
+            "required": [
+              "symbol_or_asset_id"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_locate": {
+      "description": "Creates a locate request for a short sale. Requires a symbol and quantity. Optionally set a limit price and all-or-none flag.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_locate"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "all_or_none": {
+                "type": "boolean",
+                "description": "Reject the locate unless the full requested quantity is available.",
+                "default": false,
+                "example": false
+              },
+              "limit_price": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Maximum acceptable locate fee per share, as a decimal string in USD.\nIf omitted, any quoted fee is accepted.\n",
+                "example": "0.05"
+              },
+              "qty": {
+                "minimum": 1,
+                "type": "integer",
+                "description": "Number of shares to locate. Must be positive and in round lots of 100; invalid quantities return HTTP 400.",
+                "format": "int64",
+                "example": 100
+              },
+              "symbol": {
+                "type": "string",
+                "description": "Stock symbol.",
+                "example": "TSLA"
+              }
+            },
+            "required": [
+              "symbol",
+              "qty"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_watchlist": {
+      "description": "Creates a new watchlist with specified symbols.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_watchlist"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The watchlist name."
+              },
+              "symbols": {
+                "type": "array",
+                "items": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "description": "List of asset symbols to include in the watchlist."
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "delete_watchlist_by_id": {
+      "description": "Delete a specific watchlist by its ID.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "delete_watchlist_by_id"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "watchlist_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "watchlist id"
+              }
+            },
+            "required": [
+              "watchlist_id"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "do_not_exercise_options_position": {
+      "description": "Submits a do-not-exercise instruction for a held option contract.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "do_not_exercise_options_position"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "symbol_or_contract_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Option contract symbol or ID."
+              }
+            },
+            "required": [
+              "symbol_or_contract_id"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "exercise_options_position": {
+      "description": "Exercises a held option contract, converting it into the underlying asset.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "exercise_options_position"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "symbol_or_contract_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Option contract symbol or ID."
+              }
+            },
+            "required": [
+              "symbol_or_contract_id"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "place_crypto_order": {
+      "description": "Place a cryptocurrency order.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "place_crypto_order"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "symbol": {
+                "type": "string",
+                "description": "Crypto pair (e.g., \"BTC/USD\", \"ETH/USD\")."
+              },
+              "side": {
+                "type": "string",
+                "description": "\"buy\" or \"sell\"."
+              },
+              "qty": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Number of coins/tokens. Mutually exclusive with notional."
+              },
+              "notional": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Dollar amount to trade. Mutually exclusive with qty.\n      Only valid for market orders."
+              },
+              "type": {
+                "default": "market",
+                "type": "string",
+                "description": "\"market\", \"limit\", or \"stop_limit\"."
+              },
+              "time_in_force": {
+                "default": "gtc",
+                "type": "string",
+                "description": "\"gtc\" (default) or \"ioc\". Crypto does not\n           support \"day\" or \"fok\"."
+              },
+              "limit_price": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for limit and stop_limit orders."
+              },
+              "stop_price": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for stop_limit orders."
+              },
+              "client_order_id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Unique idempotency key. If the request times out,\n             you can safely retry with the same value — the API\n             will reject duplicates. Recommended for every order."
+              }
+            },
+            "required": [
+              "symbol",
+              "side"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "place_option_order": {
+      "description": "Place an options order (single-leg or multi-leg).\n\nFor single-leg orders, provide symbol, side, and qty.\nFor multi-leg orders, provide qty, legs, and optionally\norder_class=\"mleg\" (auto-inferred). Symbol and side on the\nparent are not needed for multi-leg.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "place_option_order"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "qty": {
+                "type": "string",
+                "description": "Number of contracts. Required for both single-leg and\n multi-leg orders. For multi-leg, this is the strategy\n multiplier — each leg's ratio_qty is scaled by this\n value (e.g., qty=\"10\" with ratio_qty=\"2\" = 20\n contracts for that leg)."
+              },
+              "type": {
+                "default": "market",
+                "type": "string",
+                "description": "\"market\" or \"limit\"."
+              },
+              "time_in_force": {
+                "default": "day",
+                "type": "string",
+                "description": "\"day\" only. Options do not support other\n           values."
+              },
+              "symbol": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "OCC option symbol (e.g., \"AAPL250321C00150000\").\n    Required for single-leg."
+              },
+              "side": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "\"buy\" or \"sell\". Required for single-leg."
+              },
+              "position_intent": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "\"buy_to_open\", \"buy_to_close\", \"sell_to_open\",\n             or \"sell_to_close\". Clarifies whether the trade\n             opens or closes a position. Optional but\n             recommended."
+              },
+              "limit_price": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for limit orders. For multi-leg, this is\n         the net debit/credit (positive = debit/cost,\n         negative = credit/proceeds)."
+              },
+              "client_order_id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Unique idempotency key. If the request times out,\n             you can safely retry with the same value — the API\n             will reject duplicates. Recommended for every order."
+              },
+              "order_class": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Set to \"mleg\" for multi-leg orders. Automatically\n         inferred when legs are provided."
+              },
+              "legs": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "List of leg dicts for multi-leg orders (max 4). Each leg\n  requires \"symbol\" and \"ratio_qty\" (string). Optional\n  per-leg fields: \"side\" (\"buy\" or \"sell\") and\n  \"position_intent\"."
+              }
+            },
+            "required": [
+              "qty"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "place_stock_order": {
+      "description": "Place a stock or ETF order.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "place_stock_order"
+          },
+          "arguments": {
+            "additionalProperties": false,
+            "properties": {
+              "symbol": {
+                "type": "string",
+                "description": "Stock ticker (e.g., \"AAPL\", \"SPY\")."
+              },
+              "side": {
+                "type": "string",
+                "description": "\"buy\" or \"sell\"."
+              },
+              "qty": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Number of shares. Mutually exclusive with notional."
+              },
+              "notional": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Dollar amount to trade. Mutually exclusive with qty.\n      Only valid for market orders with time_in_force=\"day\"."
+              },
+              "type": {
+                "default": "market",
+                "type": "string",
+                "description": "Order type — \"market\", \"limit\", \"stop\", \"stop_limit\",\n  \"trailing_stop\"."
+              },
+              "time_in_force": {
+                "default": "day",
+                "type": "string",
+                "description": "\"day\", \"gtc\", \"opg\", \"cls\", \"ioc\", or \"fok\"."
+              },
+              "limit_price": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for limit and stop_limit orders."
+              },
+              "stop_price": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for stop and stop_limit orders."
+              },
+              "trail_price": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Dollar trail amount for trailing_stop orders."
+              },
+              "trail_percent": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Percent trail for trailing_stop orders."
+              },
+              "extended_hours": {
+                "default": false,
+                "type": "boolean",
+                "description": "Allow execution in pre-market, after-hours, and\n            overnight sessions. Only works with type=\"limit\"\n            and time_in_force=\"day\" or \"gtc\"."
+              },
+              "client_order_id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Unique idempotency key. If the request times out,\n             you can safely retry with the same value — the API\n             will reject duplicates. Recommended for every order."
+              },
+              "order_class": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "\"simple\", \"bracket\", \"oco\", or \"oto\". Automatically\n         set to \"bracket\" when take_profit or stop_loss params\n         are provided."
+              },
+              "take_profit_limit_price": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Limit price for bracket take-profit leg."
+              },
+              "stop_loss_stop_price": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Stop price for bracket stop-loss leg."
+              },
+              "stop_loss_limit_price": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Limit price for bracket stop-loss leg."
+              },
+              "advanced_instructions": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Alpaca Elite Smart Router routing/algo\npayload. Stocks-only (the Elite docs explicitly note options\nand crypto reject the payload). Requires the account to be\non Elite Smart Router routing; non-Elite accounts will see\nthe field ignored or rejected by Alpaca's API. Shapes:\n  DMA Gateway (direct routing):\n    {\"algorithm\": \"DMA\",\n     \"destination\": \"NYSE\"|\"NASDAQ\"|\"ARCA\",\n     \"display_qty\": \"<round lot, optional>\"}\n    Only with type=\"limit\"|\"market\" and time_in_force=\"day\";\n    not compatible with opg/cls/gtc or stop orders.\n  VWAP (Volume-Weighted Average Price):\n    {\"algorithm\": \"VWAP\",\n     \"start_time\": \"<RFC3339, optional>\",\n     \"end_time\":   \"<RFC3339, optional>\",\n     \"max_percentage\": \"<0<x<1, optional>\"}\n    Does NOT participate in open/close auctions.\n  TWAP (Time-Weighted Average Price):\n    {\"algorithm\": \"TWAP\",\n     \"start_time\": \"<RFC3339, optional>\",\n     \"end_time\":   \"<RFC3339, optional>\",\n     \"max_percentage\": \"<0<x<1, optional>\"}\n    Does NOT participate in open/close auctions.\nNOTE: PATCH /v2/orders/{id} already documents\n`advanced_instructions` in the OpenAPI spec\n(PatchOrderRequest), and `replace_order_by_id` exposes\nit through auto-generation — this patch only addresses\nthe POST-side asymmetry."
+              }
+            },
+            "required": [
+              "symbol",
+              "side"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "remove_asset_from_watchlist_by_id": {
+      "description": "Remove an asset by symbol from a specific watchlist.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "remove_asset_from_watchlist_by_id"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "watchlist_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Watchlist ID"
+              },
+              "symbol": {
+                "type": "string",
+                "description": "symbol name to remove from the watchlist content"
+              }
+            },
+            "required": [
+              "watchlist_id",
+              "symbol"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "replace_order_by_id": {
+      "description": "Replaces an existing open order with updated parameters. At least one optional field must be provided.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "replace_order_by_id"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "order_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "order id"
+              },
+              "advanced_instructions": {
+                "title": "AdvancedInstructions",
+                "type": "object",
+                "properties": {
+                  "algorithm": {
+                    "enum": [
+                      "DMA",
+                      "TWAP",
+                      "VWAP"
+                    ],
+                    "type": "string",
+                    "description": "The advanced routing algorithm to use for the order",
+                    "example": "DMA"
+                  },
+                  "destination": {
+                    "enum": [
+                      "NYSE",
+                      "NASDAQ",
+                      "ARCA"
+                    ],
+                    "type": "string",
+                    "description": "Target exchange for order execution",
+                    "example": "NYSE"
+                  },
+                  "display_qty": {
+                    "type": "string",
+                    "description": "Maximum shares/contracts displayed on the exchange at any time. Must be in round lot increments",
+                    "format": "decimal",
+                    "example": "100"
+                  },
+                  "end_time": {
+                    "type": "string",
+                    "description": "When the algorithm is to be done executing. Must be within current market trading hours",
+                    "format": "date-time",
+                    "example": "2025-07-21T15:30:00-04:00"
+                  },
+                  "max_percentage": {
+                    "type": "string",
+                    "description": "Maximum percentage of the ticker's period volume this order might participate in. Must be 0 < max_percentage < 1, with up to 3 decimal points precision.",
+                    "format": "decimal",
+                    "example": "0.314"
+                  },
+                  "start_time": {
+                    "type": "string",
+                    "description": "When the algorithm is to start executing. Must be within current market trading hours",
+                    "format": "date-time",
+                    "example": "2025-07-21T09:30:00-04:00"
+                  }
+                },
+                "description": "Advanced instructions for Elite Smart Router: https://docs.alpaca.markets/docs/alpaca-elite-smart-router",
+                "x-examples": {
+                  "example-1": {
+                    "algorithm": "DMA",
+                    "destination": "NYSE",
+                    "display_qty": 100
+                  },
+                  "example-2": {
+                    "algorithm": "TWAP",
+                    "end_time": "2025-07-21T15:30:00-04:00",
+                    "max_percentage": 0.314,
+                    "start_time": "2025-07-21T09:30:00-04:00"
+                  },
+                  "example-3": {
+                    "algorithm": "VWAP",
+                    "end_time": "2025-07-21T15:30:00-04:00",
+                    "max_percentage": 0.314,
+                    "start_time": "2025-07-21T09:30:00-04:00"
+                  }
+                }
+              },
+              "client_order_id": {
+                "maxLength": 128,
+                "type": "string",
+                "description": "A unique identifier for the new order. Automatically generated if not sent. (<= 128 characters)"
+              },
+              "limit_price": {
+                "type": "string",
+                "description": "Required if original order's `type` field was `limit` or `stop_limit`.\nIn case of `mleg`, the limit_price parameter is expressed with the following notation:\n- A positive value indicates a debit, representing a cost or payment to be made.\n- A negative value signifies a credit, reflecting an amount to be received.",
+                "example": "3.14"
+              },
+              "notional": {
+                "type": "string",
+                "description": "New notional (dollar amount) for the order. Only valid for IPO indications of interest (`asset_class: \"ipo\"`); will be rejected for any other asset class.\nMutually exclusive with `qty` on the same replace request.",
+                "example": "750"
+              },
+              "qty": {
+                "type": "string",
+                "description": "number of shares to trade.\n\nYou can only patch full shares for now.\n\nQty of equity fractional orders are not allowed to change. Non-IPO notional orders cannot be replaced at all - no fields (qty, limit_price, stop_price, etc.) can be modified; cancel and resubmit instead.",
+                "example": "4"
+              },
+              "stop_price": {
+                "type": "string",
+                "description": "required if original order type is limit or stop_limit",
+                "example": "3.14"
+              },
+              "time_in_force": {
+                "title": "TimeInForce",
+                "enum": [
+                  "day",
+                  "gtc",
+                  "opg",
+                  "cls",
+                  "ioc",
+                  "fok"
+                ],
+                "type": "string",
+                "description": "The Time-In-Force values supported by Alpaca vary based on the order's security type. Here is a breakdown of the supported TIFs for each specific security type:\n- Equity trading: day, gtc, opg, cls, ioc, fok.\n- Options trading: day.\n- Crypto trading: gtc, ioc.\n\nBelow are the descriptions of each TIF:\n- day:\n  A day order is eligible for execution only on the day it is live. By default, the order is only valid during Regular Trading Hours (9:30am - 4:00pm ET). If unfilled after the closing auction, it is automatically canceled. If submitted after the close, it is queued and submitted the following trading day. However, if marked as eligible for extended hours, the order can also execute during supported extended hours.\n\n- gtc:\n  The order is good until canceled. Non-marketable GTC limit orders are subject to price adjustments to offset corporate actions affecting the issue. We do not currently support Do Not Reduce (DNR) orders to opt out of such price adjustments.\n\n- opg:\n  Use this TIF with a market/limit order type to submit \"market on open\" (MOO) and \"limit on open\" (LOO) orders. This order is eligible to execute only in the market opening auction. Any unfilled orders after the open will be cancelled. OPG orders submitted after 9:28am but before 7:00pm ET will be rejected. OPG orders submitted after 7:00pm will be queued and routed to the following day's opening auction. On open/on close orders are routed to the primary exchange. Such orders do not necessarily execute exactly at 9:30am / 4:00pm ET but execute per the exchange's auction rules.\n\n- cls:\n  Use this TIF with a market/limit order type to submit \"market on close\" (MOC) and \"limit on close\" (LOC) orders. This order is eligible to execute only in the market closing auction. Any unfilled orders after the close will be cancelled. CLS orders submitted after 3:50pm but before 7:00pm ET will be rejected. CLS orders submitted after 7:00pm will be queued and routed to the following day's closing auction. Only available with API v2.\n\n- ioc:\n  An Immediate Or Cancel (IOC) order requires all or part of the order to be executed immediately. Any unfilled portion of the order is canceled. Only available with API v2. Most market makers who receive IOC orders will attempt to fill the order on a principal basis only, and cancel any unfilled balance. On occasion, this can result in the entire order being cancelled if the market maker does not have any existing inventory of the security in question.\n\n- fok:\n  A Fill or Kill (FOK) order is only executed if the entire order quantity can be filled, otherwise the order is canceled. Only available with API v2.",
+                "example": "day"
+              },
+              "trail": {
+                "type": "string",
+                "description": "the new value of the trail_price or trail_percent value (works only for type=\"trailing_stop\")",
+                "example": "3.14"
+              }
+            },
+            "required": [
+              "order_id"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "update_account_config": {
+      "description": "Updates one or more account configuration settings. Only the fields you provide will be changed; all others retain their current values.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "update_account_config"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "disable_overnight_trading": {
+                "type": "boolean",
+                "description": "If true, overnight trading is disabled."
+              },
+              "fractional_trading": {
+                "type": "boolean",
+                "description": "If true, account is able to participate in fractional trading"
+              },
+              "max_margin_multiplier": {
+                "type": "string",
+                "description": "Can be \"1\", \"2\", or \"4\""
+              },
+              "max_options_trading_level": {
+                "enum": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "type": "integer",
+                "description": "The desired maximum options trading level. 0=disabled, 1=Covered Call/Cash-Secured Put, 2=Long Call/Put, 3=Spreads/Straddles."
+              },
+              "no_shorting": {
+                "type": "boolean",
+                "description": "If true, account becomes long-only mode."
+              },
+              "ptp_no_exception_entry": {
+                "type": "boolean",
+                "description": "If set to true then Alpaca will accept orders for PTP symbols with no exception. Default is false."
+              },
+              "suspend_trade": {
+                "type": "boolean",
+                "description": "If true, new orders are blocked."
+              },
+              "trade_confirm_email": {
+                "type": "string",
+                "description": "all or none. If none, emails for order fills are not sent."
+              }
+            },
+            "required": []
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "update_watchlist_by_id": {
+      "description": "Update an existing watchlist. IMPORTANT: this replaces the entire watchlist. You must include the symbols parameter with the full list of desired symbols, otherwise all assets will be removed.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "update_watchlist_by_id"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "watchlist_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "watchlist id"
+              },
+              "name": {
+                "type": "string",
+                "description": "The watchlist name."
+              },
+              "symbols": {
+                "type": "array",
+                "items": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "description": "List of asset symbols to include in the watchlist."
+              }
+            },
+            "required": [
+              "watchlist_id"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

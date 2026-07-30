@@ -1,0 +1,18 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "/Users/mpas1/Projects/mcp-targets/alpaca/.venv/bin/alpaca-mcp-server",
+    "args": [],
+    "env": {
+      "ALPACA_API_KEY": "{{credential:alpacaApiKey}}",
+      "ALPACA_SECRET_KEY": "{{credential:alpacaApiSecret}}",
+      "ALPACA_PAPER_TRADE": "true"
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}

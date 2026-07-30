@@ -1,0 +1,303 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "add_asset_to_watchlist_by_id": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "cancel_all_orders": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "cancel_order_by_id": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "close_all_positions": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "close_position": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "create_locate": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "create_watchlist": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "delete_watchlist_by_id": {
+      "impact": "critical",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "do_not_exercise_options_position": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "exercise_options_position": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "fetch_alpaca_doc": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_account_activities": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_account_activities_by_type": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_account_config": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_account_info": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_all_assets": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_all_positions": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_alpaca_endpoint_docs": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_asset": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_calendar": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_clock": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_corporate_action_announcement": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_corporate_action_announcements": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_corporate_actions": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_crypto_bars": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_crypto_latest_bar": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_crypto_latest_orderbook": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_crypto_latest_quote": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_crypto_latest_trade": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_crypto_quotes": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_crypto_snapshot": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_crypto_trades": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_fixed_income_latest_quotes": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_index_latest_values": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_index_values": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_locate": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_locate_quotes": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_locates": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_market_movers": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_most_active_stocks": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_news": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_open_position": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_option_bars": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_option_chain": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_option_contract": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_option_contracts": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_option_exchange_codes": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_option_latest_quote": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_option_latest_trade": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_option_snapshot": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_option_trades": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_order_by_client_id": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_order_by_id": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_orders": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_portfolio_history": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_stock_bars": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_stock_latest_bar": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_stock_latest_quote": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_stock_latest_trade": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_stock_quotes": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_stock_snapshot": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_stock_trades": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_watchlist_by_id": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "get_watchlists": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "list_alpaca_api_endpoints": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "place_crypto_order": {
+      "impact": "critical",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "place_option_order": {
+      "impact": "critical",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "place_stock_order": {
+      "impact": "critical",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "remove_asset_from_watchlist_by_id": {
+      "impact": "critical",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "replace_order_by_id": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "search_alpaca_api_specs": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "search_alpaca_docs": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+    },
+    "update_account_config": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    },
+    "update_watchlist_by_id": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+    }
+  }
+}
