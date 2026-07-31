@@ -1,0 +1,14 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "kubernetes-mcp-server",
+    "version": "v0.0.65"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "/Users/mpas1/Projects/mcp-targets/kubernetes/bin/kubernetes-mcp-server-darwin-arm64"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-31T06:58:09.448Z"
+}

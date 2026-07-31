@@ -1,0 +1,83 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "events_list": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "namespaces_list": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "nodes_log": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "nodes_stats_summary": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "nodes_top": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "pods_delete": {
+      "impact": "critical",
+      "rationale": "reviewed: mutates cluster state or executes commands in a workload; approval required"
+    },
+    "pods_exec": {
+      "impact": "critical",
+      "rationale": "reviewed: mutates cluster state or executes commands in a workload; approval required"
+    },
+    "pods_get": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "pods_list": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "pods_list_in_namespace": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "pods_log": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "pods_run": {
+      "impact": "critical",
+      "rationale": "reviewed: mutates cluster state or executes commands in a workload; approval required"
+    },
+    "pods_top": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "projects_list": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "resources_create_or_update": {
+      "impact": "critical",
+      "rationale": "reviewed: mutates cluster state or executes commands in a workload; approval required"
+    },
+    "resources_delete": {
+      "impact": "critical",
+      "rationale": "reviewed: mutates cluster state or executes commands in a workload; approval required"
+    },
+    "resources_get": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "resources_list": {
+      "impact": "medium",
+      "rationale": "reviewed: read-only observation or retrieval; pass-through"
+    },
+    "resources_scale": {
+      "impact": "critical",
+      "rationale": "reviewed: mutates cluster state or executes commands in a workload; approval required"
+    }
+  }
+}
