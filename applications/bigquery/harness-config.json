@@ -1,0 +1,21 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "/Users/mpas1/Projects/mcp-targets/bigquery/bin/toolbox",
+    "args": [
+      "--prebuilt",
+      "bigquery",
+      "--stdio"
+    ],
+    "env": {
+      "BIGQUERY_PROJECT": "{{credential:bigqueryProject}}",
+      "GOOGLE_APPLICATION_CREDENTIALS": "{{credential:googleApplicationCredentials}}"
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}

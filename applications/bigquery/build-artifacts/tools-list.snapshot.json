@@ -1,0 +1,295 @@
+{
+  "version": "1",
+  "type": "McpToolsListSnapshot",
+  "toolSurface": {
+    "alg": "sha-256",
+    "value": "X8tlSzRy_CJTuM4PB67_Zf7kC2gcjcad6lv82sDdTnc"
+  },
+  "tools": [
+    {
+      "name": "analyze_contribution",
+      "description": "Use this tool to analyze the contribution about changes to key metrics in multi-dimensional data.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "contribution_metric": {
+            "type": "string",
+            "description": "The name of the column that contains the metric to analyze.\n\t\tProvides the expression to use to calculate the metric you are analyzing.\n\t\tTo calculate a summable metric, the expression must be in the form SUM(metric_column_name),\n\t\twhere metric_column_name is a numeric data type.\n\t\tTo calculate a summable ratio metric, the expression must be in the form\n\t\tSUM(numerator_metric_column_name)/SUM(denominator_metric_column_name),\n\t\twhere numerator_metric_column_name and denominator_metric_column_name are numeric data types.\n\t\tTo calculate a summable by category metric, the expression must be in the form\n\t\tSUM(metric_sum_column_name)/COUNT(DISTINCT categorical_column_name). The summed column must be a numeric data type.\n\t\tThe categorical column must have type BOOL, DATE, DATETIME, TIME, TIMESTAMP, STRING, or INT64."
+          },
+          "dimension_id_cols": {
+            "type": "array",
+            "description": "An array of column names that uniquely identify each dimension.",
+            "items": {
+              "type": "string",
+              "description": "A dimension column name."
+            }
+          },
+          "input_data": {
+            "type": "string",
+            "description": "The data that contain the test and control data to analyze. Can be a fully qualified BigQuery table ID or a SQL query."
+          },
+          "is_test_col": {
+            "type": "string",
+            "description": "The name of the column that identifies whether a row is in the test or control group."
+          },
+          "pruning_method": {
+            "type": "string",
+            "description": "The method to use for pruning redundant insights. Can be 'NO_PRUNING' or 'PRUNE_REDUNDANT_INSIGHTS'.",
+            "default": "PRUNE_REDUNDANT_INSIGHTS"
+          },
+          "top_k_insights_by_apriori_support": {
+            "type": "integer",
+            "description": "The number of top insights to return, ranked by apriori support.",
+            "default": 30
+          }
+        },
+        "required": [
+          "input_data",
+          "contribution_metric",
+          "is_test_col"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "ask_data_insights",
+      "description": "Use this tool to perform data analysis, get insights,\nor answer complex questions about the contents of specific\nBigQuery tables.\n",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "table_references": {
+            "type": "string",
+            "description": "A JSON string of a list of BigQuery tables to use as context. Each object in the list must contain 'projectId', 'datasetId', and 'tableId'. Example: '[{\"projectId\": \"my-gcp-project\", \"datasetId\": \"my_dataset\", \"tableId\": \"my_table\"}]'."
+          },
+          "user_query_with_context": {
+            "type": "string",
+            "description": "The user's question, potentially including conversation history and system instructions for context."
+          }
+        },
+        "required": [
+          "user_query_with_context",
+          "table_references"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "execute_sql",
+      "description": "Use this tool to execute sql statement.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dry_run": {
+            "type": "boolean",
+            "description": "If set to true, the query will be validated and information about the execution will be returned without running the query. Defaults to false.",
+            "default": false
+          },
+          "sql": {
+            "type": "string",
+            "description": "The SQL to execute."
+          }
+        },
+        "required": [
+          "sql"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true
+      }
+    },
+    {
+      "name": "forecast",
+      "description": "Use this tool to forecast time series data.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "data_col": {
+            "type": "string",
+            "description": "The name of the time series data column."
+          },
+          "history_data": {
+            "type": "string",
+            "description": "The table id or the query of the history time series data."
+          },
+          "horizon": {
+            "type": "integer",
+            "description": "The number of forecasting steps.",
+            "default": 10
+          },
+          "id_cols": {
+            "type": "array",
+            "description": "An array of the time series id column names.",
+            "items": {
+              "type": "string",
+              "description": "The name of time series id column."
+            },
+            "default": []
+          },
+          "timestamp_col": {
+            "type": "string",
+            "description": "The name of the time series timestamp column."
+          }
+        },
+        "required": [
+          "history_data",
+          "timestamp_col",
+          "data_col"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "get_dataset_info",
+      "description": "Use this tool to get dataset metadata.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dataset": {
+            "type": "string",
+            "description": "The dataset to get metadata information. Can be in `project.dataset` format."
+          },
+          "project": {
+            "type": "string",
+            "description": "The Google Cloud project ID containing the dataset.",
+            "default": "YOUR_PROJECT_ID"
+          }
+        },
+        "required": [
+          "dataset"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "get_table_info",
+      "description": "Use this tool to get table metadata.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dataset": {
+            "type": "string",
+            "description": "The table's parent dataset."
+          },
+          "project": {
+            "type": "string",
+            "description": "The Google Cloud project ID containing the dataset and table.",
+            "default": "YOUR_PROJECT_ID"
+          },
+          "table": {
+            "type": "string",
+            "description": "The table to get metadata information."
+          }
+        },
+        "required": [
+          "dataset",
+          "table"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "list_dataset_ids",
+      "description": "Use this tool to list datasets.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "type": "string",
+            "description": "The Google Cloud project to list dataset ids.",
+            "default": "YOUR_PROJECT_ID"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "list_table_ids",
+      "description": "Use this tool to list tables.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dataset": {
+            "type": "string",
+            "description": "The dataset to list table ids."
+          },
+          "project": {
+            "type": "string",
+            "description": "The Google Cloud project ID containing the dataset.",
+            "default": "YOUR_PROJECT_ID"
+          }
+        },
+        "required": [
+          "dataset"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "search_catalog",
+      "description": "Use this tool to find tables, views, models, routines or connections.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "datasetIds": {
+            "type": "array",
+            "description": "Array of dataset IDs.",
+            "items": {
+              "type": "string",
+              "description": "The IDs of the bigquery dataset."
+            },
+            "default": []
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of results in the search page.",
+            "default": 5
+          },
+          "projectIds": {
+            "type": "array",
+            "description": "Array of project IDs.",
+            "items": {
+              "type": "string",
+              "description": "The IDs of the bigquery project."
+            },
+            "default": []
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Prompt representing search intention. Do not rewrite the prompt."
+          },
+          "types": {
+            "type": "array",
+            "description": "Array of data types to filter by.",
+            "items": {
+              "type": "string",
+              "description": "The type of the data. Accepted values are: CONNECTION, POLICY, DATASET, MODEL, ROUTINE, TABLE, VIEW."
+            },
+            "default": []
+          }
+        },
+        "required": [
+          "prompt"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    }
+  ]
+}
