@@ -15,6 +15,11 @@ development-time bridge generator live in
 [`oma3dao/mpas`](https://github.com/oma3dao/mpas). This repository contains
 the generated and reviewed application-specific artifacts.
 
+These applications use the MCP execution profile because agents talk to MCP
+servers. MPAS the protocol is broader: it is not limited to MCP, and a
+Proposer or Signer can be any entity that holds a private key — a human,
+agent, device, service, or organization.
+
 ## Applications
 
 See [ROADMAP.md](ROADMAP.md) for the current list of completed, in-progress,
@@ -108,9 +113,19 @@ every lookup without adding control. What warrants a human approver is the
 agent *acting*: publishing, spending, deploying, deleting, messaging a
 customer, or changing configuration.
 
-An operator who disagrees can always tighten this in their
-`MpasApplicationPolicy`; they cannot loosen a surface the plugin never
-declared.
+An operator who disagrees can always override the plugin in the Credential
+Adapter’s deployment config JSON (the file in the adapter `config/` folder —
+not `harness-config.json` in this repository). That config can:
+
+- **govern more** — name additional tools under policy so they enter the
+  governed set even when the plugin left them as pass-through; or
+- **require proposer only** — mark a function/tool `proposerOnly` so it
+  executes on the Proposer’s verified signature alone, with no additional
+  Approver.
+
+They still cannot turn a plugin-declared operation into ungoverned
+pass-through merely by omitting approval rules; once it is in the governed
+set (plugin or config), it stays under policy evaluation.
 
 ### Govern a read only if it crosses a trust boundary
 
@@ -175,13 +190,15 @@ have to.
 
 ## Artifact DID
 
-Each application's `registry-entry.json` includes an `artifactDid` — a content-addressable identifier derived from the canonical JSON of its `plugin.json`. The MPAS Credential Adapter validates this hash at startup and rejects a mismatch.
+Each application's `registry-entry.json` includes an `artifactDid` — a content-addressable identifier derived from the canonical JSON of its `plugin.json`. The MPAS Credential Adapter validates this hash at startup and rejects a mismatch. That check proves **content integrity only**: the bytes loaded match the identifier in deployment configuration.
+
+Integrity is not the whole trust story. After the hash check, the adapter also fetches the attestations and related evidence bound to that `artifactDid` (responsibility claims, cybersecurity assessments, linked identifiers, and other recognized evidence) so the operator can decide whether to trust the plugin. A matching hash does not by itself prove publisher legitimacy or that a trusted party reviewed the artifact.
 
 See the full method specification: [did:artifact Method Spec](https://oma3dao.github.io/omatrust-docs/specification/did-artifact-method-spec.html)
 
 ### How to compute
 
-**Via the OMA Trust UI (recommended):**
+**Via the OMATrust UI (recommended):**
 
 1. Go to https://test.app.omatrust.org/publish/security-assessment
 2. Upload the application's `plugin.json`
@@ -214,7 +231,8 @@ Any modification to `plugin.json` — adding/removing operations, changing schem
 
 ### Deployment config usage
 
-When writing a deployment config for the Credential Adapter, include the `artifactDid` in the `plugin` section:
+When writing the Credential Adapter deployment config JSON (the file in the
+adapter `config/` folder), include the `artifactDid` in the `plugin` section:
 
 ```json
 {
