@@ -1,0 +1,4025 @@
+{
+  "version": "1",
+  "type": "McpToolsListSnapshot",
+  "toolSurface": {
+    "alg": "sha-256",
+    "value": "aFws1EtOwk3wIfFsuABrkVktOgx5vaiJu-hYnf3dj84"
+  },
+  "tools": [
+    {
+      "name": "add_data_table_column",
+      "description": "Add a new column to an existing data table.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dataTableId": {
+            "type": "string",
+            "description": "The ID of the data table to add a column to"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "The project ID the data table belongs to"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+            "description": "Column name. Must start with a letter, contain only letters, numbers, and underscores (max 63 chars)"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "string",
+              "number",
+              "boolean",
+              "date"
+            ],
+            "description": "The data type of the new column"
+          }
+        },
+        "required": [
+          "dataTableId",
+          "projectId",
+          "name",
+          "type"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Add Data Table Column",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the operation succeeded"
+          },
+          "message": {
+            "type": "string",
+            "description": "Description of the result"
+          },
+          "column": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The unique identifier of the column"
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the column"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "date"
+                ],
+                "description": "The data type of the column"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "type"
+            ],
+            "additionalProperties": false,
+            "description": "The created column"
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "column"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "add_data_table_rows",
+      "description": "Insert rows into an existing data table. Each row is an object mapping column names to values. Use search_data_tables to find the data table ID first.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dataTableId": {
+            "type": "string",
+            "description": "The ID of the data table to insert rows into"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "The project ID the data table belongs to"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "null"
+                ]
+              }
+            },
+            "minItems": 1,
+            "maxItems": 1000,
+            "description": "Array of row objects to insert. Each object maps column names to values. Maximum 1000 rows per call."
+          }
+        },
+        "required": [
+          "dataTableId",
+          "projectId",
+          "rows"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Add Data Table Rows",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the insert operation succeeded"
+          },
+          "insertedCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of rows successfully inserted"
+          }
+        },
+        "required": [
+          "success",
+          "insertedCount"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "archive_workflow",
+      "description": "Archive a workflow in n8n by its ID.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow to archive"
+          }
+        },
+        "required": [
+          "workflowId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Archiving workflow",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "archived": {
+            "type": "boolean",
+            "description": "Whether the workflow was archived"
+          },
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the archived workflow"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the archived workflow"
+          }
+        },
+        "required": [
+          "archived",
+          "workflowId",
+          "name"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "create_data_table",
+      "description": "Create a new data table with the specified columns. Use search_projects to find a project ID first.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "description": "The project ID where the data table will be created"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "The name of the data table (must be unique within the project)"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 63,
+                  "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+                  "description": "Column name. Must start with a letter, contain only letters, numbers, and underscores (max 63 chars)"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "string",
+                    "number",
+                    "boolean",
+                    "date"
+                  ],
+                  "description": "The data type of the column"
+                }
+              },
+              "required": [
+                "name",
+                "type"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "description": "The columns to create in the data table. At least one column is required."
+          }
+        },
+        "required": [
+          "projectId",
+          "name",
+          "columns"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Create Data Table",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the created data table"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the created data table"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "The project ID of the created data table"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "projectId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "create_workflow_from_code",
+      "description": "Create a workflow in n8n from validated SDK code. This tool expects code that already follows the n8n Workflow SDK patterns and has passed validate_workflow. If code fails to parse, call get_sdk_reference, rewrite the code using the reference, validate again, then retry creation. If the user named a target project, resolve it via search_projects before calling this tool; when projectId is omitted, the workflow is created in the user's personal project. If you used n8n skills while preparing this workflow, pass their identifiers in skillsUsed. After creation, always tell the user which project the workflow landed in (see the targetProject field in the response).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Full TypeScript/JavaScript workflow code using the n8n Workflow SDK. Must be validated first with validate_workflow."
+          },
+          "skillsUsed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "IDs of n8n skills used to prepare this call, e.g. \"workflow-builder\". An optional plugin prefix is allowed, e.g. \"n8n-skills:workflow-builder\". Entries are normalized server-side (trimmed, lowercased, deduped); invalid identifiers are dropped."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 128,
+            "description": "Optional workflow name. If not provided, uses the name from the code."
+          },
+          "description": {
+            "type": "string",
+            "description": "Workflow description. Longer text is shortened to 255 chars before saving."
+          },
+          "versionName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Short summary of this initial version, shown in the workflow's version history (e.g. \"Initial Slack notification workflow\"). Always provide it."
+          },
+          "versionDescription": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Longer description of what this version does, shown in the version history alongside the version name."
+          },
+          "projectId": {
+            "type": "string",
+            "description": "Project ID to create the workflow in. If the user named a project (e.g. 'in my Marketing project'), you MUST call search_projects first to resolve the name to an ID and pass it here — do not guess. If search_projects returns multiple partial matches with no exact match, ask the user to clarify before creating the workflow. Only omit this field when the user did not mention a project at all; in that case it defaults to the user's personal project."
+          },
+          "folderId": {
+            "type": "string",
+            "description": "Optional folder ID to create the workflow in. Requires projectId to be set. Use search_folders to find a folder by name within a project."
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Creating workflow from code",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the created workflow"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the created workflow"
+          },
+          "nodeCount": {
+            "type": "number",
+            "description": "The number of nodes in the workflow"
+          },
+          "url": {
+            "type": "string",
+            "description": "The URL to open the workflow in n8n"
+          },
+          "autoAssignedCredentials": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "nodeName": {
+                  "type": "string",
+                  "description": "The name of the node that had credentials auto-assigned"
+                },
+                "credentialName": {
+                  "type": "string",
+                  "description": "The name of the credential that was auto-assigned"
+                },
+                "credentialType": {
+                  "type": "string",
+                  "description": "The credential type that was auto-assigned"
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "aiGateway"
+                  ],
+                  "description": "Where the credential came from: \"user\" for an existing user credential, \"aiGateway\" for a credential managed via n8n credits."
+                }
+              },
+              "required": [
+                "nodeName",
+                "credentialName",
+                "credentialType"
+              ],
+              "additionalProperties": false
+            },
+            "description": "List of credentials that were automatically assigned to nodes"
+          },
+          "targetProject": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The ID of the project the workflow was created in"
+              },
+              "name": {
+                "type": "string",
+                "description": "The display name of the project the workflow was created in"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "personal",
+                  "team"
+                ],
+                "description": "Whether the workflow landed in a personal or team project"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "type"
+            ],
+            "additionalProperties": false,
+            "description": "The project the workflow was actually created in."
+          },
+          "note": {
+            "type": "string",
+            "description": "Additional notes about the workflow creation, such as any nodes that were skipped during credential auto-assignment."
+          },
+          "hint": {
+            "type": "string",
+            "description": "Actionable hint for recovering from the error. When present, follow the suggested action before retrying."
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "The warning code identifying the type of warning"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "The warning message"
+                },
+                "nodeName": {
+                  "type": "string",
+                  "description": "The node that triggered the warning"
+                },
+                "parameterPath": {
+                  "type": "string",
+                  "description": "The parameter path that triggered the warning"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Validation warnings emitted while parsing the submitted code. Surface these to the user so they can correct the workflow."
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message explaining why the creation failed. Present only on failure."
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "delete_data_table_column",
+      "description": "Delete a column from a data table. This permanently removes the column and all its data.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dataTableId": {
+            "type": "string",
+            "description": "The ID of the data table containing the column"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "The project ID the data table belongs to"
+          },
+          "columnId": {
+            "type": "string",
+            "description": "The ID of the column to delete"
+          }
+        },
+        "required": [
+          "dataTableId",
+          "projectId",
+          "columnId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Delete Data Table Column",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the operation succeeded"
+          },
+          "message": {
+            "type": "string",
+            "description": "Description of the result"
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "execute_workflow",
+      "description": "Execute a workflow by ID. Returns the execution ID immediately without waiting for completion. Before executing always ensure you know the input schema by first using the get_workflow_details tool and consulting workflow description",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow to execute"
+          },
+          "executionMode": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "production"
+            ],
+            "description": "Required execution intent. Use \"manual\" for testing or validating the current workflow, including tests against live external services. Use \"production\" only when intentionally running the published workflow as a live execution."
+          },
+          "inputs": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "chat"
+                  },
+                  "chatInput": {
+                    "type": "string",
+                    "description": "Input for chat-based workflows"
+                  }
+                },
+                "required": [
+                  "type",
+                  "chatInput"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "form"
+                  },
+                  "formData": {
+                    "type": "object",
+                    "additionalProperties": {},
+                    "description": "Input data for form-based workflows"
+                  }
+                },
+                "required": [
+                  "type",
+                  "formData"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "webhook"
+                  },
+                  "webhookData": {
+                    "type": "object",
+                    "properties": {
+                      "method": {
+                        "type": "string",
+                        "enum": [
+                          "GET",
+                          "POST",
+                          "PUT",
+                          "DELETE",
+                          "PATCH",
+                          "HEAD",
+                          "OPTIONS"
+                        ],
+                        "default": "GET",
+                        "description": "HTTP method (defaults to GET)"
+                      },
+                      "query": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
+                        },
+                        "description": "Query string parameters"
+                      },
+                      "body": {
+                        "type": "object",
+                        "additionalProperties": {},
+                        "description": "Request body data (main webhook payload)"
+                      },
+                      "headers": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "string"
+                        },
+                        "description": "HTTP headers (e.g., authorization, content-type)"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "description": "Input data for webhook-based workflows"
+                  }
+                },
+                "required": [
+                  "type",
+                  "webhookData"
+                ],
+                "additionalProperties": false
+              }
+            ],
+            "description": "Inputs to provide to the workflow."
+          }
+        },
+        "required": [
+          "workflowId",
+          "executionMode"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Execute Workflow",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "executionId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "started",
+              "error"
+            ],
+            "description": "The status of the execution"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if the execution failed"
+          }
+        },
+        "required": [
+          "executionId",
+          "status"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "explore_node_resources",
+      "description": "Resolve the real values behind a node's resource locator or load-options dropdown (e.g. Slack channels, Google Sheets tabs, OpenAI models). Use this after get_node_types so you ground RLC and load-options parameters in real IDs instead of inventing them. Requires a credential ID from list_credentials — the call runs as the current user with that credential.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "nodeType": {
+            "type": "string",
+            "description": "Fully-qualified node type ID from search_nodes / get_node_types, e.g. \"n8n-nodes-base.slack\"."
+          },
+          "version": {
+            "type": "number",
+            "description": "Node version, e.g. 4.7. Must match a version returned by search_nodes."
+          },
+          "methodName": {
+            "type": "string",
+            "description": "The exact method name from the node's `@searchListMethod` or `@loadOptionsMethod` annotation in the type definition. Call get_node_types first to read the real method name. Do not invent or guess."
+          },
+          "methodType": {
+            "type": "string",
+            "enum": [
+              "listSearch",
+              "loadOptions"
+            ],
+            "description": "\"listSearch\" for `@searchListMethod` annotations (supports filter/pagination); \"loadOptions\" for `@loadOptionsMethod` annotations."
+          },
+          "credentialType": {
+            "type": "string",
+            "description": "Credential type key for the node, e.g. \"slackApi\" or \"googleSheetsOAuth2Api\"."
+          },
+          "credentialId": {
+            "type": "string",
+            "description": "ID of a credential the user can access, obtained from list_credentials."
+          },
+          "filter": {
+            "type": "string",
+            "description": "Optional search/filter text to narrow results."
+          },
+          "paginationToken": {
+            "type": "string",
+            "description": "Pagination token from a previous call to fetch the next page (listSearch only)."
+          },
+          "currentNodeParameters": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "Current node parameters for dependent lookups. Some methods require prior selections — e.g. listing sheets within a spreadsheet needs `{ documentId: { __rl: true, mode: \"id\", value: \"<spreadsheetId>\" } }`. Check the type definition's displayOptions to know which parameters a method depends on."
+          }
+        },
+        "required": [
+          "nodeType",
+          "version",
+          "methodName",
+          "methodType",
+          "credentialType",
+          "credentialId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Exploring node resources",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean"
+                  ]
+                },
+                "url": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "value"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Resources returned by the node method. `value` is the id to use in workflow code."
+          },
+          "paginationToken": {
+            "type": "string",
+            "description": "Pass back as `paginationToken` to fetch the next page. Absent if no more results."
+          },
+          "builderHint": {
+            "type": "string",
+            "description": "Selection guidance from the node's @builderHint annotation, when present."
+          }
+        },
+        "required": [
+          "results"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_execution",
+      "description": "Get execution details by execution ID and workflow ID. By default returns metadata only. Set includeData to true to include node execution data, optionally filtered by nodeNames and truncated by truncateData.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow the execution belongs to"
+          },
+          "executionId": {
+            "type": "string",
+            "description": "The ID of the execution to retrieve"
+          },
+          "includeData": {
+            "type": "boolean",
+            "description": "Whether to include the full execution result data. Defaults to false (metadata only). Set to true to include node inputs/outputs. Use `false` to quickly check execution status"
+          },
+          "nodeNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "When includeData is true, return data only for these node names. If omitted, data for all nodes is included."
+          },
+          "truncateData": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "description": "When includeData is true, limit the number of data items returned per node output to this value. If omitted, all items are returned."
+          }
+        },
+        "required": [
+          "workflowId",
+          "executionId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Get Execution",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "execution": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "workflowId": {
+                    "type": "string"
+                  },
+                  "mode": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "startedAt": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "stoppedAt": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "retryOf": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "retrySuccessId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "waitTill": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "workflowId",
+                  "mode",
+                  "status",
+                  "startedAt",
+                  "stoppedAt"
+                ],
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Execution metadata, or null if an error occurred"
+          },
+          "data": {
+            "description": "Execution result data (only present when includeData is true)"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if the request failed"
+          }
+        },
+        "required": [
+          "execution"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_node_types",
+      "description": "Get TypeScript type definitions for n8n nodes. Returns exact parameter names and structures. MUST be called before writing workflow code — guessing parameter names creates invalid workflows. Pass nodeIds as an array of objects like { nodeId: \"n8n-nodes-base.gmail\" }. Include discriminators (resource/operation/mode) from search_nodes results.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "nodeIds": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "nodeId": {
+                  "type": "string",
+                  "description": "The node type ID (e.g. \"n8n-nodes-base.gmail\")"
+                },
+                "version": {
+                  "type": "string",
+                  "description": "Specific version (e.g. \"2.1\")"
+                },
+                "resource": {
+                  "type": "string",
+                  "description": "Resource discriminator (e.g. \"message\")"
+                },
+                "operation": {
+                  "type": "string",
+                  "description": "Operation discriminator (e.g. \"send\")"
+                },
+                "mode": {
+                  "type": "string",
+                  "description": "Mode discriminator"
+                }
+              },
+              "required": [
+                "nodeId"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "description": "Node type requests to get definitions for. Always pass an array of objects, even for a single node. Include discriminators from search_nodes results when available."
+          }
+        },
+        "required": [
+          "nodeIds"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Getting node definitions",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "definitions": {
+            "type": "string",
+            "description": "TypeScript type definitions for the requested nodes"
+          },
+          "n8nConnect": {
+            "type": "object",
+            "properties": {
+              "credentialTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Credential types n8n Connect can provide."
+              },
+              "nodes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Node types n8n Connect may cover. Prefer these when the user has not specified an integration. Candidate coverage only — exact eligibility also depends on the node action, minimum type version, and hidden properties."
+              }
+            },
+            "required": [
+              "credentialTypes",
+              "nodes"
+            ],
+            "additionalProperties": false,
+            "description": "Present when n8n Connect is available. Candidate coverage — cross-reference against the returned node types, but call list_n8n_connect_services for exact eligibility (supported actions, min versions, hidden properties)."
+          }
+        },
+        "required": [
+          "definitions"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_sdk_reference",
+      "description": "Required reference for building n8n Workflow SDK code. Call this BEFORE writing workflow code to learn workflow(), trigger()/node(), .add()/.to(), expr(), and credential patterns.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "section": {
+            "type": "string",
+            "enum": [
+              "patterns",
+              "patterns_detailed",
+              "expressions",
+              "functions",
+              "rules",
+              "import",
+              "guidelines",
+              "design",
+              "all"
+            ],
+            "description": "Optional section to retrieve. Omit this for the full reference, or use a section for targeted lookup."
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Getting SDK reference",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "reference": {
+            "type": "string",
+            "description": "SDK reference documentation content for the requested section"
+          }
+        },
+        "required": [
+          "reference"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_workflow_best_practices",
+      "description": "Required workflow-planning step. Get best-practices guidance (recommended nodes, patterns, and common pitfalls) for a specific workflow technique before searching for nodes or writing code. Call once per relevant technique. Use technique=\"list\" first if unsure which techniques apply.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "technique": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "scheduling",
+                  "chatbot",
+                  "form_input",
+                  "scraping_and_research",
+                  "monitoring",
+                  "enrichment",
+                  "triage",
+                  "content_generation",
+                  "document_processing",
+                  "data_extraction",
+                  "data_analysis",
+                  "data_transformation",
+                  "data_persistence",
+                  "notification",
+                  "knowledge_base",
+                  "human_in_the_loop",
+                  "web_app"
+                ]
+              },
+              {
+                "type": "string",
+                "const": "list"
+              }
+            ],
+            "description": "Workflow technique key (e.g. \"chatbot\", \"scheduling\", \"triage\") to fetch best-practices guidance for. Pass \"list\" to discover all available techniques."
+          }
+        },
+        "required": [
+          "technique"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Getting workflow best practices",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "technique": {
+            "type": "string",
+            "description": "The requested technique key, or \"list\" when listing all available techniques."
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable summary of the response."
+          },
+          "documentation": {
+            "type": "string",
+            "description": "Best-practices documentation for the requested technique, when one with documentation was requested."
+          },
+          "availableTechniques": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "technique": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "hasDocumentation": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "technique",
+                "description",
+                "hasDocumentation"
+              ],
+              "additionalProperties": false
+            },
+            "description": "All available techniques, returned when \"list\" was requested."
+          }
+        },
+        "required": [
+          "technique",
+          "message"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_workflow_details",
+      "description": "Get detailed information about a specific workflow including trigger details",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow to retrieve"
+          }
+        },
+        "required": [
+          "workflowId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Get Workflow Details",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "workflow": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "active": {
+                "type": "boolean"
+              },
+              "isArchived": {
+                "type": "boolean"
+              },
+              "versionId": {
+                "type": "string",
+                "description": "The current workflow version ID"
+              },
+              "activeVersionId": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The active workflow version ID, if available"
+              },
+              "triggerCount": {
+                "type": "number"
+              },
+              "createdAt": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "updatedAt": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "settings": {
+                "anyOf": [
+                  {},
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "connections": {
+                "type": "object",
+                "additionalProperties": {}
+              },
+              "nodes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "type"
+                  ],
+                  "additionalProperties": true
+                }
+              },
+              "nodeGroups": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "nodeNames": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Names of the member nodes, matching the update_workflow group operations."
+                    },
+                    "description": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "nodeNames"
+                  ],
+                  "additionalProperties": false,
+                  "description": "A named visual grouping of nodes"
+                },
+                "description": "Node groups in the workflow"
+              },
+              "activeVersion": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "nodes": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/properties/workflow/properties/nodes/items"
+                        }
+                      },
+                      "connections": {
+                        "type": "object",
+                        "additionalProperties": {}
+                      },
+                      "nodeGroups": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/properties/workflow/properties/nodeGroups/items"
+                        },
+                        "description": "Node groups in the active version"
+                      }
+                    },
+                    "required": [
+                      "nodes",
+                      "connections",
+                      "nodeGroups"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Active workflow graph, if available"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name"
+                  ],
+                  "additionalProperties": true
+                }
+              },
+              "meta": {
+                "anyOf": [
+                  {},
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "parentFolderId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "description": {
+                "type": "string",
+                "description": "The description of the workflow"
+              },
+              "scopes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "User permissions for this workflow"
+              },
+              "canExecute": {
+                "type": "boolean",
+                "description": "Whether the user has permission to execute this workflow"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "active",
+              "isArchived",
+              "versionId",
+              "activeVersionId",
+              "triggerCount",
+              "createdAt",
+              "updatedAt",
+              "connections",
+              "nodes",
+              "nodeGroups",
+              "activeVersion",
+              "tags",
+              "parentFolderId",
+              "scopes",
+              "canExecute"
+            ],
+            "additionalProperties": true,
+            "description": "Sanitized workflow data safe for MCP consumption"
+          },
+          "triggerInfo": {
+            "type": "string",
+            "description": "Human-readable instructions describing how to trigger the workflow"
+          }
+        },
+        "required": [
+          "workflow",
+          "triggerInfo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_workflow_history",
+      "description": "List the saved version history of a workflow (newest first), so you can inspect how it changed over time and pick a version to retrieve or restore.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow to read version history for"
+          },
+          "limit": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 50,
+            "description": "Limit the number of results (max 50)"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of versions to skip for pagination (default 0)"
+          }
+        },
+        "required": [
+          "workflowId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Get Workflow History",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "workflowId": {
+            "type": "string"
+          },
+          "versions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "versionId": {
+                  "type": "string",
+                  "description": "The version ID, usable with get_workflow_version"
+                },
+                "authors": {
+                  "type": "string",
+                  "description": "Who authored this version"
+                },
+                "name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Optional named-version label"
+                },
+                "description": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Optional named-version description"
+                },
+                "autosaved": {
+                  "type": "boolean",
+                  "description": "Whether this version was autosaved"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO timestamp when the version was created"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO timestamp when the version metadata was last updated"
+                }
+              },
+              "required": [
+                "versionId",
+                "authors",
+                "name",
+                "description",
+                "autosaved",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Versions ordered newest first. Older versions may be pruned by retention settings."
+          },
+          "count": {
+            "type": "number",
+            "description": "Number of versions returned in this page"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "workflowId",
+          "versions",
+          "count"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_workflow_version",
+      "description": "Retrieve the full content (nodes, connections, node groups) of a specific workflow version from its history. Use the versionId from get_workflow_history.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow the version belongs to"
+          },
+          "versionId": {
+            "type": "string",
+            "description": "The version ID to retrieve, as returned by get_workflow_history"
+          }
+        },
+        "required": [
+          "workflowId",
+          "versionId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Get Workflow Version",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "versionId": {
+            "type": "string"
+          },
+          "workflowId": {
+            "type": "string"
+          },
+          "authors": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Who authored this version"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional named-version label"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional named-version description"
+          },
+          "createdAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "ISO timestamp when the version was created"
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "ISO timestamp when the version metadata was last updated"
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "type"
+              ],
+              "additionalProperties": true
+            },
+            "description": "The workflow nodes captured in this version"
+          },
+          "connections": {
+            "description": "The node connections captured in this version"
+          },
+          "nodeGroups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "nodeNames": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Names of the member nodes, matching the update_workflow group operations."
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "nodeNames"
+              ],
+              "additionalProperties": false,
+              "description": "A named visual grouping of nodes"
+            },
+            "description": "The node groups captured in this version"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "versionId",
+          "workflowId",
+          "authors",
+          "name",
+          "description",
+          "createdAt",
+          "updatedAt",
+          "nodes",
+          "nodeGroups"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "list_credentials",
+      "description": "List credentials the current user can access. Use this to find a credential ID before referencing it from a workflow node. Never returns credential secret data.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 200,
+            "description": "Limit the number of results (max 200)"
+          },
+          "query": {
+            "type": "string",
+            "description": "Filter credentials by name (partial match)"
+          },
+          "type": {
+            "type": "string",
+            "description": "Filter by credential type (e.g. \"slackApi\", \"httpHeaderAuth\"). Partial match."
+          },
+          "projectId": {
+            "type": "string",
+            "description": "Restrict results to credentials belonging to this project"
+          },
+          "onlySharedWithMe": {
+            "type": "boolean",
+            "description": "Only return credentials shared directly with the current user"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "List Credentials",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The unique identifier of the credential"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The name of the credential"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "The credential type (e.g. \"slackApi\")"
+                },
+                "scopes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "The user permissions on this credential (e.g. \"credential:read\")"
+                },
+                "isManaged": {
+                  "type": "boolean",
+                  "description": "Whether the credential is managed by n8n and cannot be edited by the user"
+                },
+                "isGlobal": {
+                  "type": "boolean",
+                  "description": "Whether the credential is available to all users"
+                },
+                "homeProject": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The unique identifier of the project"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The name of the project"
+                        },
+                        "type": {
+                          "type": "string",
+                          "description": "The project type. 'personal' is a user's private project; 'team' is a shared project accessible to multiple users."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "type"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "The project that owns the credential, if available"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "type",
+                "scopes",
+                "isManaged",
+                "isGlobal",
+                "homeProject"
+              ],
+              "additionalProperties": false
+            },
+            "description": "List of credentials accessible to the current user"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of credentials returned"
+          },
+          "n8nConnect": {
+            "type": "object",
+            "properties": {
+              "credentialTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Credential type names that n8n credits can provide (e.g. \"openAiApi\")."
+              },
+              "nodes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Node types covered by n8n credits (e.g. \"@n8n/n8n-nodes-langchain.openAi\")."
+              }
+            },
+            "required": [
+              "credentialTypes",
+              "nodes"
+            ],
+            "additionalProperties": false,
+            "description": "Present when n8n credits is available for this instance. Omitted otherwise. Candidate coverage only — actual eligibility for a managed credential also depends on the node action, minimum type version, and hidden properties; call list_n8n_connect_services for the authoritative contract."
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message when the tool failed"
+          }
+        },
+        "required": [
+          "data",
+          "count"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "list_n8n_connect_services",
+      "description": "List n8n credits coverage: node and credential types the platform can provide managed credentials for, plus supported resource+operation combinations, minimum type versions, and hidden node properties. Use this to decide which nodes let the user skip credential setup.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "List services available with n8n credits",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "available": {
+            "type": "boolean",
+            "description": "True when n8n credits is available for this instance. When false, the remaining fields are omitted."
+          },
+          "credentialTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Credential type names Connect can provide (e.g. \"openAiApi\")."
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Node types Connect covers (e.g. \"@n8n/n8n-nodes-langchain.openAi\")."
+          },
+          "supportedActions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Per-node allowlist keyed by node type, then resource (or `__operation_only__` for nodes without a resource dimension). Values are supported operation names."
+          },
+          "minNodeTypeVersion": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            },
+            "description": "Minimum `typeVersion` per node type for Connect coverage."
+          },
+          "hiddenNodeProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Per-node property names hidden from the user when Connect provides the credential."
+          }
+        },
+        "required": [
+          "available"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "list_tags",
+      "description": "List all workflow tags in the instance.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 500,
+            "description": "Limit the number of results (max 500)"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "List Tags",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The unique identifier of the tag"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The display name of the tag"
+                },
+                "usageCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Number of non-archived workflows using this tag"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "The ISO timestamp when the tag was created"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "The ISO timestamp when the tag was last updated"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "usageCount",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Workflow tags available in the instance"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of tags returned"
+          },
+          "totalCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total number of tags before applying the limit"
+          }
+        },
+        "required": [
+          "data",
+          "count",
+          "totalCount"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "prepare_test_pin_data",
+      "description": "Prepare test pin data for a workflow. Trigger nodes, nodes with credentials, and HTTP Request nodes need pin data. Logic nodes (Set, If, Code, etc.) and credential-free I/O nodes (Execute Command, file read/write) execute normally without pin data. Returns JSON Schemas describing the expected output shape for each node that needs pin data — schemas are derived from past execution output shapes or node type definitions. No actual user data is returned. You should generate realistic sample data for the schemas, use empty defaults for nodes without schema, merge everything into a single pinData object, and pass it to test_workflow.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow to generate test pin data for"
+          }
+        },
+        "required": [
+          "workflowId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Prepare Test Pin Data",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "nodeSchemasToGenerate": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {}
+            },
+            "description": "Nodes that need pin data generated by you. Keys are node names, values are JSON Schema objects describing the expected output shape. Schemas may come from node type definitions or inferred from past execution output shapes. Generate realistic sample data matching each schema, wrap each item as {\"json\": {...}}, and collect into a pinData object to pass to test_workflow."
+          },
+          "nodesWithoutSchema": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Node names that need pin data but have no output schema. Generate a single item [{\"json\": {}}] for each, and merge into pinData before passing to test_workflow."
+          },
+          "nodesSkipped": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Nodes that do not need pin data and will execute normally during the test (e.g. Set, If, Code, Merge)."
+          },
+          "coverage": {
+            "type": "object",
+            "properties": {
+              "withSchemaFromExecution": {
+                "type": "number",
+                "description": "Number of nodes with schemas inferred from last successful execution output"
+              },
+              "withSchemaFromDefinition": {
+                "type": "number",
+                "description": "Number of nodes with schemas from node type definitions"
+              },
+              "withoutSchema": {
+                "type": "number",
+                "description": "Number of nodes with no data or schema — use empty defaults"
+              },
+              "skipped": {
+                "type": "number",
+                "description": "Number of nodes that will execute normally (no pin data needed)"
+              },
+              "total": {
+                "type": "number",
+                "description": "Total number of enabled nodes"
+              }
+            },
+            "required": [
+              "withSchemaFromExecution",
+              "withSchemaFromDefinition",
+              "withoutSchema",
+              "skipped",
+              "total"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "nodeSchemasToGenerate",
+          "nodesWithoutSchema",
+          "nodesSkipped",
+          "coverage"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "publish_workflow",
+      "description": "Publish (activate) a workflow to make it available for production execution. This creates an active version from the current draft.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow to publish"
+          },
+          "versionId": {
+            "type": "string",
+            "description": "Optional version ID to publish. If not provided, publishes the current draft version."
+          }
+        },
+        "required": [
+          "workflowId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Publish Workflow",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "workflowId": {
+            "type": "string"
+          },
+          "activeVersionId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "workflowId",
+          "activeVersionId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "rename_data_table",
+      "description": "Rename an existing data table.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dataTableId": {
+            "type": "string",
+            "description": "The ID of the data table to rename"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "The project ID the data table belongs to"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "The new name for the data table"
+          }
+        },
+        "required": [
+          "dataTableId",
+          "projectId",
+          "name"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Rename Data Table",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the operation succeeded"
+          },
+          "message": {
+            "type": "string",
+            "description": "Description of the result"
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "rename_data_table_column",
+      "description": "Rename a column in a data table.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dataTableId": {
+            "type": "string",
+            "description": "The ID of the data table containing the column"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "The project ID the data table belongs to"
+          },
+          "columnId": {
+            "type": "string",
+            "description": "The ID of the column to rename"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63,
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+            "description": "The new column name"
+          }
+        },
+        "required": [
+          "dataTableId",
+          "projectId",
+          "columnId",
+          "name"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Rename Data Table Column",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the operation succeeded"
+          },
+          "message": {
+            "type": "string",
+            "description": "Description of the result"
+          },
+          "column": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The unique identifier of the column"
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the column"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "date"
+                ],
+                "description": "The data type of the column"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "type"
+            ],
+            "additionalProperties": false,
+            "description": "The renamed column"
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "column"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "restore_workflow_version",
+      "description": "Restore a workflow to a previous version from its history. Re-applies that version as the current draft and records a new history entry. Use get_workflow_history to find the versionId.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow to restore"
+          },
+          "versionId": {
+            "type": "string",
+            "description": "The version ID to restore, as returned by get_workflow_history"
+          }
+        },
+        "required": [
+          "workflowId",
+          "versionId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Restore Workflow Version",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "workflowId": {
+            "type": "string"
+          },
+          "restoredFromVersionId": {
+            "type": "string"
+          },
+          "newVersionId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The new current version ID created by the restore, if successful"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "workflowId",
+          "restoredFromVersionId",
+          "newVersionId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "search_data_tables",
+      "description": "Search for data tables accessible to the current user. Use this to find a data table ID before modifying or adding data to it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Filter data tables by name (case-insensitive partial match)"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "Filter by project ID"
+          },
+          "limit": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 100,
+            "description": "Limit the number of results (max 100)"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Search Data Tables",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Autogenerated unique identifier of the data table."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The name of the data table"
+                },
+                "projectId": {
+                  "type": "string",
+                  "description": "The project this data table belongs to"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "Autogenerated ISO timestamp when the data table was created"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "Autogenerated ISO timestamp when the data table was last updated"
+                },
+                "columns": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier of the column"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the column"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "string",
+                          "number",
+                          "boolean",
+                          "date"
+                        ],
+                        "description": "The data type of the column"
+                      },
+                      "index": {
+                        "type": "integer",
+                        "description": "The position of the column in the table"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "type",
+                      "index"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "The columns defined in this data table"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "projectId",
+                "createdAt",
+                "updatedAt",
+                "columns"
+              ],
+              "additionalProperties": false
+            },
+            "description": "List of data tables matching the query"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total number of matching data tables"
+          }
+        },
+        "required": [
+          "data",
+          "count"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "search_executions",
+      "description": "Search for workflow executions with optional filters. Returns execution metadata including status, timing, and workflow ID.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "Filter executions by workflow ID"
+          },
+          "status": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "canceled",
+                "crashed",
+                "error",
+                "new",
+                "running",
+                "success",
+                "unknown",
+                "waiting"
+              ]
+            },
+            "description": "Filter by execution status(es)"
+          },
+          "startedAfter": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp — only return executions that started after this time"
+          },
+          "startedBefore": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp — only return executions that started before this time"
+          },
+          "limit": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 200,
+            "description": "Limit the number of results (max 200)"
+          },
+          "lastId": {
+            "type": "string",
+            "description": "Cursor for pagination — pass the last execution ID from the previous page"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Search Executions",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The unique identifier of the execution"
+                },
+                "workflowId": {
+                  "type": "string",
+                  "description": "The workflow this execution belongs to"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "canceled",
+                    "crashed",
+                    "error",
+                    "new",
+                    "running",
+                    "success",
+                    "unknown",
+                    "waiting"
+                  ],
+                  "description": "The execution status"
+                },
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "cli",
+                    "error",
+                    "integrated",
+                    "internal",
+                    "manual",
+                    "retry",
+                    "trigger",
+                    "webhook",
+                    "evaluation",
+                    "chat",
+                    "agent"
+                  ],
+                  "description": "How the execution was triggered"
+                },
+                "startedAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "ISO timestamp when the execution started"
+                },
+                "stoppedAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "ISO timestamp when the execution stopped"
+                },
+                "waitTill": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "ISO timestamp until when the execution is waiting"
+                }
+              },
+              "required": [
+                "id",
+                "workflowId",
+                "status",
+                "mode",
+                "startedAt",
+                "stoppedAt",
+                "waitTill"
+              ],
+              "additionalProperties": false
+            },
+            "description": "List of executions matching the query"
+          },
+          "count": {
+            "anyOf": [
+              {
+                "type": "number",
+                "const": -1
+              },
+              {
+                "type": "integer",
+                "minimum": 0
+              }
+            ],
+            "description": "Total matching executions, or -1 if the count is unavailable"
+          },
+          "estimated": {
+            "type": "boolean",
+            "description": "Whether the count is an estimate (for large datasets)"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if the query failed"
+          }
+        },
+        "required": [
+          "data",
+          "count",
+          "estimated"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "search_folders",
+      "description": "Search for folders within a project. Use this to find a folder ID before creating a workflow in a specific folder. Requires a projectId — use search_projects first if needed.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "description": "The ID of the project to search folders in"
+          },
+          "query": {
+            "type": "string",
+            "description": "Filter folders by name (case-insensitive partial match)"
+          },
+          "limit": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 100,
+            "description": "Limit the number of results (max 100)"
+          }
+        },
+        "required": [
+          "projectId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Search Folders",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The unique identifier of the folder"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The name of the folder"
+                },
+                "parentFolderId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The ID of the parent folder, or null if at project root"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "parentFolderId"
+              ],
+              "additionalProperties": false
+            },
+            "description": "List of folders matching the query"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total number of matching folders"
+          }
+        },
+        "required": [
+          "data",
+          "count"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "search_nodes",
+      "description": "Search for n8n nodes by service name, trigger type, or utility function. Returns node IDs, discriminators (resource/operation/mode), and related nodes needed for get_node_types.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "queries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Search queries for n8n nodes — service names (e.g. \"gmail\", \"slack\"), trigger types (e.g. \"schedule trigger\", \"webhook\"), or utility nodes (e.g. \"set\", \"if\", \"merge\", \"code\")"
+          }
+        },
+        "required": [
+          "queries"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Searching nodes",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "string",
+            "description": "Search results with matching node IDs, discriminators, and related nodes"
+          },
+          "n8nConnect": {
+            "type": "object",
+            "properties": {
+              "credentialTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Credential types n8n Connect can provide."
+              },
+              "nodes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Node types n8n Connect may cover. Prefer these when the user has not specified an integration. Candidate coverage only — exact eligibility also depends on the node action, minimum type version, and hidden properties."
+              }
+            },
+            "required": [
+              "credentialTypes",
+              "nodes"
+            ],
+            "additionalProperties": false,
+            "description": "Present when n8n Connect is available. Candidate coverage — cross-reference against the search results, but call list_n8n_connect_services for exact eligibility (supported actions, min versions, hidden properties)."
+          }
+        },
+        "required": [
+          "results"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "search_projects",
+      "description": "Search for projects accessible to the current user. Call this whenever the user names a project — pass the name as the query, then use the resolved ID with create_workflow_from_code or update_workflow. Results are ranked with exact case-insensitive name matches first. If no exact match is found but multiple partials are returned, the response includes a `hint` field telling you to clarify with the user before acting; follow it instead of guessing. The response also includes `teamProjectsEnabled` — when false, team projects are not licensed on this instance, so default to creating workflows in the caller's personal project unless the user explicitly picks one of the returned accessible projects.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Filter projects by name (case-insensitive partial match). Pass the exact project name the user mentioned — results are ranked with exact case-insensitive matches first, then partial matches."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "personal",
+              "team"
+            ],
+            "description": "Filter by project type. 'team' for shared team projects, 'personal' for personal projects."
+          },
+          "limit": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 100,
+            "description": "Limit the number of results (max 100)"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Search Projects",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The unique identifier of the project"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The name of the project"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "personal",
+                    "team"
+                  ],
+                  "description": "The project type: 'personal' or 'team'"
+                },
+                "matchType": {
+                  "type": "string",
+                  "enum": [
+                    "exact",
+                    "partial"
+                  ],
+                  "description": "Whether this project's name matches the query exactly (case-insensitive) or only partially. Only present when a query was provided."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "type"
+              ],
+              "additionalProperties": false
+            },
+            "description": "List of projects matching the query, sorted with exact case-insensitive matches first."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total number of matching projects"
+          },
+          "teamProjectsEnabled": {
+            "type": "boolean",
+            "description": "Whether team projects are licensed on this n8n instance. When false, default to omitting projectId on create_workflow_from_code so the workflow lands in the caller's personal project, unless the user explicitly picked one of the returned accessible projects (legacy team projects can still appear here after a license downgrade). Omitted on error responses."
+          },
+          "hint": {
+            "type": "string",
+            "description": "Guidance for picking a result. Present when the match is ambiguous — for example when no exact match was found but multiple partials were returned, or when team projects are not licensed on this instance. When present, follow it before calling create_workflow_from_code."
+          }
+        },
+        "required": [
+          "data",
+          "count"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "search_workflows",
+      "description": "Search for workflows with optional filters. Returns a preview of each workflow.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 200,
+            "description": "Limit the number of results (max 200)"
+          },
+          "query": {
+            "type": "string",
+            "description": "Filter by name or description"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Filter by tag names (AND semantics — workflow must have all)."
+          },
+          "sortBy": {
+            "type": "string",
+            "enum": [
+              "updatedAt:desc",
+              "updatedAt:asc",
+              "createdAt:desc",
+              "createdAt:asc",
+              "name:asc",
+              "name:desc"
+            ],
+            "description": "Sort order for results (default: updatedAt:desc). Use updatedAt:desc to find the most recently edited workflows first."
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Search Workflows",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The unique identifier of the workflow"
+                },
+                "name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The name of the workflow"
+                },
+                "description": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The description of the workflow"
+                },
+                "active": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ],
+                  "description": "Whether the workflow is active"
+                },
+                "createdAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The ISO timestamp when the workflow was created"
+                },
+                "updatedAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "ISO timestamp the workflow definition was last saved. Use this to identify recently edited workflows."
+                },
+                "triggerCount": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "description": "The number of triggers associated with the workflow"
+                },
+                "scopes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "User permissions for this workflow"
+                },
+                "canExecute": {
+                  "type": "boolean",
+                  "description": "Whether the user has permission to execute this workflow"
+                },
+                "availableInMCP": {
+                  "type": "boolean",
+                  "description": "Whether the workflow is visible to MCP tools"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ],
+                    "additionalProperties": true
+                  },
+                  "description": "Tags assigned to the workflow"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "active",
+                "createdAt",
+                "updatedAt",
+                "triggerCount",
+                "scopes",
+                "canExecute",
+                "availableInMCP",
+                "tags"
+              ],
+              "additionalProperties": true
+            },
+            "description": "List of workflows matching the query"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total number of workflows that match the filters"
+          }
+        },
+        "required": [
+          "data",
+          "count"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "test_workflow",
+      "description": "Test a workflow using pin data to bypass external services. Trigger nodes, nodes with credentials, and HTTP Request nodes are pinned (use simulated data). Other nodes (Set, If, Code, etc.) execute normally — including credential-free I/O nodes like Execute Command or file read/write nodes. Use prepare_test_pin_data to generate the pin data first.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow to test"
+          },
+          "pinData": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": {}
+              }
+            },
+            "description": "Pin data for all workflow nodes. Use the prepare_test_pin_data tool to generate this. Keys are node names, values are arrays of items. Each item MUST be wrapped in a \"json\" property, e.g. [{\"json\": {\"id\": \"123\", \"name\": \"test\"}}]. Do NOT pass flat objects like [{\"id\": \"123\"}]."
+          },
+          "triggerNodeName": {
+            "type": "string",
+            "description": "Optional name of the trigger node to start execution from. Useful for workflows with multiple triggers. Defaults to the first trigger node found."
+          },
+          "timeout": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 3600,
+            "description": "Optional timeout in seconds before the test execution is interrupted. Defaults to 300 seconds. Increase this to test workflows that take longer to run."
+          }
+        },
+        "required": [
+          "workflowId",
+          "pinData"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Test Workflow",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "executionId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "error",
+              "running",
+              "waiting",
+              "canceled",
+              "crashed",
+              "new",
+              "unknown"
+            ],
+            "description": "The status of the test execution"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if the execution failed"
+          }
+        },
+        "required": [
+          "executionId",
+          "status"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "unpublish_workflow",
+      "description": "Unpublish (deactivate) a workflow to stop it from being available for production execution.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow to unpublish"
+          }
+        },
+        "required": [
+          "workflowId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Unpublish Workflow",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "workflowId": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "workflowId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "update_workflow",
+      "description": "Atomically update an existing workflow with operation objects. Edits nodes/connections and also workflow-level settings via setWorkflowSettings — including the error workflow that runs automatically on failure to send alerts (e.g. when a user asks to \"add error handling\" or \"notify me if this breaks\"). Pass skillsUsed if n8n skills were used.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow to update."
+          },
+          "skillsUsed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "IDs of n8n skills used to prepare this call, e.g. \"workflow-builder\". An optional plugin prefix is allowed, e.g. \"n8n-skills:workflow-builder\". Entries are normalized server-side (trimmed, lowercased, deduped); invalid identifiers are dropped."
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "updateNodeParameters",
+                    "setNodeParameter",
+                    "addNode",
+                    "removeNode",
+                    "renameNode",
+                    "addConnection",
+                    "removeConnection",
+                    "setNodeCredential",
+                    "setNodePosition",
+                    "setNodeDisabled",
+                    "setNodeSettings",
+                    "setWorkflowMetadata",
+                    "setWorkflowSettings",
+                    "addTags",
+                    "removeTags",
+                    "setNodeGroups"
+                  ],
+                  "description": "Operation type."
+                },
+                "nodeName": {
+                  "type": "string",
+                  "description": "For node-targeted ops."
+                },
+                "node": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Unique node name."
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Node type, e.g. \"n8n-nodes-base.set\"."
+                    },
+                    "typeVersion": {
+                      "type": "number"
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "additionalProperties": {}
+                    },
+                    "position": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "description": "Canvas [x, y]."
+                    },
+                    "credentials": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "disabled": {
+                      "type": "boolean"
+                    },
+                    "notes": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "type",
+                    "typeVersion"
+                  ],
+                  "additionalProperties": false,
+                  "description": "For addNode."
+                },
+                "parameters": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "description": "For updateNodeParameters."
+                },
+                "replace": {
+                  "type": "boolean",
+                  "description": "For updateNodeParameters; default false."
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 2,
+                  "description": "For setNodeParameter; JSON Pointer path."
+                },
+                "value": {
+                  "description": "For setNodeParameter."
+                },
+                "oldName": {
+                  "type": "string",
+                  "description": "For renameNode."
+                },
+                "newName": {
+                  "type": "string",
+                  "description": "For renameNode."
+                },
+                "source": {
+                  "type": "string",
+                  "description": "For connection ops."
+                },
+                "target": {
+                  "type": "string",
+                  "description": "For connection ops."
+                },
+                "sourceIndex": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "For connection ops; default 0."
+                },
+                "targetIndex": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "For connection ops; default 0."
+                },
+                "connectionType": {
+                  "type": "string",
+                  "description": "For connection ops; default \"main\"."
+                },
+                "credentialKey": {
+                  "type": "string",
+                  "description": "For setNodeCredential."
+                },
+                "credentialId": {
+                  "type": "string",
+                  "description": "For setNodeCredential."
+                },
+                "credentialName": {
+                  "type": "string",
+                  "description": "For setNodeCredential."
+                },
+                "position": {
+                  "$ref": "#/properties/operations/items/properties/node/properties/position",
+                  "description": "For setNodePosition."
+                },
+                "disabled": {
+                  "type": "boolean",
+                  "description": "For setNodeDisabled."
+                },
+                "settings": {
+                  "type": "object",
+                  "properties": {
+                    "onError": {
+                      "type": "string",
+                      "enum": [
+                        "stopWorkflow",
+                        "continueRegularOutput",
+                        "continueErrorOutput"
+                      ],
+                      "description": "Error behavior."
+                    },
+                    "retryOnFail": {
+                      "type": "boolean"
+                    },
+                    "maxTries": {
+                      "type": "integer",
+                      "minimum": 2,
+                      "maximum": 5
+                    },
+                    "waitBetweenTries": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 5000
+                    },
+                    "alwaysOutputData": {
+                      "type": "boolean"
+                    },
+                    "executeOnce": {
+                      "type": "boolean"
+                    },
+                    "errorWorkflow": {
+                      "type": "string",
+                      "description": "ID of a SEPARATE workflow to run whenever THIS workflow fails — the common best-practice way to send failure alerts (email, Slack, etc.) or log errors via a shared, reusable handler. The referenced workflow must contain an Error Trigger node; find its ID with search_workflows. Pass \"DEFAULT\" to clear it. There are two ways to handle failures: (a) a dedicated/shared error workflow set here, or (b) an Error Trigger node placed directly inside THIS workflow (n8n fires it automatically on failure, no setting needed). When the user asks for error handling, ask which pattern they prefer before choosing. When errorWorkflow is set, it takes precedence over a same-workflow Error Trigger for the failing run. Failure handling fires for production executions only, not manual/test runs. Distinct from per-node onError/retry (setNodeSettings)."
+                    },
+                    "timezone": {
+                      "type": "string",
+                      "description": "IANA timezone used by Schedule Triggers and date/time operations, e.g. \"America/New_York\". Pass \"DEFAULT\" to inherit the instance timezone."
+                    },
+                    "executionOrder": {
+                      "type": "string",
+                      "enum": [
+                        "v0",
+                        "v1"
+                      ],
+                      "description": "Node execution order. \"v1\" is the default for new workflows; \"v0\" is legacy."
+                    },
+                    "saveExecutionProgress": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "const": "DEFAULT"
+                        }
+                      ],
+                      "description": "Save execution data after each node finishes. Allows resuming/inspecting partial runs at the cost of speed."
+                    },
+                    "saveManualExecutions": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "const": "DEFAULT"
+                        }
+                      ],
+                      "description": "Whether manual (test) executions are saved to the execution list."
+                    },
+                    "saveDataErrorExecution": {
+                      "type": "string",
+                      "enum": [
+                        "DEFAULT",
+                        "all",
+                        "none"
+                      ],
+                      "description": "Whether to store execution data for failed runs."
+                    },
+                    "saveDataSuccessExecution": {
+                      "type": "string",
+                      "enum": [
+                        "DEFAULT",
+                        "all",
+                        "none"
+                      ],
+                      "description": "Whether to store execution data for successful runs."
+                    },
+                    "executionTimeout": {
+                      "type": "integer",
+                      "description": "Maximum execution time in seconds before a run is stopped. Use a positive number of seconds (not exceeding the instance maximum, enforced server-side), or -1 for unlimited (no timeout)."
+                    },
+                    "timeSavedPerExecution": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Estimated time saved per execution, in minutes (used for insights/reporting)."
+                    },
+                    "callerPolicy": {
+                      "type": "string",
+                      "enum": [
+                        "any",
+                        "none",
+                        "workflowsFromAList",
+                        "workflowsFromSameOwner"
+                      ],
+                      "description": "Which workflows may call this one via the Execute Sub-workflow node. Defaults to \"workflowsFromSameOwner\"."
+                    },
+                    "callerIds": {
+                      "type": "string",
+                      "description": "Comma-separated workflow IDs allowed to call this workflow (only used with callerPolicy \"workflowsFromAList\")."
+                    }
+                  },
+                  "additionalProperties": false,
+                  "description": "For setNodeSettings or setWorkflowSettings."
+                },
+                "name": {
+                  "type": "string",
+                  "maxLength": 128,
+                  "description": "Only used for setWorkflowMetadata."
+                },
+                "description": {
+                  "type": "string",
+                  "maxLength": 255,
+                  "description": "Only used for setWorkflowMetadata."
+                },
+                "names": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "For addTags / removeTags."
+                },
+                "nodeGroups": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "nodeNames": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "nodeNames"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "For setNodeGroups. Replaces all node groups; pass [] to clear. Group members are node names, not ids."
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": false,
+              "description": "Workflow update operation. Provide fields matching type."
+            },
+            "minItems": 1,
+            "maxItems": 100,
+            "description": "Ordered operations to apply atomically (max 100). If any op fails, nothing is saved."
+          },
+          "versionName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Short summary of what this update changes, shown in the workflow's version history (e.g. \"Added Slack notification after HTTP request\"). Always provide it."
+          },
+          "versionDescription": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Longer description of what changed and why, shown in the version history alongside the version name."
+          }
+        },
+        "required": [
+          "workflowId",
+          "operations"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Updating workflow",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "nodeCount": {
+            "type": "number"
+          },
+          "url": {
+            "type": "string"
+          },
+          "appliedOperations": {
+            "type": "number",
+            "description": "Number of operations applied."
+          },
+          "autoAssignedCredentials": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "nodeName": {
+                  "type": "string"
+                },
+                "credentialName": {
+                  "type": "string"
+                },
+                "credentialType": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "aiGateway"
+                  ]
+                }
+              },
+              "required": [
+                "nodeName",
+                "credentialName",
+                "credentialType"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Credentials auto-assigned to nodes that were added in this update."
+          },
+          "validationWarnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "nodeName": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Graph and JSON validation warnings on the resulting workflow. Use these to self-correct on the next call."
+          },
+          "note": {
+            "type": "string"
+          },
+          "settings": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "Resulting workflow-level settings after the update. Present only when a setWorkflowSettings operation ran. Reflects server-side cleanup (e.g. \"DEFAULT\" values are removed)."
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message explaining why the update failed. Present only on failure."
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "validate_node_config",
+      "description": "Validate a node's config the moment you write it — before assembling create_workflow_from_code or calling update_workflow. Read-only and needs no existing workflow, so use it freely while composing. Unlike the write tools (which validate only as they mutate), this returns isolated per-node, per-parameter errors with no graph noise, and can check several candidate configs in one call so you wire only the one that passes. For langchain tool subnodes (nodes wired via ai_tool), set isToolNode: true so the schema evaluates the correct displayOptions branch. Schema-level only — for connections, required inputs, triggers, and credentials use validate_workflow.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Optional node name. Echoed back in the result so callers can correlate."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Full node type, e.g. \"n8n-nodes-base.set\" or \"@n8n/n8n-nodes-langchain.agent\"."
+                },
+                "typeVersion": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "default": 1,
+                  "description": "Node type version. Defaults to 1."
+                },
+                "parameters": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "default": {},
+                  "description": "Node parameters object — same shape as workflow JSON."
+                },
+                "subnodes": {
+                  "description": "Optional subnode config for AI parent nodes (e.g. langchain agent): `{ model, memory, tools: [...] }` of `{ type, version }` refs."
+                },
+                "isToolNode": {
+                  "type": "boolean",
+                  "description": "Set to true when validating a node that is wired as an AI tool subnode (ai_tool connection). Adjusts which displayOptions branch is evaluated."
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 50,
+            "description": "One or more node configurations to validate independently."
+          }
+        },
+        "required": [
+          "nodes"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Validating node config",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "description": "True when every node is valid."
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "number",
+                  "description": "Position of this node in the input array."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Echo of the input name, if provided."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Echo of the input node type."
+                },
+                "valid": {
+                  "type": "boolean",
+                  "description": "Whether this node config is valid."
+                },
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "path": {
+                        "type": "string",
+                        "description": "Parameter path of the error."
+                      },
+                      "message": {
+                        "type": "string",
+                        "description": "Human-readable error message."
+                      }
+                    },
+                    "required": [
+                      "path",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Validation errors for this node (omitted when valid)."
+                }
+              },
+              "required": [
+                "index",
+                "type",
+                "valid"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Per-node validation results, in input order."
+          },
+          "error": {
+            "type": "string",
+            "description": "Top-level error message when validation could not run at all (e.g. internal failure loading the schema). Omitted on success."
+          }
+        },
+        "required": [
+          "valid",
+          "results"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "validate_workflow",
+      "description": "Validate n8n Workflow SDK code. Required before creating or updating workflows from code. If you have not already read get_sdk_reference, call that first; guessing SDK syntax commonly creates invalid workflows.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Full TypeScript/JavaScript workflow code using the n8n Workflow SDK. Must include the workflow export."
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "title": "Validating workflow",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "description": "Whether the workflow code is valid"
+          },
+          "nodeCount": {
+            "type": "number",
+            "description": "The number of nodes in the workflow (if valid)"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "The warning code identifying the type of warning"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "The warning message"
+                },
+                "nodeName": {
+                  "type": "string",
+                  "description": "The node that triggered the warning"
+                },
+                "parameterPath": {
+                  "type": "string",
+                  "description": "The parameter path that triggered the warning"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Validation warnings (if any)"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Validation errors (if invalid)"
+          },
+          "hint": {
+            "type": "string",
+            "description": "Actionable hint for recovering from the error. When present, follow the suggested action before retrying."
+          }
+        },
+        "required": [
+          "valid"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    }
+  ]
+}

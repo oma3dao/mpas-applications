@@ -48,6 +48,7 @@ database data planes are separate MPAS surfaces and should be bridged independen
 | Firebase / Firestore | Official Firebase MCP Server | [firebase/firebase-tools](https://github.com/firebase/firebase-tools) | ✅ Tested | Protect database writes plus project, rules, auth, and service operations |
 | Upstash | Official Upstash MCP Server | [upstash/mcp-server](https://github.com/upstash/mcp-server) | ✅ Tested | Protect flush/delete, database lifecycle, and credential operations |
 | Railway | Official Railway MCP Server | [railwayapp/cli](https://github.com/railwayapp/cli) | ✅ Tested | Protect projects, services, deployments, variables, volumes, and backups |
+| n8n | Official n8n Instance MCP Server | [n8n-io/n8n](https://github.com/n8n-io/n8n) | ✅ Tested | Protect workflow execution, publication, mutation, restoration, and data-table writes |
 | Fastly | Official Fastly MCP Server | [fastly/mcp](https://github.com/fastly/mcp) | 💡 Requested | Protect service configuration, deployments, purges, and security changes |
 | Vercel | Vercel MCP Server | TBD | 💡 Requested | Protect projects, deployments, domains, environment variables, and team settings |
 | AWS | AWS MCP Servers | [awslabs/mcp](https://github.com/awslabs/mcp) | 📋 Planned | Multiple servers covering cloud infrastructure and developer workflows |

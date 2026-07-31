@@ -1,0 +1,143 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": true,
+  "operations": {
+    "add_data_table_column": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "add_data_table_rows": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "archive_workflow": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "create_data_table": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "create_workflow_from_code": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "delete_data_table_column": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "execute_workflow": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "explore_node_resources": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_execution": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_node_types": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_sdk_reference": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_workflow_best_practices": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_workflow_details": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_workflow_history": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_workflow_version": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_credentials": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_n8n_connect_services": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_tags": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "prepare_test_pin_data": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "publish_workflow": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "rename_data_table": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "rename_data_table_column": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "restore_workflow_version": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "search_data_tables": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "search_executions": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "search_folders": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "search_nodes": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "search_projects": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "search_workflows": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "test_workflow": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "unpublish_workflow": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "update_workflow": {
+      "impact": "critical",
+      "rationale": "mcp-annotation: destructiveHint=true"
+    },
+    "validate_node_config": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "validate_workflow": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    }
+  }
+}
