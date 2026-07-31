@@ -1,0 +1,17 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "Toolbox",
+    "version": "1.8.0+binary.darwin.arm64.44d1a05+prebuilt.bigquery"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "/Users/mpas1/Projects/mcp-targets/bigquery/bin/toolbox",
+    "--prebuilt",
+    "bigquery",
+    "--stdio"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-31T06:47:06.235Z"
+}
