@@ -2,6 +2,17 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-07-30 — Revalidated implementation artifacts
+
+- Rebuilt the generated TypeScript bridge from a clean dependency install and
+  confirmed all 5 discovered upstream tools are packaged.
+- Corrected the reviewed classification artifact for `execute_write_query`
+  from high to critical so it matches the operative plugin policy and the
+  documented review decision. Arbitrary DDL can irreversibly destroy
+  production schema or data in a single call.
+- Confirmed the governed surface remains limited to the sole mutating tool;
+  the 4 read-only tools remain pass-through.
+
 ## 2026-07-29 — Narrowed the governed surface to mutations
 
 - Reduced `plugin.json` from 5 operations to 1. `execute_read_query`,

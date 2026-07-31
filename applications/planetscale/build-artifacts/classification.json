@@ -8,8 +8,8 @@
       "rationale": "Reviewed: read-only SQL can expose production data and is governed at medium impact."
     },
     "execute_write_query": {
-      "impact": "high",
-      "rationale": "Reviewed: executes INSERT, UPDATE, DELETE, and DDL against the selected database; destructive queries require exact-argument approval."
+      "impact": "critical",
+      "rationale": "Reviewed: executes arbitrary INSERT, UPDATE, DELETE, and DDL against the selected database; a single call can irreversibly destroy production data or schema, so exact-argument approval is required."
     },
     "get_insights": {
       "impact": "medium",
