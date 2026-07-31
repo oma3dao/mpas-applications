@@ -1,0 +1,19 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-remote@0.1.37",
+      "https://mcp.vercel.com",
+      "--header",
+      "Authorization: Bearer {{credential:vercelMcpOAuthAccessToken}}"
+    ]
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": true,
+  "operations": {
+    "add_toolbar_reaction": {
+      "impact": "high",
+      "rationale": "manual-review: external toolbar communication mutation"
+    },
+    "buy_addon": {
+      "impact": "critical",
+      "rationale": "manual-review: immediate non-refundable purchase"
+    },
+    "buy_credits": {
+      "impact": "critical",
+      "rationale": "manual-review: immediate non-refundable purchase"
+    },
+    "buy_domain": {
+      "impact": "critical",
+      "rationale": "manual-review: domain registration and non-refundable purchase"
+    },
+    "buy_pro": {
+      "impact": "critical",
+      "rationale": "manual-review: starts recurring paid subscription"
+    },
+    "change_toolbar_thread_resolve_status": {
+      "impact": "high",
+      "rationale": "manual-review: externally visible toolbar thread mutation"
+    },
+    "check_domain_availability_and_price": {
+      "impact": "medium",
+      "rationale": "manual-review: read-only availability and pricing lookup"
+    },
+    "deploy_to_vercel": {
+      "impact": "high",
+      "rationale": "manual-review: creates a project and deploys supplied code"
+    },
+    "edit_toolbar_message": {
+      "impact": "high",
+      "rationale": "manual-review: edits external toolbar communication"
+    },
+    "get_access_to_vercel_url": {
+      "impact": "high",
+      "rationale": "manual-review: creates a temporary authentication-bypass URL"
+    },
+    "get_agent_run": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_agent_run_trace": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_deployment": {
+      "impact": "medium",
+      "rationale": "manual-review: read-only deployment metadata"
+    },
+    "get_deployment_build_logs": {
+      "impact": "medium",
+      "rationale": "manual-review: read-only build logs"
+    },
+    "get_domain_order": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_project": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_project_deployment_protection": {
+      "impact": "medium",
+      "rationale": "manual-review: read-only protection settings with passwords withheld"
+    },
+    "get_purchase_quote": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_runtime_errors": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_runtime_logs": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_toolbar_thread": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "get_web_analytics": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "import-claude-design-from-url": {
+      "impact": "high",
+      "rationale": "manual-review: imports externally fetched content into Vercel"
+    },
+    "list_agent_run_projects": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_agent_runs": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_deployments": {
+      "impact": "medium",
+      "rationale": "manual-review: read-only deployment listing"
+    },
+    "list_projects": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_teams": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "list_toolbar_threads": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "reply_to_toolbar_thread": {
+      "impact": "high",
+      "rationale": "manual-review: sends external toolbar communication"
+    },
+    "search_vercel_documentation": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    },
+    "update_project_deployment_protection": {
+      "impact": "critical",
+      "rationale": "manual-review: changes project authentication and trusted-IP controls"
+    },
+    "web_fetch_vercel_url": {
+      "impact": "medium",
+      "rationale": "name-heuristic"
+    }
+  }
+}
