@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "stripe-mcp",
+    "version": "1.0.0"
+  },
+  "protocolVersion": "2025-03-26",
+  "upstreamCommand": [
+    "node",
+    "/Users/mpas1/Projects/mcp-targets/stripe/src/tools/modelcontextprotocol/dist/index.js"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-31T00:59:50.359Z"
+}

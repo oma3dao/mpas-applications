@@ -1,0 +1,18 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "node",
+    "args": [
+      "/Users/mpas1/Projects/mcp-targets/stripe/src/tools/modelcontextprotocol/dist/index.js"
+    ],
+    "env": {
+      "STRIPE_SECRET_KEY": "{{credential:stripeRestrictedApiKey}}"
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}
