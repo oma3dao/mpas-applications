@@ -24,7 +24,7 @@
 
 - [ ] This is a self-merge
 - **Reason for emergency self-merge:**
-  <!-- e.g., production outage fix, broken deploy pipeline, launch-blocking bug -->
+  <!-- e.g., failed build blocking work, docs correction, low-risk typo -->
 - **Post-merge reviewer:** @<!-- tag someone to review after merge -->
 
 ---
@@ -32,32 +32,25 @@
 ### Self-Merge Policy Reference
 
 **Allowed self-merge examples:**
-- Production outage fix
-- Broken deploy pipeline
-- Launch-blocking bug
 - Failed build blocking work
 - Low-risk typo / config fix
-- Dependency / security patch
-- Docs correction blocking external users
-- Test-only changes
-- CI / workflow fixes
+- Docs or ROADMAP correction
+- Dependency / security patch in a bridge `package.json`
+- Test-only or fixture-only changes
+- CI / workflow fixes that do not broaden permissions
 
 **Never self-merge (red-zone):**
-- Smart contract logic
-- Contract deployment
-- Auth / signature verification
-- Permission model changes
-- Database migrations
-- Production secrets
+- Plugin operation classification / impact changes
+- Governed vs pass-through tool surface changes
+- `plugin.json`, `registry-entry.json`, or `artifactDid` changes
+- Bridge dispatch or approval-gating behavior
+- Credential / secrets in configs or examples
 - GitHub Actions permission changes
 - Deployment credentials
-- Irreversible onchain changes
-- Registry identity / trust logic
-- Attestation validity logic
 
 ---
 
 ### Labels
 
 Apply any that fit:
-`self-merged` · `emergency` · `post-merge-review-needed` · `launch-blocker` · `low-risk` · `security` · `red-zone` · `contract-change`
+`self-merged` · `emergency` · `post-merge-review-needed` · `launch-blocker` · `low-risk` · `security` · `red-zone` · `plugin-change` · `bridge-change`
