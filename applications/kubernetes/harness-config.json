@@ -1,0 +1,19 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "/Users/mpas1/Projects/mcp-targets/kubernetes/bin/kubernetes-mcp-server-darwin-arm64",
+    "args": [],
+    "env": {
+      "KUBECONFIG": {
+        "required": true,
+        "description": "Path to a credential-adapter-managed kubeconfig with least-privileged access to the intended cluster and namespaces."
+      }
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}

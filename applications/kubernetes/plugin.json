@@ -1,0 +1,272 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:kubernetes-mcp-server",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:kubernetes-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2024-11-05"
+  },
+  "credentialRequirements": [
+    {
+      "type": "kubernetesClusterCredential",
+      "requiredCapabilities": [
+        "pods:create",
+        "pods:delete",
+        "pods:exec",
+        "resources:create",
+        "resources:update",
+        "resources:delete",
+        "resources:scale"
+      ],
+      "description": "Kubernetes credential supplied only within the credential adapter and scoped by cluster, namespace, and RBAC to the intended workloads. Bearer tokens, client keys, certificates, and kubeconfig contents must never be returned to the proposer."
+    }
+  ],
+  "operations": {
+    "pods_delete": {
+      "description": "Delete a Kubernetes Pod in the current or provided namespace with the provided name",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "pods_delete"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the Pod to delete"
+              },
+              "namespace": {
+                "type": "string",
+                "description": "Namespace to delete the Pod from"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "pods_exec": {
+      "description": "Execute a command in a Kubernetes Pod (shell access, run commands in container) in the current or provided namespace with the provided name and command",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "pods_exec"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "command": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Command to execute in the Pod container. The first item is the command to be run, and the rest are the arguments to that command. Example: [\"ls\", \"-l\", \"/tmp\"]"
+              },
+              "container": {
+                "type": "string",
+                "description": "Name of the Pod container where the command will be executed (Optional)"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the Pod where the command will be executed"
+              },
+              "namespace": {
+                "type": "string",
+                "description": "Namespace of the Pod where the command will be executed"
+              }
+            },
+            "required": [
+              "name",
+              "command"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "pods_run": {
+      "description": "Run a Kubernetes Pod in the current or provided namespace with the provided container image and optional name",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "pods_run"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "image": {
+                "type": "string",
+                "description": "Container Image to run in the Pod"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the Pod (Optional, random name if not provided)"
+              },
+              "namespace": {
+                "type": "string",
+                "description": "Namespace to run the Pod in"
+              },
+              "port": {
+                "type": "number",
+                "description": "TCP/IP port to expose from the Pod container (Optional, no port exposed if not provided)"
+              }
+            },
+            "required": [
+              "image"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "resources_create_or_update": {
+      "description": "Create or update a Kubernetes resource via Server-Side Apply. The manifest is the complete desired state: any field this tool previously set and the new manifest omits is removed. To edit an existing resource, fetch it with resources_get, modify it, then re-apply the full resource.\n(common apiVersion and kind include: v1 Pod, v1 Service, v1 Node, apps/v1 Deployment, networking.k8s.io/v1 Ingress, route.openshift.io/v1 Route)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "resources_create_or_update"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "resource": {
+                "type": "string",
+                "description": "Complete YAML or JSON representation of the Kubernetes resource (full desired state, not a partial patch). Include apiVersion, kind, metadata, and the full spec."
+              }
+            },
+            "required": [
+              "resource"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "resources_delete": {
+      "description": "Delete a Kubernetes resource in the current cluster by providing its apiVersion, kind, optionally the namespace, and its name\n(common apiVersion and kind include: v1 Pod, v1 Service, v1 Node, apps/v1 Deployment, networking.k8s.io/v1 Ingress, route.openshift.io/v1 Route)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "resources_delete"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "apiVersion": {
+                "type": "string",
+                "description": "apiVersion of the resource (examples of valid apiVersion are: v1, apps/v1, networking.k8s.io/v1)"
+              },
+              "gracePeriodSeconds": {
+                "type": "integer",
+                "description": "Optional duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used"
+              },
+              "kind": {
+                "type": "string",
+                "description": "kind of the resource (examples of valid kind are: Pod, Service, Deployment, Ingress)"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the resource"
+              },
+              "namespace": {
+                "type": "string",
+                "description": "Optional Namespace to delete the namespaced resource from (ignored in case of cluster scoped resources). If not provided, will delete resource from configured namespace"
+              }
+            },
+            "required": [
+              "apiVersion",
+              "kind",
+              "name"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "resources_scale": {
+      "description": "Get or update the scale of a Kubernetes resource in the current cluster by providing its apiVersion, kind, name, and optionally the namespace. If the scale is set in the tool call, the scale will be updated to that value. Always returns the current scale of the resource",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "resources_scale"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "apiVersion": {
+                "type": "string",
+                "description": "apiVersion of the resource (examples of valid apiVersion are apps/v1)"
+              },
+              "kind": {
+                "type": "string",
+                "description": "kind of the resource (examples of valid kind are: StatefulSet, Deployment)"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the resource"
+              },
+              "namespace": {
+                "type": "string",
+                "description": "Optional Namespace to get/update the namespaced resource scale from (ignored in case of cluster scoped resources). If not provided, will get/update resource scale from configured namespace"
+              },
+              "scale": {
+                "type": "integer",
+                "description": "Optional scale to update the resources scale to. If not provided, will return the current scale of the resource, and not update it"
+              }
+            },
+            "required": [
+              "apiVersion",
+              "kind",
+              "name"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

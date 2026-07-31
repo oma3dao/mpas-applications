@@ -52,7 +52,7 @@ database data planes are separate MPAS surfaces and should be bridged independen
 | Fastly | Official Fastly MCP Server | [fastly/mcp](https://github.com/fastly/mcp) | 💡 Requested | Protect service configuration, deployments, purges, and security changes |
 | Vercel | Official hosted Vercel MCP Server | [mcp.vercel.com](https://mcp.vercel.com) | ✅ Tested | Protect deployments, deployment protection, temporary access grants, purchases, and toolbar communication |
 | AWS | AWS MCP Servers | [awslabs/mcp](https://github.com/awslabs/mcp) | 📋 Planned | Multiple servers covering cloud infrastructure and developer workflows |
-| Kubernetes | Kubernetes MCP Server | [stormforge-llc/mcp-k8s-go](https://github.com/stormforge-llc/mcp-k8s-go) | 📋 Planned | Protect cluster administration, resource deletion, and scaling |
+| Kubernetes | Kubernetes MCP Server | [containers/kubernetes-mcp-server](https://github.com/containers/kubernetes-mcp-server) | ✅ Tested | Protect cluster administration, workload command execution, resource deletion, and scaling |
 | Terraform | Terraform MCP Server | [hashicorp/terraform-mcp-server](https://github.com/hashicorp/terraform-mcp-server) | 📋 Planned | Infrastructure changes have a large blast radius |
 | GitLab | GitLab MCP Server | [gitlab-org/editor-extensions/gitlab-mcp-server](https://gitlab.com/gitlab-org/editor-extensions/gitlab-mcp-server) | 📋 Planned | Protect source control and CI/CD mutations |
 | Linear | Linear MCP Server | [jerhadf/linear-mcp-server](https://github.com/jerhadf/linear-mcp-server) | 📋 Planned | Protect issue, project, and workspace mutations |
