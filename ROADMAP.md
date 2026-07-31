@@ -67,7 +67,7 @@ This segment covers marketing, customer communications, collaboration, and publi
 
 | Application | Upstream | Upstream Source | Status | Notes |
 | :---------- | :------- | :-------------- | :----- | :---- |
-| Plain | Plain.com MCP Server | [tellahq/plain-mcp](https://github.com/tellahq/plain-mcp) | 🚧 In Development | Protect customer communications, records, help centers, automations, and webhooks |
+| Plain | Plain.com MCP Server | [tellahq/plain-mcp](https://github.com/tellahq/plain-mcp) | ✅ Tested | Protect customer communications, records, help centers, automations, and webhooks |
 | X / Twitter | X (Twitter) MCP Server | [rafaljanicki/x-twitter-mcp-server](https://github.com/rafaljanicki/x-twitter-mcp-server) | 🚧 In Development | Protect public publishing, deletion, engagement, and account-context reads |
 | Slack | Slack MCP Server | [modelcontextprotocol/servers/slack](https://github.com/modelcontextprotocol/servers/tree/main/src/slack) | 📋 Planned | Protect messages, invitations, and workspace mutations |
 | HubSpot | HubSpot MCP Server | TBD | 💡 Requested | Protect CRM, marketing, sales, and customer communication workflows |
