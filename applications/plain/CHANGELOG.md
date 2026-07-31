@@ -1,5 +1,13 @@
 # Changelog — plain
 
+## 2026-07-30 — Revalidated and promoted to tested
+
+- Regenerated against the pinned `tellahq/plain-mcp` 1.2.0 source and confirmed
+  the upstream server still exposes the same 82-tool surface with no schema drift.
+- Confirmed the manually reviewed 59-operation governed set and plugin artifact
+  DID remain unchanged.
+- Rebuilt the generated bridge and reran the bridge-generator test suite.
+
 ## 2026-07-29 — Narrowed the governed surface to mutations
 
 - Reduced `plugin.json` from 82 operations to 59. The 23 dropped tools are all
