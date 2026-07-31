@@ -90,7 +90,7 @@ This segment covers exchanges, brokerage, payments, and other financial transact
 | Kraken | Official Kraken CLI MCP Server | [krakenfx/kraken-cli](https://github.com/krakenfx/kraken-cli) | 🚧 In Development | Protect spot and futures orders, withdrawals, wallet transfers, earn allocations, and subaccount mutations |
 | Robinhood Crypto | Robinhood Crypto MCP Server | [rohitsingh-iitd/robinhood-mcp-server](https://github.com/rohitsingh-iitd/robinhood-mcp-server) | 💡 Requested | Protect brokerage and crypto orders, transfers, and account mutations |
 | Alpaca | Official Alpaca MCP Server | [alpacahq/alpaca-mcp-server](https://github.com/alpacahq/alpaca-mcp-server) | ✅ Tested | Protect stock, crypto, and option orders; cancellations; liquidation; option exercise; and account mutations |
-| Stripe | Stripe Agent Toolkit | [stripe/agent-toolkit](https://github.com/stripe/agent-toolkit) | 📋 Planned | Protect payments, refunds, transfers, subscriptions, and account mutations |
+| Stripe | Official Stripe MCP Server | [stripe/ai](https://github.com/stripe/ai/tree/main/tools/modelcontextprotocol) | ✅ Tested | Protect refunds and generic API writes covering payments, invoices, subscriptions, pricing, disputes, webhooks, and other account mutations |
 
 ---
 

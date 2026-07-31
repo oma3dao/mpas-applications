@@ -1,0 +1,43 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "create_refund": {
+      "impact": "critical",
+      "rationale": "Manual review: governed because the operation refunds money, performs an arbitrary Stripe API mutation, or sends external feedback to Stripe."
+    },
+    "get_stripe_account_info": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, planning, account inspection, or API discovery/read access."
+    },
+    "search_stripe_documentation": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, planning, account inspection, or API discovery/read access."
+    },
+    "send_stripe_mcp_feedback": {
+      "impact": "medium",
+      "rationale": "Manual review: governed because the operation refunds money, performs an arbitrary Stripe API mutation, or sends external feedback to Stripe."
+    },
+    "stripe_api_details": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, planning, account inspection, or API discovery/read access."
+    },
+    "stripe_api_read": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, planning, account inspection, or API discovery/read access."
+    },
+    "stripe_api_search": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, planning, account inspection, or API discovery/read access."
+    },
+    "stripe_api_write": {
+      "impact": "critical",
+      "rationale": "Manual review: governed because the operation refunds money, performs an arbitrary Stripe API mutation, or sends external feedback to Stripe."
+    },
+    "stripe_implementation_planner": {
+      "impact": "medium",
+      "rationale": "Manual review: pass-through because the operation is read-only documentation, planning, account inspection, or API discovery/read access."
+    }
+  }
+}

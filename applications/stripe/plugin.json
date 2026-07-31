@@ -1,0 +1,185 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:stripe-mcp-server",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:stripe-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2025-03-26"
+  },
+  "credentialRequirements": [
+    {
+      "type": "stripeRestrictedApiKey",
+      "requiredCapabilities": [
+        "stripe:read",
+        "stripe:write"
+      ],
+      "description": "A Stripe restricted API key scoped to the intended account and resources. The Credential Adapter must retain the key and execute the official Stripe MCP proxy; the key must never be disclosed to the proposer."
+    }
+  ],
+  "operations": {
+    "create_refund": {
+      "description": "This tool will refund a payment intent in Stripe.\n",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_refund"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "payment_intent": {
+                "description": "The ID of the PaymentIntent to refund.",
+                "type": "string"
+              },
+              "amount": {
+                "description": "The amount to refund in currency minor units, e.g. cents for USD and yen for JPY.",
+                "type": "integer"
+              },
+              "reason": {
+                "description": "The reason for the refund.",
+                "enum": [
+                  "duplicate",
+                  "fraudulent",
+                  "requested_by_customer"
+                ],
+                "type": "string"
+              },
+              "human_confirmation": {
+                "type": "object",
+                "description": "This tool might require human confirmation. To run it, first invoke it with the desired parameters, ignoring the `approval_token` parameter.\nIf it requires human confirmation, the response will include an approval request ID and a URL to an approval page for the human to approve the tool call.\nYou, as the LLM agent, should:\n\n1. Present this URL to the human as a clickable markdown link. Tell them that they have to approve this tool call at that URL, and that they should tell you when they have approved the operation.\n2. The human will approve that call.\n3. After the human tells you they have approved the operation, you must call the tool again with the `approval_token` parameter and the exact same parameters. The operation will then go through.\n",
+                "properties": {
+                  "approval_token": {
+                    "type": "string",
+                    "description": "The ID of the approval token for the request. This is required on only the post-human-confirmation invocation. An example ID is `approval_123`."
+                  }
+                }
+              }
+            },
+            "required": [
+              "payment_intent"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "send_stripe_mcp_feedback": {
+      "description": "Submit feedback from user or agent about Stripe's MCP server tools.\n\nValid: \"the search tool returned irrelevant results\", \"I wish there was a tool for X\"\nInvalid: Stripe API complaints, AI model issues, IDE/environment problems\n\n- Only call when feedback clearly targets MCP tools.\n- If feedback is about one specific tool, include its name in tool_name.\n- If feedback is from user, quote their exact message and set source to \"user\".\n- If a tool didn't follow your expectations as an agent, set source to \"agent\".\n",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "send_stripe_mcp_feedback"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "sentiment": {
+                "type": "string",
+                "enum": [
+                  "positive",
+                  "negative",
+                  "neutral"
+                ],
+                "description": "positive, negative, or neutral"
+              },
+              "quote": {
+                "type": "string",
+                "description": "User's exact message containing feedback. Max 1000 chars.",
+                "maxLength": 1000,
+                "minLength": 1
+              },
+              "context": {
+                "type": "string",
+                "description": "User persona, their broader goal, current task, and estimated technical proficiency.",
+                "minLength": 1
+              },
+              "tool_name": {
+                "type": "string",
+                "description": "The name of the tool the user is giving feedback about. Include if confident that feedback is about a specific tool."
+              },
+              "source": {
+                "type": "string",
+                "description": "user or agent",
+                "enum": [
+                  "user",
+                  "agent"
+                ]
+              }
+            },
+            "required": [
+              "sentiment",
+              "quote",
+              "context",
+              "source"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "stripe_api_write": {
+      "description": "Write data via any Stripe API POST/PATCH/PUT/DELETE operation:\n1. Use stripe_api_search to find the operation ID.\n2. Use stripe_api_details to understand its parameters (required for operations with nested object fields like address, metadata, or restrictions).\n3. Call this tool with the stripe_api_operation_id and a parameters object containing path, query, and body parameters. For read-only lookups (GET), use stripe_api_read instead.\nAll monetary amounts must be in the smallest currency unit (e.g. 1000 = $10.00 USD for most currencies).\n",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "stripe_api_write"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "stripe_api_operation_id": {
+                "description": "The operation ID to execute",
+                "type": "string",
+                "examples": [
+                  "PostCustomers",
+                  "GetPaymentIntents"
+                ]
+              },
+              "parameters": {
+                "description": "Parameters for the API call. Include path parameters (e.g. 'customer' for /v1/customers/{customer}), query parameters, and body parameters. Array fields (e.g. line_items) must be passed as a JSON array value, not as a plain string.",
+                "type": "object"
+              },
+              "human_confirmation": {
+                "type": "object",
+                "description": "This tool might require human confirmation. To run it, first invoke it with the desired parameters, ignoring the `approval_token` parameter.\nIf it requires human confirmation, the response will include an approval request ID and a URL to an approval page for the human to approve the tool call.\nYou, as the LLM agent, should:\n\n1. Present this URL to the human as a clickable markdown link. Tell them that they have to approve this tool call at that URL, and that they should tell you when they have approved the operation.\n2. The human will approve that call.\n3. After the human tells you they have approved the operation, you must call the tool again with the `approval_token` parameter and the exact same parameters. The operation will then go through.\n",
+                "properties": {
+                  "approval_token": {
+                    "type": "string",
+                    "description": "The ID of the approval token for the request. This is required on only the post-human-confirmation invocation. An example ID is `approval_123`."
+                  }
+                }
+              }
+            },
+            "required": [
+              "stripe_api_operation_id",
+              "parameters"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
