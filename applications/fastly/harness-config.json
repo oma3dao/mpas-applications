@@ -1,0 +1,13 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "/Users/mpas1/Projects/mcp-targets/fastly/node_modules/.bin/fastly-mcp",
+    "args": []
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}
