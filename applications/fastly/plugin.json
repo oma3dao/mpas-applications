@@ -1,0 +1,54 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:fastly-mcp-server",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:fastly-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2024-11-05"
+  },
+  "credentialRequirements": [
+    {
+      "type": "fastlyApiToken",
+      "requiredCapabilities": [
+        "fastly:api"
+      ],
+      "description": "Fastly API token supplied only within the credential adapter and scoped to the intended Fastly account and services with least-privileged permissions. The token must never be returned to the proposer."
+    }
+  ],
+  "operations": {
+    "execute": {
+      "description": "Run JavaScript in a sandbox with the Fastly API client pre-authenticated.\n\nIf you already know the method, call it directly. Otherwise, use `search` first and copy its `usage` snippet.\n\nYou MUST use `return` to produce output. API methods return values directly (arrays, objects), not wrapped in `.result`. Every Fastly.*Api class is pre-instantiated as a camelCase global: `serviceApi`, `purgeApi`, `backendApi`, etc.\n\nExample: `return await serviceApi.listServices();`",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "execute"
+          },
+          "arguments": {
+            "type": "object",
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "JavaScript code to execute. `Fastly` is available globally. Auth is pre-configured. Use `return` to get results."
+              }
+            },
+            "required": [
+              "code"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
