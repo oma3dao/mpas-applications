@@ -1,0 +1,2427 @@
+[
+  {
+    "name": "outlook_auth_status",
+    "description": "Check authentication status. Run `outlook-mcp auth` on the host if needed.",
+    "inputSchema": {
+      "properties": {},
+      "title": "outlook_auth_statusArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_list_inbox",
+    "description": "List messages in one folder with structured filters (read, sender, date, Focused class).\n\nUse this for folder-scoped browsing; use outlook_search_mail for KQL full-text search across\nall folders. For polling/recurring agents use outlook_list_inbox_delta (typically 10x cheaper\nafter the first call).\n\nExample: outlook_list_inbox(folder=\"Junk Email\", unread_only=True, count=5)\n`folder` accepts display names, well-known names (\"inbox\", \"junkemail\"), or Graph IDs — prefer\nnames. Pass concise=True to drop large fields (preview, categories) — ~10x fewer tokens.\n",
+    "inputSchema": {
+      "properties": {
+        "folder": {
+          "default": "inbox",
+          "title": "Folder",
+          "type": "string"
+        },
+        "count": {
+          "default": 25,
+          "title": "Count",
+          "type": "integer"
+        },
+        "unread_only": {
+          "default": false,
+          "title": "Unread Only",
+          "type": "boolean"
+        },
+        "from_address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "From Address"
+        },
+        "after": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "After"
+        },
+        "before": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Before"
+        },
+        "skip": {
+          "default": 0,
+          "title": "Skip",
+          "type": "integer"
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cursor"
+        },
+        "classification": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Classification"
+        },
+        "concise": {
+          "default": false,
+          "title": "Concise",
+          "type": "boolean"
+        }
+      },
+      "title": "outlook_list_inboxArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_read_message",
+    "description": "Get one full message by ID. `format` is \"text\", \"html\", or \"full\" (both).\n\nPass include_deferred_send=True to also return the scheduled-send time (PR_DEFERRED_SEND_TIME)\nas deferred_send_datetime — useful when recreating a delayed draft.\nPass concise=True to drop large fields (body, body_html) and return a 200-char body_preview —\n~10x fewer tokens for triage scans.\n",
+    "inputSchema": {
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "format": {
+          "default": "text",
+          "title": "Format",
+          "type": "string"
+        },
+        "include_deferred_send": {
+          "default": false,
+          "title": "Include Deferred Send",
+          "type": "boolean"
+        },
+        "concise": {
+          "default": false,
+          "title": "Concise",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "message_id"
+      ],
+      "title": "outlook_read_messageArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_read_messages",
+    "description": "Bulk read up to 20 messages by ID via $batch — use NOT N outlook_read_message calls.\n\nPer-message shape in `messages` matches outlook_read_message byte-for-byte for the same\n(format, concise, include_deferred_send). Ordering follows input `message_ids`. Returns\n`{messages, failures, requested, succeeded, failed}` — 404s on some IDs are surfaced in\n`failures` without failing the whole call (partial-failure tolerant).\n\nExample: outlook_read_messages(message_ids=[id1, id2, id3], concise=True)\nHard cap of 20 (Graph $batch limit).\n",
+    "inputSchema": {
+      "properties": {
+        "message_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Message Ids",
+          "type": "array"
+        },
+        "format": {
+          "default": "text",
+          "title": "Format",
+          "type": "string"
+        },
+        "concise": {
+          "default": false,
+          "title": "Concise",
+          "type": "boolean"
+        },
+        "include_deferred_send": {
+          "default": false,
+          "title": "Include Deferred Send",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "message_ids"
+      ],
+      "title": "outlook_read_messagesArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_search_mail",
+    "description": "Full-text search mail with KQL across all folders (or one, if `folder` is set).\n\nUse this for \"find emails about X\"; use outlook_list_inbox for structured filters scoped to a\nsingle folder.\n\nExample: outlook_search_mail(query=\"from:sarah@acme.com received>=2026-01-01\", count=10)\n`query` is Microsoft KQL (from:, subject:, received>=, hasattachment:true, AND/OR/NOT).\nPass concise=True to drop large fields (preview, categories) — ~10x fewer tokens.\n",
+    "inputSchema": {
+      "properties": {
+        "query": {
+          "title": "Query",
+          "type": "string"
+        },
+        "count": {
+          "default": 25,
+          "title": "Count",
+          "type": "integer"
+        },
+        "folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Folder"
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cursor"
+        },
+        "concise": {
+          "default": false,
+          "title": "Concise",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "title": "outlook_search_mailArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_list_folders",
+    "description": "List mail folders with message counts, parent_id, and child count.\n\nDefault is top-level only; pass recursive=True to walk the full tree and resolve subfolder\nnames.\n",
+    "inputSchema": {
+      "properties": {
+        "cursor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cursor"
+        },
+        "recursive": {
+          "default": false,
+          "title": "Recursive",
+          "type": "boolean"
+        }
+      },
+      "title": "outlook_list_foldersArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_list_inbox_delta",
+    "description": "List only inbox changes since the last call.\n\nUse this for polling/recurring agents — typically 10x cheaper than outlook_list_inbox after\nthe first call. Use outlook_list_inbox for one-shot snapshots.\n\nExample: first call: outlook_list_inbox_delta(); next:\noutlook_list_inbox_delta(delta_token=<token from prior response>).\nis_deleted=True items are tombstones (drop cached payload). has_more=True means drain\nimmediately by passing the returned delta_token back.\n",
+    "inputSchema": {
+      "properties": {
+        "folder": {
+          "default": "inbox",
+          "title": "Folder",
+          "type": "string"
+        },
+        "page_size": {
+          "default": 50,
+          "title": "Page Size",
+          "type": "integer"
+        },
+        "delta_token": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Delta Token"
+        }
+      },
+      "title": "outlook_list_inbox_deltaArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_send_message",
+    "description": "Send an email immediately, no human review.\n\nFor human-review workflows use outlook_create_draft + outlook_send_draft instead.\nFor replying to an existing message use outlook_reply; for calendar invites use outlook_rsvp.\nPass reply_to to route recipient replies to a different address (e.g. a shared team alias).\n",
+    "inputSchema": {
+      "properties": {
+        "to": {
+          "items": {
+            "type": "string"
+          },
+          "title": "To",
+          "type": "array"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "cc": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cc"
+        },
+        "bcc": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bcc"
+        },
+        "is_html": {
+          "default": false,
+          "title": "Is Html",
+          "type": "boolean"
+        },
+        "importance": {
+          "default": "normal",
+          "title": "Importance",
+          "type": "string"
+        },
+        "sensitivity": {
+          "default": "normal",
+          "title": "Sensitivity",
+          "type": "string"
+        },
+        "request_read_receipt": {
+          "default": false,
+          "title": "Request Read Receipt",
+          "type": "boolean"
+        },
+        "reply_to": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reply To"
+        }
+      },
+      "required": [
+        "to",
+        "subject",
+        "body"
+      ],
+      "title": "outlook_send_messageArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_reply",
+    "description": "Reply (or reply-all) to an email message.\n\nUse this for email; use outlook_rsvp for calendar meeting invites.\n",
+    "inputSchema": {
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "reply_all": {
+          "default": false,
+          "title": "Reply All",
+          "type": "boolean"
+        },
+        "is_html": {
+          "default": false,
+          "title": "Is Html",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "message_id",
+        "body"
+      ],
+      "title": "outlook_replyArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_forward",
+    "description": "Forward an existing message to new recipients, with optional comment.",
+    "inputSchema": {
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "to": {
+          "items": {
+            "type": "string"
+          },
+          "title": "To",
+          "type": "array"
+        },
+        "comment": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comment"
+        }
+      },
+      "required": [
+        "message_id",
+        "to"
+      ],
+      "title": "outlook_forwardArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_move_message",
+    "description": "Move a message to another folder (removes from source).\n\nUse outlook_copy_message to duplicate without removing the source. For deletion use\noutlook_delete_message (not move to \"deleteditems\"). `folder` accepts display names,\nwell-known names (\"inbox\", \"archive\", \"deleteditems\"), or Graph IDs — prefer names.\n",
+    "inputSchema": {
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "folder": {
+          "title": "Folder",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id",
+        "folder"
+      ],
+      "title": "outlook_move_messageArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_delete_message",
+    "description": "Delete a message — soft delete (to Deleted Items) by default; permanent=True to hard-delete.\n\nThis is the canonical way to delete a message. Do NOT use\noutlook_move_message(folder=\"deleteditems\") for deletion.\n",
+    "inputSchema": {
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "permanent": {
+          "default": false,
+          "title": "Permanent",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "message_id"
+      ],
+      "title": "outlook_delete_messageArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true
+    }
+  },
+  {
+    "name": "outlook_flag_message",
+    "description": "Set the follow-up flag on a message. `status` is \"flagged\", \"complete\", or \"notFlagged\".",
+    "inputSchema": {
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id",
+        "status"
+      ],
+      "title": "outlook_flag_messageArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_categorize_message",
+    "description": "Set categories on a message (replaces the full list).\n\nExample: outlook_categorize_message(message_id=..., categories=[\"Follow-up\", \"Pricing\"])\n",
+    "inputSchema": {
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "categories": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Categories",
+          "type": "array"
+        }
+      },
+      "required": [
+        "message_id",
+        "categories"
+      ],
+      "title": "outlook_categorize_messageArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_mark_read",
+    "description": "Mark a single message as read or unread (set is_read=True or False).",
+    "inputSchema": {
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "is_read": {
+          "title": "Is Read",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "message_id",
+        "is_read"
+      ],
+      "title": "outlook_mark_readArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_reclassify_message",
+    "description": "Reclassify ONE message's Focused/Other placement. `classification` is \"focused\" or \"other\".\n\nUse this to fix a single message; use outlook_set_inbox_override for a sticky rule that affects\nfuture messages from the same sender.\n",
+    "inputSchema": {
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "classification": {
+          "title": "Classification",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id",
+        "classification"
+      ],
+      "title": "outlook_reclassify_messageArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_list_inbox_overrides",
+    "description": "List the user's Focused Inbox per-sender override rules.\n\nEach override forces mail from a given sender into Focused or Other regardless of Graph's\ninference.\n",
+    "inputSchema": {
+      "properties": {},
+      "title": "outlook_list_inbox_overridesArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_set_inbox_override",
+    "description": "Create or update a sticky Focused/Other rule for a sender (upsert, case-insensitive).\n\nUse this to permanently change classification for FUTURE messages from a sender; use\noutlook_reclassify_message to fix ONE existing message.\n\nExample: outlook_set_inbox_override(sender_email=\"marketing@acme.com\", classify_as=\"other\")\nReturns status: \"created\" or \"updated\".\n",
+    "inputSchema": {
+      "properties": {
+        "sender_email": {
+          "title": "Sender Email",
+          "type": "string"
+        },
+        "classify_as": {
+          "title": "Classify As",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sender_email",
+        "classify_as"
+      ],
+      "title": "outlook_set_inbox_overrideArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_delete_inbox_override",
+    "description": "Delete a Focused Inbox per-sender override rule by its ID.",
+    "inputSchema": {
+      "properties": {
+        "override_id": {
+          "title": "Override Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "override_id"
+      ],
+      "title": "outlook_delete_inbox_overrideArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true
+    }
+  },
+  {
+    "name": "outlook_list_events",
+    "description": "List calendar events in a date range (expands recurring instances).\n\nUse for one-shot queries; use outlook_list_events_delta for polling/recurring agents.\n\nPass concise=True to drop large fields (body, attendees, organizer, categories) — ~10x fewer\ntokens for day-at-a-glance scans.\n",
+    "inputSchema": {
+      "properties": {
+        "days": {
+          "default": 7,
+          "title": "Days",
+          "type": "integer"
+        },
+        "after": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "After"
+        },
+        "before": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Before"
+        },
+        "count": {
+          "default": 50,
+          "title": "Count",
+          "type": "integer"
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cursor"
+        },
+        "concise": {
+          "default": false,
+          "title": "Concise",
+          "type": "boolean"
+        }
+      },
+      "title": "outlook_list_eventsArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_get_event",
+    "description": "Get one full calendar event by ID, including body, attendees, organizer, and recurrence.",
+    "inputSchema": {
+      "properties": {
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "event_id"
+      ],
+      "title": "outlook_get_eventArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_list_events_delta",
+    "description": "List only calendar event changes within a window since the last call.\n\nUse this for polling/recurring agents — typically 10x cheaper than outlook_list_events after\nthe first call. Use outlook_list_events for one-shot queries.\n\nExample: first call: outlook_list_events_delta(start=\"2026-05-22T00:00:00Z\",\nend=\"2026-05-29T00:00:00Z\"); next: outlook_list_events_delta(delta_token=<token>).\nstart/end (ISO 8601) required on first call only; the cursor encodes the window thereafter.\nis_deleted=True items are tombstones. has_more=True means drain immediately.\n",
+    "inputSchema": {
+      "properties": {
+        "start": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "page_size": {
+          "default": 50,
+          "title": "Page Size",
+          "type": "integer"
+        },
+        "delta_token": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Delta Token"
+        }
+      },
+      "title": "outlook_list_events_deltaArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_create_event",
+    "description": "Create a calendar event with optional attendees, recurrence, and Teams online meeting.\n\nExample: outlook_create_event(subject=\"Q3 review\", start=\"2026-08-15T14:00:00Z\",\nend=\"2026-08-15T15:00:00Z\", attendees=[\"alice@acme.com\"], is_online=True)\n`start`/`end` are ISO 8601. `recurrence` accepts a simple string (\"daily\", \"weekly\", \"monthly\").\n",
+    "inputSchema": {
+      "properties": {
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "start": {
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "title": "End",
+          "type": "string"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Location"
+        },
+        "body": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Body"
+        },
+        "attendees": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Attendees"
+        },
+        "is_all_day": {
+          "default": false,
+          "title": "Is All Day",
+          "type": "boolean"
+        },
+        "is_online": {
+          "default": false,
+          "title": "Is Online",
+          "type": "boolean"
+        },
+        "recurrence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recurrence"
+        }
+      },
+      "required": [
+        "subject",
+        "start",
+        "end"
+      ],
+      "title": "outlook_create_eventArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_update_event",
+    "description": "Update fields on an existing event (partial patch — only provided fields change).",
+    "inputSchema": {
+      "properties": {
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subject"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Location"
+        },
+        "body": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Body"
+        }
+      },
+      "required": [
+        "event_id"
+      ],
+      "title": "outlook_update_eventArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_delete_event",
+    "description": "Delete a calendar event by ID (cancels and notifies attendees if you're the organizer).",
+    "inputSchema": {
+      "properties": {
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "event_id"
+      ],
+      "title": "outlook_delete_eventArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true
+    }
+  },
+  {
+    "name": "outlook_rsvp",
+    "description": "RSVP to a calendar meeting invite. `response` is \"accept\", \"decline\", or \"tentative\".\n\nUse this for meeting invites; use outlook_reply to reply to a regular email message.\n",
+    "inputSchema": {
+      "properties": {
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "response": {
+          "title": "Response",
+          "type": "string"
+        },
+        "message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message"
+        }
+      },
+      "required": [
+        "event_id",
+        "response"
+      ],
+      "title": "outlook_rsvpArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_list_contacts",
+    "description": "List contacts with cursor pagination.\n\nUse for one-shot queries; use outlook_list_contacts_delta for polling/recurring agents.\n",
+    "inputSchema": {
+      "properties": {
+        "count": {
+          "default": 25,
+          "title": "Count",
+          "type": "integer"
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cursor"
+        }
+      },
+      "title": "outlook_list_contactsArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_search_contacts",
+    "description": "Search contacts by name or email using KQL query syntax.",
+    "inputSchema": {
+      "properties": {
+        "query": {
+          "title": "Query",
+          "type": "string"
+        },
+        "count": {
+          "default": 25,
+          "title": "Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "title": "outlook_search_contactsArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_get_contact",
+    "description": "Get one full contact by ID.",
+    "inputSchema": {
+      "properties": {
+        "contact_id": {
+          "title": "Contact Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contact_id"
+      ],
+      "title": "outlook_get_contactArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_create_contact",
+    "description": "Create a new contact with name and optional email, phone, company, title.",
+    "inputSchema": {
+      "properties": {
+        "first_name": {
+          "title": "First Name",
+          "type": "string"
+        },
+        "last_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Name"
+        },
+        "email": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Email"
+        },
+        "phone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phone"
+        },
+        "company": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Company"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        }
+      },
+      "required": [
+        "first_name"
+      ],
+      "title": "outlook_create_contactArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_update_contact",
+    "description": "Update an existing contact (partial patch — only provided fields change).",
+    "inputSchema": {
+      "properties": {
+        "contact_id": {
+          "title": "Contact Id",
+          "type": "string"
+        },
+        "first_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "First Name"
+        },
+        "last_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Name"
+        },
+        "email": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Email"
+        },
+        "phone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phone"
+        }
+      },
+      "required": [
+        "contact_id"
+      ],
+      "title": "outlook_update_contactArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_delete_contact",
+    "description": "Delete a contact by ID.",
+    "inputSchema": {
+      "properties": {
+        "contact_id": {
+          "title": "Contact Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contact_id"
+      ],
+      "title": "outlook_delete_contactArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true
+    }
+  },
+  {
+    "name": "outlook_list_contacts_delta",
+    "description": "List only contact changes since the last call.\n\nUse this for polling/recurring agents — typically 10x cheaper than outlook_list_contacts after\nthe first call. Use outlook_list_contacts for one-shot queries.\n\nExample: first call: outlook_list_contacts_delta(); next:\noutlook_list_contacts_delta(delta_token=<token from prior response>).\nis_deleted=True items are tombstones (drop cached payload). has_more=True means drain\nimmediately by passing the returned delta_token back.\n",
+    "inputSchema": {
+      "properties": {
+        "page_size": {
+          "default": 50,
+          "title": "Page Size",
+          "type": "integer"
+        },
+        "delta_token": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Delta Token"
+        }
+      },
+      "title": "outlook_list_contacts_deltaArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_changes_since",
+    "description": "One structured \"since last call\" digest across mail, events, and contacts.\n\nUse this for recurring agent loops (morning brief, hourly inbox sweep) — one call\nreturns counts, urgent_flagged mail, by-sender rollup, plus new/cancelled events and\ncontacts counts. Use the three individual delta tools (outlook_list_inbox_delta,\noutlook_list_events_delta, outlook_list_contacts_delta) when you need raw item lists\nor per-resource control.\n\nExample: first call: outlook_changes_since(); next:\noutlook_changes_since(delta_tokens=<delta_tokens from prior response>).\nFirst call returns a snapshot filtered to the last `fallback_window_hours` (default 24)\nso the digest doesn't surface thousands of historical items; subsequent calls (tokens\npassed back) return only what changed. Each resource's token is independent — drop\none stale token without re-syncing the others. If Graph 410s on a token\n(`syncStateNotFound`), that resource auto-resyncs and `_meta.resync` lists which one.\n`urgent_flagged` = high-importance OR flagged mail. `by_sender` = top 5 senders.\nCalendar `modified[]` is reserved for future use — modified events surface in `new[]`\ntoday (Graph delta doesn't distinguish them). Calendar `organizer_email` is also\ncurrently empty (the v1.9.0 delta formatter surfaces the organizer name only).\n",
+    "inputSchema": {
+      "properties": {
+        "delta_tokens": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Delta Tokens"
+        },
+        "fallback_window_hours": {
+          "default": 24,
+          "title": "Fallback Window Hours",
+          "type": "integer"
+        }
+      },
+      "title": "outlook_changes_sinceArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_list_task_lists",
+    "description": "List all Microsoft To Do task lists for the current user.",
+    "inputSchema": {
+      "properties": {},
+      "title": "outlook_list_task_listsArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_list_tasks",
+    "description": "List tasks in a To Do list with optional `status` filter.\n\n`status`: \"notStarted\", \"inProgress\", or \"completed\".\n",
+    "inputSchema": {
+      "properties": {
+        "list_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List Id"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Status"
+        },
+        "count": {
+          "default": 25,
+          "title": "Count",
+          "type": "integer"
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cursor"
+        }
+      },
+      "title": "outlook_list_tasksArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_create_task",
+    "description": "Create a Microsoft To Do task with optional due date, importance, body, and recurrence.\n\nExample: outlook_create_task(title=\"Send invoice\", due=\"2026-09-01\", importance=\"high\")\n`due` is ISO 8601. `importance` is \"low\", \"normal\", or \"high\". Defaults to the user's default\nlist when `list_id` is omitted.\n",
+    "inputSchema": {
+      "properties": {
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "list_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List Id"
+        },
+        "due": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Due"
+        },
+        "importance": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Importance"
+        },
+        "body": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Body"
+        },
+        "reminder": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reminder"
+        },
+        "recurrence": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recurrence"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "title": "outlook_create_taskArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_update_task",
+    "description": "Update fields on a To Do task (partial patch — only provided fields change).",
+    "inputSchema": {
+      "properties": {
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        },
+        "list_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List Id"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "due": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Due"
+        },
+        "body": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Body"
+        },
+        "importance": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Importance"
+        }
+      },
+      "required": [
+        "task_id"
+      ],
+      "title": "outlook_update_taskArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_complete_task",
+    "description": "Mark a To Do task as completed.",
+    "inputSchema": {
+      "properties": {
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        },
+        "list_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List Id"
+        }
+      },
+      "required": [
+        "task_id"
+      ],
+      "title": "outlook_complete_taskArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_delete_task",
+    "description": "Delete a task from a Microsoft To Do list.",
+    "inputSchema": {
+      "properties": {
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        },
+        "list_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List Id"
+        }
+      },
+      "required": [
+        "task_id"
+      ],
+      "title": "outlook_delete_taskArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true
+    }
+  },
+  {
+    "name": "outlook_list_drafts",
+    "description": "List messages in the Drafts folder with cursor pagination.",
+    "inputSchema": {
+      "properties": {
+        "count": {
+          "default": 25,
+          "title": "Count",
+          "type": "integer"
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cursor"
+        }
+      },
+      "title": "outlook_list_draftsArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_create_draft",
+    "description": "Create a draft email for later review/send (pair with outlook_send_draft).\n\nUse this when a human should review before sending; use outlook_send_message to send\nimmediately without review.\nPass deferred_send_datetime (ISO 8601, e.g. \"2026-05-06T08:00:00Z\") to schedule delayed\ndelivery — Exchange holds the message server-side after outlook_send_draft.\nPass reply_to to pre-populate the Reply-To header.\n",
+    "inputSchema": {
+      "properties": {
+        "to": {
+          "items": {
+            "type": "string"
+          },
+          "title": "To",
+          "type": "array"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "cc": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cc"
+        },
+        "bcc": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bcc"
+        },
+        "is_html": {
+          "default": false,
+          "title": "Is Html",
+          "type": "boolean"
+        },
+        "importance": {
+          "default": "normal",
+          "title": "Importance",
+          "type": "string"
+        },
+        "reply_to": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reply To"
+        },
+        "deferred_send_datetime": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Deferred Send Datetime"
+        }
+      },
+      "required": [
+        "to",
+        "subject",
+        "body"
+      ],
+      "title": "outlook_create_draftArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_update_draft",
+    "description": "Update an existing draft (partial patch).\n\nPass is_html=True when body is HTML — required when overwriting a draft originally composed\nas HTML (consumer Outlook rejects Text-over-HTML PATCH).\nPass reply_to=[...] to overwrite Reply-To; reply_to=[] to clear it.\nPass deferred_send_datetime (ISO 8601) to set the scheduled-send time; empty string clears it.\n",
+    "inputSchema": {
+      "properties": {
+        "draft_id": {
+          "title": "Draft Id",
+          "type": "string"
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subject"
+        },
+        "body": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Body"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "To"
+        },
+        "cc": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cc"
+        },
+        "reply_to": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reply To"
+        },
+        "is_html": {
+          "default": false,
+          "title": "Is Html",
+          "type": "boolean"
+        },
+        "deferred_send_datetime": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Deferred Send Datetime"
+        }
+      },
+      "required": [
+        "draft_id"
+      ],
+      "title": "outlook_update_draftArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_send_draft",
+    "description": "Send an existing draft (pair with outlook_create_draft for human-review send flow).",
+    "inputSchema": {
+      "properties": {
+        "draft_id": {
+          "title": "Draft Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "draft_id"
+      ],
+      "title": "outlook_send_draftArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_delete_draft",
+    "description": "Delete a draft message by ID.",
+    "inputSchema": {
+      "properties": {
+        "draft_id": {
+          "title": "Draft Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "draft_id"
+      ],
+      "title": "outlook_delete_draftArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true
+    }
+  },
+  {
+    "name": "outlook_list_attachments",
+    "description": "List attachments on a message — returns IDs, names, sizes, and content types.",
+    "inputSchema": {
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id"
+      ],
+      "title": "outlook_list_attachmentsArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_download_attachment",
+    "description": "Download an attachment from a message and write decoded bytes to `save_path` on the host.",
+    "inputSchema": {
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "attachment_id": {
+          "title": "Attachment Id",
+          "type": "string"
+        },
+        "save_path": {
+          "title": "Save Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id",
+        "attachment_id",
+        "save_path"
+      ],
+      "title": "outlook_download_attachmentArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_send_with_attachments",
+    "description": "Send an email with file attachments; auto-switches to upload-session for files >3MB.\n\n`attachment_paths` must be absolute paths to files that exist on the host. Pass reply_to to\nroute replies to a different address.\n",
+    "inputSchema": {
+      "properties": {
+        "to": {
+          "items": {
+            "type": "string"
+          },
+          "title": "To",
+          "type": "array"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "attachment_paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Attachment Paths",
+          "type": "array"
+        },
+        "cc": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cc"
+        },
+        "bcc": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bcc"
+        },
+        "is_html": {
+          "default": false,
+          "title": "Is Html",
+          "type": "boolean"
+        },
+        "importance": {
+          "default": "normal",
+          "title": "Importance",
+          "type": "string"
+        },
+        "reply_to": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reply To"
+        }
+      },
+      "required": [
+        "to",
+        "subject",
+        "body",
+        "attachment_paths"
+      ],
+      "title": "outlook_send_with_attachmentsArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_attach_to_draft",
+    "description": "Add attachments to an existing draft; auto-switches to upload-session for files >3MB.\n\n`attachment_paths` must be absolute paths to files that exist on the host. Returns new\nattachment IDs for later removal via outlook_remove_draft_attachment.\n",
+    "inputSchema": {
+      "properties": {
+        "draft_id": {
+          "title": "Draft Id",
+          "type": "string"
+        },
+        "attachment_paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Attachment Paths",
+          "type": "array"
+        }
+      },
+      "required": [
+        "draft_id",
+        "attachment_paths"
+      ],
+      "title": "outlook_attach_to_draftArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_remove_draft_attachment",
+    "description": "Remove a single attachment from a draft message by attachment ID.",
+    "inputSchema": {
+      "properties": {
+        "draft_id": {
+          "title": "Draft Id",
+          "type": "string"
+        },
+        "attachment_id": {
+          "title": "Attachment Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "draft_id",
+        "attachment_id"
+      ],
+      "title": "outlook_remove_draft_attachmentArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true
+    }
+  },
+  {
+    "name": "outlook_create_folder",
+    "description": "Create a mail folder; pass `parent_folder` (name or ID) to nest under an existing folder.",
+    "inputSchema": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "parent_folder": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Folder"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "outlook_create_folderArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_rename_folder",
+    "description": "Rename a user-created mail folder by ID.",
+    "inputSchema": {
+      "properties": {
+        "folder_id": {
+          "title": "Folder Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "folder_id",
+        "name"
+      ],
+      "title": "outlook_rename_folderArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_delete_folder",
+    "description": "Delete a user-created mail folder by ID; refuses well-known folders (inbox, sentitems).",
+    "inputSchema": {
+      "properties": {
+        "folder_id": {
+          "title": "Folder Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "folder_id"
+      ],
+      "title": "outlook_delete_folderArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true
+    }
+  },
+  {
+    "name": "outlook_list_thread",
+    "description": "List all messages in a conversation thread, chronological order.\n\nNeeds `conversation_id` from a message's metadata. Pass concise=True to drop large fields\n(quoted prior-message text in each preview) — ~10x fewer tokens on long reply chains.\n",
+    "inputSchema": {
+      "properties": {
+        "conversation_id": {
+          "title": "Conversation Id",
+          "type": "string"
+        },
+        "count": {
+          "default": 50,
+          "title": "Count",
+          "type": "integer"
+        },
+        "concise": {
+          "default": false,
+          "title": "Concise",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "conversation_id"
+      ],
+      "title": "outlook_list_threadArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_copy_message",
+    "description": "Copy a message to another folder (duplicates; source is unchanged).\n\nUse outlook_move_message to remove from source. `folder` accepts display names, well-known\nnames, or Graph IDs — prefer names.\n",
+    "inputSchema": {
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "folder": {
+          "title": "Folder",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id",
+        "folder"
+      ],
+      "title": "outlook_copy_messageArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_batch_triage",
+    "description": "Triage up to 20 messages in one $batch call.\n\n`action` is \"move\", \"flag\", \"categorize\", or \"mark_read\".\n\nExample: outlook_batch_triage(message_ids=[id1, id2], action=\"move\", value=\"Archive\")\n`value` is the action target (folder name for move, status for flag/mark_read, category name\nfor categorize). Hard cap of 20.\n",
+    "inputSchema": {
+      "properties": {
+        "message_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Message Ids",
+          "type": "array"
+        },
+        "action": {
+          "title": "Action",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_ids",
+        "action",
+        "value"
+      ],
+      "title": "outlook_batch_triageArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "outlook_whoami",
+    "description": "Get the authenticated user's profile (display name, email, ID).",
+    "inputSchema": {
+      "properties": {},
+      "title": "outlook_whoamiArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_list_calendars",
+    "description": "List all calendars available to the authenticated user (primary + secondary).",
+    "inputSchema": {
+      "properties": {},
+      "title": "outlook_list_calendarsArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_list_categories",
+    "description": "List the user's master category definitions (names + colors).\n\nProvides the valid values for outlook_categorize_message.\n",
+    "inputSchema": {
+      "properties": {},
+      "title": "outlook_list_categoriesArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_get_mail_tips",
+    "description": "Pre-send check for recipients: out-of-office, delivery limits, mailbox-full warnings.",
+    "inputSchema": {
+      "properties": {
+        "emails": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Emails",
+          "type": "array"
+        }
+      },
+      "required": [
+        "emails"
+      ],
+      "title": "outlook_get_mail_tipsArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_list_accounts",
+    "description": "List all configured Outlook accounts and their authentication status.",
+    "inputSchema": {
+      "properties": {},
+      "title": "outlook_list_accountsArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    }
+  },
+  {
+    "name": "outlook_switch_account",
+    "description": "Switch the active Outlook account by configured `name` (from outlook_list_accounts).",
+    "inputSchema": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "outlook_switch_accountArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  }
+]

@@ -1,0 +1,255 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "outlook_attach_to_draft": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_auth_status": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_batch_triage": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_categorize_message": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_changes_since": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_complete_task": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_copy_message": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_create_contact": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_create_draft": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_create_event": {
+      "impact": "high",
+      "rationale": "Governed. Changes calendar commitments and can notify external attendees or meeting organizers."
+    },
+    "outlook_create_folder": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_create_task": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_delete_contact": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_delete_draft": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_delete_event": {
+      "impact": "high",
+      "rationale": "Governed. Changes calendar commitments and can notify external attendees or meeting organizers."
+    },
+    "outlook_delete_folder": {
+      "impact": "critical",
+      "rationale": "Governed. Can cause irreversible data loss: permanent message deletion or deletion of a mail folder and its contents."
+    },
+    "outlook_delete_inbox_override": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_delete_message": {
+      "impact": "critical",
+      "rationale": "Governed. Can cause irreversible data loss: permanent message deletion or deletion of a mail folder and its contents."
+    },
+    "outlook_delete_task": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_download_attachment": {
+      "impact": "high",
+      "rationale": "Governed. Writes decoded attachment bytes to a caller-selected path on the credential-adapter host, creating a material local filesystem side effect."
+    },
+    "outlook_flag_message": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_forward": {
+      "impact": "high",
+      "rationale": "Governed. Sends external email as the authenticated user; delivery cannot be recalled and may include attachments or quoted private content."
+    },
+    "outlook_get_contact": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_get_event": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_get_mail_tips": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_accounts": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_attachments": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_calendars": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_categories": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_contacts": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_contacts_delta": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_drafts": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_events": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_events_delta": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_folders": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_inbox": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_inbox_delta": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_inbox_overrides": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_task_lists": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_tasks": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_list_thread": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_mark_read": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_move_message": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_read_message": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_read_messages": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_reclassify_message": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_remove_draft_attachment": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_rename_folder": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_reply": {
+      "impact": "high",
+      "rationale": "Governed. Sends external email as the authenticated user; delivery cannot be recalled and may include attachments or quoted private content."
+    },
+    "outlook_rsvp": {
+      "impact": "high",
+      "rationale": "Governed. Changes calendar commitments and can notify external attendees or meeting organizers."
+    },
+    "outlook_search_contacts": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_search_mail": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    },
+    "outlook_send_draft": {
+      "impact": "high",
+      "rationale": "Governed. Sends external email as the authenticated user; delivery cannot be recalled and may include attachments or quoted private content."
+    },
+    "outlook_send_message": {
+      "impact": "high",
+      "rationale": "Governed. Sends external email as the authenticated user; delivery cannot be recalled and may include attachments or quoted private content."
+    },
+    "outlook_send_with_attachments": {
+      "impact": "high",
+      "rationale": "Governed. Sends external email as the authenticated user; delivery cannot be recalled and may include attachments or quoted private content."
+    },
+    "outlook_set_inbox_override": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_switch_account": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_update_contact": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_update_draft": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_update_event": {
+      "impact": "high",
+      "rationale": "Governed. Changes calendar commitments and can notify external attendees or meeting organizers."
+    },
+    "outlook_update_task": {
+      "impact": "medium",
+      "rationale": "Governed. Changes Outlook mailbox, contact, task, draft, folder, attachment, triage, or active-account state; generally limited or reversible but still uses delegated write authority."
+    },
+    "outlook_whoami": {
+      "impact": "medium",
+      "rationale": "Pass-through. Upstream marks this tool read-only; it retrieves Outlook or local account metadata without changing remote state."
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "outlook-mcp",
+    "version": "1.12.0"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "/Users/mpas1/Projects/mcp-targets/outlook/.venv/bin/outlook-mcp",
+    "serve"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-31T06:09:18.904Z"
+}

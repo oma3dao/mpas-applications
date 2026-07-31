@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "/Users/mpas1/Projects/mcp-targets/outlook/.venv/bin/outlook-mcp",
+    "args": [
+      "serve"
+    ]
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}
