@@ -3,10 +3,6 @@
   "type": "ImpactClassificationDraft",
   "draft": false,
   "operations": {
-    "configuration_view": {
-      "impact": "medium",
-      "rationale": "reviewed: read-only observation or retrieval; pass-through"
-    },
     "events_list": {
       "impact": "medium",
       "rationale": "reviewed: read-only observation or retrieval; pass-through"
