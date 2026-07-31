@@ -50,7 +50,7 @@ database data planes are separate MPAS surfaces and should be bridged independen
 | Railway | Official Railway MCP Server | [railwayapp/cli](https://github.com/railwayapp/cli) | ✅ Tested | Protect projects, services, deployments, variables, volumes, and backups |
 | n8n | Official n8n Instance MCP Server | [n8n-io/n8n](https://github.com/n8n-io/n8n) | ✅ Tested | Protect workflow execution, publication, mutation, restoration, and data-table writes |
 | Fastly | Official Fastly MCP Server | [fastly/mcp](https://github.com/fastly/mcp) | 💡 Requested | Protect service configuration, deployments, purges, and security changes |
-| Vercel | Vercel MCP Server | TBD | 💡 Requested | Protect projects, deployments, domains, environment variables, and team settings |
+| Vercel | Official hosted Vercel MCP Server | [mcp.vercel.com](https://mcp.vercel.com) | ✅ Tested | Protect deployments, deployment protection, temporary access grants, purchases, and toolbar communication |
 | AWS | AWS MCP Servers | [awslabs/mcp](https://github.com/awslabs/mcp) | 📋 Planned | Multiple servers covering cloud infrastructure and developer workflows |
 | Kubernetes | Kubernetes MCP Server | [stormforge-llc/mcp-k8s-go](https://github.com/stormforge-llc/mcp-k8s-go) | 📋 Planned | Protect cluster administration, resource deletion, and scaling |
 | Terraform | Terraform MCP Server | [hashicorp/terraform-mcp-server](https://github.com/hashicorp/terraform-mcp-server) | 📋 Planned | Infrastructure changes have a large blast radius |
