@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "n8n-instance-mcp",
+    "version": "2.32.6"
+  },
+  "protocolVersion": "2025-03-26",
+  "upstreamCommand": [
+    "node",
+    "/tmp/n8n-schema-server.mjs"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-07-31T02:22:10.566Z"
+}

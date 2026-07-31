@@ -1,0 +1,19 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-remote@0.1.38",
+      "https://wivity.app.n8n.cloud/mcp-server/http",
+      "--header",
+      "Authorization: Bearer {{credential:n8nMcpBearerToken}}"
+    ]
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}
