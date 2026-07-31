@@ -1,6 +1,7 @@
 # MPAS Applications Roadmap
 
-A list of future bridges that will be built. Each completed application gets its own folder in `applications/`.
+A current inventory of completed bridges and the remaining application roadmap.
+Each completed application has its own folder in `applications/`.
 
 To request a new application or volunteer to build one, open a PR updating this file.
 
@@ -41,6 +42,7 @@ database data planes are separate MPAS surfaces and should be bridged independen
 | :---------- | :------- | :-------------- | :----- | :---- |
 | GitHub | Official GitHub MCP Server | [github/github-mcp-server](https://github.com/github/github-mcp-server) | 🟢 In Production | Protect merges, branch deletion, releases, and other repository mutations |
 | PostgreSQL | Reference PostgreSQL MCP Server | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers/tree/main/src/postgres) | ✅ Tested | Generic data-plane bridge. Protect SQL, DDL, migrations, and destructive writes |
+| BigQuery | Google MCP Toolbox for Databases | [googleapis/mcp-toolbox](https://github.com/googleapis/mcp-toolbox) | ✅ Tested | Protect arbitrary SQL, billable analytics, forecasting, and caller-selected data processing |
 | Supabase | Official Supabase MCP Server | [supabase/mcp](https://github.com/supabase/mcp) | ✅ Tested | Protect SQL, migrations, branches, auth, storage, and project operations |
 | Neon | Official Neon MCP Server | [neondatabase/mcp-server-neon](https://github.com/neondatabase/mcp-server-neon) | ✅ Tested | Protect SQL, migrations, project and branch deletion, resets, and credential changes |
 | MongoDB | Official MongoDB MCP Server | [mongodb-js/mongodb-mcp-server](https://github.com/mongodb-js/mongodb-mcp-server) | ✅ Tested | Protect drops, deletes, index changes, and Atlas cluster operations |
@@ -49,7 +51,7 @@ database data planes are separate MPAS surfaces and should be bridged independen
 | Upstash | Official Upstash MCP Server | [upstash/mcp-server](https://github.com/upstash/mcp-server) | ✅ Tested | Protect flush/delete, database lifecycle, and credential operations |
 | Railway | Official Railway MCP Server | [railwayapp/cli](https://github.com/railwayapp/cli) | ✅ Tested | Protect projects, services, deployments, variables, volumes, and backups |
 | n8n | Official n8n Instance MCP Server | [n8n-io/n8n](https://github.com/n8n-io/n8n) | ✅ Tested | Protect workflow execution, publication, mutation, restoration, and data-table writes |
-| Fastly | Official Fastly MCP Server | [fastly/mcp](https://github.com/fastly/mcp) | 💡 Requested | Protect service configuration, deployments, purges, and security changes |
+| Fastly | Official Fastly MCP Server | [fastly/mcp](https://github.com/fastly/mcp) | ✅ Tested | Protect arbitrary authenticated Fastly API execution, including configuration, deployment, purge, and security changes |
 | Vercel | Official hosted Vercel MCP Server | [mcp.vercel.com](https://mcp.vercel.com) | ✅ Tested | Protect deployments, deployment protection, temporary access grants, purchases, and toolbar communication |
 | AWS | AWS MCP Servers | [awslabs/mcp](https://github.com/awslabs/mcp) | 📋 Planned | Multiple servers covering cloud infrastructure and developer workflows |
 | Kubernetes | Kubernetes MCP Server | [containers/kubernetes-mcp-server](https://github.com/containers/kubernetes-mcp-server) | ✅ Tested | Protect cluster administration, workload command execution, resource deletion, and scaling |
@@ -68,13 +70,13 @@ This segment covers marketing, customer communications, collaboration, and publi
 | Application | Upstream | Upstream Source | Status | Notes |
 | :---------- | :------- | :-------------- | :----- | :---- |
 | Plain | Plain.com MCP Server | [tellahq/plain-mcp](https://github.com/tellahq/plain-mcp) | ✅ Tested | Protect customer communications, records, help centers, automations, and webhooks |
-| X / Twitter | X (Twitter) MCP Server | [rafaljanicki/x-twitter-mcp-server](https://github.com/rafaljanicki/x-twitter-mcp-server) | 🚧 In Development | Protect public publishing, deletion, engagement, and account-context reads |
+| X / Twitter | X (Twitter) MCP Server | [rafaljanicki/x-twitter-mcp-server](https://github.com/rafaljanicki/x-twitter-mcp-server) | ✅ Tested | Protect public publishing, deletion, engagement, and private bookmark mutations |
 | Slack | Slack MCP Server | [modelcontextprotocol/servers/slack](https://github.com/modelcontextprotocol/servers/tree/main/src/slack) | 📋 Planned | Protect messages, invitations, and workspace mutations |
 | HubSpot | HubSpot MCP Server | TBD | 💡 Requested | Protect CRM, marketing, sales, and customer communication workflows |
 | Klaviyo | Klaviyo MCP Server | TBD | 💡 Requested | Protect campaigns, flows, audiences, and customer messaging |
 | beehiiv | beehiiv MCP Server | TBD | 💡 Requested | Protect newsletter publishing, automations, audiences, and subscriptions |
 | Gmail | Gmail MCP Server | TBD | 💡 Requested | Protect sending, deleting, labeling, and account-level email operations |
-| Outlook | Outlook MCP Server | TBD | 💡 Requested | Protect email, calendar, contact, and mailbox operations |
+| Outlook | Outlook Graph MCP Server | [mpalermiti/outlook-mcp](https://github.com/mpalermiti/outlook-mcp) | ✅ Tested | Protect email, calendar, contact, task, attachment, and mailbox mutations |
 | Discord | Discord MCP Server | TBD | 📋 Planned | Protect community messages, roles, channels, and moderation |
 | Microsoft Teams | Teams MCP Server | TBD | 📋 Planned | Protect enterprise messaging and collaboration actions |
 | LinkedIn | LinkedIn MCP Server | TBD | 📋 Planned | Protect professional publishing and engagement |
@@ -87,8 +89,8 @@ This segment covers exchanges, brokerage, payments, and other financial transact
 | Application | Upstream | Upstream Source | Status | Notes |
 | :---------- | :------- | :-------------- | :----- | :---- |
 | Coinbase Agentic Wallet | Coinbase Payments MCP | [coinbase/payments-mcp](https://github.com/coinbase/payments-mcp) | ✅ Tested | Protect wallet authentication, token sends, payments, transfers, and trades |
-| Coinbase Advanced Trade | Coinbase CLI MCP Server | [Coinbase CLI](https://docs.cdp.coinbase.com/coinbase-cli/skill.md) | 🚧 In Development | Protect portfolios, accounts, orders, trades, conversions, and transfers |
-| Kraken | Official Kraken CLI MCP Server | [krakenfx/kraken-cli](https://github.com/krakenfx/kraken-cli) | 🚧 In Development | Protect spot and futures orders, withdrawals, wallet transfers, earn allocations, and subaccount mutations |
+| Coinbase Advanced Trade | Coinbase CLI MCP Server | [Coinbase CLI](https://docs.cdp.coinbase.com/coinbase-cli/skill.md) | ✅ Tested | Protect portfolios, accounts, orders, trades, conversions, and transfers |
+| Kraken | Official Kraken CLI MCP Server | [krakenfx/kraken-cli](https://github.com/krakenfx/kraken-cli) | ✅ Tested | Protect spot and futures orders, withdrawals, wallet transfers, earn allocations, and subaccount mutations |
 | Robinhood Crypto | Robinhood Crypto MCP Server | [rohitsingh-iitd/robinhood-mcp-server](https://github.com/rohitsingh-iitd/robinhood-mcp-server) | 💡 Requested | Protect brokerage and crypto orders, transfers, and account mutations |
 | Alpaca | Official Alpaca MCP Server | [alpacahq/alpaca-mcp-server](https://github.com/alpacahq/alpaca-mcp-server) | ✅ Tested | Protect stock, crypto, and option orders; cancellations; liquidation; option exercise; and account mutations |
 | Stripe | Official Stripe MCP Server | [stripe/ai](https://github.com/stripe/ai/tree/main/tools/modelcontextprotocol) | ✅ Tested | Protect refunds and generic API writes covering payments, invoices, subscriptions, pricing, disputes, webhooks, and other account mutations |
