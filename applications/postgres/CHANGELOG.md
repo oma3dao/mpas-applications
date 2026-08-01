@@ -2,6 +2,17 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-07-31 — Completed the impact classification
+
+- Rewrote the single entry in `build-artifacts/classification.json` to record
+  why `query` is governed despite being read-only. This application has no
+  pass-through operations — the upstream server exposes exactly one tool — so
+  the classification and the plugin describe the same surface here.
+- Aligned the entry's impact with `plugin.json`.
+- The file remains advisory. `artifactDid` covers `plugin.json` only, so
+  classification carries no integrity guarantee and is not the authority on
+  what is governed.
+
 ## 2026-07-29 — Reviewed; `query` remains governed
 
 - Reviewed against the repository-wide rule (reads are pass-through, state

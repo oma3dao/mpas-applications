@@ -18,7 +18,7 @@
   },
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/outlook/plugin.json",
-    "artifactDid": "did:artifact:bafkreid7lnu235aa4mesmklf2mkdarqzoj3tvl23u3fcko3bux4rqbsgoe",
+    "artifactDid": "did:artifact:bafkreiaiadx3jildyql3gnnhxfd4kq5mcdotxav2amyq5g6etysbqosub4",
     "pluginDid": "did:web:wivity.com:plugins:outlook-mcp-server"
   },
   "publisher": {

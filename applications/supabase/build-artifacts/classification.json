@@ -5,119 +5,119 @@
   "operations": {
     "apply_migration": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Applies DDL to the database. Schema changes are rarely reversible in place."
     },
     "confirm_cost": {
       "impact": "low",
-      "rationale": "Governed: records explicit user acknowledgment of a quoted project or branch cost but does not itself create the resource."
+      "rationale": "Pass-through (precursor): mints a confirmation ID that create_project requires. Not a real control — an agent can call it to satisfy its own precondition — so the guarantee comes from create_project being governed."
     },
     "create_branch": {
       "impact": "high",
-      "rationale": "Governed: creates a billable database branch and applies the production migration history."
+      "rationale": "Creates a branch database and applies all migrations to it. Billable."
     },
     "create_project": {
       "impact": "high",
-      "rationale": "Governed: creates a billable hosted project in the selected organization and region."
+      "rationale": "Provisions a new billable project."
     },
     "delete_branch": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Destroys a development branch and its database."
     },
     "deploy_edge_function": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Deploys code that runs publicly on the project's edge, with access to project secrets."
     },
     "execute_sql": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Raw SQL against the Postgres database. Unbounded read and write."
     },
     "generate_typescript_types": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): derives type definitions from the existing schema."
     },
     "get_advisors": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Pass-through (read): security and performance advisory notices. Reveals posture, changes nothing."
     },
     "get_cost": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): pricing for a prospective project or branch."
     },
     "get_edge_function": {
-      "impact": "high",
-      "rationale": "Governed: retrieves deployed application source that can contain sensitive implementation details."
+      "impact": "medium",
+      "rationale": "Pass-through (read): retrieves Edge Function source. The access token already reaches it, and reading source grants no new capability."
     },
     "get_logs": {
-      "impact": "high",
-      "rationale": "Governed: production service logs can contain sensitive data, identifiers, and application output."
+      "impact": "medium",
+      "rationale": "Pass-through (read): service logs for the project."
     },
     "get_organization": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): organization details and plan."
     },
     "get_project": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): project details and status."
     },
     "get_project_url": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): the project's API URL."
     },
     "get_publishable_keys": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): publishable and legacy anon keys are designed to ship inside client applications and are constrained by row level security. Not privileged credential disclosure."
     },
     "list_branches": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): branch inventory and status."
     },
     "list_edge_functions": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): deployed function names."
     },
     "list_extensions": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): installed Postgres extensions."
     },
     "list_migrations": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): applied migration history."
     },
     "list_organizations": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): organization memberships."
     },
     "list_projects": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): accessible projects."
     },
     "list_tables": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): table inventory, optionally with column detail."
     },
     "merge_branch": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Promotes migrations and edge functions from a development branch to production."
     },
     "pause_project": {
       "impact": "high",
-      "rationale": "Governed: pauses a hosted project and disrupts database and API availability."
+      "rationale": "Takes a project offline. Recoverable, but an availability event."
     },
     "rebase_branch": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Replays production migrations onto a branch, rewriting its migration state."
     },
     "reset_branch": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Discards untracked data and schema changes on the branch, by its own description."
     },
     "restore_project": {
       "impact": "high",
-      "rationale": "Governed: restores a hosted project and changes its operational state."
+      "rationale": "Brings a paused project back online, resuming billing."
     },
     "search_docs": {
-      "impact": "medium",
-      "rationale": "Pass-through: searches public Supabase documentation and does not access operator resources or mutate external state."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): searches Supabase's public documentation."
     }
   }
 }

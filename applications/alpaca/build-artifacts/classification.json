@@ -4,300 +4,300 @@
   "draft": false,
   "operations": {
     "add_asset_to_watchlist_by_id": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): watchlist maintenance. Private to the account, holds no funds, trivially reversible."
     },
     "cancel_all_orders": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "critical",
+      "rationale": "Cancels every open order at once, including protective stops across the whole account."
     },
     "cancel_order_by_id": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "critical",
+      "rationale": "Cancels an order. Not a harmless undo — cancelling a protective stop leaves a position unprotected."
     },
     "close_all_positions": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "critical",
+      "rationale": "Liquidates the entire portfolio."
     },
     "close_position": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "critical",
+      "rationale": "Liquidates a position by placing a sell order, realising gains or losses."
     },
     "create_locate": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "high",
+      "rationale": "Creates a short-sale locate request, a borrowing commitment with associated fees."
     },
     "create_watchlist": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): watchlist maintenance. Private to the account, holds no funds, trivially reversible."
     },
     "delete_watchlist_by_id": {
-      "impact": "critical",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): watchlist maintenance. Private to the account, holds no funds, trivially reversible."
     },
     "do_not_exercise_options_position": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "critical",
+      "rationale": "Submits a do-not-exercise instruction, irrevocably abandoning contract value at expiry."
     },
     "exercise_options_position": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "critical",
+      "rationale": "Exercises a held contract, converting it into the underlying and committing the required capital."
     },
     "fetch_alpaca_doc": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): documentation and API reference lookup."
     },
     "get_account_activities": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_account_activities_by_type": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_account_config": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_account_info": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_all_assets": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_all_positions": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_alpaca_endpoint_docs": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): documentation and API reference lookup."
     },
     "get_asset": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_calendar": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_clock": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_corporate_action_announcement": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_corporate_action_announcements": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_corporate_actions": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_crypto_bars": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_crypto_latest_bar": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_crypto_latest_orderbook": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_crypto_latest_quote": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_crypto_latest_trade": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_crypto_quotes": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_crypto_snapshot": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_crypto_trades": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_fixed_income_latest_quotes": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_index_latest_values": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_index_values": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_locate": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_locate_quotes": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_locates": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_market_movers": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_most_active_stocks": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_news": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_open_position": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_option_bars": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_option_chain": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_option_contract": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_option_contracts": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_option_exchange_codes": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_option_latest_quote": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_option_latest_trade": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_option_snapshot": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_option_trades": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_order_by_client_id": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_order_by_id": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_orders": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_portfolio_history": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_stock_bars": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_stock_latest_bar": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_stock_latest_quote": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_stock_latest_trade": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_stock_quotes": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_stock_snapshot": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_stock_trades": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): market data — quotes, trades, bars, order books, snapshots, corporate actions, and calendar information. Public reference data with no account context."
     },
     "get_watchlist_by_id": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "get_watchlists": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "rationale": "Pass-through (read): the account's own positions, orders, activity, and portfolio history. The API key already reaches these and none returns a reusable credential."
     },
     "list_alpaca_api_endpoints": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): documentation and API reference lookup."
     },
     "place_crypto_order": {
       "impact": "critical",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "rationale": "Places a live cryptocurrency order."
     },
     "place_option_order": {
       "impact": "critical",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "rationale": "Places a single- or multi-leg options order, which can carry unbounded assignment risk."
     },
     "place_stock_order": {
       "impact": "critical",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "rationale": "Places a live stock or ETF order that commits funds at market."
     },
     "remove_asset_from_watchlist_by_id": {
-      "impact": "critical",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): watchlist maintenance. Private to the account, holds no funds, trivially reversible."
     },
     "replace_order_by_id": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "critical",
+      "rationale": "Replaces an open order with new parameters, changing committed exposure."
     },
     "search_alpaca_api_specs": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): documentation and API reference lookup."
     },
     "search_alpaca_docs": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, market data, portfolio/account inspection, or order/position inspection."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): documentation and API reference lookup."
     },
     "update_account_config": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "high",
+      "rationale": "Changes account configuration such as shorting, margin, and day-trade protection settings."
     },
     "update_watchlist_by_id": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation mutates an Alpaca account, order, position, option exercise instruction, locate request, or watchlist."
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): watchlist maintenance. Private to the account, holds no funds, trivially reversible."
     }
   }
 }

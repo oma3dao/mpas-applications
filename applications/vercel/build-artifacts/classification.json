@@ -1,139 +1,139 @@
 {
   "version": "1",
   "type": "ImpactClassificationDraft",
-  "draft": true,
+  "draft": false,
   "operations": {
     "add_toolbar_reaction": {
-      "impact": "high",
-      "rationale": "manual-review: external toolbar communication mutation"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): an emoji reaction on an internal comment thread."
     },
     "buy_addon": {
       "impact": "critical",
-      "rationale": "manual-review: immediate non-refundable purchase"
+      "rationale": "Executes a purchase against the account's payment method."
     },
     "buy_credits": {
       "impact": "critical",
-      "rationale": "manual-review: immediate non-refundable purchase"
+      "rationale": "Executes a prepaid credits purchase."
     },
     "buy_domain": {
       "impact": "critical",
-      "rationale": "manual-review: domain registration and non-refundable purchase"
+      "rationale": "Registers a domain, a billed and externally binding act."
     },
     "buy_pro": {
       "impact": "critical",
-      "rationale": "manual-review: starts recurring paid subscription"
+      "rationale": "Executes a plan upgrade with recurring cost."
     },
     "change_toolbar_thread_resolve_status": {
-      "impact": "high",
-      "rationale": "manual-review: externally visible toolbar thread mutation"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): marks a comment thread resolved or unresolved."
     },
     "check_domain_availability_and_price": {
-      "impact": "medium",
-      "rationale": "manual-review: read-only availability and pricing lookup"
+      "impact": "low",
+      "rationale": "Pass-through (read): domain availability and pricing. Charges nothing."
     },
     "deploy_to_vercel": {
       "impact": "high",
-      "rationale": "manual-review: creates a project and deploys supplied code"
+      "rationale": "Deploys arbitrary files to a new project and serves them publicly."
     },
     "edit_toolbar_message": {
-      "impact": "high",
-      "rationale": "manual-review: edits external toolbar communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): edits a team-internal comment on a preview deployment."
     },
     "get_access_to_vercel_url": {
-      "impact": "high",
-      "rationale": "manual-review: creates a temporary authentication-bypass URL"
+      "impact": "critical",
+      "rationale": "Credential disclosure. Mints a _vercel_share link that bypasses authentication on a protected deployment — a transferable capability the caller keeps, not a read of metadata."
     },
     "get_agent_run": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): agent run metadata."
     },
     "get_agent_run_trace": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): agent run trace and messages."
     },
     "get_deployment": {
-      "impact": "medium",
-      "rationale": "manual-review: read-only deployment metadata"
+      "impact": "low",
+      "rationale": "Pass-through (read): deployment detail."
     },
     "get_deployment_build_logs": {
-      "impact": "medium",
-      "rationale": "manual-review: read-only build logs"
+      "impact": "low",
+      "rationale": "Pass-through (read): build logs."
     },
     "get_domain_order": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): status of a domain purchase already made."
     },
     "get_project": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): project detail."
     },
     "get_project_deployment_protection": {
       "impact": "medium",
-      "rationale": "manual-review: read-only protection settings with passwords withheld"
+      "rationale": "Pass-through (read): reports protection settings. Reveals posture; the write path update_project_deployment_protection is governed."
     },
     "get_purchase_quote": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (precursor): states in its own description that it NEVER charges. It mints the idempotency key the governed buy_* tools consume."
     },
     "get_runtime_errors": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): grouped runtime error clusters."
     },
     "get_runtime_logs": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Pass-through (read): application runtime logs, which may echo application data."
     },
     "get_toolbar_thread": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): one comment thread."
     },
     "get_web_analytics": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): aggregate visitor and pageview counts."
     },
     "import-claude-design-from-url": {
       "impact": "high",
-      "rationale": "manual-review: imports externally fetched content into Vercel"
+      "rationale": "Imports a self-contained bundle from an external URL into Vercel. Content injection from a source the approver should see."
     },
     "list_agent_run_projects": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): projects with agent observability data."
     },
     "list_agent_runs": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): agent run inventory."
     },
     "list_deployments": {
-      "impact": "medium",
-      "rationale": "manual-review: read-only deployment listing"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): deployment inventory."
     },
     "list_projects": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): project inventory."
     },
     "list_teams": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): team memberships."
     },
     "list_toolbar_threads": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): comment threads for a team."
     },
     "reply_to_toolbar_thread": {
-      "impact": "high",
-      "rationale": "manual-review: sends external toolbar communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): replies to a team-internal comment thread."
     },
     "search_vercel_documentation": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read-public): searches Vercel's public documentation."
     },
     "update_project_deployment_protection": {
       "impact": "critical",
-      "rationale": "manual-review: changes project authentication and trusted-IP controls"
+      "rationale": "Can remove password protection, Vercel Authentication, and Trusted IP restrictions, exposing previously private deployments."
     },
     "web_fetch_vercel_url": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Pass-through (read): fetches a Vercel deployment URL and returns the response. Scoped to deployments the token already reaches."
     }
   }
 }

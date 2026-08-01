@@ -2,6 +2,28 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-07-31 — Completed the impact classification
+
+- Reviewed all 44 entries in `build-artifacts/classification.json`,
+  covering the full upstream surface rather than only the 15 governed
+  operations. `plugin.json` lists what is governed; it cannot record why
+  anything else was left out, so that reasoning now lives here.
+- Wrote a rationale for each of the 29 pass-through operations, tagged by
+  reason (read 16, metadata-only 9, routine-job 2, precursor 1, read-public 1), so an operator
+  deciding whether to govern more in deployment config can see what was
+  deliberately exempted and on what grounds.
+- Aligned every governed entry's impact with `plugin.json`.
+- The file remains advisory. `artifactDid` covers `plugin.json` only, so
+  classification carries no integrity guarantee and is not the authority on
+  what is governed.
+
+## 2026-07-31 — Removed pending-review comment drafting
+
+- Dropped `add_comment_to_pending_review`, taking the plugin from 16 to 15.
+  A pending review comment is not visible to anyone until the review is
+  submitted, and `pull_request_review_write` is the governed chokepoint that
+  publishes it.
+
 ## 2026-07-29 — Normalized impact grading
 
 - No membership change. The governed surface was already narrowed to the 16

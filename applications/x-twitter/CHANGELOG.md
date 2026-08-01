@@ -1,5 +1,30 @@
 # Changelog — x-twitter
 
+## 2026-07-31 — Completed the impact classification
+
+- Reviewed all 24 entries in `build-artifacts/classification.json`,
+  covering the full upstream surface rather than only the 6 governed
+  operations. `plugin.json` lists what is governed; it cannot record why
+  anything else was left out, so that reasoning now lives here.
+- Wrote a rationale for each of the 18 pass-through operations, tagged by
+  reason (read 14, routine-job 2, read-public 1, simulated 1), so an operator
+  deciding whether to govern more in deployment config can see what was
+  deliberately exempted and on what grounds.
+- Aligned every governed entry's impact with `plugin.json`.
+- The file remains advisory. `artifactDid` covers `plugin.json` only, so
+  classification carries no integrity guarantee and is not the authority on
+  what is governed.
+
+## 2026-07-31 — Removed private bookmark and poll operations
+
+- Dropped `bookmark_tweet`, `delete_bookmark`, and `vote_on_poll`, taking the
+  plugin from 9 operations to 6.
+- Bookmarks are private to the account and reversible. `vote_on_poll` is
+  mocked upstream and has no real effect today; if it is ever implemented for
+  real that is upstream tool drift, which deployments monitor separately.
+- The governed set is now exactly the operations with public effect:
+  publishing, deletion, and the like/unlike engagement signals.
+
 ## 2026-07-29 — Narrowed the governed surface to mutations
 
 - Reduced `plugin.json` from 24 operations to 9. The 15 read-only tools

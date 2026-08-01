@@ -1,143 +1,143 @@
 {
   "version": "1",
   "type": "ImpactClassificationDraft",
-  "draft": true,
+  "draft": false,
   "operations": {
     "add_data_table_column": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Adds a column to an existing data table."
     },
     "add_data_table_rows": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Inserts rows into a data table."
     },
     "archive_workflow": {
-      "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "impact": "high",
+      "rationale": "Archives a workflow, removing it from active use. Reversible in n8n."
     },
     "create_data_table": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Creates a data table in a project."
     },
     "create_workflow_from_code": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Creates a workflow from SDK code. Inert until published or executed, both of which are separately governed."
     },
     "delete_data_table_column": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Permanently removes a column and all its data, by its own description."
     },
     "execute_workflow": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Runs a workflow against live third-party systems using its stored credentials. Side effects are whatever the workflow does."
     },
     "explore_node_resources": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Pass-through (read): resolves dropdown values from connected services, such as Slack channel names. Reads through credentials the workflow already holds."
     },
     "get_execution": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Pass-through (read): execution detail, optionally including run data."
     },
     "get_node_types": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): node type definitions."
     },
     "get_sdk_reference": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read-public): SDK documentation."
     },
     "get_workflow_best_practices": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read-public): authoring guidance."
     },
     "get_workflow_details": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): workflow definition and triggers."
     },
     "get_workflow_history": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): saved version list."
     },
     "get_workflow_version": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): the content of one historical version."
     },
     "list_credentials": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): credential IDs, names, and types. Its description states it never returns credential secret data, so it confers no capability outside the bridge."
     },
     "list_n8n_connect_services": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): node and credential types with managed-credential coverage."
     },
     "list_tags": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workflow tags."
     },
     "prepare_test_pin_data": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): writes test fixture data used to keep test runs off real services."
     },
     "publish_workflow": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "high",
+      "rationale": "Activates a workflow for production. It then fires on its triggers, unattended, using stored credentials against live systems."
     },
     "rename_data_table": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): a rename. Affects no data and is reversible."
     },
     "rename_data_table_column": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Renames a column, which breaks workflows referencing the old name."
     },
     "restore_workflow_version": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Re-applies a historical version over the current one, reverting production behaviour."
     },
     "search_data_tables": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): data table inventory."
     },
     "search_executions": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): execution metadata."
     },
     "search_folders": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): folders within a project."
     },
     "search_nodes": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): node catalogue search."
     },
     "search_projects": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): accessible projects."
     },
     "search_workflows": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): workflow inventory with previews."
     },
     "test_workflow": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Pin data bypasses external services, but trigger, credential, and HTTP Request nodes without pin data still reach real systems."
     },
     "unpublish_workflow": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Deactivates a workflow, stopping production execution. An availability change, reversible."
     },
     "update_workflow": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Atomically edits nodes, connections, and workflow-level settings — including on a published production workflow."
     },
     "validate_node_config": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (validation-only): lints a node configuration. No state change."
     },
     "validate_workflow": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (validation-only): lints SDK code before creation or update. No state change."
     }
   }
 }

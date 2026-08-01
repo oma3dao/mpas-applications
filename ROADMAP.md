@@ -52,9 +52,9 @@ database data planes are separate MPAS surfaces and should be bridged independen
 | Railway | Official Railway MCP Server | [railwayapp/cli](https://github.com/railwayapp/cli) | ✅ Tested | Protect projects, services, deployments, variables, volumes, and backups |
 | n8n | Official n8n Instance MCP Server | [n8n-io/n8n](https://github.com/n8n-io/n8n) | ✅ Tested | Protect workflow execution, publication, mutation, restoration, and data-table writes |
 | Fastly | Official Fastly MCP Server | [fastly/mcp](https://github.com/fastly/mcp) | ✅ Tested | Protect arbitrary authenticated Fastly API execution, including configuration, deployment, purge, and security changes |
-| Vercel | Official hosted Vercel MCP Server | [mcp.vercel.com](https://mcp.vercel.com) | ✅ Tested | Protect deployments, deployment protection, temporary access grants, purchases, and toolbar communication |
+| Vercel | Official hosted Vercel MCP Server | [mcp.vercel.com](https://mcp.vercel.com) | ✅ Tested | Protect deployments, deployment protection, temporary access grants, and purchases |
+| Kubernetes | Kubernetes MCP Server | [containers/kubernetes-mcp-server](https://github.com/containers/kubernetes-mcp-server) | ✅ Tested | Protect cluster administration, workload command execution, resource deletion, scaling, and Secret-bearing resource reads |
 | AWS | AWS MCP Servers | [awslabs/mcp](https://github.com/awslabs/mcp) | 📋 Planned | Multiple servers covering cloud infrastructure and developer workflows |
-| Kubernetes | Kubernetes MCP Server | [containers/kubernetes-mcp-server](https://github.com/containers/kubernetes-mcp-server) | ✅ Tested | Protect cluster administration, workload command execution, resource deletion, and scaling |
 | Terraform | Terraform MCP Server | [hashicorp/terraform-mcp-server](https://github.com/hashicorp/terraform-mcp-server) | 📋 Planned | Infrastructure changes have a large blast radius |
 | GitLab | GitLab MCP Server | [gitlab-org/editor-extensions/gitlab-mcp-server](https://gitlab.com/gitlab-org/editor-extensions/gitlab-mcp-server) | 📋 Planned | Protect source control and CI/CD mutations |
 | Linear | Linear MCP Server | [jerhadf/linear-mcp-server](https://github.com/jerhadf/linear-mcp-server) | 📋 Planned | Protect issue, project, and workspace mutations |
@@ -70,13 +70,13 @@ This segment covers marketing, customer communications, collaboration, and publi
 | Application | Upstream | Upstream Source | Status | Notes |
 | :---------- | :------- | :-------------- | :----- | :---- |
 | Plain | Plain.com MCP Server | [tellahq/plain-mcp](https://github.com/tellahq/plain-mcp) | ✅ Tested | Protect customer communications, records, help centers, automations, and webhooks |
-| X / Twitter | X (Twitter) MCP Server | [rafaljanicki/x-twitter-mcp-server](https://github.com/rafaljanicki/x-twitter-mcp-server) | ✅ Tested | Protect public publishing, deletion, engagement, and private bookmark mutations |
+| X / Twitter | X (Twitter) MCP Server | [rafaljanicki/x-twitter-mcp-server](https://github.com/rafaljanicki/x-twitter-mcp-server) | ✅ Tested | Protect public publishing, deletion, and engagement |
+| Outlook | Outlook Graph MCP Server | [mpalermiti/outlook-mcp](https://github.com/mpalermiti/outlook-mcp) | ✅ Tested | Protect email, calendar, contact, task, attachment, and mailbox mutations |
 | Slack | Slack MCP Server | [modelcontextprotocol/servers/slack](https://github.com/modelcontextprotocol/servers/tree/main/src/slack) | 📋 Planned | Protect messages, invitations, and workspace mutations |
 | HubSpot | HubSpot MCP Server | TBD | 💡 Requested | Protect CRM, marketing, sales, and customer communication workflows |
 | Klaviyo | Klaviyo MCP Server | TBD | 💡 Requested | Protect campaigns, flows, audiences, and customer messaging |
 | beehiiv | beehiiv MCP Server | TBD | 💡 Requested | Protect newsletter publishing, automations, audiences, and subscriptions |
 | Gmail | Gmail MCP Server | TBD | 💡 Requested | Protect sending, deleting, labeling, and account-level email operations |
-| Outlook | Outlook Graph MCP Server | [mpalermiti/outlook-mcp](https://github.com/mpalermiti/outlook-mcp) | ✅ Tested | Protect email, calendar, contact, task, attachment, and mailbox mutations |
 | Discord | Discord MCP Server | TBD | 📋 Planned | Protect community messages, roles, channels, and moderation |
 | Microsoft Teams | Teams MCP Server | TBD | 📋 Planned | Protect enterprise messaging and collaboration actions |
 | LinkedIn | LinkedIn MCP Server | TBD | 📋 Planned | Protect professional publishing and engagement |
@@ -91,9 +91,9 @@ This segment covers exchanges, brokerage, payments, and other financial transact
 | Coinbase Agentic Wallet | Coinbase Payments MCP | [coinbase/payments-mcp](https://github.com/coinbase/payments-mcp) | ✅ Tested | Protect wallet authentication, token sends, payments, transfers, and trades |
 | Coinbase Advanced Trade | Coinbase CLI MCP Server | [Coinbase CLI](https://docs.cdp.coinbase.com/coinbase-cli/skill.md) | ✅ Tested | Protect portfolios, accounts, orders, trades, conversions, and transfers |
 | Kraken | Official Kraken CLI MCP Server | [krakenfx/kraken-cli](https://github.com/krakenfx/kraken-cli) | ✅ Tested | Protect spot and futures orders, withdrawals, wallet transfers, earn allocations, and subaccount mutations |
-| Robinhood Crypto | Robinhood Crypto MCP Server | [rohitsingh-iitd/robinhood-mcp-server](https://github.com/rohitsingh-iitd/robinhood-mcp-server) | 💡 Requested | Protect brokerage and crypto orders, transfers, and account mutations |
 | Alpaca | Official Alpaca MCP Server | [alpacahq/alpaca-mcp-server](https://github.com/alpacahq/alpaca-mcp-server) | ✅ Tested | Protect stock, crypto, and option orders; cancellations; liquidation; option exercise; and account mutations |
 | Stripe | Official Stripe MCP Server | [stripe/ai](https://github.com/stripe/ai/tree/main/tools/modelcontextprotocol) | ✅ Tested | Protect refunds and generic API writes covering payments, invoices, subscriptions, pricing, disputes, webhooks, and other account mutations |
+| Robinhood Crypto | Robinhood Crypto MCP Server | [rohitsingh-iitd/robinhood-mcp-server](https://github.com/rohitsingh-iitd/robinhood-mcp-server) | 💡 Requested | Protect brokerage and crypto orders, transfers, and account mutations |
 
 ---
 

@@ -4,120 +4,120 @@
   "draft": false,
   "operations": {
     "aggregate": {
-      "impact": "high",
-      "rationale": "Governed: arbitrary collection aggregation can return unrestricted production document data."
+      "impact": "medium",
+      "rationale": "Pass-through (read): aggregation pipeline over a collection. The configured connection string already grants this."
     },
     "aggregate-db": {
-      "impact": "high",
-      "rationale": "Governed: arbitrary database aggregation can access multiple collections and expose production data."
+      "impact": "medium",
+      "rationale": "Pass-through (read): database-level aggregation."
     },
     "atlas-local-connect-deployment": {
       "impact": "high",
-      "rationale": "name-heuristic"
+      "rationale": "Re-targeting: switches the active connection to a local deployment, with a smaller blast radius than connect."
     },
     "atlas-local-create-deployment": {
       "impact": "high",
-      "rationale": "name-heuristic"
+      "rationale": "Creates a local Atlas deployment running a chosen image."
     },
     "atlas-local-delete-deployment": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Destroys a local Atlas deployment and its data."
     },
     "atlas-local-list-deployments": {
-      "impact": "high",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): local deployment inventory."
     },
     "collection-indexes": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): index definitions."
     },
     "collection-schema": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): inferred collection schema."
     },
     "collection-storage-size": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): collection size on disk."
     },
     "connect": {
       "impact": "critical",
-      "rationale": "Governed: changes the active deployment and credential-bound target; connection strings must remain inside the credential adapter."
+      "rationale": "Credential injection and re-targeting. Accepts an arbitrary connectionString, letting the proposer supply its own credential and point every later operation at a cluster the approver did not have in mind."
     },
     "count": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): document count for a filter."
     },
     "create-collection": {
       "impact": "high",
-      "rationale": "Governed: creates persistent database schema/storage state."
+      "rationale": "Creates a collection, and the database too if absent."
     },
     "create-index": {
       "impact": "high",
-      "rationale": "Governed: changes collection indexes and can materially affect availability and performance."
+      "rationale": "Builds an index, which locks and consumes resources on large collections."
     },
     "db-stats": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): database usage statistics."
     },
     "delete-many": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Removes every document matching a filter. Blast radius is set by the filter, with no undo."
     },
     "drop-collection": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Removes a collection, its documents, and its indexes."
     },
     "drop-database": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Removes a database and its data files."
     },
     "drop-index": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Drops an index. Rebuilding on a large collection is expensive and the interim is a performance incident."
     },
     "explain": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): query plan statistics. Unlike Neon's EXPLAIN ANALYZE, MongoDB's explain does not apply writes, and its method argument is constrained to query methods."
     },
     "export": {
-      "impact": "high",
-      "rationale": "Governed: exports arbitrary query or aggregation results and can exfiltrate production data."
+      "impact": "medium",
+      "rationale": "Pass-through (read): materializes find or aggregate results as EJSON. The content is data find already returns, and the export is retrieved through the same session — no host path argument."
     },
     "find": {
-      "impact": "high",
-      "rationale": "Governed: arbitrary filters and projections can return unrestricted production document data."
+      "impact": "medium",
+      "rationale": "Pass-through (read): document query. Returns data the connection string already reaches."
     },
     "insert-many": {
       "impact": "high",
-      "rationale": "Governed: performs bulk document insertion and can create substantial persistent state."
+      "rationale": "Writes an arbitrary array of documents into a collection."
     },
     "list-collections": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): collection names."
     },
     "list-databases": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): database names."
     },
     "list-knowledge-sources": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read-public): MongoDB Assistant knowledge base sources. No customer data."
     },
     "mongodb-logs": {
-      "impact": "high",
-      "rationale": "Governed: server logs can contain sensitive data, identifiers, topology, and operational details."
+      "impact": "medium",
+      "rationale": "Pass-through (read): recent mongod events."
     },
     "rename-collection": {
       "impact": "high",
-      "rationale": "Governed: renames a collection and changes application-visible database structure."
+      "rationale": "Renames a collection, breaking every client that references the old name."
     },
     "search-knowledge": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read-public): searches MongoDB's public documentation and guidance."
     },
     "update-many": {
-      "impact": "high",
-      "rationale": "Governed: performs bulk document updates against an arbitrary filter."
+      "impact": "critical",
+      "rationale": "Mutates every document matching a filter. Same unbounded blast radius as delete-many."
     }
   }
 }

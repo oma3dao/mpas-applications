@@ -5,15 +5,15 @@
   "operations": {
     "execute": {
       "impact": "critical",
-      "rationale": "Governed. Executes arbitrary JavaScript against the authenticated Fastly API surface, including irreversible deletion, purge, security, and service-configuration operations; the generic tool name understates its maximum impact."
+      "rationale": "Runs arbitrary JavaScript against a pre-authenticated Fastly API client. Equivalent to unrestricted access to every Fastly operation, including purges and service configuration."
     },
     "inspect": {
-      "impact": "medium",
-      "rationale": "Pass-through. Reads bundled API method documentation and does not invoke an authenticated Fastly API operation."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): describes available API methods and shapes."
     },
     "search": {
-      "impact": "medium",
-      "rationale": "Pass-through. Searches the MCP server's bundled API method index and does not invoke an authenticated Fastly API operation."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): searches Fastly API documentation."
     }
   }
 }

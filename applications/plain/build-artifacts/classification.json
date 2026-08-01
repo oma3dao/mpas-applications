@@ -5,331 +5,331 @@
   "operations": {
     "add_customer_to_groups": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Changes a customer's segment membership, affecting routing."
     },
     "add_labels": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "add_labels_to_thread": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "assign_thread": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "change_thread_priority": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "change_thread_status_to_todo": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "create_autoresponder": {
       "impact": "high",
-      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+      "rationale": "Standing automation that messages customers with no human in the loop on each send."
     },
     "create_customer_event": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "create_customer_group": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Creates a customer segment used for routing and reporting."
     },
     "create_help_center": {
       "impact": "high",
-      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+      "rationale": "Creates a public-facing help center site."
     },
     "create_help_center_article_group": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Creates a public content category."
     },
     "create_knowledge_source": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Adds a source the AI will reference when answering customers."
     },
     "create_label_type": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "create_note": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "create_snippet": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "create_thread": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Opens a support thread for a customer, which may notify them."
     },
     "create_thread_event": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "create_tier": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Creates a support tier affecting routing and SLA."
     },
     "create_webhook": {
-      "impact": "high",
-      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+      "impact": "critical",
+      "rationale": "Egress. Establishes a standing channel streaming customer support events to an arbitrary destination URL."
     },
     "delete_autoresponder": {
-      "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "impact": "high",
+      "rationale": "Removes automation, silently stopping replies customers are expecting."
     },
     "delete_company": {
       "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "rationale": "Destroys a company record."
     },
     "delete_customer": {
       "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "rationale": "Destroys a customer record and its associated history."
     },
     "delete_help_center": {
       "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "rationale": "Destroys an entire public help center and its content."
     },
     "delete_help_center_article": {
-      "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "impact": "high",
+      "rationale": "Removes published public content."
     },
     "delete_help_center_article_group": {
-      "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "impact": "high",
+      "rationale": "Removes a public content category and its structure."
     },
     "delete_knowledge_source": {
-      "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "impact": "high",
+      "rationale": "Removes a source the AI references when answering."
     },
     "delete_note": {
-      "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "impact": "medium",
+      "rationale": "Removes an internal note from a thread."
     },
     "delete_snippet": {
-      "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "impact": "medium",
+      "rationale": "Removes a canned response."
     },
     "delete_tenant": {
       "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "rationale": "Destroys a tenant record."
     },
     "delete_thread": {
       "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "rationale": "Permanently deletes a support thread and its conversation history."
     },
     "delete_tier": {
-      "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "impact": "high",
+      "rationale": "Removes a support tier, changing routing and SLA treatment for customers."
     },
     "delete_webhook": {
-      "impact": "critical",
-      "rationale": "reviewed: permanently deletes customer-service records or workspace configuration and may not be reversible"
+      "impact": "high",
+      "rationale": "Removes a webhook, silently stopping an integration's data flow."
     },
     "download_attachment": {
       "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "rationale": "Pass-through (read): customer and thread records. Sensitive, but a Plain API key is issued so the agent can work this queue — reading it is not disclosing it."
     },
     "generate_help_center_article": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "high",
+      "rationale": "A verb that lies: its help_center_id argument names the help center to create the article in, so it publishes AI-generated text derived from a private support thread to a public site."
     },
     "get_customer": {
       "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "rationale": "Pass-through (read): customer and thread records. Sensitive, but a Plain API key is issued so the agent can work this queue — reading it is not disclosing it."
     },
     "get_help_center": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "get_help_center_article": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "get_help_center_article_by_slug": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "get_help_center_article_group": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "get_help_center_index": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "get_queue_stats": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "get_thread": {
       "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "rationale": "Pass-through (read): customer and thread records. Sensitive, but a Plain API key is issued so the agent can work this queue — reading it is not disclosing it."
     },
     "get_workspace": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "link_thread_to_linear": {
-      "impact": "high",
-      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+      "impact": "medium",
+      "rationale": "Creates a tracking link to an external Linear issue."
     },
     "list_autoresponders": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "list_customer_groups": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "list_help_center_article_groups": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "list_help_center_articles": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "list_help_centers": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "list_label_types": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "list_snippets": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "list_thread_field_schemas": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "list_threads": {
       "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "rationale": "Pass-through (read): customer and thread records. Sensitive, but a Plain API key is issued so the agent can work this queue — reading it is not disclosing it."
     },
     "list_tiers": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "list_users": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "list_webhooks": {
-      "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): workspace inventory and configuration listings — help centers, articles, groups, labels, snippets, tiers, users, webhooks, queues, and field schemas."
     },
     "mark_customer_as_spam": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Flags a real customer as spam, changing how their messages are treated."
     },
     "mark_thread_done": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "mark_thread_todo": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "remove_customer_from_groups": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Removes segment membership, affecting routing."
     },
     "remove_labels": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "remove_labels_from_thread": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "reply_to_thread": {
       "impact": "high",
-      "rationale": "reviewed: sends an external communication to a customer and creates reputational and support-commitment risk"
+      "rationale": "Replies to a customer via the thread's original channel. Cannot be recalled."
     },
     "search_customers": {
       "impact": "medium",
-      "rationale": "reviewed: reads workspace, customer, conversation, or attachment data that may contain sensitive information"
+      "rationale": "Pass-through (read): customer and thread records. Sensitive, but a Plain API key is issued so the agent can work this queue — reading it is not disclosing it."
     },
     "send_chat": {
       "impact": "high",
-      "rationale": "reviewed: sends an external communication to a customer and creates reputational and support-commitment risk"
+      "rationale": "Sends a chat message to a customer. Cannot be recalled."
     },
     "send_email": {
       "impact": "high",
-      "rationale": "reviewed: sends an external communication to a customer and creates reputational and support-commitment risk"
+      "rationale": "Sends a new email to a customer under the company's name. Cannot be recalled."
     },
     "snooze_thread": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "unassign_thread": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "unmark_customer_as_spam": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Clears a spam flag, restoring normal treatment."
     },
     "update_help_center": {
       "impact": "high",
-      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+      "rationale": "Changes a public-facing help center."
     },
     "update_help_center_article_group": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Renames or restructures a public content category."
     },
     "update_help_center_custom_domain": {
       "impact": "high",
-      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+      "rationale": "Points a custom domain at the help center, changing its public address."
     },
     "update_help_center_index": {
       "impact": "high",
-      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+      "rationale": "Changes public help center navigation."
     },
     "update_snippet": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "update_thread_title": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "update_webhook": {
-      "impact": "high",
-      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+      "impact": "critical",
+      "rationale": "Egress. Can repoint an existing webhook at a different destination URL."
     },
     "upsert_company": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Creates or updates a company record."
     },
     "upsert_customer": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Creates or updates a customer record."
     },
     "upsert_help_center_article": {
       "impact": "high",
-      "rationale": "reviewed: changes public, automated, or external integration behavior with workspace-wide effects"
+      "rationale": "Publishes or edits public help center content."
     },
     "upsert_tenant": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Creates or updates a tenant record."
     },
     "upsert_thread_field": {
-      "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): support-desk thread handling. This is the work the agent is deployed to perform — internal, reversible, and invisible to the customer."
     },
     "verify_help_center_custom_domain": {
       "impact": "medium",
-      "rationale": "reviewed: changes bounded customer-service workflow state without permanent deletion or direct external communication"
+      "rationale": "Verifies DNS ownership for a help center domain. External but benign and idempotent."
     }
   }
 }

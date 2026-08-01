@@ -5,119 +5,119 @@
   "operations": {
     "coinbase_balance": {
       "impact": "medium",
-      "rationale": "Reviewed: read-only account balance data; governed for exact schema validation and deployment policy."
+      "rationale": "Pass-through (read): account balances and holds."
     },
     "coinbase_convert_execute": {
       "impact": "critical",
-      "rationale": "Reviewed: executes a quoted currency conversion and moves funds."
+      "rationale": "Executes a quoted currency conversion, moving funds between assets."
     },
     "coinbase_convert_get": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads conversion status without moving funds."
+      "impact": "low",
+      "rationale": "Pass-through (read): status of a conversion by quote ID."
     },
     "coinbase_convert_quote": {
-      "impact": "medium",
-      "rationale": "Reviewed: produces a non-executing conversion quote."
+      "impact": "low",
+      "rationale": "Pass-through (precursor): a non-binding quote. An agent can obtain one itself, so it is not a control; coinbase_convert_execute is the governed step."
     },
     "coinbase_env": {
-      "impact": "medium",
-      "rationale": "Reviewed: reports configured environment metadata without returning private-key material."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): shows the active and configured environments. The write path coinbase_set_env is governed."
     },
     "coinbase_fees": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads the account fee tier and trading volume."
+      "impact": "low",
+      "rationale": "Pass-through (read): fee tier and 30-day volume."
     },
     "coinbase_help": {
-      "impact": "medium",
-      "rationale": "Reviewed: returns local command documentation only."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): command help text."
     },
     "coinbase_orders_cancel": {
-      "impact": "high",
-      "rationale": "Reviewed: changes live order state and releases reserved funds; partial batch outcomes are possible."
+      "impact": "critical",
+      "rationale": "Cancels open orders. Not a harmless undo — removing a resting stop-loss leaves a position unprotected."
     },
     "coinbase_orders_close_position": {
       "impact": "critical",
-      "rationale": "Reviewed: submits a market order to flatten all or part of a live position."
+      "rationale": "Places a market order to flatten a position, realising gains or losses immediately."
     },
     "coinbase_orders_create": {
       "impact": "critical",
-      "rationale": "Reviewed: places a live order that can immediately spend or dispose of assets."
+      "rationale": "Places a live order that executes immediately and moves funds."
     },
     "coinbase_orders_edit": {
       "impact": "critical",
-      "rationale": "Reviewed: modifies the price or size of a live order and changes market exposure."
+      "rationale": "Changes an open order's price or size in place, altering committed exposure."
     },
     "coinbase_orders_fills": {
       "impact": "medium",
-      "rationale": "Reviewed: reads historical trade executions and fees."
+      "rationale": "Pass-through (read): individual trade executions."
     },
     "coinbase_orders_get": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads a single order's state and fills."
+      "impact": "low",
+      "rationale": "Pass-through (read): one order's status and fills."
     },
     "coinbase_orders_list": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads order history and open-order state."
+      "impact": "low",
+      "rationale": "Pass-through (read): order list with filters."
     },
     "coinbase_orders_preview": {
-      "impact": "medium",
-      "rationale": "Reviewed: estimates execution, fees, and slippage without placing an order."
+      "impact": "low",
+      "rationale": "Pass-through (precursor): a POST that its own description says estimates fees, fill price, and slippage without executing. The HTTP verb is not the classifier."
     },
     "coinbase_portfolios_create": {
       "impact": "high",
-      "rationale": "Reviewed: creates a new account portfolio and changes account organization."
+      "rationale": "Creates a new portfolio for segregating funds and positions."
     },
     "coinbase_portfolios_delete": {
-      "impact": "critical",
-      "rationale": "Reviewed: irreversibly deletes an empty portfolio."
+      "impact": "high",
+      "rationale": "Permanently deletes a portfolio. The API requires it to be empty first, so no funds are at risk."
     },
     "coinbase_portfolios_edit": {
-      "impact": "high",
-      "rationale": "Reviewed: renames a portfolio and changes account organization."
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): a metadata-only rename that does not affect balances or positions, per its own description."
     },
     "coinbase_portfolios_get": {
       "impact": "medium",
-      "rationale": "Reviewed: reads portfolio balances, positions, allocation, and PnL."
+      "rationale": "Pass-through (read): portfolio balances and positions."
     },
     "coinbase_portfolios_list": {
-      "impact": "medium",
-      "rationale": "Reviewed: lists portfolio identifiers and metadata."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): portfolio names and UUIDs."
     },
     "coinbase_products_best_bid_ask": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads public best-bid and best-ask market data."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): best bid and ask. Public market data."
     },
     "coinbase_products_book": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads public order-book market data."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): order book. Public market data."
     },
     "coinbase_products_candles": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads public historical candle market data."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): historical OHLCV. Public market data."
     },
     "coinbase_products_get": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads public product metadata and pricing."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): product detail. Public market data."
     },
     "coinbase_products_list": {
-      "impact": "medium",
-      "rationale": "Reviewed: lists public tradable products."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): tradable products. Public market data."
     },
     "coinbase_products_ticker": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads public recent-trade and bid/ask market data."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): recent trades and best quote. Public market data."
     },
     "coinbase_set_env": {
       "impact": "critical",
-      "rationale": "Reviewed: changes the CLI execution environment used by later operations and therefore the credential/target context."
+      "rationale": "Re-targeting. Switches the active environment, so an order approved for sandbox can execute against real funds."
     },
     "coinbase_template": {
-      "impact": "medium",
-      "rationale": "Reviewed: returns a local request template without sending an API request."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): example request body for a command."
     },
     "coinbase_transfer": {
       "impact": "critical",
-      "rationale": "Reviewed: moves assets between portfolios."
+      "rationale": "Moves funds between portfolios. Executes immediately."
     }
   }
 }

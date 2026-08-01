@@ -18,7 +18,7 @@
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/kraken-cli/plugin.json",
     "pluginDid": "did:web:wivity.com:plugins:kraken-cli-mcp-server",
-    "artifactDid": "did:artifact:bafkreifqrbzrutnja4rsr2a2f7v6mh7a42pzw2suxgiqaivrrjfqzjm63i"
+    "artifactDid": "did:artifact:bafkreib2ntvd3zgtayixtvv2vv7bwmufskswdeooi2tk532hit4ua4eewu"
   },
   "publisher": {
     "name": "Wivity",

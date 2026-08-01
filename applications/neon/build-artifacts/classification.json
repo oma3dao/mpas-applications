@@ -5,95 +5,95 @@
   "operations": {
     "complete_database_migration": {
       "impact": "critical",
-      "rationale": "Governed: can apply tested migration changes to the main branch and remove temporary resources."
+      "rationale": "Applies a prepared migration to the main branch and deletes the temporary branch."
     },
     "complete_query_tuning": {
       "impact": "critical",
-      "rationale": "Governed: can merge query-tuning schema changes into the main branch or discard the tuning branch."
+      "rationale": "Applies tuning changes — typically index DDL — to the main branch."
     },
     "create_branch": {
       "impact": "high",
-      "rationale": "Governed: creates a database branch and associated compute/storage resources."
+      "rationale": "Creates a branch with its own compute. Billable."
     },
     "create_project": {
       "impact": "high",
-      "rationale": "Governed: creates a hosted Neon project with billable database resources."
+      "rationale": "Provisions a new billable project."
     },
     "delete_branch": {
       "impact": "critical",
-      "rationale": "name-heuristic"
+      "rationale": "Destroys a branch and its data."
     },
     "delete_project": {
       "impact": "critical",
-      "rationale": "name-heuristic"
+      "rationale": "Destroys a project and every branch and database in it."
     },
     "describe_branch": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): object tree for a branch."
     },
     "describe_project": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): project details."
     },
     "describe_table_schema": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): a table's schema."
     },
     "explain_sql_statement": {
       "impact": "high",
-      "rationale": "Governed: EXPLAIN ANALYZE executes the supplied statement and can expose production query data."
+      "rationale": "A verb that lies: framed as a diagnostic, but it takes arbitrary SQL plus an analyze flag, and EXPLAIN ANALYZE executes the statement it is given, including DML and DDL."
     },
     "get_connection_string": {
       "impact": "critical",
-      "rationale": "Governed: resolves a reusable database credential; deployments must prevent the resolved secret from reaching the proposer."
+      "rationale": "Credential disclosure. Returns a working PostgreSQL URI for the branch's read-write compute, letting the caller perform every governed SQL operation directly, outside the bridge."
     },
     "get_database_tables": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): table inventory."
     },
     "list_branch_computes": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): compute endpoints. Returns endpoint identity, not connection credentials."
     },
     "list_organizations": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): organization memberships."
     },
     "list_projects": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): accessible projects."
     },
     "list_shared_projects": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): projects shared with the user."
     },
     "list_slow_queries": {
-      "impact": "high",
-      "rationale": "Governed: retrieves production query text and performance telemetry that can contain sensitive values."
+      "impact": "medium",
+      "rationale": "Pass-through (read): queries pg_stat_statements. Statement text can echo literal values, but it is a read and yields no reusable credential."
     },
     "prepare_database_migration": {
       "impact": "high",
-      "rationale": "Governed: creates a temporary branch and executes generated DDL for later promotion."
+      "rationale": "Generates and executes DDL on a temporary branch it creates."
     },
     "prepare_query_tuning": {
       "impact": "high",
-      "rationale": "Governed: creates a temporary branch and may apply generated indexes or schema changes."
+      "rationale": "Creates a temporary branch and applies candidate index changes to it."
     },
     "provision_neon_auth": {
       "impact": "high",
-      "rationale": "Governed: provisions authentication infrastructure and a third-party Stack Auth integration."
+      "rationale": "Creates a third-party authentication integration for the project."
     },
     "reset_from_parent": {
       "impact": "critical",
-      "rationale": "Governed: resets a branch to its parent and can discard all branch-local data and schema changes."
+      "rationale": "Discards all changes on a branch to match its parent. Data loss unless preserveUnderName is supplied."
     },
     "run_sql": {
       "impact": "critical",
-      "rationale": "Governed: executes arbitrary SQL, including writes, DDL, destructive statements, and sensitive reads."
+      "rationale": "Executes an arbitrary SQL statement against a Neon database."
     },
     "run_sql_transaction": {
       "impact": "critical",
-      "rationale": "Governed: executes an arbitrary multi-statement SQL transaction with write and destructive capability."
+      "rationale": "Executes an arbitrary multi-statement SQL transaction."
     }
   }
 }

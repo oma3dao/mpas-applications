@@ -4,40 +4,40 @@
   "draft": false,
   "operations": {
     "analyze_contribution": {
-      "impact": "high",
-      "rationale": "Governed. Runs contribution-analysis queries over caller-selected tables or SQL, consuming BigQuery compute and potentially processing sensitive data."
+      "impact": "medium",
+      "rationale": "Pass-through (read): contribution analysis over existing tables. Takes source columns and metrics only, no destination, and writes nothing back."
     },
     "ask_data_insights": {
-      "impact": "high",
-      "rationale": "Governed. Sends a natural-language request and selected BigQuery table context to Google Cloud Conversational Analytics, with data-disclosure and billable-service implications."
+      "impact": "medium",
+      "rationale": "Pass-through (read): natural-language analysis over named tables. Bills per byte scanned, but metered cost is not a state change — control it with BigQuery custom quotas rather than an approval on every question."
     },
     "execute_sql": {
       "impact": "critical",
-      "rationale": "Governed. Executes caller-supplied GoogleSQL; with the official prebuilt source defaulting to writeMode=allowed, this can mutate or delete datasets and tables, trigger large billable scans, or exfiltrate query results."
+      "rationale": "The only tool here that can run DDL or DML. Arbitrary SQL against the project's datasets."
     },
     "forecast": {
-      "impact": "high",
-      "rationale": "Governed. Runs billable forecasting analysis over caller-selected tables or SQL and may process sensitive time-series data."
+      "impact": "medium",
+      "rationale": "Pass-through (read): time-series forecast over a source table or query. No destination argument; produces a result, not a stored model."
     },
     "get_dataset_info": {
-      "impact": "medium",
-      "rationale": "Pass-through. Read-only dataset metadata lookup with no remote state change."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): dataset description and properties."
     },
     "get_table_info": {
-      "impact": "medium",
-      "rationale": "Pass-through. Read-only table metadata lookup with no remote state change."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): table schema and properties."
     },
     "list_dataset_ids": {
-      "impact": "medium",
-      "rationale": "Pass-through. Read-only dataset enumeration with no remote state change."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): dataset names in the project."
     },
     "list_table_ids": {
-      "impact": "medium",
-      "rationale": "Pass-through. Read-only table enumeration with no remote state change."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): table names in a dataset."
     },
     "search_catalog": {
-      "impact": "medium",
-      "rationale": "Pass-through. Read-only Dataplex catalog search with no remote state change."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): searches the data catalog for tables and columns."
     }
   }
 }

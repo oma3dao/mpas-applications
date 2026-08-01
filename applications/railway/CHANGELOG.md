@@ -2,6 +2,21 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-07-31 — Completed the impact classification
+
+- Reviewed all 47 entries in `build-artifacts/classification.json`,
+  covering the full upstream surface rather than only the 27 governed
+  operations. `plugin.json` lists what is governed; it cannot record why
+  anything else was left out, so that reasoning now lives here.
+- Wrote a rationale for each of the 20 pass-through operations, tagged by
+  reason (metadata-only 10, read 7, read-public 3), so an operator
+  deciding whether to govern more in deployment config can see what was
+  deliberately exempted and on what grounds.
+- Aligned every governed entry's impact with `plugin.json`.
+- The file remains advisory. `artifactDid` covers `plugin.json` only, so
+  classification carries no integrity guarantee and is not the authority on
+  what is governed.
+
 ## 2026-07-29 — Narrowed the governed surface to mutations
 
 - Reduced `plugin.json` from 47 operations to 27. The 20 dropped tools are
