@@ -1,183 +1,183 @@
 {
   "version": "1",
   "type": "ImpactClassificationDraft",
-  "draft": true,
+  "draft": false,
   "operations": {
     "add_comment_to_pending_review": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (precursor): a pending review comment is invisible until the review is submitted, and pull_request_review_write is the governed chokepoint that submits it."
     },
     "add_issue_comment": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Publishes a comment under the account's identity, on a repository that is often public."
     },
     "add_reply_to_pull_request_comment": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Publishes a threaded reply under the account's identity."
     },
     "assign_copilot_to_issue": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Delegates an issue to an automated agent, consuming quota and producing a branch and PR."
     },
     "create_branch": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): creates a branch reference. Additive and deletable."
     },
     "create_or_update_file": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "high",
+      "rationale": "Writes repository content directly on a branch."
     },
     "create_pull_request": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Opens a pull request. Public on public repositories and triggers CI, but reviewable and closable before merge."
     },
     "create_repository": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "high",
+      "rationale": "Creates a repository, which may be public and carries the organization's name."
     },
     "delete_file": {
       "impact": "critical",
-      "rationale": "mcp-annotation: destructiveHint=true"
+      "rationale": "Removes a file from a repository in a commit."
     },
     "fork_repository": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Copies a readable repository into another namespace. Leaves the source untouched."
     },
     "get_commit": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): commit detail."
     },
     "get_file_contents": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): file or directory contents."
     },
     "get_label": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): label detail."
     },
     "get_latest_release": {
-      "impact": "high",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): most recent release."
     },
     "get_me": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): the authenticated user's own profile."
     },
     "get_release_by_tag": {
-      "impact": "high",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): release by tag."
     },
     "get_tag": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): tag detail."
     },
     "get_team_members": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): team membership."
     },
     "get_teams": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): team list."
     },
     "issue_read": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): issue detail and comments."
     },
     "issue_write": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Creates or updates an issue, publicly visible on public repositories."
     },
     "list_branches": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): branch list."
     },
     "list_commits": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): commit history."
     },
     "list_issue_fields": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): custom issue field definitions."
     },
     "list_issue_types": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): issue type definitions."
     },
     "list_issues": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): issue list."
     },
     "list_pull_requests": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): pull request list."
     },
     "list_releases": {
-      "impact": "high",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): release list."
     },
     "list_repository_collaborators": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): collaborator list."
     },
     "list_tags": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): tag list."
     },
     "merge_pull_request": {
       "impact": "high",
-      "rationale": "name-heuristic"
+      "rationale": "Merges into the base branch, typically triggering deployment pipelines."
     },
     "pull_request_read": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): pull request detail, diff, and comments."
     },
     "pull_request_review_write": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Creates, submits, or dismisses a review. Submission is what publishes pending comments."
     },
     "push_files": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "high",
+      "rationale": "Pushes multiple file changes in one commit."
     },
     "request_copilot_review": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Invokes an automated reviewer. Consumes quota; changes no repository content."
     },
     "search_code": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Pass-through (read): code search across accessible repositories, including private ones the token reaches."
     },
     "search_commits": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): commit search."
     },
     "search_issues": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): issue search."
     },
     "search_pull_requests": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): pull request search."
     },
     "search_repositories": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read): repository search."
     },
     "search_users": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (read-public): user search."
     },
     "sub_issue_write": {
-      "impact": "medium",
-      "rationale": "name-heuristic"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): links, unlinks, or reorders sub-issues. Internal tracking structure, fully reversible."
     },
     "update_pull_request": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Edits pull request title, body, state, or base."
     },
     "update_pull_request_branch": {
       "impact": "medium",
-      "rationale": "name-heuristic"
+      "rationale": "Updates the PR branch from its base, rewriting what reviewers are looking at."
     }
   }
 }

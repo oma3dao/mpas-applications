@@ -5,23 +5,23 @@
   "operations": {
     "execute_read_query": {
       "impact": "medium",
-      "rationale": "Reviewed: read-only SQL can expose production data and is governed at medium impact."
+      "rationale": "Pass-through (read): read-only, enforced upstream by the database role rather than by convention."
     },
     "execute_write_query": {
       "impact": "critical",
-      "rationale": "Reviewed: executes arbitrary INSERT, UPDATE, DELETE, and DDL against the selected database; a single call can irreversibly destroy production data or schema, so exact-argument approval is required."
+      "rationale": "Arbitrary INSERT, UPDATE, DELETE and DDL. A single call can drop a table. This is the entire governed surface for this application."
     },
     "get_insights": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads query-performance telemetry without mutating the database."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): aggregated query performance statistics for a branch."
     },
     "list_cluster_sizes": {
-      "impact": "medium",
-      "rationale": "Reviewed: lists available cluster SKUs without changing infrastructure."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): available cluster SKUs and pricing."
     },
     "search_documentation": {
-      "impact": "medium",
-      "rationale": "Reviewed: searches PlanetScale documentation without changing provider resources."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): searches the public PlanetScale knowledge base with no account context."
     }
   }
 }

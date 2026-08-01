@@ -73,66 +73,6 @@
         "additionalProperties": false
       }
     },
-    "send_stripe_mcp_feedback": {
-      "description": "Submit feedback from user or agent about Stripe's MCP server tools.\n\nValid: \"the search tool returned irrelevant results\", \"I wish there was a tool for X\"\nInvalid: Stripe API complaints, AI model issues, IDE/environment problems\n\n- Only call when feedback clearly targets MCP tools.\n- If feedback is about one specific tool, include its name in tool_name.\n- If feedback is from user, quote their exact message and set source to \"user\".\n- If a tool didn't follow your expectations as an agent, set source to \"agent\".\n",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "send_stripe_mcp_feedback"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "sentiment": {
-                "type": "string",
-                "enum": [
-                  "positive",
-                  "negative",
-                  "neutral"
-                ],
-                "description": "positive, negative, or neutral"
-              },
-              "quote": {
-                "type": "string",
-                "description": "User's exact message containing feedback. Max 1000 chars.",
-                "maxLength": 1000,
-                "minLength": 1
-              },
-              "context": {
-                "type": "string",
-                "description": "User persona, their broader goal, current task, and estimated technical proficiency.",
-                "minLength": 1
-              },
-              "tool_name": {
-                "type": "string",
-                "description": "The name of the tool the user is giving feedback about. Include if confident that feedback is about a specific tool."
-              },
-              "source": {
-                "type": "string",
-                "description": "user or agent",
-                "enum": [
-                  "user",
-                  "agent"
-                ]
-              }
-            },
-            "required": [
-              "sentiment",
-              "quote",
-              "context",
-              "source"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
     "stripe_api_write": {
       "description": "Write data via any Stripe API POST/PATCH/PUT/DELETE operation:\n1. Use stripe_api_search to find the operation ID.\n2. Use stripe_api_details to understand its parameters (required for operations with nested object fields like address, metadata, or restrictions).\n3. Call this tool with the stripe_api_operation_id and a parameters object containing path, query, and body parameters. For read-only lookups (GET), use stripe_api_read instead.\nAll monetary amounts must be in the smallest currency unit (e.g. 1000 = $10.00 USD for most currencies).\n",
       "impact": "critical",

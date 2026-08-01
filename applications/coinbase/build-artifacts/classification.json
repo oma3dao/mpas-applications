@@ -5,55 +5,55 @@
   "operations": {
     "bazaar_get_resource_details": {
       "impact": "low",
-      "rationale": "Reviewed as pass-through: read-only marketplace metadata lookup; no payment or wallet mutation."
+      "rationale": "Pass-through (read-public): marketplace listing details."
     },
     "bazaar_list": {
       "impact": "low",
-      "rationale": "Reviewed as pass-through: read-only marketplace listing; no payment or wallet mutation."
+      "rationale": "Pass-through (read-public): marketplace service listings."
     },
     "bazaar_search": {
       "impact": "low",
-      "rationale": "Reviewed as pass-through: read-only marketplace search; no payment or wallet mutation."
+      "rationale": "Pass-through (read-public): marketplace search."
     },
     "check_session_status": {
       "impact": "low",
-      "rationale": "Reviewed as pass-through: reads authentication state without changing the session."
+      "rationale": "Pass-through (metadata-only): reports whether a session is authenticated."
     },
     "get_wallet_address": {
       "impact": "low",
-      "rationale": "Reviewed as pass-through: reads public wallet addresses without moving funds."
+      "rationale": "Pass-through (read): returns the wallet's public address, which is public by design and confers no spending authority."
     },
     "get_wallet_balance": {
       "impact": "low",
-      "rationale": "Reviewed as pass-through: reads wallet balances without moving funds."
+      "rationale": "Pass-through (read): on-chain balances, already publicly observable for the address."
     },
     "make_http_request_with_x402": {
       "impact": "critical",
-      "rationale": "Governed: can automatically make an irreversible USDC payment to an external service."
+      "rationale": "Calls a paid endpoint with automatic USDC payment. Moves funds to a destination chosen by the call."
     },
     "send": {
       "impact": "critical",
-      "rationale": "Governed: executes an irreversible on-chain token transfer to a recipient."
+      "rationale": "Transfers USDC, ETH, or SOL to an arbitrary recipient. Irreversible once broadcast."
     },
     "show_wallet_app": {
       "impact": "low",
-      "rationale": "Reviewed as pass-through: displays the local wallet interface without changing wallet state."
+      "rationale": "Pass-through (routine-job): opens the wallet UI. No state change."
     },
     "sign_in_with_email": {
       "impact": "medium",
-      "rationale": "Governed: initiates an authentication flow and sends a verification code to an external email address."
+      "rationale": "Initiates email sign-in and sends a verification code. Starts an authentication flow whose completion is separately governed."
     },
     "trade": {
       "impact": "critical",
-      "rationale": "Governed: executes an on-chain token swap with financial and slippage risk."
+      "rationale": "Swaps between tokens, converting held value at market. Irreversible once executed."
     },
     "verify_email_otp": {
       "impact": "high",
-      "rationale": "Governed: completes authentication and establishes access to wallet capabilities."
+      "rationale": "Completes sign-in and establishes an authenticated session, which is a control-plane change rather than an account read."
     },
     "x402_discover_payment_requirements": {
       "impact": "low",
-      "rationale": "Reviewed as pass-through: discovers price and payment requirements without making a payment."
+      "rationale": "Pass-through (precursor): reads an endpoint's payment terms without paying. The payment itself is governed by make_http_request_with_x402."
     }
   }
 }

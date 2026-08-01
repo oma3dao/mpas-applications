@@ -4,80 +4,80 @@
   "draft": false,
   "operations": {
     "developerknowledge_answer_query": {
-      "impact": "medium",
-      "rationale": "Reviewed: generates a grounded answer from Google developer documentation without changing Firebase resources."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): answers questions from Google's public product documentation. Never touches the user's project."
     },
     "developerknowledge_get_documents": {
-      "impact": "medium",
-      "rationale": "Reviewed: retrieves developer documentation without changing Firebase resources."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): retrieves public documentation pages."
     },
     "developerknowledge_search_documents": {
-      "impact": "medium",
-      "rationale": "Reviewed: searches developer documentation without changing Firebase resources."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): searches public documentation."
     },
     "firebase_create_android_sha": {
       "impact": "high",
-      "rationale": "Reviewed: changes the trusted certificate configuration of the selected Android app."
+      "rationale": "Registers a signing certificate hash, admitting a new app build to the project's authenticated surface."
     },
     "firebase_create_app": {
       "impact": "high",
-      "rationale": "Reviewed: creates an app registration in the selected Firebase project."
+      "rationale": "Creates a new client app registration in the active project."
     },
     "firebase_create_project": {
       "impact": "high",
-      "rationale": "Reviewed: creates a new Firebase project and associated provider resources."
+      "rationale": "Provisions a new billable Firebase project."
     },
     "firebase_deploy": {
-      "impact": "high",
-      "rationale": "Reviewed: deploys project resources, code, configuration, and security rules from firebase.json."
+      "impact": "critical",
+      "rationale": "Deploys whatever firebase.json specifies — including Firestore and Storage security rules. One call can open a database to anonymous public access."
     },
     "firebase_deploy_status": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads the status of an existing deployment job without changing it."
+      "impact": "low",
+      "rationale": "Pass-through (read): status of a background deployment job."
     },
     "firebase_get_environment": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads the current CLI/MCP environment and active target."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): current CLI environment and active project."
     },
     "firebase_get_project": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads metadata for the active Firebase project."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): active project details."
     },
     "firebase_get_sdk_config": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads SDK configuration for a registered Firebase app."
+      "impact": "low",
+      "rationale": "Pass-through (read): returns the client SDK config. The apiKey it contains is designed to ship inside client applications — a project identifier, not a secret — so this is not credential disclosure."
     },
     "firebase_get_security_rules": {
       "impact": "medium",
-      "rationale": "Reviewed: reads deployed security rules without modifying them."
+      "rationale": "Pass-through (read): reveals the project's security posture, but reading rules confers no ability to change them; firebase_deploy is the governed write path."
     },
     "firebase_init": {
       "impact": "high",
-      "rationale": "Reviewed: initializes services and may overwrite workspace configuration that is later deployed."
+      "rationale": "Initializes services in the workspace, writing configuration and provisioning databases."
     },
     "firebase_list_apps": {
-      "impact": "medium",
-      "rationale": "Reviewed: lists app registrations in the active project."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): registered app list."
     },
     "firebase_list_projects": {
-      "impact": "medium",
-      "rationale": "Reviewed: lists projects accessible to the authenticated principal."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): accessible project list."
     },
     "firebase_login": {
-      "impact": "high",
-      "rationale": "Reviewed: changes the authenticated Firebase CLI principal."
+      "impact": "critical",
+      "rationale": "Credential injection. Establishes a Google session sourced outside the Credential Adapter, so every later call runs under an identity the operator never provisioned."
     },
     "firebase_logout": {
-      "impact": "high",
-      "rationale": "Reviewed: clears the authenticated Firebase CLI principal."
+      "impact": "medium",
+      "rationale": "Ends the CLI session. Disruptive, but it terminates authority rather than establishing it, and is reversible."
     },
     "firebase_read_resources": {
-      "impact": "medium",
-      "rationale": "Reviewed: reads or lists firebase:// resources without mutation."
+      "impact": "low",
+      "rationale": "Pass-through (read): reads firebase:// resource contents."
     },
     "firebase_update_environment": {
-      "impact": "high",
-      "rationale": "Reviewed: changes the active project, account, project directory, or terms acceptance used by later operations."
+      "impact": "critical",
+      "rationale": "Re-targeting, and more. Switches the active project so later approved deploys land elsewhere, and can accept Terms of Service on the account owner's behalf."
     }
   }
 }

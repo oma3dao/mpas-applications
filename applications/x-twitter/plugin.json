@@ -25,48 +25,6 @@
     }
   ],
   "operations": {
-    "bookmark_tweet": {
-      "description": "Adds the tweet to bookmarks",
-      "impact": "low",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "bookmark_tweet"
-          },
-          "arguments": {
-            "additionalProperties": false,
-            "properties": {
-              "tweet_id": {
-                "type": "string",
-                "description": "The ID of the tweet to bookmark."
-              },
-              "folder_id": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ],
-                "default": null,
-                "description": "The ID of the bookmark folder to add the tweet to. (Currently not supported by Tweepy v2 client, will be ignored)."
-              }
-            },
-            "required": [
-              "tweet_id"
-            ],
-            "type": "object"
-          }
-        },
-        "additionalProperties": false
-      }
-    },
     "create_poll_tweet": {
       "description": "Create a tweet with a poll",
       "impact": "high",
@@ -126,36 +84,6 @@
           "arguments": {
             "additionalProperties": false,
             "properties": {},
-            "type": "object"
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "delete_bookmark": {
-      "description": "Removes the tweet from bookmarks",
-      "impact": "low",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "delete_bookmark"
-          },
-          "arguments": {
-            "additionalProperties": false,
-            "properties": {
-              "tweet_id": {
-                "type": "string",
-                "description": "The ID of the tweet to remove from bookmarks."
-              }
-            },
-            "required": [
-              "tweet_id"
-            ],
             "type": "object"
           }
         },
@@ -317,41 +245,6 @@
             },
             "required": [
               "tweet_id"
-            ],
-            "type": "object"
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "vote_on_poll": {
-      "description": "Vote on a poll (mocked)",
-      "impact": "low",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "vote_on_poll"
-          },
-          "arguments": {
-            "additionalProperties": false,
-            "properties": {
-              "tweet_id": {
-                "type": "string",
-                "description": "The ID of the tweet containing the poll."
-              },
-              "choice": {
-                "type": "string",
-                "description": "The choice to vote for (must exactly match one of the poll options)."
-              }
-            },
-            "required": [
-              "tweet_id",
-              "choice"
             ],
             "type": "object"
           }

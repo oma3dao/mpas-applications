@@ -294,56 +294,6 @@
         "additionalProperties": false
       }
     },
-    "box_runs": {
-      "description": "List, get details, or cancel runs (execution history) for an Upstash Box. Useful for debugging past agent runs and shell executions, checking their status, output, token usage, and costs.",
-      "impact": "low",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "box_runs"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "action": {
-                "type": "string",
-                "enum": [
-                  "list",
-                  "get",
-                  "cancel"
-                ],
-                "description": "The action to perform"
-              },
-              "box_id": {
-                "type": "string",
-                "description": "The box ID"
-              },
-              "run_id": {
-                "type": "string",
-                "description": "Run ID (required for get and cancel actions)"
-              },
-              "box_api_key": {
-                "type": "string",
-                "description": "Box API key (starts with 'box_'). Check the project's .env file for BOX_API_KEY, or ask the user for it."
-              }
-            },
-            "required": [
-              "action",
-              "box_id",
-              "box_api_key"
-            ],
-            "additionalProperties": false,
-            "$schema": "http://json-schema.org/draft-07/schema#"
-          }
-        },
-        "additionalProperties": false
-      }
-    },
     "box_snapshots": {
       "description": "Manage Upstash Box snapshots. Create full filesystem snapshots of a box, list snapshots, delete them, or restore a box from a snapshot.",
       "impact": "critical",

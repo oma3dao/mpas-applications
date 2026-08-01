@@ -18,7 +18,7 @@
   },
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/kubernetes/plugin.json",
-    "artifactDid": "did:artifact:bafkreib7sri54mz7gmi32ds2z2zogq5nw54qdxd3d2zbxdunnkzstt4woy",
+    "artifactDid": "did:artifact:bafkreihnfwerguh6rx7nfodvywdbrjx24dlkt734orovx6stbkyi6zic5y",
     "pluginDid": "did:web:wivity.com:plugins:kubernetes-mcp-server"
   },
   "publisher": {

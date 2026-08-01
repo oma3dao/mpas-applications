@@ -4,100 +4,100 @@
   "draft": false,
   "operations": {
     "bookmark_tweet": {
-      "impact": "medium",
-      "rationale": "reviewed: mutates account engagement or bookmark state with limited blast radius"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): private to the account and trivially reversible."
     },
     "create_poll_tweet": {
       "impact": "high",
-      "rationale": "reviewed: public publishing changes the account public record and may create material reputational impact"
+      "rationale": "Public publication that additionally solicits third-party engagement which cannot be undone."
     },
     "delete_all_bookmarks": {
       "impact": "critical",
-      "rationale": "reviewed: permanently deletes every bookmark in the account and cannot be undone"
+      "rationale": "Bulk and irreversible by its own description; iterates destructively over the whole collection with no confirmation step."
     },
     "delete_bookmark": {
-      "impact": "medium",
-      "rationale": "reviewed: mutates account engagement or bookmark state with limited blast radius"
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): removes one private, re-addable item."
     },
     "delete_tweet": {
       "impact": "critical",
-      "rationale": "reviewed: permanently removes published account content and is not reliably reversible"
+      "rationale": "Permanently removes published content. Breaks threads, citations, and embeds beyond the account."
     },
     "favorite_tweet": {
       "impact": "medium",
-      "rationale": "reviewed: mutates account engagement or bookmark state with limited blast radius"
+      "rationale": "Likes are public and attributable — a published endorsement, not private state."
     },
     "get_bookmarks": {
       "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "rationale": "Pass-through (read): the account's own bookmarks. Private, but reading them is not publishing them."
     },
     "get_highlights_tweets": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): highlighted tweets from a user timeline."
     },
     "get_latest_timeline": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): home timeline, Following view."
     },
     "get_timeline": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): home timeline, For You view."
     },
     "get_trends": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read-public): trending topics."
     },
     "get_tweet_details": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): a single tweet's content and metrics."
     },
     "get_user_by_id": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): public profile lookup by ID."
     },
     "get_user_by_screen_name": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): public profile lookup by handle."
     },
     "get_user_followers": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): follower list."
     },
     "get_user_followers_you_know": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): common followers."
     },
     "get_user_following": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): following list."
     },
     "get_user_mentions": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): tweets mentioning a user."
     },
     "get_user_profile": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): profile detail."
     },
     "get_user_subscriptions": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): subscription list, proxied via following."
     },
     "post_tweet": {
       "impact": "high",
-      "rationale": "reviewed: public publishing changes the account public record and may create material reputational impact"
+      "rationale": "Publishes to the public record under the account's name. Cannot be recalled; a deletion is itself public."
     },
     "search_twitter": {
-      "impact": "medium",
-      "rationale": "reviewed: reads account, audience, timeline, or potentially non-public user-context data"
+      "impact": "low",
+      "rationale": "Pass-through (read): public search."
     },
     "unfavorite_tweet": {
       "impact": "medium",
-      "rationale": "reviewed: mutates account engagement or bookmark state with limited blast radius"
+      "rationale": "Publicly visible withdrawal of an endorsement."
     },
     "vote_on_poll": {
-      "impact": "medium",
-      "rationale": "reviewed: mutates account engagement or bookmark state with limited blast radius"
+      "impact": "low",
+      "rationale": "Pass-through (simulated): mocked upstream, so it has no real effect. If it is ever implemented for real that is upstream tool drift, which the snapshot hash surfaces."
     }
   }
 }

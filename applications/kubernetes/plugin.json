@@ -28,7 +28,7 @@
   "operations": {
     "pods_delete": {
       "description": "Delete a Kubernetes Pod in the current or provided namespace with the provided name",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -221,9 +221,100 @@
         "additionalProperties": false
       }
     },
+    "resources_get": {
+      "description": "Get a Kubernetes resource in the current cluster by providing its apiVersion, kind, optionally the namespace, and its name\n(common apiVersion and kind include: v1 Pod, v1 Service, v1 Node, apps/v1 Deployment, networking.k8s.io/v1 Ingress, route.openshift.io/v1 Route)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "resources_get"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "apiVersion": {
+                "type": "string",
+                "description": "apiVersion of the resource (examples of valid apiVersion are: v1, apps/v1, networking.k8s.io/v1)"
+              },
+              "kind": {
+                "type": "string",
+                "description": "kind of the resource (examples of valid kind are: Pod, Service, Deployment, Ingress)"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the resource"
+              },
+              "namespace": {
+                "type": "string",
+                "description": "Optional Namespace to retrieve the namespaced resource from (ignored in case of cluster scoped resources). If not provided, will get resource from configured namespace"
+              }
+            },
+            "required": [
+              "apiVersion",
+              "kind",
+              "name"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "resources_list": {
+      "description": "List Kubernetes resources and objects in the current cluster by providing their apiVersion and kind and optionally the namespace and label selector\n(common apiVersion and kind include: v1 Pod, v1 Service, v1 Node, apps/v1 Deployment, networking.k8s.io/v1 Ingress, route.openshift.io/v1 Route)",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "resources_list"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "apiVersion": {
+                "type": "string",
+                "description": "apiVersion of the resources (examples of valid apiVersion are: v1, apps/v1, networking.k8s.io/v1)"
+              },
+              "fieldSelector": {
+                "type": "string",
+                "description": "Optional Kubernetes field selector to filter resources by field values (e.g. 'status.phase=Running', 'metadata.name=myresource'). Supported fields vary by resource type. For Pods: metadata.name, metadata.namespace, spec.nodeName, spec.restartPolicy, spec.schedulerName, spec.serviceAccountName, status.phase (Pending/Running/Succeeded/Failed/Unknown), status.podIP, status.nominatedNodeName. See https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/",
+                "pattern": "^[.\\-A-Za-z0-9]+([=!,]{1,2}[./\\-A-Za-z0-9]+)+$"
+              },
+              "kind": {
+                "type": "string",
+                "description": "kind of the resources (examples of valid kind are: Pod, Service, Deployment, Ingress)"
+              },
+              "labelSelector": {
+                "type": "string",
+                "description": "Optional Kubernetes label selector (e.g. 'app=myapp,env=prod' or 'app in (myapp,yourapp)'), use this option when you want to filter the resources by label",
+                "pattern": "^([/_.\\-A-Za-z0-9=, ()!])+$"
+              },
+              "namespace": {
+                "type": "string",
+                "description": "Optional Namespace to retrieve the namespaced resources from (ignored in case of cluster scoped resources). If not provided, will list resources from all namespaces"
+              }
+            },
+            "required": [
+              "apiVersion",
+              "kind"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
     "resources_scale": {
       "description": "Get or update the scale of a Kubernetes resource in the current cluster by providing its apiVersion, kind, name, and optionally the namespace. If the scale is set in the tool call, the scale will be updated to that value. Always returns the current scale of the resource",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [

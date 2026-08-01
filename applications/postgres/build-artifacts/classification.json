@@ -5,7 +5,7 @@
   "operations": {
     "query": {
       "impact": "high",
-      "rationale": "Governed: although the reference server runs queries in a read-only transaction, arbitrary SQL can expose unrestricted production data and must be bound to the exact database and statement."
+      "rationale": "Read-only by construction (the server wraps it in BEGIN TRANSACTION READ ONLY), but it is the only tool this server exposes. Governed deliberately: an empty governed surface would leave nothing for MPAS to do here. Arbitrary SQL across a whole database is a far broader read than a scoped metadata getter."
     }
   }
 }

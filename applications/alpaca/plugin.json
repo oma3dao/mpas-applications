@@ -31,40 +31,6 @@
     }
   ],
   "operations": {
-    "add_asset_to_watchlist_by_id": {
-      "description": "Add an asset by symbol to a specific watchlist.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "add_asset_to_watchlist_by_id"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "watchlist_id": {
-                "type": "string",
-                "format": "uuid",
-                "description": "watchlist id"
-              },
-              "symbol": {
-                "type": "string",
-                "description": "the symbol name to add to the watchlist"
-              }
-            },
-            "required": [
-              "watchlist_id"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
     "cancel_all_orders": {
       "description": "Cancel all open orders.",
       "impact": "critical",
@@ -227,75 +193,6 @@
             "required": [
               "symbol",
               "qty"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "create_watchlist": {
-      "description": "Creates a new watchlist with specified symbols.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "create_watchlist"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "The watchlist name."
-              },
-              "symbols": {
-                "type": "array",
-                "items": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "description": "List of asset symbols to include in the watchlist."
-              }
-            },
-            "required": [
-              "name"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "delete_watchlist_by_id": {
-      "description": "Delete a specific watchlist by its ID.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "delete_watchlist_by_id"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "watchlist_id": {
-                "type": "string",
-                "format": "uuid",
-                "description": "watchlist id"
-              }
-            },
-            "required": [
-              "watchlist_id"
             ]
           }
         },
@@ -790,41 +687,6 @@
         "additionalProperties": false
       }
     },
-    "remove_asset_from_watchlist_by_id": {
-      "description": "Remove an asset by symbol from a specific watchlist.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "remove_asset_from_watchlist_by_id"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "watchlist_id": {
-                "type": "string",
-                "format": "uuid",
-                "description": "Watchlist ID"
-              },
-              "symbol": {
-                "type": "string",
-                "description": "symbol name to remove from the watchlist content"
-              }
-            },
-            "required": [
-              "watchlist_id",
-              "symbol"
-            ]
-          }
-        },
-        "additionalProperties": false
-      }
-    },
     "replace_order_by_id": {
       "description": "Replaces an existing open order with updated parameters. At least one optional field must be provided.",
       "impact": "critical",
@@ -1025,50 +887,6 @@
               }
             },
             "required": []
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "update_watchlist_by_id": {
-      "description": "Update an existing watchlist. IMPORTANT: this replaces the entire watchlist. You must include the symbols parameter with the full list of desired symbols, otherwise all assets will be removed.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "update_watchlist_by_id"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {
-              "watchlist_id": {
-                "type": "string",
-                "format": "uuid",
-                "description": "watchlist id"
-              },
-              "name": {
-                "type": "string",
-                "description": "The watchlist name."
-              },
-              "symbols": {
-                "type": "array",
-                "items": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "description": "List of asset symbols to include in the watchlist."
-              }
-            },
-            "required": [
-              "watchlist_id"
-            ]
           }
         },
         "additionalProperties": false

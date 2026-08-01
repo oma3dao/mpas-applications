@@ -5,39 +5,39 @@
   "operations": {
     "create_refund": {
       "impact": "critical",
-      "rationale": "Manual review: governed because the operation refunds money, performs an arbitrary Stripe API mutation, or sends external feedback to Stripe."
+      "rationale": "Moves money back to a customer. Irreversible once settled."
     },
     "get_stripe_account_info": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, planning, account inspection, or API discovery/read access."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): account identity and capabilities."
     },
     "search_stripe_documentation": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, planning, account inspection, or API discovery/read access."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): searches Stripe's public documentation."
     },
     "send_stripe_mcp_feedback": {
-      "impact": "medium",
-      "rationale": "Manual review: governed because the operation refunds money, performs an arbitrary Stripe API mutation, or sends external feedback to Stripe."
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): submits free-text feedback about Stripe's MCP tooling to Stripe. Touches no account object, moves no money, reaches no customer."
     },
     "stripe_api_details": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, planning, account inspection, or API discovery/read access."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): describes the shape of a Stripe API operation."
     },
     "stripe_api_read": {
       "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, planning, account inspection, or API discovery/read access."
+      "rationale": "Pass-through (read): every Stripe API GET. Authenticated and can return customer records, but the API key already reaches them and Stripe does not expose reusable secrets over GET — requiring authentication is not by itself a reason to govern."
     },
     "stripe_api_search": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, planning, account inspection, or API discovery/read access."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): finds the operation ID for a Stripe API call."
     },
     "stripe_api_write": {
       "impact": "critical",
-      "rationale": "Manual review: governed because the operation refunds money, performs an arbitrary Stripe API mutation, or sends external feedback to Stripe."
+      "rationale": "Every POST/PATCH/PUT/DELETE on the Stripe API behind one tool name — charges, payouts, transfers, subscription and customer changes. Policy can still discriminate: the payload exposes /arguments/stripe_api_operation_id and /arguments/parameters, so requirements can differ by operation and by amount."
     },
     "stripe_implementation_planner": {
-      "impact": "medium",
-      "rationale": "Manual review: pass-through because the operation is read-only documentation, planning, account inspection, or API discovery/read access."
+      "impact": "low",
+      "rationale": "Pass-through (read-public): generates integration guidance from Stripe documentation."
     }
   }
 }

@@ -13,6 +13,30 @@ jobs:
   ci:
     name: ci
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      # Standard library only — no install step needed.
+      # Fails on: plugin structure, operation key vs executionPayloadSchema
+      # name.const, governed operations missing from the upstream snapshot, a
+      # stale plugin.artifactDid (the Credential Adapter rejects a mismatch at
+      # startup), classification coverage, unreviewed 'name-heuristic'
+      # rationales, and unrecognised pass-through reason tags.
+      # Warns without failing on classification/plugin impact drift.
+      - name: Validate application artifacts
+        run: python3 scripts/validate-applications.py --github
+
+  # Smoke-build one bridge; not required by the critical ruleset.
+  test:
+    name: test
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: applications/github/bridge

@@ -1,5 +1,34 @@
 # Changelog — plain
 
+## 2026-07-31 — Completed the impact classification
+
+- Reviewed all 82 entries in `build-artifacts/classification.json`,
+  covering the full upstream surface rather than only the 40 governed
+  operations. `plugin.json` lists what is governed; it cannot record why
+  anything else was left out, so that reasoning now lives here.
+- Wrote a rationale for each of the 42 pass-through operations, tagged by
+  reason (routine-job 19, metadata-only 18, read 5), so an operator
+  deciding whether to govern more in deployment config can see what was
+  deliberately exempted and on what grounds.
+- Aligned every governed entry's impact with `plugin.json`.
+- The file remains advisory. `artifactDid` covers `plugin.json` only, so
+  classification carries no integrity guarantee and is not the authority on
+  what is governed.
+
+## 2026-07-31 — Removed routine support-desk operations
+
+- Dropped the nineteen operations previously graded `low`, taking the plugin
+  from 59 operations to 40: thread assignment, priority, status, snoozing,
+  labels, titles, timeline events, custom fields, internal notes, snippets,
+  and label types.
+- These are the day-to-day actions the agent is deployed to perform. Because
+  `defaultRequirement` applies to every governed operation, keeping them
+  listed meant a human approval for assigning a ticket or adding a label
+  unless the operator wrote a `proposerOnly` entry for each one by name.
+- Customer-facing and destructive operations are unaffected: outbound
+  messaging, help-center publishing, webhooks, and record deletion all remain
+  governed.
+
 ## 2026-07-30 — Revalidated and promoted to tested
 
 - Regenerated against the pinned `tellahq/plain-mcp` 1.2.0 source and confirmed

@@ -5,135 +5,135 @@
   "operations": {
     "box_agent_run": {
       "impact": "critical",
-      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Runs an AI agent inside a box with shell, filesystem, and git access. Unbounded action under the account's authority."
     },
     "box_exec": {
       "impact": "critical",
-      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Arbitrary shell command execution inside a box container."
     },
     "box_logs": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (read): container log entries."
     },
     "box_manage": {
       "impact": "critical",
-      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Creates, deletes, pauses, resumes, and forks boxes. Deletion destroys container state."
     },
     "box_preview": {
       "impact": "high",
-      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Mints public URLs for services running inside a box, with basic_auth and bearer_token as opt-in flags. Publishes an internal service to the internet; revocable by deletion."
     },
     "box_runs": {
-      "impact": "high",
-      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): list and get are reads; only cancel mutates, and a cancelled run can simply be started again."
     },
     "box_snapshots": {
       "impact": "critical",
-      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Creates, deletes, and restores filesystem snapshots. A restore silently rolls back everything since the snapshot."
     },
     "qstash_dlq_get": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (read): a single dead-letter message."
     },
     "qstash_dlq_list": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (read): dead-letter queue contents."
     },
     "qstash_get_user_token": {
       "impact": "critical",
-      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Credential disclosure. Returns a reusable QSTASH_TOKEN. The bridge also refuses it in code, but that protects only this proposer implementation; the plugin entry is what stops another proposer being routed pass-through."
     },
     "qstash_logs_get": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (read): one message log entry with body."
     },
     "qstash_logs_list": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (read): message logs without bodies."
     },
     "qstash_publish_message": {
       "impact": "high",
-      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Sends an HTTP request to an arbitrary destination URL through the queue, and can trigger workflow runs. An egress and side-effect channel."
     },
     "qstash_schedules_list": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): configured schedules."
     },
     "qstash_schedules_manage": {
       "impact": "high",
-      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Creates, updates, pauses, resumes, and deletes schedules — standing automation that keeps firing with no human present."
     },
     "redis_database_create_new": {
       "impact": "high",
-      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Provisions a new billable database."
     },
     "redis_database_delete": {
       "impact": "critical",
-      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Destroys a database and its keyspace."
     },
     "redis_database_get_details": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): database configuration and usage."
     },
     "redis_database_get_statistics": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): usage statistics."
     },
     "redis_database_list_backups": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): backup inventory."
     },
     "redis_database_list_databases": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (metadata-only): database names and IDs."
     },
     "redis_database_manage_backup": {
       "impact": "critical",
-      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Creates, deletes, and restores backups. Both deletion and restore are destructive."
     },
     "redis_database_reset_password": {
       "impact": "critical",
-      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Rotates the database password, breaking every existing client and issuing new credentials."
     },
     "redis_database_run_redis_commands": {
       "impact": "critical",
-      "rationale": "Reviewed: critical impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Arbitrary Redis commands, including FLUSHALL and DEL."
     },
     "redis_database_set_daily_backup": {
       "impact": "high",
-      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Enables or disables daily backups. Disabling produces no visible failure; the loss appears only when recovery is needed."
     },
     "redis_database_update_regions": {
       "impact": "high",
-      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Changes read regions, altering replication topology, latency, and cost."
     },
     "util_dates_to_timestamps": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): local date arithmetic. Touches no account at all."
     },
     "util_timestamps_to_date": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (routine-job): local date arithmetic. Touches no account at all."
     },
     "workflow_dlq_get": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (read): one failed workflow run."
     },
     "workflow_dlq_list": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (read): failed workflow runs."
     },
     "workflow_dlq_manage": {
       "impact": "high",
-      "rationale": "Reviewed: high impact based on the upstream operation semantics and exact execution schema."
+      "rationale": "Deletes, restarts, and resumes failed workflow runs. A restart re-executes side effects."
     },
     "workflow_logs_get": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (read): one workflow run's detail."
     },
     "workflow_logs_list": {
-      "impact": "medium",
-      "rationale": "Reviewed: medium impact based on the upstream operation semantics and exact execution schema."
+      "impact": "low",
+      "rationale": "Pass-through (read): workflow run history."
     }
   }
 }
