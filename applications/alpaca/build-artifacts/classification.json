@@ -8,24 +8,24 @@
       "rationale": "Pass-through (routine-job): watchlist maintenance. Private to the account, holds no funds, trivially reversible."
     },
     "cancel_all_orders": {
-      "impact": "critical",
-      "rationale": "Cancels every open order at once, including protective stops across the whole account."
+      "impact": "medium",
+      "rationale": "Cancels every open order at once. No funds move and no new exposure is created, so it is graded below order placement — but it is account-wide and removes protective stops together with entries, which puts it above a single cancel."
     },
     "cancel_order_by_id": {
-      "impact": "critical",
-      "rationale": "Cancels an order. Not a harmless undo — cancelling a protective stop leaves a position unprotected."
+      "impact": "low",
+      "rationale": "Cancels one identified order. Nothing is bought, sold, or transferred, and committed exposure can only fall. Governed so an agent signer can rate-limit churn and check that a cancelled protective stop is replaced; a human approver on this path is an availability problem rather than a control."
     },
     "close_all_positions": {
-      "impact": "critical",
-      "rationale": "Liquidates the entire portfolio."
+      "impact": "medium",
+      "rationale": "Liquidates the portfolio to cash with market orders. Exposure only falls and nothing leaves the account, so it is graded below order placement — but it realises P&L at whatever the book offers, which a cancel does not."
     },
     "close_position": {
-      "impact": "critical",
-      "rationale": "Liquidates a position by placing a sell order, realising gains or losses."
+      "impact": "medium",
+      "rationale": "Flattens one symbol with a market order. Risk-reducing and bounded by the existing position, but it realises P&L at the available price rather than merely withdrawing an instruction."
     },
     "create_locate": {
-      "impact": "high",
-      "rationale": "Creates a short-sale locate request, a borrowing commitment with associated fees."
+      "impact": "medium",
+      "rationale": "Creates a short-sale locate request. A borrowing commitment with fees, bounded by the requested quantity."
     },
     "create_watchlist": {
       "impact": "low",
@@ -36,12 +36,12 @@
       "rationale": "Pass-through (routine-job): watchlist maintenance. Private to the account, holds no funds, trivially reversible."
     },
     "do_not_exercise_options_position": {
-      "impact": "critical",
-      "rationale": "Submits a do-not-exercise instruction, irrevocably abandoning contract value at expiry."
+      "impact": "high",
+      "rationale": "Instructs the broker not to exercise a held contract. The value at stake is bounded by that one contract, but the instruction is terminal at expiry."
     },
     "exercise_options_position": {
-      "impact": "critical",
-      "rationale": "Exercises a held contract, converting it into the underlying and committing the required capital."
+      "impact": "high",
+      "rationale": "Exercises a held contract, converting it into the underlying and committing the capital assignment requires."
     },
     "fetch_alpaca_doc": {
       "impact": "low",
@@ -264,15 +264,15 @@
       "rationale": "Pass-through (read-public): documentation and API reference lookup."
     },
     "place_crypto_order": {
-      "impact": "critical",
-      "rationale": "Places a live cryptocurrency order."
+      "impact": "high",
+      "rationale": "Places a live cryptocurrency order, committing funds at market. Value stays inside the account, but a fill is not recallable."
     },
     "place_option_order": {
-      "impact": "critical",
-      "rationale": "Places a single- or multi-leg options order, which can carry unbounded assignment risk."
+      "impact": "high",
+      "rationale": "Places a single- or multi-leg options order. Graded with the other order-placement operations; an operator who wants a human on the unbounded short-leg case should express that as a policy threshold rather than as a blanket grade."
     },
     "place_stock_order": {
-      "impact": "critical",
+      "impact": "high",
       "rationale": "Places a live stock or ETF order that commits funds at market."
     },
     "remove_asset_from_watchlist_by_id": {
@@ -280,8 +280,8 @@
       "rationale": "Pass-through (routine-job): watchlist maintenance. Private to the account, holds no funds, trivially reversible."
     },
     "replace_order_by_id": {
-      "impact": "critical",
-      "rationale": "Replaces an open order with new parameters, changing committed exposure."
+      "impact": "high",
+      "rationale": "Replaces an open order with new parameters. A replacement can raise size or price, so it is graded as placement rather than as a cancel."
     },
     "search_alpaca_api_specs": {
       "impact": "low",

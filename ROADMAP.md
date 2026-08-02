@@ -82,18 +82,26 @@ This segment covers marketing, customer communications, collaboration, and publi
 | LinkedIn | LinkedIn MCP Server | TBD | 📋 Planned | Protect professional publishing and engagement |
 | YouTube | YouTube MCP Server | TBD | 📋 Planned | Protect content publishing and channel management |
 
-## Trading
+## Financial
 
-This segment covers exchanges, brokerage, payments, and other financial transaction surfaces.
+This segment covers payments, exchanges, brokerage, and other financial
+transaction surfaces.
 
 | Application | Upstream | Upstream Source | Status | Notes |
 | :---------- | :------- | :-------------- | :----- | :---- |
+| Stripe | Official Stripe MCP Server | [stripe/ai](https://github.com/stripe/ai/tree/main/tools/modelcontextprotocol) | ✅ Tested | Protect refunds and generic API writes covering payments, invoices, subscriptions, pricing, disputes, webhooks, and other account mutations |
 | Coinbase Agentic Wallet | Coinbase Payments MCP | [coinbase/payments-mcp](https://github.com/coinbase/payments-mcp) | ✅ Tested | Protect wallet authentication, token sends, payments, transfers, and trades |
 | Coinbase Advanced Trade | Coinbase CLI MCP Server | [Coinbase CLI](https://docs.cdp.coinbase.com/coinbase-cli/skill.md) | ✅ Tested | Protect portfolios, accounts, orders, trades, conversions, and transfers |
 | Kraken | Official Kraken CLI MCP Server | [krakenfx/kraken-cli](https://github.com/krakenfx/kraken-cli) | ✅ Tested | Protect spot and futures orders, withdrawals, wallet transfers, earn allocations, and subaccount mutations |
 | Alpaca | Official Alpaca MCP Server | [alpacahq/alpaca-mcp-server](https://github.com/alpacahq/alpaca-mcp-server) | ✅ Tested | Protect stock, crypto, and option orders; cancellations; liquidation; option exercise; and account mutations |
-| Stripe | Official Stripe MCP Server | [stripe/ai](https://github.com/stripe/ai/tree/main/tools/modelcontextprotocol) | ✅ Tested | Protect refunds and generic API writes covering payments, invoices, subscriptions, pricing, disputes, webhooks, and other account mutations |
 | Robinhood Crypto | Robinhood Crypto MCP Server | [rohitsingh-iitd/robinhood-mcp-server](https://github.com/rohitsingh-iitd/robinhood-mcp-server) | 💡 Requested | Protect brokerage and crypto orders, transfers, and account mutations |
+
+**What trading bridges are for.** Published evidence has shown that trading
+agents do not perform that well today. That is a warning about agent strategy
+quality, not a reason to skip these bridges. Trading venues already ship MCP
+servers, and MPAS is still useful on top of them: it gives operators more
+flexibility in how agent actions are analyzed and approved before they hit the
+venue.
 
 ---
 

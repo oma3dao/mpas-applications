@@ -1,5 +1,22 @@
 # Changelog — Coinbase
 
+## 2026-08-02 — Normalized impact grading
+
+- Re-graded all 5 governed operations against the README rubric, using `github`
+  as the calibration reference. The plugin was 3/5 `critical` (60%); it is now
+  2 `critical`, 2 `high`, 1 `medium`.
+- Lowered `trade` from `critical` to `high`. It converts held value at market
+  and is not recallable once broadcast, but the value stays in the wallet. That
+  puts it with order placement across the segment, and below `send`, which
+  moves value out.
+- Kept `send` and `make_http_request_with_x402` at `critical`. Both move funds
+  to a destination the call chooses, irreversibly once broadcast.
+- Left `verify_email_otp` at `high` and `sign_in_with_email` at `medium`
+  unchanged.
+- No membership change. This is grading only — the governed set is untouched.
+- Updated `build-artifacts/classification.json` to match and recomputed
+  `plugin.artifactDid` in `registry-entry.json`.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 13 entries in `build-artifacts/classification.json`,

@@ -1,5 +1,35 @@
 # Changelog — alpaca
 
+## 2026-08-02 — Normalized impact grading
+
+- Re-graded all 12 governed operations against the README rubric, using
+  `github` as the calibration reference. The plugin was 10/12 `critical`
+  (83%); it is now 0 `critical`, 7 `high`, 4 `medium`, 1 `low`.
+- Reserved `critical` for value crossing an account boundary. Alpaca's upstream
+  surface exposes no withdrawal, transfer, or journal tool, so nothing here
+  reaches that level. The absence is the finding rather than an oversight: a
+  policy author can read this plugin as *an agent on this credential cannot
+  move money off the venue*.
+- Graded order placement, replacement, option exercise, and do-not-exercise at
+  `high`. These commit capital or settle a contract — value stays in the
+  account, but a fill is not recallable.
+- Graded cancels and position closes **below** placement. `cancel_order_by_id`
+  is now `low`; `cancel_all_orders`, `close_position`, and
+  `close_all_positions` are `medium`. Cancelling is risk-reducing and
+  time-sensitive, and `critical` carries a suggested approver of at least one
+  human — paging a person to cancel an order during a market move is both an
+  availability problem and a driver of approval fatigue. The closes stay above
+  the cancels because a market order realises P&L at whatever the book offers,
+  where a cancel only withdraws an instruction.
+- Lowered `create_locate` from `high` to `medium`: a borrowing commitment
+  bounded by the requested quantity.
+- `low` here is the README's borderline signal, not a shrug. A cancel stays
+  governed so an agent signer can rate-limit churn and check that a cancelled
+  protective stop is replaced; what it should not do is block on a human.
+- No membership change. This is grading only — the governed set is untouched.
+- Updated `build-artifacts/classification.json` to match and recomputed
+  `plugin.artifactDid` in `registry-entry.json`.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 74 entries in `build-artifacts/classification.json`,

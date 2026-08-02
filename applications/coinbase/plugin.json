@@ -208,7 +208,7 @@
     },
     "trade": {
       "description": "Swap between tokens on EVM chains. Supports USDC↔ETH on Base and USDC↔POL on Polygon. Solana swaps are not supported. Amount is in atomic units based on the token decimals. Supported token aliases on Base: usdc, eth. On Polygon: usdc, pol. You can also use contract addresses (0x...). Amount can be human-readable (e.g., \"$1.00\", \"0.50\") or in atomic units. Supported chains: base (default), base-sepolia, polygon. IMPORTANT: This executes a real token swap on-chain. Only call this tool when the user has explicitly requested a trade or swap, with clear token pair and amount. Always confirm the trade details with the user before calling.",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [

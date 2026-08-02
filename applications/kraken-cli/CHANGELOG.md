@@ -2,6 +2,57 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-08-02 — Normalized impact grading
+
+- Re-graded all 30 governed operations against the README rubric, using
+  `github` as the calibration reference. The plugin was 24/30 `critical`
+  (80%); it is now 6 `critical`, 12 `high`, 8 `medium`, 4 `low`.
+- **`kraken_withdrawal_cancel` was the clearest error.** It was graded
+  `critical`, identical to `kraken_withdraw`. Cancelling a withdrawal is
+  risk-*reducing* — it is the only operation in this plugin that stops funds
+  leaving. Grading the brake with the accelerator inverted the ladder. It is
+  now `low`.
+- Reserved `critical` for value crossing an account boundary and for the one
+  operation that escapes the boundary itself: `kraken_withdraw`,
+  `kraken_wallet_transfer`, `kraken_subaccount_transfer`,
+  `kraken_futures_transfer`, `kraken_futures_wallet_transfer`, and
+  `kraken_export_retrieve`.
+- Raised `kraken_export_retrieve` from `high` to `critical`. Its `output_file`
+  argument is a write primitive on the filesystem of the machine running the
+  Credential Adapter, which the rubric places in `critical` as a bypass of the
+  governance boundary itself — the same category as
+  `coinbase_advanced_trade.coinbase_set_env`.
+- Kept the whole transfer family at `critical`, including the two intra-account
+  futures transfers. They are the same action shape as
+  `coinbase_advanced_trade.coinbase_transfer`, and the rubric requires the same
+  shape to grade the same way across sibling applications.
+- Graded order placement, batches, amends, and edits at `high` — spot and
+  futures alike. An amend or a cancel-and-replace can raise size, so it is
+  graded as placement rather than as a cancel.
+- Graded cancels **below** placement. Scoped cancels are `low`
+  (`kraken_order_cancel`, `kraken_order_cancel_batch`,
+  `kraken_futures_cancel`, `kraken_withdrawal_cancel`); account-wide and armed
+  cancels are `medium` (`kraken_order_cancel_all`, `kraken_order_cancel_after`,
+  `kraken_futures_cancel_all`, `kraken_futures_cancel_after`). `critical`
+  carries a suggested approver of at least one human, and paging a person to
+  cancel an order during a market move is both an availability problem and a
+  driver of approval fatigue. The dead man's switches stay at `medium` because
+  they arm a standing rule that fires later with nobody present.
+- Split the earn pair: `kraken_earn_allocate` is `high` (commits funds into a
+  lock-up), `kraken_earn_deallocate` is `medium` (restores liquidity).
+- Lowered `kraken_subaccount_create` from `high` to `medium`. It creates an
+  empty container that holds no funds until a governed transfer puts them
+  there. Graded with `coinbase_advanced_trade.coinbase_portfolios_create`, and
+  below `github.create_repository`, which is externally visible and carries the
+  organisation's name.
+- The upstream `[DANGEROUS: requires human confirmation]` prefixes in the tool
+  descriptions are Kraken's own text and are preserved verbatim. Per the README,
+  an upstream danger label is a hint worth checking, never the classifier —
+  it is applied to `kraken_order_cancel` and `kraken_withdraw` alike.
+- No membership change. This is grading only — the governed set is untouched.
+- Updated `build-artifacts/classification.json` to match and recomputed
+  `plugin.artifactDid` in `registry-entry.json`.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 106 entries in `build-artifacts/classification.json`,
