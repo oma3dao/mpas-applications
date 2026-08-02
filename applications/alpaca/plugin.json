@@ -33,7 +33,7 @@
   "operations": {
     "cancel_all_orders": {
       "description": "Cancel all open orders.",
-      "impact": "critical",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -55,7 +55,7 @@
     },
     "cancel_order_by_id": {
       "description": "Cancel a specific order by its ID.",
-      "impact": "critical",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -85,7 +85,7 @@
     },
     "close_all_positions": {
       "description": "Closes all open positions by placing sell orders for each. If the market is closed, the sell orders will remain queued and execute at the next market open.",
-      "impact": "critical",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -112,7 +112,7 @@
     },
     "close_position": {
       "description": "Closes a specific position for a single symbol by placing a sell order. If the market is closed, the sell order will remain queued and execute at the next market open.",
-      "impact": "critical",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -149,7 +149,7 @@
     },
     "create_locate": {
       "description": "Creates a locate request for a short sale. Requires a symbol and quantity. Optionally set a limit price and all-or-none flag.",
-      "impact": "high",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -201,7 +201,7 @@
     },
     "do_not_exercise_options_position": {
       "description": "Submits a do-not-exercise instruction for a held option contract.",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -231,7 +231,7 @@
     },
     "exercise_options_position": {
       "description": "Exercises a held option contract, converting it into the underlying asset.",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -261,7 +261,7 @@
     },
     "place_crypto_order": {
       "description": "Place a cryptocurrency order.",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -366,7 +366,7 @@
     },
     "place_option_order": {
       "description": "Place an options order (single-leg or multi-leg).\n\nFor single-leg orders, provide symbol, side, and qty.\nFor multi-leg orders, provide qty, legs, and optionally\norder_class=\"mleg\" (auto-inferred). Symbol and side on the\nparent are not needed for multi-leg.",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -494,7 +494,7 @@
     },
     "place_stock_order": {
       "description": "Place a stock or ETF order.",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -689,7 +689,7 @@
     },
     "replace_order_by_id": {
       "description": "Replaces an existing open order with updated parameters. At least one optional field must be provided.",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [

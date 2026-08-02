@@ -55,7 +55,7 @@
   "operations": {
     "kraken_earn_allocate": {
       "description": "[DANGEROUS: requires human confirmation] Allocate funds to an earn strategy",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -95,7 +95,7 @@
     },
     "kraken_earn_deallocate": {
       "description": "[DANGEROUS: requires human confirmation] Deallocate funds from an earn strategy",
-      "impact": "critical",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -187,7 +187,7 @@
     },
     "kraken_export_retrieve": {
       "description": "[DANGEROUS: requires human confirmation] Download export report",
-      "impact": "high",
+      "impact": "critical",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -226,7 +226,7 @@
     },
     "kraken_futures_batch_order": {
       "description": "[DANGEROUS: requires human confirmation] Place a batch of futures orders (auth required)",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -261,7 +261,7 @@
     },
     "kraken_futures_cancel": {
       "description": "[DANGEROUS: requires human confirmation] Cancel a futures order by order_id or client order id (auth required)",
-      "impact": "critical",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -299,7 +299,7 @@
     },
     "kraken_futures_cancel_after": {
       "description": "[DANGEROUS: requires human confirmation] Dead man's switch: cancel all orders after timeout (auth required)",
-      "impact": "critical",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -334,7 +334,7 @@
     },
     "kraken_futures_cancel_all": {
       "description": "[DANGEROUS: requires human confirmation] Cancel all futures orders (auth required)",
-      "impact": "critical",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -368,7 +368,7 @@
     },
     "kraken_futures_edit_order": {
       "description": "[DANGEROUS: requires human confirmation] Edit an existing futures order (auth required)",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -415,7 +415,7 @@
     },
     "kraken_futures_order_buy": {
       "description": "[DANGEROUS: requires human confirmation] Place a buy order",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -503,7 +503,7 @@
     },
     "kraken_futures_order_sell": {
       "description": "[DANGEROUS: requires human confirmation] Place a sell order",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -794,7 +794,7 @@
     },
     "kraken_order_amend": {
       "description": "[DANGEROUS: requires human confirmation] Amend a live order in-place (preserves queue priority and identifiers)",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -860,7 +860,7 @@
     },
     "kraken_order_batch": {
       "description": "[DANGEROUS: requires human confirmation] Submit batch orders from a JSON file (2-15 orders)",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -911,7 +911,7 @@
     },
     "kraken_order_buy": {
       "description": "[DANGEROUS: requires human confirmation] Place a buy order",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1032,7 +1032,7 @@
     },
     "kraken_order_cancel": {
       "description": "[DANGEROUS: requires human confirmation] Cancel an open order by txid, userref, or client order ID",
-      "impact": "critical",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1073,7 +1073,7 @@
     },
     "kraken_order_cancel_after": {
       "description": "[DANGEROUS: requires human confirmation] Dead man's switch — cancel all orders after timeout",
-      "impact": "critical",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1108,7 +1108,7 @@
     },
     "kraken_order_cancel_all": {
       "description": "[DANGEROUS: requires human confirmation] Cancel all open orders",
-      "impact": "critical",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1138,7 +1138,7 @@
     },
     "kraken_order_cancel_batch": {
       "description": "[DANGEROUS: requires human confirmation] Cancel a batch of orders (max 50 total across txids and cl-ord-ids)",
-      "impact": "critical",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1182,7 +1182,7 @@
     },
     "kraken_order_edit": {
       "description": "[DANGEROUS: requires human confirmation] Edit (cancel+replace) an order",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1229,7 +1229,7 @@
     },
     "kraken_order_sell": {
       "description": "[DANGEROUS: requires human confirmation] Place a sell order",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1350,7 +1350,7 @@
     },
     "kraken_subaccount_create": {
       "description": "Create a new subaccount",
-      "impact": "high",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -1550,7 +1550,7 @@
     },
     "kraken_withdrawal_cancel": {
       "description": "[DANGEROUS: requires human confirmation] Cancel a pending withdrawal",
-      "impact": "critical",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [

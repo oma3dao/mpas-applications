@@ -1,5 +1,35 @@
 # Changelog — Coinbase Advanced Trade
 
+## 2026-08-02 — Normalized impact grading
+
+- Re-graded all 9 governed operations against the README rubric, using `github`
+  as the calibration reference. The plugin was 7/9 `critical` (78%); it is now
+  2 `critical`, 3 `high`, 3 `medium`, 1 `low`.
+- Reserved `critical` for `coinbase_transfer`, which relocates funds out of the
+  portfolio an approver had in view, and `coinbase_set_env`, which re-targets
+  every later call and is a bypass of the governance boundary itself.
+- Graded `coinbase_orders_create`, `coinbase_orders_edit`, and
+  `coinbase_convert_execute` at `high`. An edit can raise size, so it is graded
+  as placement rather than as a cancel.
+- Graded `coinbase_orders_cancel` at `low` and
+  `coinbase_orders_close_position` at `medium` — both **below** placement.
+  Cancelling is risk-reducing and time-sensitive, and `critical` carries a
+  suggested approver of at least one human; paging a person to cancel an order
+  during a market move is both an availability problem and a driver of approval
+  fatigue. The close stays above the cancel because a market order realises P&L
+  at whatever the book offers, where a cancel only withdraws an instruction.
+- Lowered the portfolio pair from `high` to `medium`.
+  `coinbase_portfolios_create` makes an empty container; the API requires a
+  portfolio to be empty before `coinbase_portfolios_delete` will remove it, so
+  what is destroyed is a container and not value.
+- `low` here is the README's borderline signal, not a shrug.
+  `coinbase_orders_cancel` stays governed so an agent signer can rate-limit and
+  check that a cancelled protective stop is replaced; what it should not do is
+  block on a human.
+- No membership change. This is grading only — the governed set is untouched.
+- Updated `build-artifacts/classification.json` to match and recomputed
+  `plugin.artifactDid` in `registry-entry.json`.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 29 entries in `build-artifacts/classification.json`,

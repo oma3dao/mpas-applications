@@ -40,8 +40,8 @@
       "rationale": "Pass-through (read): authenticated account data — balances, ledgers, orders, positions, fills, history, deposit and withdrawal status, or futures preferences. Requiring an API key is not a reason to govern: the credential flows into these calls and none returns one."
     },
     "kraken_earn_allocate": {
-      "impact": "critical",
-      "rationale": "Commits funds to an earn strategy, typically with a lock-up."
+      "impact": "high",
+      "rationale": "Commits funds to an earn strategy, typically with a lock-up. The funds stay in the account but stop being available."
     },
     "kraken_earn_allocate_status": {
       "impact": "medium",
@@ -52,8 +52,8 @@
       "rationale": "Pass-through (read): authenticated account data — balances, ledgers, orders, positions, fills, history, deposit and withdrawal status, or futures preferences. Requiring an API key is not a reason to govern: the credential flows into these calls and none returns one."
     },
     "kraken_earn_deallocate": {
-      "impact": "critical",
-      "rationale": "Withdraws funds from an earn strategy."
+      "impact": "medium",
+      "rationale": "Returns funds from an earn strategy to the spot balance. Restores liquidity rather than committing it, though it may forfeit accrued rewards or wait out an unbonding period."
     },
     "kraken_earn_deallocate_status": {
       "impact": "medium",
@@ -72,8 +72,8 @@
       "rationale": "Requests generation of an account export report."
     },
     "kraken_export_retrieve": {
-      "impact": "high",
-      "rationale": "Host-side effect. Takes an output_file path and writes the report to the filesystem of the machine running the Credential Adapter."
+      "impact": "critical",
+      "rationale": "Host-side effect. Takes an output_file path and writes to the filesystem of the machine running the Credential Adapter — a write primitive on the host rather than an exchange call, which is a bypass of the governance boundary itself."
     },
     "kraken_export_status": {
       "impact": "low",
@@ -92,24 +92,24 @@
       "rationale": "Pass-through (read): authenticated account data — balances, ledgers, orders, positions, fills, history, deposit and withdrawal status, or futures preferences. Requiring an API key is not a reason to govern: the credential flows into these calls and none returns one."
     },
     "kraken_futures_batch_order": {
-      "impact": "critical",
-      "rationale": "Submits a batch of futures orders."
+      "impact": "high",
+      "rationale": "Submits a batch of leveraged futures orders."
     },
     "kraken_futures_cancel": {
-      "impact": "critical",
-      "rationale": "Cancels a futures order."
+      "impact": "low",
+      "rationale": "Cancels one identified futures order. No funds move and exposure can only fall. An agent signer is the right check here; a human is a delay."
     },
     "kraken_futures_cancel_after": {
-      "impact": "critical",
-      "rationale": "Dead man's switch for futures orders."
+      "impact": "medium",
+      "rationale": "Dead man's switch for futures orders. Risk-reducing in effect, but it arms an account-wide cancellation that fires later with nobody present."
     },
     "kraken_futures_cancel_all": {
-      "impact": "critical",
-      "rationale": "Cancels all futures orders."
+      "impact": "medium",
+      "rationale": "Cancels every open futures order. Risk-reducing, but account-wide: it removes protective stops together with entries."
     },
     "kraken_futures_edit_order": {
-      "impact": "critical",
-      "rationale": "Edits an open futures order."
+      "impact": "high",
+      "rationale": "Edits an open futures order. An edit can raise size, so it is graded as placement."
     },
     "kraken_futures_fee_schedule_volumes": {
       "impact": "medium",
@@ -168,11 +168,11 @@
       "rationale": "Pass-through (read): authenticated account data — balances, ledgers, orders, positions, fills, history, deposit and withdrawal status, or futures preferences. Requiring an API key is not a reason to govern: the credential flows into these calls and none returns one."
     },
     "kraken_futures_order_buy": {
-      "impact": "critical",
+      "impact": "high",
       "rationale": "Places a leveraged futures buy order."
     },
     "kraken_futures_order_sell": {
-      "impact": "critical",
+      "impact": "high",
       "rationale": "Places a leveraged futures sell order."
     },
     "kraken_futures_order_status": {
@@ -225,7 +225,7 @@
     },
     "kraken_futures_transfer": {
       "impact": "critical",
-      "rationale": "Moves funds between spot and futures wallets, changing margin available."
+      "rationale": "Moves funds between the spot and futures wallets. Value leaves the balance an approver had in view and lands where it backs leveraged positions."
     },
     "kraken_futures_transfers": {
       "impact": "medium",
@@ -237,7 +237,7 @@
     },
     "kraken_futures_wallet_transfer": {
       "impact": "critical",
-      "rationale": "Moves funds between futures wallets."
+      "rationale": "Moves funds between futures wallets, out of the scope an approver had in view."
     },
     "kraken_ledgers": {
       "impact": "medium",
@@ -252,39 +252,39 @@
       "rationale": "Pass-through (read): authenticated account data — balances, ledgers, orders, positions, fills, history, deposit and withdrawal status, or futures preferences. Requiring an API key is not a reason to govern: the credential flows into these calls and none returns one."
     },
     "kraken_order_amend": {
-      "impact": "critical",
-      "rationale": "Amends a live order in place, changing committed exposure."
+      "impact": "high",
+      "rationale": "Amends a live order in place. An amend can raise size, so it is graded as placement rather than as a cancel."
     },
     "kraken_order_batch": {
-      "impact": "critical",
-      "rationale": "Submits 2-15 orders in one call."
+      "impact": "high",
+      "rationale": "Submits 2-15 live orders in one call."
     },
     "kraken_order_buy": {
-      "impact": "critical",
+      "impact": "high",
       "rationale": "Places a live buy order committing funds at market."
     },
     "kraken_order_cancel": {
-      "impact": "critical",
-      "rationale": "Cancels an open order. Cancelling a protective stop leaves a position unprotected."
+      "impact": "low",
+      "rationale": "Cancels one open order by txid, userref, or client order ID. Nothing is bought, sold, or transferred, and committed exposure can only fall. Governed so an agent signer can rate-limit churn and check that a cancelled protective stop is replaced; paging a human to cancel an order during a market move costs availability and buys no judgment."
     },
     "kraken_order_cancel_after": {
-      "impact": "critical",
-      "rationale": "Dead man's switch — arms automatic cancellation of all orders after a timeout."
+      "impact": "medium",
+      "rationale": "Dead man's switch — arms automatic cancellation of all orders after a timeout. Risk-reducing in effect, but it is a standing rule that fires later with nobody present."
     },
     "kraken_order_cancel_all": {
-      "impact": "critical",
-      "rationale": "Cancels every open order, including protective stops across the account."
+      "impact": "medium",
+      "rationale": "Cancels every open order. Risk-reducing and no funds move, but account-wide: it removes protective stops together with entries."
     },
     "kraken_order_cancel_batch": {
-      "impact": "critical",
-      "rationale": "Cancels up to 50 orders in one call."
+      "impact": "low",
+      "rationale": "Cancels an enumerated batch of up to 50 orders. Bounded by the ids supplied and no funds move; graded with the single cancel it repeats."
     },
     "kraken_order_edit": {
-      "impact": "critical",
-      "rationale": "Cancel-and-replace on a live order."
+      "impact": "high",
+      "rationale": "Cancel-and-replace on a live order. The replacement can raise size, so it is graded as placement."
     },
     "kraken_order_sell": {
-      "impact": "critical",
+      "impact": "high",
       "rationale": "Places a live sell order."
     },
     "kraken_orderbook": {
@@ -372,12 +372,12 @@
       "rationale": "Pass-through (read-public): unauthenticated market data. Requires no API key at all."
     },
     "kraken_subaccount_create": {
-      "impact": "high",
-      "rationale": "Creates a new subaccount under the master account."
+      "impact": "medium",
+      "rationale": "Creates an empty subaccount under the master account. Internal to the organisation and holds no funds until a transfer puts them there."
     },
     "kraken_subaccount_transfer": {
       "impact": "critical",
-      "rationale": "Moves funds between accounts."
+      "rationale": "Moves funds between accounts. Value crosses an account boundary and lands beyond the reach of the credential an approver was reasoning about."
     },
     "kraken_ticker": {
       "impact": "low",
@@ -401,19 +401,19 @@
     },
     "kraken_wallet_transfer": {
       "impact": "critical",
-      "rationale": "Moves funds between wallets."
+      "rationale": "Moves funds between wallets, out of the balance an approver had in view."
     },
     "kraken_withdraw": {
       "impact": "critical",
-      "rationale": "Moves funds off the exchange to an external address. Irreversible once broadcast."
+      "rationale": "Moves funds off the exchange to an external address. Irreversible once broadcast, and the one operation here that no later call can undo."
     },
     "kraken_withdrawal_addresses": {
       "impact": "medium",
       "rationale": "Pass-through (read): the whitelisted withdrawal address list. Reading it grants nothing; kraken_withdraw is the governed path."
     },
     "kraken_withdrawal_cancel": {
-      "impact": "critical",
-      "rationale": "Cancels a pending withdrawal, changing whether funds leave."
+      "impact": "low",
+      "rationale": "Cancels a pending withdrawal. Risk-reducing in the strict sense — it is the only operation in this plugin that stops funds leaving. Grading it alongside kraken_withdraw inverted the ladder, making the brake as hard to approve as the accelerator."
     },
     "kraken_withdrawal_info": {
       "impact": "medium",

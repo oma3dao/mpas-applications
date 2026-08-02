@@ -24,7 +24,7 @@
   "operations": {
     "coinbase_convert_execute": {
       "description": "POST /convert/execute/{quote_id} — Executes a previously quoted conversion using the quote id from convert_quote. This moves funds at the quoted rate — always get a fresh quote first, since quotes expire. The from/to currencies must match the original quote. (2 fields, 2 required)",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -65,7 +65,7 @@
     },
     "coinbase_orders_cancel": {
       "description": "POST /orders/cancel — Cancels one or more open orders by ID. Removes resting orders from the book so reserved funds are released; already-filled portions are unaffected. Returns per-order success so a partial batch can fail. (1 fields, 1 required)",
-      "impact": "critical",
+      "impact": "low",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -94,7 +94,7 @@
     },
     "coinbase_orders_close_position": {
       "description": "POST /orders/close-position — Places a market order to flatten an open position for a product, moving funds immediately. Omit size for a full close or set it for a partial close. Preview the equivalent order first if fee or slippage impact matters. (3 fields, 2 required)",
-      "impact": "critical",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -134,7 +134,7 @@
     },
     "coinbase_orders_create": {
       "description": "POST /orders — Places a live order — executes immediately and moves funds (market buy spends quote currency; sell disposes of base). Preview with orders_preview first to estimate fees, fill price, and slippage. (14 fields, 3 required) (one of: base_size, quote_size)",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -247,7 +247,7 @@
     },
     "coinbase_orders_edit": {
       "description": "POST /orders/edit — Atomically update an open order's price or size without cancelling. Avoids the cancel+replace exposure window. (3 fields, 1 required)",
-      "impact": "critical",
+      "impact": "high",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -286,7 +286,7 @@
     },
     "coinbase_portfolios_create": {
       "description": "POST /portfolios — Creates a new named portfolio for segregating funds and positions. Does not move any funds; use transfer afterward to fund it. (1 fields, 1 required)",
-      "impact": "high",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [
@@ -316,7 +316,7 @@
     },
     "coinbase_portfolios_delete": {
       "description": "DELETE /portfolios/{portfolio_id} — Permanently deletes a portfolio. The portfolio must be empty first — transfer out any remaining funds and close all positions before deleting. The DEFAULT portfolio cannot be deleted.",
-      "impact": "high",
+      "impact": "medium",
       "executionPayloadSchema": {
         "type": "object",
         "required": [

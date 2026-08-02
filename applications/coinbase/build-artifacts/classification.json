@@ -44,8 +44,8 @@
       "rationale": "Initiates email sign-in and sends a verification code. Starts an authentication flow whose completion is separately governed."
     },
     "trade": {
-      "impact": "critical",
-      "rationale": "Swaps between tokens, converting held value at market. Irreversible once executed."
+      "impact": "high",
+      "rationale": "Swaps between tokens on-chain, converting held value at market. Not recallable once broadcast, but the value stays in the wallet — graded with order placement rather than with `send`, which moves it out."
     },
     "verify_email_otp": {
       "impact": "high",
