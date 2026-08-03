@@ -3,13 +3,14 @@
   "application": {
     "name": "Supabase MCP MPAS Bridge Server",
     "description": "MPAS-protected bridge for the official Supabase MCP Server.",
-    "applicationDid": "did:web:wivity.com:applications:supabase-mcp-server",
-    "website": "https://github.com/supabase-community/supabase-mcp"
+    "applicationDid": "did:web:wivity.com:applications:supabase-mcp-server"
   },
   "native": false,
   "protocol": "mcp",
   "upstream": {
     "name": "supabase",
+    "repository": "https://github.com/supabase-community/supabase-mcp",
+    "distributionUrl": "https://www.npmjs.com/package/@supabase/mcp-server-supabase/v/0.9.0",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

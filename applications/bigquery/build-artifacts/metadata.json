@@ -7,7 +7,15 @@
   },
   "protocolVersion": "2024-11-05",
   "upstreamCommand": [
-    "/Users/mpas1/Projects/mcp-targets/bigquery/bin/toolbox",
+    "docker",
+    "run",
+    "-i",
+    "--rm",
+    "-e",
+    "BIGQUERY_PROJECT",
+    "-e",
+    "GOOGLE_APPLICATION_CREDENTIALS",
+    "us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox@sha256:bbfdd4f2757e3740cf615ce8d5549a5f7c8fa08ac9352c1bc2c0d08aab62ab1a",
     "--prebuilt",
     "bigquery",
     "--stdio"

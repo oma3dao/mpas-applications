@@ -7,8 +7,9 @@
   },
   "protocolVersion": "2024-11-05",
   "upstreamCommand": [
-    "node",
-    "/Users/mpas1/Projects/mcp-targets/railway/node_modules/@railway/cli/bin/railway.js",
+    "npx",
+    "-y",
+    "@railway/cli@5.28.1",
     "mcp"
   ],
   "generatorVersion": "0.2.0",

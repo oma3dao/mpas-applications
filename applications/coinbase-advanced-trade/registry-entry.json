@@ -9,6 +9,7 @@
   "protocol": "mcp",
   "upstream": {
     "name": "Coinbase CLI MCP Server",
+    "distributionUrl": "https://www.npmjs.com/package/@coinbase/coinbase-cli/v/0.0.4",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

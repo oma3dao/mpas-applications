@@ -2,12 +2,20 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "node",
+    "command": "npx",
     "args": [
-      "/Users/mpas1/Projects/mcp-targets/neon/neon-env-stdio.mjs"
+      "-y",
+      "@neondatabase/mcp-server-neon@0.6.5"
     ],
     "env": {
       "NEON_API_KEY": "{{credential:neonApiKey}}"
+    },
+    "distribution": {
+      "type": "npm",
+      "package": "@neondatabase/mcp-server-neon",
+      "version": "0.6.5",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": true
     }
   },
   "intentionalDeviations": {

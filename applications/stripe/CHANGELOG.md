@@ -1,5 +1,20 @@
 # Changelog — stripe
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to `npx -y @stripe/mcp@0.3.3`, replacing a path into a local build of
+  the `stripe/ai` working tree.
+- **Version could not be reconciled with `serverInfo.version`.** metadata
+  records 1.0.0, which `@stripe/mcp` has never published — latest is 0.3.3. The
+  capture ran a local build, which is why the number is unattested. 0.3.3 is
+  corroborated by this changelog and was the npm release current at `capturedAt`.
+- Added optional upstream discoverability pointers on `registry-entry.json`:
+  `upstream.repository` (source) and `upstream.distributionUrl` (versioned
+  obtain page). `application.website` is not used.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 9 entries in `build-artifacts/classification.json`,

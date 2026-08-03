@@ -63,6 +63,43 @@ The development-time
 Application publishers review and maintain their contributed artifacts. An
 application can also be built manually if it conforms to the MPAS profiles.
 
+### Upstreams must be pinned and resolvable
+
+`harness-config.json` records how to launch the upstream MCP server, and
+`build-artifacts/metadata.json` mirrors that as `upstreamCommand`. Both must
+name something **anyone** can obtain, at a **fixed** version:
+
+| Upstream kind | Pin |
+| --- | --- |
+| Container | Digest, not a tag — `ghcr.io/github/github-mcp-server@sha256:…` |
+| npm | `npx -y <pkg>@<exact-version>` |
+| PyPI | `uvx --from <pkg>==<version> <entrypoint>` |
+| Release binary | Release URL plus expected SHA-256, with a `fetch` recipe |
+| Source-only | Repository URL plus commit SHA |
+| Hosted endpoint | Endpoint URL plus a pinned client (`mcp-remote@<version>`) |
+
+The reproduction path is what makes a classification checkable. `plugin.json`
+says what is governed and `classification.json` says why the rest was not, but
+a reviewer can only *verify* either claim by launching the same upstream and
+re-discovering the same tools. An absolute path on the author's machine, or a
+floating tag that has since moved, converts both files from evidence into
+assertion. CI fails the build on either.
+
+Record the pin in `upstream.distribution`. `serverInfo.version` is often not
+the package version — servers report a framework or internal version — so
+where the two disagree, set `versionMatchesServerInfo` to `false` and say what
+disagrees in `reconciliation` rather than adjusting either to match.
+
+Binaries are not vendored here: redistribution raises licensing questions and
+releases are multi-arch. A URL and a checksum give the same guarantee.
+
+`registry-entry.json` `upstream` may also carry optional discoverability
+pointers: `repository` (source URL) and `distributionUrl` (a versioned page
+for the pinned artifact — npm/PyPI/release/commit/endpoint). Omit either when
+the source is private or there is no public obtain page. Launch and pin
+details remain in `harness-config.json`. Do not put upstream URLs under
+`application` — that object describes the plugin.
+
 ## How the Bridge Works
 
 For any existing MCP server, the generated bridge preserves the upstream tool names and input schemas. Agents call the same tools with the same arguments, but high-impact actions are intercepted for MPAS approval before being forwarded upstream.
@@ -410,6 +447,10 @@ graded.
       the customer-facing, destructive, automation, and egress edges.
 - [ ] `plugin.artifactDid` in `registry-entry.json` was recomputed
       (see [Artifact DID](#artifact-did)).
+- [ ] The upstream in `harness-config.json` and `metadata.json` is pinned and
+      resolvable by someone other than you, and `upstream.distribution`
+      records the pin
+      (see [Upstreams must be pinned and resolvable](#upstreams-must-be-pinned-and-resolvable)).
 - [ ] `CHANGELOG.md` records what was left as pass-through and why.
 
 ## Artifact DID

@@ -2,13 +2,24 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "/Users/mpas1/Projects/mcp-targets/kubernetes/bin/kubernetes-mcp-server-darwin-arm64",
-    "args": [],
+    "command": "npx",
+    "args": [
+      "-y",
+      "kubernetes-mcp-server@0.0.65"
+    ],
     "env": {
       "KUBECONFIG": {
         "required": true,
         "description": "Path to a credential-adapter-managed kubeconfig with least-privileged access to the intended cluster and namespaces."
       }
+    },
+    "distribution": {
+      "type": "npm",
+      "package": "kubernetes-mcp-server",
+      "version": "0.0.65",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": true,
+      "reconciliation": "Published as an npm launcher whose per-platform binaries are pinned to the same 0.0.65 through optionalDependencies (linux/darwin/windows x amd64/arm64), so this is platform-neutral without vendoring a binary."
     }
   },
   "intentionalDeviations": {

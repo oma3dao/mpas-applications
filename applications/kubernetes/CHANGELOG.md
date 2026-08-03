@@ -1,5 +1,19 @@
 # Changelog — kubernetes
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to `npx -y kubernetes-mcp-server@0.0.65`, replacing a local
+  `bin/kubernetes-mcp-server-darwin-arm64` binary. 0.0.65 matches
+  `serverInfo.version`.
+- Recorded as npm rather than as a release binary. The published launcher pins
+  its per-platform binaries to the same 0.0.65 through `optionalDependencies`
+  across linux/darwin/windows on amd64 and arm64, which is platform-neutral and
+  needs no checksum bookkeeping. The upstream GitHub release publishes no
+  checksum manifest, so the npm route is also the better-attested one.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 19 entries in `build-artifacts/classification.json`,

@@ -9,6 +9,8 @@
   "protocol": "mcp",
   "upstream": {
     "name": "upstash",
+    "repository": "https://github.com/upstash/mcp-server",
+    "distributionUrl": "https://www.npmjs.com/package/@upstash/mcp-server/v/0.2.4",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

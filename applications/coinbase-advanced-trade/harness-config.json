@@ -2,10 +2,19 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "coinbase",
+    "command": "npx",
     "args": [
+      "-y",
+      "@coinbase/coinbase-cli@0.0.4",
       "mcp"
-    ]
+    ],
+    "distribution": {
+      "type": "npm",
+      "package": "@coinbase/coinbase-cli",
+      "version": "0.0.4",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": true
+    }
   },
   "intentionalDeviations": {
     "renamedTools": {},

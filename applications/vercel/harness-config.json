@@ -9,7 +9,18 @@
       "https://mcp.vercel.com",
       "--header",
       "Authorization: Bearer {{credential:vercelMcpOAuthAccessToken}}"
-    ]
+    ],
+    "distribution": {
+      "type": "remote",
+      "endpoint": "https://mcp.vercel.com",
+      "client": {
+        "type": "npm",
+        "package": "mcp-remote",
+        "version": "0.1.37"
+      },
+      "versionMatchesServerInfo": true,
+      "reconciliation": "Hosted endpoint: serverInfo.version 0.1.0 is Vercel's own and is not client-pinnable. metadata.json recorded mcp-remote@latest, which floats; corrected to the 0.1.37 the harness already pinned."
+    }
   },
   "intentionalDeviations": {
     "renamedTools": {},

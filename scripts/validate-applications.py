@@ -10,9 +10,13 @@ Errors (exit 1):
   - every governed operation exists in the upstream tool snapshot
   - registry-entry.json plugin.artifactDid matches the canonical hash of
     plugin.json (the Credential Adapter rejects a mismatch at startup)
+  - registry-entry.json optional upstream pointers are upstream.repository 
+    and upstream.distributionUrl (URI if set)
   - classification.json covers exactly the upstream surface
   - no classification entry is still an unreviewed 'name-heuristic' draft
   - pass-through classification entries carry a recognised reason tag
+  - no author-local absolute path in harness-config.json or metadata.json
+    (LOCAL_PATH_EXEMPT holds the not-yet-migrated applications)
 
 Warnings (exit 0):
   - classification impact disagrees with plugin impact. Drift is not intended
@@ -27,6 +31,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -43,6 +48,29 @@ REASON_TAGS = {
     "validation-only",
     "simulated",
 }
+# Absolute paths that only exist on the machine that ran discovery. Matched
+# anywhere in a string, since these appear inside argv arrays.
+LOCAL_PATH_RE = re.compile(
+    r"(?:^|[\s\"'=:])(?:"
+    r"/(?:Users|home|root|tmp|private|opt/homebrew|usr/local/Cellar)/"
+    r"|/var/(?:folders|tmp)/"
+    r"|[A-Za-z]:[\\/]{1,2}(?:Users|Program Files)"
+    r")"
+)
+
+# Applications still carrying an author-local upstream path. Shrink this list;
+# never add to it. An entry that has become clean is itself an error, so the
+# list cannot outlive the problem it documents.
+LOCAL_PATH_EXEMPT = {
+    "outlook": "excluded from the de-localization workstream by the requester",
+    "x-twitter": "excluded from the de-localization workstream by the requester",
+}
+
+# Discoverability pointers on registry-entry.json upstream. Keys are required;
+# values may be null (source may be private; not every distribution has a
+# public page).
+URI_RE = re.compile(r"^https?://", re.IGNORECASE)
+
 PLUGIN_REQUIRED = [
     "version",
     "type",
@@ -118,9 +146,85 @@ def load(path: Path, rel: str, report: Report):
 
 # --- checks -----------------------------------------------------------------
 
+def _local_paths(node, trail: str = ""):
+    """Yield (json-path, offending string) for every author-local path found."""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            yield from _local_paths(v, f"{trail}.{k}" if trail else k)
+    elif isinstance(node, list):
+        for i, v in enumerate(node):
+            yield from _local_paths(v, f"{trail}[{i}]")
+    elif isinstance(node, str) and LOCAL_PATH_RE.search(node):
+        yield trail, node
+
+
+def check_local_paths(app_dir: Path, report: Report) -> None:
+    """No harness-config.json or metadata.json may name a path on the author's box."""
+    app = app_dir.name
+    found = []
+    for rel in ("harness-config.json", "build-artifacts/metadata.json"):
+        path = app_dir / rel
+        if not path.exists():
+            continue
+        try:
+            doc = json.loads(path.read_text())
+        except json.JSONDecodeError:
+            continue  # reported elsewhere
+        for trail, value in _local_paths(doc):
+            found.append((f"applications/{app}/{rel}", trail, value))
+
+    if app in LOCAL_PATH_EXEMPT:
+        if found:
+            print(f"  known-local (exempt: {LOCAL_PATH_EXEMPT[app]})")
+        else:
+            report.error(
+                f"applications/{app}/harness-config.json",
+                f"{app} is listed in LOCAL_PATH_EXEMPT but has no author-local path "
+                "left — remove it from the list so the exemption cannot outlive the "
+                "problem it documents",
+            )
+        return
+
+    for file, trail, value in found:
+        report.error(
+            file,
+            f"{trail} contains an author-local absolute path: {value!r}. "
+            "Upstream commands must be resolvable on any machine — pin an npm "
+            "version, a PyPI version, an image digest, or a release URL with a "
+            "checksum. Nobody can reproduce a classification they cannot run.",
+        )
+
+
+def check_registry_upstream(registry: dict, registry_rel: str, report: Report) -> None:
+    """No application.website; optional upstream URIs must look like URIs when set."""
+    application = registry.get("application")
+    if isinstance(application, dict) and "website" in application:
+        report.error(
+            registry_rel,
+            "application.website is no longer used — put a source URL in "
+            "upstream.repository and/or a versioned obtain URL in "
+            "upstream.distributionUrl (omit either when unknown)",
+        )
+
+    upstream = registry.get("upstream")
+    if not isinstance(upstream, dict):
+        return
+    for field in ("repository", "distributionUrl"):
+        if field not in upstream:
+            continue
+        value = upstream[field]
+        if not isinstance(value, str) or not URI_RE.match(value):
+            report.error(
+                registry_rel,
+                f"upstream.{field} must be an http(s) URI when set, got {value!r}",
+            )
+
+
 def check_app(app_dir: Path, report: Report) -> None:
     app = app_dir.name
     print(f"{app}")
+
+    check_local_paths(app_dir, report)
 
     plugin_path = app_dir / "plugin.json"
     plugin_rel = f"applications/{app}/plugin.json"
@@ -175,7 +279,7 @@ def check_app(app_dir: Path, report: Report) -> None:
         if name not in upstream:
             report.error(plugin_rel, f"{name}: governed but absent from the upstream tool snapshot")
 
-    # artifactDid
+    # artifactDid + optional upstream pointers
     registry = load(registry_path, registry_rel, report)
     if registry is not None:
         recorded = registry.get("plugin", {}).get("artifactDid")
@@ -186,6 +290,7 @@ def check_app(app_dir: Path, report: Report) -> None:
                 f"plugin.artifactDid is stale: recorded {recorded}, computed {computed}. "
                 "The Credential Adapter rejects a mismatch at startup.",
             )
+        check_registry_upstream(registry, registry_rel, report)
 
     # classification
     classification = load(classification_path, classification_rel, report)

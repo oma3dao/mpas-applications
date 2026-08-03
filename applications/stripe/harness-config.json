@@ -2,12 +2,21 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "node",
+    "command": "npx",
     "args": [
-      "/Users/mpas1/Projects/mcp-targets/stripe/src/tools/modelcontextprotocol/dist/index.js"
+      "-y",
+      "@stripe/mcp@0.3.3"
     ],
     "env": {
       "STRIPE_SECRET_KEY": "{{credential:stripeRestrictedApiKey}}"
+    },
+    "distribution": {
+      "type": "npm",
+      "package": "@stripe/mcp",
+      "version": "0.3.3",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": false,
+      "reconciliation": "metadata.serverInfo.version is 1.0.0, which @stripe/mcp has never published (latest is 0.3.3) — the capture ran a local build from the stripe/ai working tree. Pinned to 0.3.3 on two records: CHANGELOG.md names 0.3.3, and 0.3.3 was the current npm release (2026-03-24) at capturedAt 2026-07-31."
     }
   },
   "intentionalDeviations": {

@@ -2,8 +2,18 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "/Users/mpas1/Projects/mcp-targets/fastly/node_modules/.bin/fastly-mcp",
-    "args": []
+    "command": "npx",
+    "args": [
+      "-y",
+      "@fastly/mcp@2.1.4"
+    ],
+    "distribution": {
+      "type": "npm",
+      "package": "@fastly/mcp",
+      "version": "2.1.4",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": true
+    }
   },
   "intentionalDeviations": {
     "renamedTools": {},

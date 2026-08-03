@@ -9,6 +9,8 @@
   "protocol": "mcp",
   "upstream": {
     "name": "firebase",
+    "repository": "https://github.com/firebase/firebase-tools",
+    "distributionUrl": "https://www.npmjs.com/package/firebase-tools/v/15.24.0",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

@@ -9,6 +9,8 @@
   "protocol": "mcp",
   "upstream": {
     "name": "railway",
+    "repository": "https://github.com/railwayapp/cli",
+    "distributionUrl": "https://www.npmjs.com/package/@railway/cli/v/5.28.1",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

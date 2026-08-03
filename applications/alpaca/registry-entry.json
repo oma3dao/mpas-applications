@@ -9,6 +9,8 @@
   "protocol": "mcp",
   "upstream": {
     "name": "Alpaca MCP Server",
+    "repository": "https://github.com/alpacahq/alpaca-mcp-server",
+    "distributionUrl": "https://pypi.org/project/alpaca-mcp-server/2.1.1/",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

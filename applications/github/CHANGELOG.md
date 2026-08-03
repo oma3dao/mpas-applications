@@ -2,6 +2,18 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to `ghcr.io/github/github-mcp-server@sha256:2b0c48b0…`, the digest the
+  v1.6.0 tag resolves to, matching `serverInfo.version`.
+- The image reference was previously untagged, so it floated to `:latest`. The
+  reference application should not float, official upstream or not.
+- The digest is an OCI image index covering linux/amd64 and linux/arm64, so
+  pinning it stays platform-neutral.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 44 entries in `build-artifacts/classification.json`,

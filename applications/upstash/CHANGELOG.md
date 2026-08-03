@@ -2,6 +2,24 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to `npx -y @upstash/mcp-server@0.2.4`, replacing a local `node_modules`
+  path in the harness and a `/tmp/upstash-discovery.YEKdgV/index.js` scratch
+  path in metadata — the latter also carried literal `YOUR_EMAIL` and
+  `YOUR_API_KEY` placeholders.
+- **Version could not be reconciled with `serverInfo.version`.** metadata
+  records 0.1.0, the server's internal version; this changelog states the
+  capture governed all 33 tools from `@upstash/mcp-server` 0.2.4. As with
+  `postgres`, 0.1.0 is also a real published version, so pinning to
+  `serverInfo.version` would have resolved to the wrong software.
+- Added optional upstream discoverability pointers on `registry-entry.json`:
+  `upstream.repository` (source) and `upstream.distributionUrl` (versioned
+  obtain page). `application.website` is not used.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 33 entries in `build-artifacts/classification.json`,

@@ -1,5 +1,20 @@
 # Changelog — plain
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to commit `c7e28e80` of `tellahq/plain-mcp`, replacing an absolute path
+  into the author's source checkout. The launch line keeps `bun@1.3.14` and now
+  refers to `{{upstreamCheckout}}`, resolved by the `fetch` steps in the
+  distribution block.
+- **Version could not be reconciled with `serverInfo.version`.** metadata says
+  2.0.0, but this changelog names 1.2.0 and the repository's `package.json` at
+  this commit declares 1.2.0. The package is not on npm and the repository
+  carries no tags, so a commit SHA is the only available pin. The commit is the
+  captured state: the repository was last pushed 2026-07-13, before `capturedAt`.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 82 entries in `build-artifacts/classification.json`,

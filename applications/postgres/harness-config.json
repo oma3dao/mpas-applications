@@ -2,11 +2,20 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "node",
+    "command": "npx",
     "args": [
-      "/Users/mpas1/Projects/mcp-targets/postgres/node_modules/@modelcontextprotocol/server-postgres/dist/index.js",
-      "postgresql://localhost/mydb"
-    ]
+      "-y",
+      "@modelcontextprotocol/server-postgres@0.6.2",
+      "{{credential:postgresConnectionString}}"
+    ],
+    "distribution": {
+      "type": "npm",
+      "package": "@modelcontextprotocol/server-postgres",
+      "version": "0.6.2",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": false,
+      "reconciliation": "metadata.serverInfo.version is 0.1.0, the server's internal version. CHANGELOG.md is explicit: 'Captured the single query tool from @modelcontextprotocol/server-postgres 0.6.2 (server version 0.1.0)'. Note that 0.1.0 also exists on npm, so pinning to serverInfo.version would have silently resolved to the wrong package."
+    }
   },
   "intentionalDeviations": {
     "renamedTools": {},

@@ -3,13 +3,13 @@
   "application": {
     "name": "Outlook MCP MPAS Bridge Server",
     "description": "MPAS-protected bridge for personal Outlook accounts via Microsoft Graph.",
-    "applicationDid": "did:web:wivity.com:applications:outlook-mcp-server",
-    "website": "https://github.com/mpalermiti/outlook-mcp"
+    "applicationDid": "did:web:wivity.com:applications:outlook-mcp-server"
   },
   "native": false,
   "protocol": "mcp",
   "upstream": {
     "name": "outlook-mcp",
+    "repository": "https://github.com/mpalermiti/outlook-mcp",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

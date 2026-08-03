@@ -7,10 +7,22 @@
       "--yes",
       "bun@1.3.14",
       "run",
-      "/Users/mpas1/Projects/mcp-targets/plain/src/index.ts"
+      "{{upstreamCheckout}}/src/index.ts"
     ],
     "env": {
       "PLAIN_API_KEY": "{{credential:plainApiKey}}"
+    },
+    "distribution": {
+      "type": "git-source",
+      "sourceUrl": "https://github.com/tellahq/plain-mcp",
+      "commit": "c7e28e8026707d63fa9485e5cee1e7612a5f6f0c",
+      "declaredVersion": "1.2.0",
+      "versionMatchesServerInfo": false,
+      "reconciliation": "Not published to npm and the repository carries no tags, so pinned by commit. metadata.serverInfo.version says 2.0.0, but CHANGELOG.md names 1.2.0 and the repository's package.json at this commit declares 1.2.0. The commit is the captured state: the repository was last pushed 2026-07-13, before capturedAt 2026-07-31.",
+      "fetch": [
+        "git clone https://github.com/tellahq/plain-mcp upstream",
+        "git -C upstream checkout c7e28e8026707d63fa9485e5cee1e7612a5f6f0c"
+      ]
     }
   },
   "intentionalDeviations": {

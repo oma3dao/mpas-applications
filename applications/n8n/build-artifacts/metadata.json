@@ -7,8 +7,12 @@
   },
   "protocolVersion": "2025-03-26",
   "upstreamCommand": [
-    "node",
-    "/tmp/n8n-schema-server.mjs"
+    "npx",
+    "-y",
+    "mcp-remote@0.1.38",
+    "https://wivity.app.n8n.cloud/mcp-server/http",
+    "--header",
+    "Authorization: Bearer {{credential:n8nMcpBearerToken}}"
   ],
   "generatorVersion": "0.2.0",
   "capturedAt": "2026-07-31T02:22:10.566Z"

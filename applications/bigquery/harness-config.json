@@ -2,8 +2,16 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "/Users/mpas1/Projects/mcp-targets/bigquery/bin/toolbox",
+    "command": "docker",
     "args": [
+      "run",
+      "-i",
+      "--rm",
+      "-e",
+      "BIGQUERY_PROJECT",
+      "-e",
+      "GOOGLE_APPLICATION_CREDENTIALS",
+      "us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox@sha256:bbfdd4f2757e3740cf615ce8d5549a5f7c8fa08ac9352c1bc2c0d08aab62ab1a",
       "--prebuilt",
       "bigquery",
       "--stdio"
@@ -11,6 +19,19 @@
     "env": {
       "BIGQUERY_PROJECT": "{{credential:bigqueryProject}}",
       "GOOGLE_APPLICATION_CREDENTIALS": "{{credential:googleApplicationCredentials}}"
+    },
+    "distribution": {
+      "type": "oci",
+      "image": "us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox",
+      "tag": "1.8.0",
+      "digest": "sha256:bbfdd4f2757e3740cf615ce8d5549a5f7c8fa08ac9352c1bc2c0d08aab62ab1a",
+      "platforms": [
+        "linux/amd64",
+        "linux/arm64"
+      ],
+      "versionMatchesServerInfo": true,
+      "reconciliation": "metadata.serverInfo.version is '1.8.0+binary.darwin.arm64.44d1a05+prebuilt.bigquery'; the 1.8.0 release component matches. The build-metadata suffix records the single-platform local binary that was used at capture and is superseded by the multi-arch image digest.",
+      "note": "GOOGLE_APPLICATION_CREDENTIALS names a file that the Credential Adapter must mount into the container."
     }
   },
   "intentionalDeviations": {

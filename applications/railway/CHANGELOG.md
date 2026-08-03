@@ -2,6 +2,18 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to `npx -y @railway/cli@5.28.1 mcp`, replacing a local
+  `node_modules/@railway/cli/bin/railway.js` path. 5.28.1 matches
+  `serverInfo.version` exactly (npm latest has since moved to 5.30.3).
+- Added optional upstream discoverability pointers on `registry-entry.json`:
+  `upstream.repository` (source) and `upstream.distributionUrl` (versioned
+  obtain page). `application.website` is not used.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 47 entries in `build-artifacts/classification.json`,
