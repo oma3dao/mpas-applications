@@ -2,9 +2,10 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "node",
+    "command": "npx",
     "args": [
-      "/Users/mpas1/Projects/mcp-targets/upstash/node_modules/@upstash/mcp-server/dist/index.js",
+      "-y",
+      "@upstash/mcp-server@0.2.4",
       "--email",
       "{{credential:upstashEmail}}",
       "--api-key",
@@ -13,6 +14,14 @@
     "env": {
       "UPSTASH_EMAIL": "{{credential:upstashEmail}}",
       "UPSTASH_API_KEY": "{{credential:upstashApiKey}}"
+    },
+    "distribution": {
+      "type": "npm",
+      "package": "@upstash/mcp-server",
+      "version": "0.2.4",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": false,
+      "reconciliation": "metadata.serverInfo.version is 0.1.0, the server's internal version. CHANGELOG.md states 'Captured and governed all 33 tools from @upstash/mcp-server 0.2.4'. As with postgres, 0.1.0 also exists on npm, so pinning to serverInfo.version would have resolved to the wrong package."
     }
   },
   "intentionalDeviations": {

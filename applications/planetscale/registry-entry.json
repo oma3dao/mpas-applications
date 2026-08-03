@@ -9,6 +9,8 @@
   "protocol": "mcp",
   "upstream": {
     "name": "mcp-server",
+    "repository": "https://github.com/planetscale/mcp-server",
+    "distributionUrl": "https://github.com/planetscale/mcp-server/tree/56a05b658de1d2035510708f3a51ec224048f4ee",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

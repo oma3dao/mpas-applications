@@ -2,6 +2,21 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to `npx -y @modelcontextprotocol/server-postgres@0.6.2`, replacing a
+  local `node_modules` path. The literal `postgresql://localhost/mydb` argument,
+  a leftover from the author's machine, is now
+  `{{credential:postgresConnectionString}}`.
+- **Version could not be reconciled with `serverInfo.version`.** metadata
+  records 0.1.0, the server's internal version; this changelog is explicit that
+  the capture used package 0.6.2. Worth stating plainly: `0.1.0` is also a real
+  published version of this package, so pinning to `serverInfo.version` would
+  have resolved silently to the wrong software.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Rewrote the single entry in `build-artifacts/classification.json` to record

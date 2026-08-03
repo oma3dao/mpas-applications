@@ -7,12 +7,13 @@
   },
   "protocolVersion": "2024-11-05",
   "upstreamCommand": [
-    "node",
-    "/tmp/upstash-discovery.YEKdgV/index.js",
+    "npx",
+    "-y",
+    "@upstash/mcp-server@0.2.4",
     "--email",
-    "YOUR_EMAIL",
+    "{{credential:upstashEmail}}",
     "--api-key",
-    "YOUR_API_KEY"
+    "{{credential:upstashApiKey}}"
   ],
   "generatorVersion": "0.2.0",
   "capturedAt": "2026-07-28T23:42:39.203Z"

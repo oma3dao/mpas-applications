@@ -9,7 +9,18 @@
       "https://wivity.app.n8n.cloud/mcp-server/http",
       "--header",
       "Authorization: Bearer {{credential:n8nMcpBearerToken}}"
-    ]
+    ],
+    "distribution": {
+      "type": "remote",
+      "endpoint": "https://wivity.app.n8n.cloud/mcp-server/http",
+      "client": {
+        "type": "npm",
+        "package": "mcp-remote",
+        "version": "0.1.38"
+      },
+      "versionMatchesServerInfo": true,
+      "reconciliation": "Hosted endpoint: serverInfo.version 2.32.6 is the n8n instance version and is not client-pinnable. The pin that matters here is the mcp-remote client."
+    }
   },
   "intentionalDeviations": {
     "renamedTools": {},

@@ -3,13 +3,14 @@
   "application": {
     "name": "PostgreSQL MCP MPAS Bridge Server",
     "description": "MPAS-protected bridge for the reference PostgreSQL MCP Server.",
-    "applicationDid": "did:web:wivity.com:applications:postgres-mcp-server",
-    "website": "https://github.com/modelcontextprotocol/servers"
+    "applicationDid": "did:web:wivity.com:applications:postgres-mcp-server"
   },
   "native": false,
   "protocol": "mcp",
   "upstream": {
     "name": "example-servers/postgres",
+    "repository": "https://github.com/modelcontextprotocol/servers",
+    "distributionUrl": "https://www.npmjs.com/package/@modelcontextprotocol/server-postgres/v/0.6.2",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

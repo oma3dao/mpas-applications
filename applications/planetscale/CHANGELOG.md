@@ -2,6 +2,31 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-08-03 — Pin the tsx launch runtime
+
+- Launch still used bare `tsx` via `npx`, which floats. Pinned to
+  `tsx@4.23.1` (latest npm release at `capturedAt`; the pinned commit's
+  `package.json` declares `tsx ^4.21.0`) and recorded the runtime under
+  `upstream.distribution.runtime`. CI requires an exact semver on npm
+  launch specs (not a dist-tag or range blacklist).
+
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to commit `56a05b65` of `planetscale/mcp-server`, replacing a
+  cwd-relative `npx tsx ./src/server.ts` that resolved against wherever the
+  command happened to run.
+- **Version could not be reconciled with `serverInfo.version`.** metadata
+  records 0.0.0, an unset placeholder that identifies no build. The package is
+  not on npm and the repository carries no tags. The commit is the repository
+  HEAD at `capturedAt`; unlike `plain`, the repository has been pushed to since,
+  so this pin is inferred from the capture timestamp rather than confirmed.
+- Added optional upstream discoverability pointers on `registry-entry.json`:
+  `upstream.repository` (source) and `upstream.distributionUrl` (versioned
+  obtain page). `application.website` is not used.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 5 entries in `build-artifacts/classification.json`,

@@ -9,6 +9,8 @@
   "protocol": "mcp",
   "upstream": {
     "name": "kraken-cli",
+    "repository": "https://github.com/krakenfx/kraken-cli",
+    "distributionUrl": "https://github.com/krakenfx/kraken-cli/releases/tag/v0.3.2",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

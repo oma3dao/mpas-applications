@@ -2,13 +2,22 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "node",
+    "command": "npx",
     "args": [
-      "/Users/mpas1/Projects/mcp-targets/firebase/node_modules/firebase-tools/lib/bin/firebase.js",
+      "-y",
+      "firebase-tools@15.24.0",
       "mcp"
     ],
     "env": {
       "FIREBASE_TOKEN": "{{credential:firebaseToken}}"
+    },
+    "distribution": {
+      "type": "npm",
+      "package": "firebase-tools",
+      "version": "15.24.0",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": false,
+      "reconciliation": "metadata.serverInfo.version is 0.3.0, the version of the MCP server embedded in firebase-tools, not of firebase-tools itself. Pinning firebase-tools@0.3.0 would resolve to an unrelated 2015 release. Pinned to 15.24.0 on two records: CHANGELOG.md names 15.24.0, and 15.24.0 was the current npm release (2026-07-15) at capturedAt 2026-07-28."
     }
   },
   "intentionalDeviations": {

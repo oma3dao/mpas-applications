@@ -7,8 +7,9 @@
   },
   "protocolVersion": "2024-11-05",
   "upstreamCommand": [
-    "node",
-    "/Users/mpas1/Projects/mcp-targets/firebase/node_modules/firebase-tools/lib/bin/firebase.js",
+    "npx",
+    "-y",
+    "firebase-tools@15.24.0",
     "mcp"
   ],
   "generatorVersion": "0.2.0",

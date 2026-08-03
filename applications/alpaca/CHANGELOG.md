@@ -1,5 +1,21 @@
 # Changelog — alpaca
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to `uvx --from alpaca-mcp-server==2.1.1`.
+- **Version could not be reconciled with `serverInfo.version`.** metadata records
+  3.4.5, which is the FastMCP framework version rather than the server's own —
+  `x-twitter` reports the same 3.4.5 from an unrelated server. 2.1.1 is taken
+  from two independent records: this changelog's own initial entry, and the
+  PyPI release current at `capturedAt` (2.1.1 shipped 2026-06-24; 2.2.0 not
+  until 2026-07-31, a day after capture).
+- Added optional upstream discoverability pointers on `registry-entry.json`:
+  `upstream.repository` (source) and `upstream.distributionUrl` (versioned
+  obtain page). `application.website` is not used.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-08-02 — Normalized impact grading
 
 - Re-graded all 12 governed operations against the README rubric, using

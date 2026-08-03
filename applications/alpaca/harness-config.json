@@ -2,12 +2,24 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "/Users/mpas1/Projects/mcp-targets/alpaca/.venv/bin/alpaca-mcp-server",
-    "args": [],
+    "command": "uvx",
+    "args": [
+      "--from",
+      "alpaca-mcp-server==2.1.1",
+      "alpaca-mcp-server"
+    ],
     "env": {
       "ALPACA_API_KEY": "{{credential:alpacaApiKey}}",
       "ALPACA_SECRET_KEY": "{{credential:alpacaApiSecret}}",
       "ALPACA_PAPER_TRADE": "true"
+    },
+    "distribution": {
+      "type": "pypi",
+      "package": "alpaca-mcp-server",
+      "version": "2.1.1",
+      "registry": "https://pypi.org/simple/",
+      "versionMatchesServerInfo": false,
+      "reconciliation": "metadata.serverInfo.version is 3.4.5, which is the FastMCP framework version the server is built on, not the server's own version — the x-twitter application reports the same 3.4.5 from a different server. Pinned to 2.1.1 on two independent records: CHANGELOG.md states 'Captured all 74 tools from the official Alpaca MCP Server 2.1.1', and 2.1.1 was the current PyPI release (2026-06-24) at capturedAt 2026-07-30, with 2.2.0 not published until 2026-07-31."
     }
   },
   "intentionalDeviations": {

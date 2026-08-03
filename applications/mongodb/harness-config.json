@@ -2,12 +2,20 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "node",
+    "command": "npx",
     "args": [
-      "/Users/mpas1/Projects/mcp-targets/mongodb/node_modules/mongodb-mcp-server/dist/esm/index.js"
+      "-y",
+      "mongodb-mcp-server@1.14.0"
     ],
     "env": {
       "MDB_MCP_CONNECTION_STRING": "{{credential:mongodbConnectionString}}"
+    },
+    "distribution": {
+      "type": "npm",
+      "package": "mongodb-mcp-server",
+      "version": "1.14.0",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": true
     }
   },
   "intentionalDeviations": {

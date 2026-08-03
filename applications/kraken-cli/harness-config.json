@@ -2,7 +2,7 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "/Users/mpas1/Projects/mcp-targets/kraken-cli/bin/kraken-cli-aarch64-apple-darwin/kraken",
+    "command": "{{upstreamCheckout}}/kraken",
     "args": [
       "mcp",
       "-s",
@@ -13,7 +13,40 @@
       "KRAKEN_API_SECRET",
       "KRAKEN_FUTURES_API_KEY",
       "KRAKEN_FUTURES_API_SECRET"
-    ]
+    ],
+    "distribution": {
+      "type": "binary-release",
+      "sourceUrl": "https://github.com/krakenfx/kraken-cli",
+      "release": "v0.3.2",
+      "versionMatchesServerInfo": true,
+      "checksumManifest": "https://github.com/krakenfx/kraken-cli/releases/download/v0.3.2/SHA256SUMS.txt",
+      "signatureScheme": "minisign (.minisig alongside each asset)",
+      "artifacts": {
+        "darwin-arm64": {
+          "url": "https://github.com/krakenfx/kraken-cli/releases/download/v0.3.2/kraken-cli-aarch64-apple-darwin.tar.gz",
+          "sha256": "55a89ec764bdd566d761b39119161b294adf34d80ffeca503fe306868f1b4c60"
+        },
+        "darwin-amd64": {
+          "url": "https://github.com/krakenfx/kraken-cli/releases/download/v0.3.2/kraken-cli-x86_64-apple-darwin.tar.gz",
+          "sha256": "6e731e88cf183106ca99fcbc5036677e06cf901fd5d78f9209b91e19a8dc79c5"
+        },
+        "linux-arm64": {
+          "url": "https://github.com/krakenfx/kraken-cli/releases/download/v0.3.2/kraken-cli-aarch64-unknown-linux-gnu.tar.gz",
+          "sha256": "c13021689218176df46e7a42c9282ef163f857543d9d157969a86cd0cdec9300"
+        },
+        "linux-amd64": {
+          "url": "https://github.com/krakenfx/kraken-cli/releases/download/v0.3.2/kraken-cli-x86_64-unknown-linux-gnu.tar.gz",
+          "sha256": "7ee56c2841cc8c1770854737f08fdc4227d3af3a9aee24a8c4af5cc6f46517be"
+        }
+      },
+      "fetch": [
+        "# select the artifact for the host platform from artifacts above",
+        "curl -fsSL -o kraken-cli.tar.gz https://github.com/krakenfx/kraken-cli/releases/download/v0.3.2/<artifact>",
+        "echo \"<sha256>  kraken-cli.tar.gz\" | shasum -a 256 -c -",
+        "tar -xzf kraken-cli.tar.gz -C {{upstreamCheckout}}"
+      ],
+      "note": "Binaries are deliberately not vendored into this repository: redistribution is a licensing question and the release is multi-arch."
+    }
   },
   "intentionalDeviations": {
     "renamedTools": {},

@@ -3,13 +3,13 @@
   "application": {
     "name": "X (Twitter) MCP MPAS Bridge Server",
     "description": "MPAS-protected bridge for the X (Twitter) MCP Server using the official X API v2.",
-    "applicationDid": "did:web:wivity.com:applications:x-twitter-mcp-server",
-    "website": "https://github.com/rafaljanicki/x-twitter-mcp-server"
+    "applicationDid": "did:web:wivity.com:applications:x-twitter-mcp-server"
   },
   "native": false,
   "protocol": "mcp",
   "upstream": {
     "name": "TwitterMCPServer",
+    "repository": "https://github.com/rafaljanicki/x-twitter-mcp-server",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

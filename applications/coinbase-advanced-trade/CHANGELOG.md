@@ -1,5 +1,17 @@
 # Changelog — Coinbase Advanced Trade
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to `npx -y @coinbase/coinbase-cli@0.0.4 mcp`, replacing a bare
+  `coinbase mcp` that depended on whatever was on the operator's PATH.
+- 0.0.4 matches `serverInfo.version` exactly and is the current npm release.
+- Added `upstream.distributionUrl` on `registry-entry.json` pointing at
+  the pinned npm package page. No confirmed public source repository is
+  recorded. `application.website` is not used.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-08-02 — Normalized impact grading
 
 - Re-graded all 9 governed operations against the README rubric, using `github`

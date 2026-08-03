@@ -8,9 +8,11 @@
   "protocolVersion": "2024-11-05",
   "upstreamCommand": [
     "npx",
-    "--yes",
-    "mcp-remote@latest",
-    "https://mcp.vercel.com"
+    "-y",
+    "mcp-remote@0.1.37",
+    "https://mcp.vercel.com",
+    "--header",
+    "Authorization: Bearer {{credential:vercelMcpOAuthAccessToken}}"
   ],
   "generatorVersion": "0.2.0",
   "capturedAt": "2026-07-31T02:39:42.053Z"

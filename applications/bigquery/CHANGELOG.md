@@ -1,5 +1,20 @@
 # Changelog — bigquery
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to the multi-arch container
+  `us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox@sha256:bbfdd4f2…`
+  (tag 1.8.0), replacing a local `bin/toolbox` build.
+- The 1.8.0 component of `serverInfo.version` matches. The rest of that string
+  (`+binary.darwin.arm64.44d1a05+prebuilt.bigquery`) described a single-platform
+  local binary and is superseded by the digest, which covers linux/amd64 and
+  linux/arm64.
+- Google publishes no GitHub release assets for this tool, so the container is
+  the resolvable channel.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 9 entries in `build-artifacts/classification.json`,

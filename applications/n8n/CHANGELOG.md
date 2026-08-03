@@ -1,5 +1,20 @@
 # Changelog — n8n
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- `harness-config.json` already pinned `mcp-remote@0.1.38` against the hosted
+  endpoint and needed no change. `metadata.json` recorded
+  `node /tmp/n8n-schema-server.mjs` — a scratch file from the discovery run that
+  described nothing reproducible — and now mirrors the harness command.
+- `serverInfo.version` 2.32.6 is the hosted n8n instance's version and is not
+  client-pinnable. The pin that matters here is the `mcp-remote` client.
+- Added optional upstream discoverability pointers on `registry-entry.json`:
+  `upstream.repository` (source) and `upstream.distributionUrl` (versioned
+  obtain page). `application.website` is not used.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 34 entries in `build-artifacts/classification.json`,

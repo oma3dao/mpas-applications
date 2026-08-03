@@ -3,13 +3,14 @@
   "application": {
     "name": "MongoDB MCP MPAS Bridge Server",
     "description": "MPAS-protected bridge for the official MongoDB MCP Server.",
-    "applicationDid": "did:web:wivity.com:applications:mongodb-mcp-server",
-    "website": "https://github.com/mongodb-js/mongodb-mcp-server"
+    "applicationDid": "did:web:wivity.com:applications:mongodb-mcp-server"
   },
   "native": false,
   "protocol": "mcp",
   "upstream": {
     "name": "MongoDB MCP Server",
+    "repository": "https://github.com/mongodb-js/mongodb-mcp-server",
+    "distributionUrl": "https://www.npmjs.com/package/mongodb-mcp-server/v/1.14.0",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

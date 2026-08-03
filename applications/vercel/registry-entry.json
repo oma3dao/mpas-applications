@@ -9,6 +9,7 @@
   "protocol": "mcp",
   "upstream": {
     "name": "Vercel MCP Server",
+    "distributionUrl": "https://mcp.vercel.com",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

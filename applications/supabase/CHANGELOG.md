@@ -2,6 +2,15 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to `npx -y @supabase/mcp-server-supabase@0.9.0`, replacing a local
+  `node_modules/@supabase/mcp-server-supabase/dist/transports/stdio.js` path.
+  0.9.0 matches `serverInfo.version` exactly.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 29 entries in `build-artifacts/classification.json`,

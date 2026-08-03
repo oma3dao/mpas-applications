@@ -2,13 +2,21 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "node",
+    "command": "npx",
     "args": [
-      "/Users/mpas1/Projects/mcp-targets/railway/node_modules/@railway/cli/bin/railway.js",
+      "-y",
+      "@railway/cli@5.28.1",
       "mcp"
     ],
     "env": {
       "RAILWAY_TOKEN": "{{credential:railwayApiToken}}"
+    },
+    "distribution": {
+      "type": "npm",
+      "package": "@railway/cli",
+      "version": "5.28.1",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": true
     }
   },
   "intentionalDeviations": {

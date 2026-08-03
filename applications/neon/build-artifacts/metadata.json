@@ -7,8 +7,9 @@
   },
   "protocolVersion": "2024-11-05",
   "upstreamCommand": [
-    "node",
-    "/tmp/neon-static-discovery.mjs"
+    "npx",
+    "-y",
+    "@neondatabase/mcp-server-neon@0.6.5"
   ],
   "generatorVersion": "0.2.0",
   "capturedAt": "2026-07-28T19:04:19.744Z"

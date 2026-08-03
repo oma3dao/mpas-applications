@@ -2,12 +2,20 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "node",
+    "command": "npx",
     "args": [
-      "/Users/mpas1/Projects/mcp-targets/supabase/node_modules/@supabase/mcp-server-supabase/dist/transports/stdio.js"
+      "-y",
+      "@supabase/mcp-server-supabase@0.9.0"
     ],
     "env": {
       "SUPABASE_ACCESS_TOKEN": "{{credential:supabasePersonalAccessToken}}"
+    },
+    "distribution": {
+      "type": "npm",
+      "package": "@supabase/mcp-server-supabase",
+      "version": "0.9.0",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": true
     }
   },
   "intentionalDeviations": {

@@ -7,8 +7,9 @@
   },
   "protocolVersion": "2024-11-05",
   "upstreamCommand": [
-    "node",
-    "/Users/mpas1/Projects/mcp-targets/mongodb/node_modules/mongodb-mcp-server/dist/esm/index.js"
+    "npx",
+    "-y",
+    "mongodb-mcp-server@1.14.0"
   ],
   "generatorVersion": "0.2.0",
   "capturedAt": "2026-07-28T19:10:23.383Z"

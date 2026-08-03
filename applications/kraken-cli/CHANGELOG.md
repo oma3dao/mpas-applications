@@ -2,6 +2,24 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Replaced the hard-coded `bin/kraken-cli-aarch64-apple-darwin/kraken` path with
+  a `binary-release` distribution block: release v0.3.2, the vendor's
+  `SHA256SUMS.txt`, and per-platform URLs and SHA-256 digests for darwin and
+  linux on both arm64 and amd64, plus a fetch recipe.
+- v0.3.2 matches `serverInfo.version`.
+- The binaries are deliberately **not** vendored into this repository:
+  redistribution is a licensing question and the release is multi-arch. A URL
+  and a checksum give the same guarantee without either problem. Kraken also
+  publishes minisign signatures alongside each asset, noted in the block.
+- Added optional upstream discoverability pointers on `registry-entry.json`:
+  `upstream.repository` (source) and `upstream.distributionUrl` (versioned
+  obtain page). `application.website` is not used.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-08-02 — Normalized impact grading
 
 - Re-graded all 30 governed operations against the README rubric, using

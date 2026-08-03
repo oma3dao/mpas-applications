@@ -2,6 +2,22 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to `npx -y firebase-tools@15.24.0 mcp`, replacing a local
+  `node_modules/firebase-tools/lib/bin/firebase.js` path.
+- **Version could not be reconciled with `serverInfo.version`.** metadata
+  records 0.3.0, which is the version of the MCP server *embedded in*
+  firebase-tools, not of firebase-tools itself — `firebase-tools@0.3.0` resolves
+  to an unrelated 2015 release. 15.24.0 is corroborated by this changelog and
+  was the npm release current at `capturedAt`.
+- Added optional upstream discoverability pointers on `registry-entry.json`:
+  `upstream.repository` (source) and `upstream.distributionUrl` (versioned
+  obtain page). `application.website` is not used.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 19 entries in `build-artifacts/classification.json`,

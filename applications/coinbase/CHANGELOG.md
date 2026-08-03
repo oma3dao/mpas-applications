@@ -1,5 +1,19 @@
 # Changelog — Coinbase
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to `npx -y @coinbase/payments-mcp@1.0.5`, replacing
+  `node /Users/…/.payments-mcp/bundle.js`.
+- **Version could not be reconciled, and this one is unresolved.** Three records
+  disagree: metadata says 1.0.0, this changelog says 2.12.1, and npm has never
+  published either (0.0.0, 1.0.1, 1.0.3, 1.0.4, 1.0.5). The capture ran a bundle
+  installed outside any package manager, so nothing ties the snapshot to a
+  published artifact. 1.0.5 removes the local path; the tool surface should be
+  re-captured against it before the snapshot is relied on.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-08-02 — Normalized impact grading
 
 - Re-graded all 5 governed operations against the README rubric, using `github`

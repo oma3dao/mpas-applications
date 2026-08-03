@@ -9,6 +9,8 @@
   "protocol": "mcp",
   "upstream": {
     "name": "stripe-mcp",
+    "repository": "https://github.com/stripe/ai/tree/main/tools/modelcontextprotocol",
+    "distributionUrl": "https://www.npmjs.com/package/@stripe/mcp/v/0.3.3",
     "protocolVersion": "2025-03-26",
     "toolSurface": {
       "alg": "sha-256",

@@ -1,5 +1,19 @@
 # Changelog — Vercel
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- `harness-config.json` already pinned `mcp-remote@0.1.37` against the hosted
+  endpoint. `metadata.json` recorded `mcp-remote@latest`, which floats and
+  disagreed with the harness; both now read 0.1.37.
+- `serverInfo.version` 0.1.0 is Vercel's own and is not client-pinnable. The
+  pin that matters here is the `mcp-remote` client.
+- Added `upstream.distributionUrl` on `registry-entry.json` (hosted
+  endpoint). No public source repository is recorded. `application.website`
+  is not used.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 33 entries in `build-artifacts/classification.json`,

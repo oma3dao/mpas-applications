@@ -10,9 +10,15 @@ Errors (exit 1):
   - every governed operation exists in the upstream tool snapshot
   - registry-entry.json plugin.artifactDid matches the canonical hash of
     plugin.json (the Credential Adapter rejects a mismatch at startup)
+  - registry-entry.json optional upstream pointers are upstream.repository 
+    and upstream.distributionUrl (URI if set)
   - classification.json covers exactly the upstream surface
   - no classification entry is still an unreviewed 'name-heuristic' draft
   - pass-through classification entries carry a recognised reason tag
+  - no author-local absolute path in harness-config.json or metadata.json
+    (LOCAL_PATH_EXEMPT holds the not-yet-migrated applications)
+  - npx launch package specs in harness-config.json / metadata.json carry an
+    exact version (not bare names or @latest)
 
 Warnings (exit 0):
   - classification impact disagrees with plugin impact. Drift is not intended
@@ -27,6 +33,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -43,6 +50,41 @@ REASON_TAGS = {
     "validation-only",
     "simulated",
 }
+# Absolute paths that only exist on the machine that ran discovery. Matched
+# anywhere in a string, since these appear inside argv arrays.
+LOCAL_PATH_RE = re.compile(
+    r"(?:^|[\s\"'=:])(?:"
+    r"/(?:Users|home|root|tmp|private|opt/homebrew|usr/local/Cellar)/"
+    r"|/var/(?:folders|tmp)/"
+    r"|[A-Za-z]:[\\/]{1,2}(?:Users|Program Files)"
+    r")"
+)
+
+# Applications still carrying an author-local upstream path. Shrink this list;
+# never add to it. An entry that has become clean is itself an error, so the
+# list cannot outlive the problem it documents.
+LOCAL_PATH_EXEMPT = {
+    "outlook": "excluded from the de-localization workstream by the requester",
+    "x-twitter": "excluded from the de-localization workstream by the requester",
+}
+
+# Optional discoverability pointers on registry-entry.json upstream. Omit when
+# unknown (source may be private; not every distribution has a public page).
+URI_RE = re.compile(r"^https?://", re.IGNORECASE)
+
+# npm package specs accepted by npx: name or @scope/name, optional @version.
+NPM_PACKAGE_RE = re.compile(
+    r"^(?:(@[A-Za-z0-9._-]+/[A-Za-z0-9._-]+)|([A-Za-z0-9._-]+))(?:@(.+))?$"
+)
+# Exact npm version only (semver core + optional prerelease/build). Dist-tags
+# (latest, beta, …), ranges (^/~/>/||/x), and wildcards are rejected.
+EXACT_NPM_VERSION_RE = re.compile(
+    r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
+    r"(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)"
+    r"(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?"
+    r"(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
+)
+
 PLUGIN_REQUIRED = [
     "version",
     "type",
@@ -118,9 +160,191 @@ def load(path: Path, rel: str, report: Report):
 
 # --- checks -----------------------------------------------------------------
 
+def _local_paths(node, trail: str = ""):
+    """Yield (json-path, offending string) for every author-local path found."""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            yield from _local_paths(v, f"{trail}.{k}" if trail else k)
+    elif isinstance(node, list):
+        for i, v in enumerate(node):
+            yield from _local_paths(v, f"{trail}[{i}]")
+    elif isinstance(node, str) and LOCAL_PATH_RE.search(node):
+        yield trail, node
+
+
+def check_local_paths(app_dir: Path, report: Report) -> None:
+    """No harness-config.json or metadata.json may name a path on the author's box."""
+    app = app_dir.name
+    found = []
+    for rel in ("harness-config.json", "build-artifacts/metadata.json"):
+        path = app_dir / rel
+        if not path.exists():
+            continue
+        try:
+            doc = json.loads(path.read_text())
+        except json.JSONDecodeError:
+            continue  # reported elsewhere
+        for trail, value in _local_paths(doc):
+            found.append((f"applications/{app}/{rel}", trail, value))
+
+    if app in LOCAL_PATH_EXEMPT:
+        if found:
+            print(f"  known-local (exempt: {LOCAL_PATH_EXEMPT[app]})")
+        else:
+            report.error(
+                f"applications/{app}/harness-config.json",
+                f"{app} is listed in LOCAL_PATH_EXEMPT but has no author-local path "
+                "left — remove it from the list so the exemption cannot outlive the "
+                "problem it documents",
+            )
+        return
+
+    for file, trail, value in found:
+        report.error(
+            file,
+            f"{trail} contains an author-local absolute path: {value!r}. "
+            "Upstream commands must be resolvable on any machine — pin an npm "
+            "version, a PyPI version, an image digest, or a release URL with a "
+            "checksum. Nobody can reproduce a classification they cannot run.",
+        )
+
+
+def _npx_package_specs(command, args):
+    """Yield npm package specs that npx would resolve from a command argv."""
+    tokens = []
+    if command == "npx":
+        tokens = list(args or [])
+    elif isinstance(command, list) and command and command[0] == "npx":
+        tokens = list(command[1:])
+    else:
+        return
+
+    i = 0
+    while i < len(tokens):
+        tok = tokens[i]
+        if not isinstance(tok, str):
+            i += 1
+            continue
+        if tok in ("-y", "--yes"):
+            i += 1
+            continue
+        if tok in ("-p", "--package"):
+            if i + 1 < len(tokens) and isinstance(tokens[i + 1], str):
+                yield tokens[i + 1]
+                i += 2
+                continue
+            i += 1
+            continue
+        if tok.startswith("-"):
+            i += 1
+            continue
+        # First positional after flags is the package (or package@version).
+        yield tok
+        return
+
+
+def _floating_npm_reason(spec: str):
+    """Return an error reason if spec is missing or not an exact npm version."""
+    if not isinstance(spec, str) or not spec or spec.startswith("{{"):
+        return None
+    # Paths / URLs are not package specs (scoped @org/pkg still starts with @).
+    if "://" in spec:
+        return None
+    if "/" in spec and not spec.startswith("@"):
+        return None
+    match = NPM_PACKAGE_RE.match(spec)
+    if not match:
+        return None
+    version = match.group(3)
+    if version is None:
+        return f"{spec!r} has no version — use {spec}@<exact-version>"
+    if not EXACT_NPM_VERSION_RE.match(version):
+        return (
+            f"{spec!r} is not pinned to an exact version "
+            f"(got {version!r}; use a semver like 1.2.3, not a dist-tag or range)"
+        )
+    return None
+
+
+def check_floating_npm_specs(app_dir: Path, report: Report) -> None:
+    """npx package arguments in harness/metadata must be exact version pins."""
+    app = app_dir.name
+    if app in LOCAL_PATH_EXEMPT:
+        return
+
+    checks = []
+    harness_path = app_dir / "harness-config.json"
+    if harness_path.exists():
+        try:
+            harness = json.loads(harness_path.read_text())
+        except json.JSONDecodeError:
+            harness = None
+        if isinstance(harness, dict):
+            upstream = harness.get("upstream") or {}
+            for spec in _npx_package_specs(upstream.get("command"), upstream.get("args")):
+                checks.append(
+                    (f"applications/{app}/harness-config.json", "upstream.args", spec)
+                )
+
+    metadata_path = app_dir / "build-artifacts" / "metadata.json"
+    if metadata_path.exists():
+        try:
+            metadata = json.loads(metadata_path.read_text())
+        except json.JSONDecodeError:
+            metadata = None
+        if isinstance(metadata, dict):
+            cmd = metadata.get("upstreamCommand")
+            if isinstance(cmd, list) and cmd:
+                for spec in _npx_package_specs(cmd[0], cmd[1:]):
+                    checks.append(
+                        (
+                            f"applications/{app}/build-artifacts/metadata.json",
+                            "upstreamCommand",
+                            spec,
+                        )
+                    )
+
+    for file, trail, spec in checks:
+        reason = _floating_npm_reason(spec)
+        if reason:
+            report.error(
+                file,
+                f"{trail} npm package {reason}. Floating npx resolutions make "
+                "the captured tool surface unreproducible.",
+            )
+
+
+def check_registry_upstream(registry: dict, registry_rel: str, report: Report) -> None:
+    """No application.website; optional upstream URIs must look like URIs when set."""
+    application = registry.get("application")
+    if isinstance(application, dict) and "website" in application:
+        report.error(
+            registry_rel,
+            "application.website is no longer used — put a source URL in "
+            "upstream.repository and/or a versioned obtain URL in "
+            "upstream.distributionUrl (omit either when unknown)",
+        )
+
+    upstream = registry.get("upstream")
+    if not isinstance(upstream, dict):
+        return
+    for field in ("repository", "distributionUrl"):
+        if field not in upstream:
+            continue
+        value = upstream[field]
+        if not isinstance(value, str) or not URI_RE.match(value):
+            report.error(
+                registry_rel,
+                f"upstream.{field} must be an http(s) URI when set, got {value!r}",
+            )
+
+
 def check_app(app_dir: Path, report: Report) -> None:
     app = app_dir.name
     print(f"{app}")
+
+    check_local_paths(app_dir, report)
+    check_floating_npm_specs(app_dir, report)
 
     plugin_path = app_dir / "plugin.json"
     plugin_rel = f"applications/{app}/plugin.json"
@@ -175,7 +399,7 @@ def check_app(app_dir: Path, report: Report) -> None:
         if name not in upstream:
             report.error(plugin_rel, f"{name}: governed but absent from the upstream tool snapshot")
 
-    # artifactDid
+    # artifactDid + optional upstream pointers
     registry = load(registry_path, registry_rel, report)
     if registry is not None:
         recorded = registry.get("plugin", {}).get("artifactDid")
@@ -186,6 +410,7 @@ def check_app(app_dir: Path, report: Report) -> None:
                 f"plugin.artifactDid is stale: recorded {recorded}, computed {computed}. "
                 "The Credential Adapter rejects a mismatch at startup.",
             )
+        check_registry_upstream(registry, registry_rel, report)
 
     # classification
     classification = load(classification_path, classification_rel, report)

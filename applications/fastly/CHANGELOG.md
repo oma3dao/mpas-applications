@@ -1,5 +1,13 @@
 # Changelog — fastly
 
+## 2026-08-02 — Pinned the upstream launch command
+
+- Pinned to `npx -y @fastly/mcp@2.1.4`, replacing a local `node_modules/.bin`
+  path. 2.1.4 matches `serverInfo.version` exactly.
+- CI now fails on any author-local absolute path in `harness-config.json`
+  or `build-artifacts/metadata.json`. An upstream nobody can launch is a
+  classification nobody can reproduce, and therefore cannot check.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 3 entries in `build-artifacts/classification.json`,

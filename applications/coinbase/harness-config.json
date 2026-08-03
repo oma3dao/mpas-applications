@@ -2,10 +2,19 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "node",
+    "command": "npx",
     "args": [
-      "/Users/mpas1/.payments-mcp/bundle.js"
-    ]
+      "-y",
+      "@coinbase/payments-mcp@1.0.5"
+    ],
+    "distribution": {
+      "type": "npm",
+      "package": "@coinbase/payments-mcp",
+      "version": "1.0.5",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": false,
+      "reconciliation": "UNRESOLVED — three records disagree and none can be confirmed. metadata.serverInfo.version says 1.0.0, CHANGELOG.md says 'Coinbase Payments MCP 2.12.1', and npm @coinbase/payments-mcp has never published either (0.0.0, 1.0.1, 1.0.3, 1.0.4, 1.0.5). The capture ran a bundle.js installed outside any package manager. Pinned to 1.0.5 to remove the local path; the tool surface must be re-captured against this pin before the snapshot can be trusted."
+    }
   },
   "intentionalDeviations": {
     "renamedTools": {},

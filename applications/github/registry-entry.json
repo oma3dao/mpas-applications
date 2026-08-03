@@ -3,13 +3,13 @@
   "application": {
     "name": "GitHub MCP MPAS Bridge Server",
     "description": "MPAS-protected bridge for the official GitHub MCP Server.",
-    "applicationDid": "did:web:wivity.com:applications:github-mcp-server",
-    "website": "https://github.com/github/github-mcp-server"
+    "applicationDid": "did:web:wivity.com:applications:github-mcp-server"
   },
   "native": false,
   "protocol": "mcp",
   "upstream": {
     "name": "github-mcp-server",
+    "repository": "https://github.com/github/github-mcp-server",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

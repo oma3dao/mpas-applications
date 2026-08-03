@@ -3,13 +3,14 @@
   "application": {
     "name": "Plain MCP MPAS Bridge Server",
     "description": "MPAS-protected bridge for the Plain.com customer support MCP Server.",
-    "applicationDid": "did:web:wivity.com:applications:plain-mcp-server",
-    "website": "https://github.com/tellahq/plain-mcp"
+    "applicationDid": "did:web:wivity.com:applications:plain-mcp-server"
   },
   "native": false,
   "protocol": "mcp",
   "upstream": {
     "name": "plain-mcp",
+    "repository": "https://github.com/tellahq/plain-mcp",
+    "distributionUrl": "https://github.com/tellahq/plain-mcp/tree/c7e28e8026707d63fa9485e5cee1e7612a5f6f0c",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

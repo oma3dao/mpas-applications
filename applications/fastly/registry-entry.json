@@ -3,13 +3,14 @@
   "application": {
     "name": "Fastly MCP MPAS Bridge Server",
     "description": "MPAS-protected bridge for Fastly's official MCP server.",
-    "applicationDid": "did:web:wivity.com:applications:fastly-mcp-server",
-    "website": "https://github.com/fastly/mcp"
+    "applicationDid": "did:web:wivity.com:applications:fastly-mcp-server"
   },
   "native": false,
   "protocol": "mcp",
   "upstream": {
     "name": "@fastly/mcp",
+    "repository": "https://github.com/fastly/mcp",
+    "distributionUrl": "https://www.npmjs.com/package/@fastly/mcp/v/2.1.4",
     "protocolVersion": "2024-11-05",
     "toolSurface": {
       "alg": "sha-256",

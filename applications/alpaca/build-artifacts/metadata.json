@@ -7,7 +7,10 @@
   },
   "protocolVersion": "2024-11-05",
   "upstreamCommand": [
-    "/Users/mpas1/Projects/mcp-targets/alpaca/.venv/bin/alpaca-mcp-server"
+    "uvx",
+    "--from",
+    "alpaca-mcp-server==2.1.1",
+    "alpaca-mcp-server"
   ],
   "generatorVersion": "0.2.0",
   "capturedAt": "2026-07-30T20:03:54.074Z"

@@ -7,7 +7,7 @@
   },
   "protocolVersion": "2024-11-05",
   "upstreamCommand": [
-    "/Users/mpas1/Projects/mcp-targets/kraken-cli/bin/kraken-cli-aarch64-apple-darwin/kraken",
+    "{{upstreamCheckout}}/kraken",
     "mcp",
     "-s",
     "all"

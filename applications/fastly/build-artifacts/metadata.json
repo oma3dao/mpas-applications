@@ -7,7 +7,9 @@
   },
   "protocolVersion": "2024-11-05",
   "upstreamCommand": [
-    "/Users/mpas1/Projects/mcp-targets/fastly/node_modules/.bin/fastly-mcp"
+    "npx",
+    "-y",
+    "@fastly/mcp@2.1.4"
   ],
   "generatorVersion": "0.2.0",
   "capturedAt": "2026-07-31T05:49:51.009Z"
