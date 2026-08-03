@@ -36,6 +36,9 @@ jobs:
       - name: Validate application artifacts
         run: python3 scripts/validate-applications.py --github
 
+      - name: Test artifact validator helpers
+        run: python3 scripts/test_validate_applications.py
+
   # Smoke-build one bridge; not required by the critical ruleset.
   test:
     name: test

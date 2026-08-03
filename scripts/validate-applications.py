@@ -76,7 +76,14 @@ URI_RE = re.compile(r"^https?://", re.IGNORECASE)
 NPM_PACKAGE_RE = re.compile(
     r"^(?:(@[A-Za-z0-9._-]+/[A-Za-z0-9._-]+)|([A-Za-z0-9._-]+))(?:@(.+))?$"
 )
-FLOATING_NPM_TAGS = {"latest", "*", "next", "canary"}
+# Exact npm version only (semver core + optional prerelease/build). Dist-tags
+# (latest, beta, …), ranges (^/~/>/||/x), and wildcards are rejected.
+EXACT_NPM_VERSION_RE = re.compile(
+    r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
+    r"(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)"
+    r"(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?"
+    r"(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
+)
 
 PLUGIN_REQUIRED = [
     "version",
@@ -237,13 +244,13 @@ def _npx_package_specs(command, args):
 
 
 def _floating_npm_reason(spec: str):
-    """Return an error reason if spec is unversioned or uses a floating tag."""
+    """Return an error reason if spec is missing or not an exact npm version."""
     if not isinstance(spec, str) or not spec or spec.startswith("{{"):
         return None
-    # Paths / URLs / env-ish tokens are not package specs.
-    if "/" in spec and not spec.startswith("@"):
+    # Paths / URLs are not package specs (scoped @org/pkg still starts with @).
+    if "://" in spec:
         return None
-    if "://" in spec or "=" in spec or " " in spec:
+    if "/" in spec and not spec.startswith("@"):
         return None
     match = NPM_PACKAGE_RE.match(spec)
     if not match:
@@ -251,8 +258,11 @@ def _floating_npm_reason(spec: str):
     version = match.group(3)
     if version is None:
         return f"{spec!r} has no version — use {spec}@<exact-version>"
-    if version in FLOATING_NPM_TAGS or version.startswith(">" ) or version.startswith("^") or version.startswith("~"):
-        return f"{spec!r} uses a floating version — pin an exact version"
+    if not EXACT_NPM_VERSION_RE.match(version):
+        return (
+            f"{spec!r} is not pinned to an exact version "
+            f"(got {version!r}; use a semver like 1.2.3, not a dist-tag or range)"
+        )
     return None
 
 
