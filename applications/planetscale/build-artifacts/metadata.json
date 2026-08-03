@@ -9,7 +9,7 @@
   "upstreamCommand": [
     "npx",
     "-y",
-    "tsx",
+    "tsx@4.23.1",
     "{{upstreamCheckout}}/src/server.ts"
   ],
   "generatorVersion": "0.2.0",

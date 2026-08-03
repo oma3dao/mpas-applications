@@ -17,6 +17,8 @@ Errors (exit 1):
   - pass-through classification entries carry a recognised reason tag
   - no author-local absolute path in harness-config.json or metadata.json
     (LOCAL_PATH_EXEMPT holds the not-yet-migrated applications)
+  - npx launch package specs in harness-config.json / metadata.json carry an
+    exact version (not bare names or @latest)
 
 Warnings (exit 0):
   - classification impact disagrees with plugin impact. Drift is not intended
@@ -66,10 +68,15 @@ LOCAL_PATH_EXEMPT = {
     "x-twitter": "excluded from the de-localization workstream by the requester",
 }
 
-# Discoverability pointers on registry-entry.json upstream. Keys are required;
-# values may be null (source may be private; not every distribution has a
-# public page).
+# Optional discoverability pointers on registry-entry.json upstream. Omit when
+# unknown (source may be private; not every distribution has a public page).
 URI_RE = re.compile(r"^https?://", re.IGNORECASE)
+
+# npm package specs accepted by npx: name or @scope/name, optional @version.
+NPM_PACKAGE_RE = re.compile(
+    r"^(?:(@[A-Za-z0-9._-]+/[A-Za-z0-9._-]+)|([A-Za-z0-9._-]+))(?:@(.+))?$"
+)
+FLOATING_NPM_TAGS = {"latest", "*", "next", "canary"}
 
 PLUGIN_REQUIRED = [
     "version",
@@ -195,6 +202,108 @@ def check_local_paths(app_dir: Path, report: Report) -> None:
         )
 
 
+def _npx_package_specs(command, args):
+    """Yield npm package specs that npx would resolve from a command argv."""
+    tokens = []
+    if command == "npx":
+        tokens = list(args or [])
+    elif isinstance(command, list) and command and command[0] == "npx":
+        tokens = list(command[1:])
+    else:
+        return
+
+    i = 0
+    while i < len(tokens):
+        tok = tokens[i]
+        if not isinstance(tok, str):
+            i += 1
+            continue
+        if tok in ("-y", "--yes"):
+            i += 1
+            continue
+        if tok in ("-p", "--package"):
+            if i + 1 < len(tokens) and isinstance(tokens[i + 1], str):
+                yield tokens[i + 1]
+                i += 2
+                continue
+            i += 1
+            continue
+        if tok.startswith("-"):
+            i += 1
+            continue
+        # First positional after flags is the package (or package@version).
+        yield tok
+        return
+
+
+def _floating_npm_reason(spec: str):
+    """Return an error reason if spec is unversioned or uses a floating tag."""
+    if not isinstance(spec, str) or not spec or spec.startswith("{{"):
+        return None
+    # Paths / URLs / env-ish tokens are not package specs.
+    if "/" in spec and not spec.startswith("@"):
+        return None
+    if "://" in spec or "=" in spec or " " in spec:
+        return None
+    match = NPM_PACKAGE_RE.match(spec)
+    if not match:
+        return None
+    version = match.group(3)
+    if version is None:
+        return f"{spec!r} has no version — use {spec}@<exact-version>"
+    if version in FLOATING_NPM_TAGS or version.startswith(">" ) or version.startswith("^") or version.startswith("~"):
+        return f"{spec!r} uses a floating version — pin an exact version"
+    return None
+
+
+def check_floating_npm_specs(app_dir: Path, report: Report) -> None:
+    """npx package arguments in harness/metadata must be exact version pins."""
+    app = app_dir.name
+    if app in LOCAL_PATH_EXEMPT:
+        return
+
+    checks = []
+    harness_path = app_dir / "harness-config.json"
+    if harness_path.exists():
+        try:
+            harness = json.loads(harness_path.read_text())
+        except json.JSONDecodeError:
+            harness = None
+        if isinstance(harness, dict):
+            upstream = harness.get("upstream") or {}
+            for spec in _npx_package_specs(upstream.get("command"), upstream.get("args")):
+                checks.append(
+                    (f"applications/{app}/harness-config.json", "upstream.args", spec)
+                )
+
+    metadata_path = app_dir / "build-artifacts" / "metadata.json"
+    if metadata_path.exists():
+        try:
+            metadata = json.loads(metadata_path.read_text())
+        except json.JSONDecodeError:
+            metadata = None
+        if isinstance(metadata, dict):
+            cmd = metadata.get("upstreamCommand")
+            if isinstance(cmd, list) and cmd:
+                for spec in _npx_package_specs(cmd[0], cmd[1:]):
+                    checks.append(
+                        (
+                            f"applications/{app}/build-artifacts/metadata.json",
+                            "upstreamCommand",
+                            spec,
+                        )
+                    )
+
+    for file, trail, spec in checks:
+        reason = _floating_npm_reason(spec)
+        if reason:
+            report.error(
+                file,
+                f"{trail} npm package {reason}. Floating npx resolutions make "
+                "the captured tool surface unreproducible.",
+            )
+
+
 def check_registry_upstream(registry: dict, registry_rel: str, report: Report) -> None:
     """No application.website; optional upstream URIs must look like URIs when set."""
     application = registry.get("application")
@@ -225,6 +334,7 @@ def check_app(app_dir: Path, report: Report) -> None:
     print(f"{app}")
 
     check_local_paths(app_dir, report)
+    check_floating_npm_specs(app_dir, report)
 
     plugin_path = app_dir / "plugin.json"
     plugin_rel = f"applications/{app}/plugin.json"

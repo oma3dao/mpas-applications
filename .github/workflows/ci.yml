@@ -28,9 +28,10 @@ jobs:
       # name.const, governed operations missing from the upstream snapshot, a
       # stale plugin.artifactDid (the Credential Adapter rejects a mismatch at
       # startup), classification coverage, unreviewed 'name-heuristic'
-      # rationales, unrecognised pass-through reason tags, and author-local
-      # absolute paths in harness-config.json or metadata.json (an upstream
-      # nobody can launch is a classification nobody can reproduce).
+      # rationales, unrecognised pass-through reason tags, author-local
+      # absolute paths in harness-config.json or metadata.json, and floating
+      # npx package specs (an upstream nobody can relaunch identically is a
+      # classification nobody can reproduce).
       # Warns without failing on classification/plugin impact drift.
       - name: Validate application artifacts
         run: python3 scripts/validate-applications.py --github

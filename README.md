@@ -75,15 +75,15 @@ name something **anyone** can obtain, at a **fixed** version:
 | npm | `npx -y <pkg>@<exact-version>` |
 | PyPI | `uvx --from <pkg>==<version> <entrypoint>` |
 | Release binary | Release URL plus expected SHA-256, with a `fetch` recipe |
-| Source-only | Repository URL plus commit SHA |
+| Source-only | Repository URL plus commit SHA; any npm launch helper (`tsx`, `bun`, …) must also be `<pkg>@<exact-version>` |
 | Hosted endpoint | Endpoint URL plus a pinned client (`mcp-remote@<version>`) |
 
 The reproduction path is what makes a classification checkable. `plugin.json`
 says what is governed and `classification.json` says why the rest was not, but
 a reviewer can only *verify* either claim by launching the same upstream and
 re-discovering the same tools. An absolute path on the author's machine, or a
-floating tag that has since moved, converts both files from evidence into
-assertion. CI fails the build on either.
+floating tag / unversioned `npx` package that has since moved, converts both
+files from evidence into assertion. CI fails the build on either.
 
 Record the pin in `upstream.distribution`. `serverInfo.version` is often not
 the package version — servers report a framework or internal version — so

@@ -5,7 +5,7 @@
     "command": "npx",
     "args": [
       "-y",
-      "tsx",
+      "tsx@4.23.1",
       "{{upstreamCheckout}}/src/server.ts"
     ],
     "env": {
@@ -17,7 +17,12 @@
       "commit": "56a05b658de1d2035510708f3a51ec224048f4ee",
       "declaredVersion": "0.0.0",
       "versionMatchesServerInfo": false,
-      "reconciliation": "Not published to npm and the repository carries no tags, so pinned by commit. metadata.serverInfo.version is 0.0.0, an unset placeholder that cannot identify a build. Commit selected as the repository HEAD at capturedAt 2026-07-28; the repository has been pushed to since, so this pin is inferred from the capture timestamp rather than confirmed.",
+      "reconciliation": "Not published to npm and the repository carries no tags, so pinned by commit. metadata.serverInfo.version is 0.0.0, an unset placeholder that cannot identify a build. Commit selected as the repository HEAD at capturedAt 2026-07-28; the repository has been pushed to since, so this pin is inferred from the capture timestamp rather than confirmed. Launch uses tsx@4.23.1 (latest npm release at capturedAt; package.json at the pin declares tsx ^4.21.0).",
+      "runtime": {
+        "type": "npm",
+        "package": "tsx",
+        "version": "4.23.1"
+      },
       "fetch": [
         "git clone https://github.com/planetscale/mcp-server upstream",
         "git -C upstream checkout 56a05b658de1d2035510708f3a51ec224048f4ee"

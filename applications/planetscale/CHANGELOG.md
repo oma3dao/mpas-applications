@@ -2,6 +2,14 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-08-03 — Pin the tsx launch runtime
+
+- Launch still used bare `tsx` via `npx`, which floats. Pinned to
+  `tsx@4.23.1` (latest npm release at `capturedAt`; the pinned commit's
+  `package.json` declares `tsx ^4.21.0`) and recorded the runtime under
+  `upstream.distribution.runtime`. CI now rejects unversioned/`@latest`
+  npm package specs in harness and metadata launch commands.
+
 ## 2026-08-02 — Pinned the upstream launch command
 
 - Pinned to commit `56a05b65` of `planetscale/mcp-server`, replacing a
