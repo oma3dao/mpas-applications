@@ -1,11 +1,12 @@
 # mpas-applications
 
 > [!WARNING]
-> **Experimental alpha.** These MPAS integrations are not production-ready or
+> **Experimental alpha.** Some MPAS integrations are not production-ready or
 > independently audited. Breaking changes are expected. The presence of an
 > application in this repository means that its plugin and bridge artifacts
 > have been contributed; it does not mean that the integration is suitable for
-> production use or has been independently validated.
+> production use or has been independently validated. See each application's
+> README.md for details.
 
 MPAS application plugins, bridges, and supporting artifacts contributed by
 their publishers.
@@ -22,8 +23,8 @@ agent, device, service, or organization.
 
 ## Applications
 
-See [ROADMAP.md](ROADMAP.md) for the current list of completed, in-progress,
-and planned applications.
+See [ROADMAP.md](ROADMAP.md) for a list of completed, in-progress,
+and planned applications.  You can add to the roadmap via PR.
 
 ## Structure
 
@@ -35,6 +36,7 @@ mpas-applications/
 
   applications/                  # Contributed application artifacts
     <application>/
+      README.md                    # Provider-specific description, setup, and operational guidance
       plugin.json
       registry-entry.json
       harness-config.json
@@ -120,6 +122,145 @@ A bridge is **tool-input compatible, not a transparent drop-in**. Multi-party ap
 - requiring the client to retrieve the eventual result through the wait tool.
 
 Native results are relayed verbatim whenever one exists. Agent integrations must understand the profile even when they already understand the upstream server.
+
+## Operating a Generated Bridge
+
+This repository contains application-specific bridge artifacts, but a usable
+deployment also needs participant keys, a Credential Adapter deployment
+configuration, a Coordination Service, and local operator policy. The
+reference implementations and management CLI live in
+[`oma3dao/mpas`](https://github.com/oma3dao/mpas/tree/main/examples/demo).
+
+### Runtime roles and credential custody
+
+`Signer` is the generic term for a participant that signs MPAS data. The same
+Signer may act as a Proposer, a Maintainer, or both. These are protocol roles,
+not necessarily separate identities or processes:
+
+| Component                                    | Holds                                                                       | Must not hold                                      |
+| -------------------------------------------- | --------------------------------------------------------------------------- | -------------------------------------------------- |
+| MCP client and generated Proposer bridge     | Signer's private key, bridge configuration, local workflow state            | Upstream application credential                    |
+| Credential Adapter                           | Adapter key, operator-created deployment configuration, upstream credential | Participant private keys                           |
+| Coordination Service                         | Non-secret coordination data and local workflow state                       | Upstream credentials or participant private keys   |
+| Signer client acting as Maintainer/approver   | Signer's private key and review state                                       | Upstream application credential                    |
+
+The Coordination Service may run anywhere. It does not need access to
+credentials, private keys, or confidential data; it only needs to be
+reachable by the participants that use it.
+
+The generated bridge never launches the upstream MCP server directly. It
+signs an MPAS Action Package and submits it to the Credential Adapter. Only
+the adapter may resolve a credential binding and launch or contact the
+upstream after verification and policy evaluation succeed.
+
+Do not put credential values in `plugin.json`, `harness-config.json`, bridge
+configuration, MCP client configuration, Action Packages, source control, or
+the Proposer's environment. `credentialRequirements` declares the kind of
+credential an application needs; it never contains the credential itself.
+
+### Configuration ownership
+
+The similarly named files have different owners and purposes:
+
+| File                                    | Purpose                                                                                              |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `plugin.json`                           | Publisher-reviewed governed operation surface and schemas.                                          |
+| `build-artifacts/classification.json`   | Advisory record explaining governed and pass-through classifications.                               |
+| `harness-config.json`                   | Pinned upstream MCP launch and credential-substitution handles.                                     |
+| Credential Adapter deployment config    | Credential bindings, execution target, Signer DIDs and groups, and operator policy.                 |
+| Proposer bridge config                  | Plugin path, adapter URL, Signer key path, Coordination Service URL, and workflow storage.           |
+
+Application plugins do not choose real credentials or approval thresholds.
+Those are deployment decisions made by the adapter operator.
+
+The operator must create or modify the Credential Adapter deployment config
+for the deployment. It is operator-owned and is therefore not stored in this
+repository. The config identifies Signers by DID; it does not contain their
+private keys.
+
+See the MPAS repository's
+[`github-mirror-adapter-config.json`](https://github.com/oma3dao/mpas/blob/main/examples/demo/configs/github-mirror-adapter-config.json)
+for a complete Credential Adapter deployment-config example.
+
+### Generic setup sequence
+
+1. Review the application's `plugin.json`, classification record, changelog,
+   upstream pin, and application-specific README.
+2. Build the generated bridge:
+
+   ```sh
+   cd applications/<application>/bridge
+   npm ci
+   npm run build
+   ```
+
+3. Generate Signer keys using the MPAS management CLI or compatible key
+   tooling. A Signer may act as a Proposer, a Maintainer, or both. Register
+   the Signer DIDs and their group membership in the adapter deployment
+   configuration.
+4. Create the Credential Adapter deployment configuration. Bind the plugin's
+   `artifactDid`, the credential handle declared by the application, the
+   pinned upstream execution target, Signer DIDs and groups, and operator
+   policy. This configuration must be created or modified by the operator for
+   the deployment.
+5. Store the real upstream credential under the configured handle in the
+   Credential Adapter's credential store. Prefer a separate OS account, VM,
+   or other trust domain that the Proposer cannot read.
+6. Create a Proposer bridge configuration. A typical configuration is:
+
+   ```json
+   {
+     "mode": "proposer",
+     "plugin": "/absolute/path/to/applications/<application>/plugin.json",
+     "adapter": { "url": "http://127.0.0.1:7544" },
+     "agent": {
+       "did": "did:jwk:...",
+       "keyFile": "/path/visible/only/to/the/proposer/proposer-key.json"
+     },
+     "target": { "applicationDid": "did:..." },
+     "coordination": { "url": "http://127.0.0.1:7545" },
+     "workflow": { "dbPath": "/path/to/proposer-workflows.db" }
+   }
+   ```
+
+7. Start the Credential Adapter and a Coordination Service reachable by the
+   participants, then any Signer servers required by policy.
+8. Register `bridge/dist/index.js --config <bridge-config.json>` as the MCP
+   server in the Proposer's MCP client. Do not also register the upstream MCP
+   server in that account; doing so would create a direct path outside MPAS.
+9. Validate with a low-impact operation before attempting governed writes.
+
+The generated bridge returns deferred results for asynchronous workflows.
+Clients retrieve the eventual outcome with `mpas_wait_for_action_result`.
+Configure `workflow.dbPath` for durable local state; omitting it makes active
+workflows unable to survive a bridge restart.
+
+### Policy and deployment safety
+
+- Governed tool names should require at least one approval.
+- Scope upstream credentials to the smallest account, project, environment,
+  and permissions that support the deployment.
+- A CLI login, browser session, environment variable, OAuth grant, or direct
+  upstream MCP registration in the Proposer's trust domain is also a
+  credential path and can bypass MPAS even when no token file is present.
+- When independent approval is required, it must come from a different Signer
+  with a different key and trust domain. A Signer may otherwise serve as both
+  Proposer and Maintainer.
+
+### Application README convention
+
+Each `applications/<application>/README.md` should document only what is
+specific to that provider:
+
+- where and how to obtain the required credential;
+- which credential type and provider-side scope the harness expects;
+- provider-specific installation, account, endpoint, or resource setup;
+- important targeting defaults and provider-specific bypass risks;
+- upstream version limitations and links to official provider documentation;
+- notable intentional behavior that differs from the upstream MCP server.
+
+Application READMEs should link to this section instead of repeating the
+generic MPAS trust model and setup sequence.
 
 ## What Belongs in `plugin.json`
 
