@@ -1,0 +1,71 @@
+{
+  "version": "1",
+  "type": "MpasAdapterDeploymentConfig",
+  "name": "railway",
+  "target": {
+    "applicationDid": "did:web:wivity.com:applications:railway-mcp-server"
+  },
+  "plugin": {
+    "pluginDid": "did:web:wivity.com:plugins:railway-mcp-server",
+    "pluginVersion": "0.1.0",
+    "artifactDid": "did:artifact:bafkreibqc2zbr7a7kyzm25c3uqtnbo766ofbwkgr47ca2kkm6jp45zfsee",
+    "path": "/absolute/path/to/mpas-applications/applications/railway/plugin.json"
+  },
+  "credentialBindings": [
+    {
+      "credentialHandle": "railwayApiToken",
+      "provider": "file"
+    }
+  ],
+  "executionTarget": {
+    "type": "mcp.stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@railway/cli@5.28.1",
+      "mcp"
+    ],
+    "env": {
+      "RAILWAY_TOKEN": "{{credential:railwayApiToken}}"
+    }
+  },
+  "policy": {
+    "version": "1",
+    "type": "MpasApplicationPolicy",
+    "policyProfileUrl": "https://github.com/oma3dao/mpas/blob/main/specs/mpas-profile-policy-json.md",
+    "applicationDid": "did:web:wivity.com:applications:railway-mcp-server",
+    "executionProfile": {
+      "id": "did:web:profiles.oma3.org:mcp",
+      "format": "mcp.toolsCall"
+    },
+    "defaultRequirement": {
+      "type": "threshold",
+      "threshold": 1,
+      "eligibleSignerGroup": "approvers",
+      "decision": "approve"
+    },
+    "signerGroups": {
+      "all": [
+        "REPLACE_WITH_PROPOSER_DID",
+        "REPLACE_WITH_APPROVER_DID"
+      ],
+      "proposers": [
+        "REPLACE_WITH_PROPOSER_DID"
+      ],
+      "approvers": [
+        "REPLACE_WITH_APPROVER_DID"
+      ]
+    },
+    "policies": {}
+  },
+  "signerKeys": [
+    {
+      "did": "REPLACE_WITH_PROPOSER_DID",
+      "label": "Proposer Signer"
+    },
+    {
+      "did": "REPLACE_WITH_APPROVER_DID",
+      "label": "Approver Signer"
+    }
+  ]
+}
