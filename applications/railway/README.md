@@ -18,6 +18,13 @@ Store the token in the Credential Adapter under the handle
 when it launches the upstream MCP server. Do not put the token in this
 repository or in the Proposer bridge configuration.
 
+Copy [`adapter-config.example.json`](adapter-config.example.json) into the
+Credential Adapter operator's configuration directory, then replace its
+Signer DIDs and absolute plugin path. The checked-in file is only a template;
+the resulting deployment config is operator-owned and should not be committed.
+For `did:jwk` Signers, the DID contains the public verification key, so no
+separate public key is needed in `signerKeys`.
+
 Project tokens are environment-scoped. Operations requiring account- or
 workspace-level authority may fail with this harness even though the tool is
 present in the captured Railway surface. Do not place a broader token in
