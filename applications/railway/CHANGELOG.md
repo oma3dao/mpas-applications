@@ -1,5 +1,11 @@
 # Changelog — railway
 
+## Unreleased
+
+- Rebased `add_reference_variable`'s local JSON Schema reference after nesting
+  the upstream input schema under the MPAS execution payload's `arguments`
+  property.
+
 Record manual review decisions and regenerations here.
 
 ## 2026-08-02 — Pinned the upstream launch command

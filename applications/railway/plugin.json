@@ -89,7 +89,7 @@
               "variables": {
                 "description": "Variables to set, each with a name and a reference value starting with \"${{\".",
                 "items": {
-                  "$ref": "#/$defs/ReferenceVariable"
+                  "$ref": "#/properties/arguments/$defs/ReferenceVariable"
                 },
                 "type": "array"
               }
