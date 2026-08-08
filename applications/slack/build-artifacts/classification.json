@@ -1,0 +1,39 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "slack_add_reaction": {
+      "impact": "medium",
+      "rationale": "Governed mutation: adds visible engagement to a workspace message under the bot identity; reversible but externally observable."
+    },
+    "slack_get_channel_history": {
+      "impact": "medium",
+      "rationale": "Pass-through (read): retrieves messages the credential is already authorized to read and does not mutate Slack state."
+    },
+    "slack_get_thread_replies": {
+      "impact": "medium",
+      "rationale": "Pass-through (read): retrieves replies the credential is already authorized to read and does not mutate Slack state."
+    },
+    "slack_get_user_profile": {
+      "impact": "medium",
+      "rationale": "Pass-through (read): retrieves one authorized workspace profile and does not mutate Slack state."
+    },
+    "slack_get_users": {
+      "impact": "medium",
+      "rationale": "Pass-through (read): lists authorized workspace profiles and does not mutate Slack state."
+    },
+    "slack_list_channels": {
+      "impact": "medium",
+      "rationale": "Pass-through (read): lists channels visible to the credential and does not mutate Slack state."
+    },
+    "slack_post_message": {
+      "impact": "high",
+      "rationale": "Governed external communication: publishes text to a channel under the organization's bot identity and may notify many people."
+    },
+    "slack_reply_to_thread": {
+      "impact": "high",
+      "rationale": "Governed external communication: publishes text in an existing thread under the organization's bot identity and may notify participants."
+    }
+  }
+}
