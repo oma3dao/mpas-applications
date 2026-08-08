@@ -19,6 +19,8 @@ Errors (exit 1):
     (LOCAL_PATH_EXEMPT holds the not-yet-migrated applications)
   - npx launch package specs in harness-config.json / metadata.json carry an
     exact version (not bare names or @latest)
+  - generated bridges pass their existing lazy KeyManager to
+    CoordinationClient and depend on an auth-capable @oma3/mpas release
 
 Warnings (exit 0):
   - classification impact disagrees with plugin impact. Drift is not intended
@@ -345,6 +347,7 @@ def check_app(app_dir: Path, report: Report) -> None:
 
     check_local_paths(app_dir, report)
     check_floating_npm_specs(app_dir, report)
+    check_bridge_auth(app_dir, report)
 
     plugin_path = app_dir / "plugin.json"
     plugin_rel = f"applications/{app}/plugin.json"
@@ -467,6 +470,27 @@ def check_app(app_dir: Path, report: Report) -> None:
                 classification_rel,
                 f"{name}: pass-through entry must begin with a 'Pass-through (<reason>)' tag",
             )
+
+
+def check_bridge_auth(app_dir: Path, report: Report) -> None:
+    """Every generated bridge must sign coordination requests with its agent key."""
+    app = app_dir.name
+    index_path = app_dir / "bridge" / "src" / "index.ts"
+    package_path = app_dir / "bridge" / "package.json"
+    index_rel = f"applications/{app}/bridge/src/index.ts"
+    package_rel = f"applications/{app}/bridge/package.json"
+
+    if not index_path.exists():
+        report.error(index_rel, f"{index_rel} is missing")
+    elif "new CoordinationClient({ url: config.coordinationUrl, signer: keyManagerPromise })" not in index_path.read_text():
+        report.error(index_rel, "CoordinationClient must use the bridge's keyManagerPromise signer")
+
+    package = load(package_path, package_rel, report)
+    if package is None:
+        return
+    version = package.get("dependencies", {}).get("@oma3/mpas")
+    if version != "^0.1.0-alpha.4":
+        report.error(package_rel, f"@oma3/mpas must be ^0.1.0-alpha.4, got {version!r}")
 
 
 def main() -> int:
