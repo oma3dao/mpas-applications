@@ -72,7 +72,7 @@ This segment covers marketing, customer communications, collaboration, and publi
 | Plain | Plain.com MCP Server | [tellahq/plain-mcp](https://github.com/tellahq/plain-mcp) | ✅ Tested | Protect customer communications, records, help centers, automations, and webhooks |
 | X / Twitter | X (Twitter) MCP Server | [rafaljanicki/x-twitter-mcp-server](https://github.com/rafaljanicki/x-twitter-mcp-server) | ✅ Tested | Protect public publishing, deletion, and engagement |
 | Outlook | Outlook Graph MCP Server | [mpalermiti/outlook-mcp](https://github.com/mpalermiti/outlook-mcp) | ✅ Tested | Protect email, calendar, contact, task, attachment, and mailbox mutations |
-| Slack | Slack MCP Server | [modelcontextprotocol/servers/slack](https://github.com/modelcontextprotocol/servers/tree/main/src/slack) | 📋 Planned | Protect messages, invitations, and workspace mutations |
+| Slack | Slack MCP Server | [modelcontextprotocol/servers-archived/slack](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/slack) | ✅ Tested | Protect messages and reactions; this archived upstream exposes no invitation or workspace-admin tools |
 | HubSpot | HubSpot MCP Server | TBD | 💡 Requested | Protect CRM, marketing, sales, and customer communication workflows |
 | Klaviyo | Klaviyo MCP Server | TBD | 💡 Requested | Protect campaigns, flows, audiences, and customer messaging |
 | beehiiv | beehiiv MCP Server | TBD | 💡 Requested | Protect newsletter publishing, automations, audiences, and subscriptions |

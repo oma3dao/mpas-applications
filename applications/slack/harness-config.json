@@ -1,0 +1,28 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-slack@2025.4.25"
+    ],
+    "env": {
+      "SLACK_BOT_TOKEN": "{{credential:slackBotToken}}",
+      "SLACK_TEAM_ID": "{{credential:slackTeamId}}"
+    },
+    "distribution": {
+      "type": "npm",
+      "package": "@modelcontextprotocol/server-slack",
+      "version": "2025.4.25",
+      "registry": "https://registry.npmjs.org/",
+      "versionMatchesServerInfo": false,
+      "reconciliation": "The published package is pinned at 2025.4.25; metadata.serverInfo.version is the upstream server's internal 1.0.0 rather than its npm package version."
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:slack-mcp-server",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:slack-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2024-11-05"
+  },
+  "credentialRequirements": [
+    {
+      "type": "slackBotToken",
+      "requiredCapabilities": [
+        "channels:read",
+        "chat:write",
+        "reactions:write",
+        "users:read"
+      ],
+      "description": "Slack bot token supplied only within the credential adapter and scoped to the intended workspace with least-privileged OAuth scopes. The reusable token must never be returned outside the authorized action result."
+    },
+    {
+      "type": "slackTeamId",
+      "requiredCapabilities": [
+        "workspace:target"
+      ],
+      "description": "Slack workspace/team identifier bound by the credential adapter so approved actions cannot be redirected to another workspace."
+    }
+  ],
+  "operations": {
+    "slack_add_reaction": {
+      "description": "Add a reaction emoji to a message",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "slack_add_reaction"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "channel_id": {
+                "type": "string",
+                "description": "The ID of the channel containing the message"
+              },
+              "timestamp": {
+                "type": "string",
+                "description": "The timestamp of the message to react to"
+              },
+              "reaction": {
+                "type": "string",
+                "description": "The name of the emoji reaction (without ::)"
+              }
+            },
+            "required": [
+              "channel_id",
+              "timestamp",
+              "reaction"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "slack_post_message": {
+      "description": "Post a new message to a Slack channel",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "slack_post_message"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "channel_id": {
+                "type": "string",
+                "description": "The ID of the channel to post to"
+              },
+              "text": {
+                "type": "string",
+                "description": "The message text to post"
+              }
+            },
+            "required": [
+              "channel_id",
+              "text"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "slack_reply_to_thread": {
+      "description": "Reply to a specific message thread in Slack",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "slack_reply_to_thread"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "channel_id": {
+                "type": "string",
+                "description": "The ID of the channel containing the thread"
+              },
+              "thread_ts": {
+                "type": "string",
+                "description": "The timestamp of the parent message in the format '1234567890.123456'. Timestamps in the format without the period can be converted by adding the period such that 6 numbers come after it."
+              },
+              "text": {
+                "type": "string",
+                "description": "The reply text"
+              }
+            },
+            "required": [
+              "channel_id",
+              "thread_ts",
+              "text"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
