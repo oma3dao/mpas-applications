@@ -1,0 +1,475 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:netlify-mcp-server",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:netlify-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2024-11-05"
+  },
+  "credentialRequirements": [
+    {
+      "type": "netlifyMcpOAuthAccessToken",
+      "requiredCapabilities": [
+        "netlify:mcp"
+      ],
+      "description": "An OAuth access token for the official hosted Netlify MCP server. The Credential Adapter must retain the token and execute the hosted MCP request; the token must never be disclosed to the proposer."
+    }
+  ],
+  "operations": {
+    "netlify-deploy-services-updater": {
+      "description": "Select and run one of the following Netlify write operations deploy-site",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "netlify-deploy-services-updater"
+          },
+          "arguments": {
+            "type": "object",
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "selectSchema": {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "const": "deploy-site"
+                  },
+                  "params": {
+                    "type": "object",
+                    "properties": {
+                      "siteId": {
+                        "description": "provide the site id of the site of this site. If the agent cannot find the siteId, the user must confirm this is a new site. NEVER assume the user wants a new site. Use 'netlify link' CLI command to link to an existing site and get a site id.",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "llmModelName": {
+                    "type": "string"
+                  },
+                  "aiAgentName": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "operation"
+                ]
+              }
+            },
+            "required": [
+              "selectSchema"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "netlify-extension-services-updater": {
+      "description": "Select and run one of the following Netlify write operations change-extension-installation, initialize-database",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "netlify-extension-services-updater"
+          },
+          "arguments": {
+            "type": "object",
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "selectSchema": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "operation": {
+                        "type": "string",
+                        "const": "change-extension-installation"
+                      },
+                      "params": {
+                        "type": "object",
+                        "properties": {
+                          "extensionSlug": {
+                            "type": "string"
+                          },
+                          "shouldBeInstalled": {
+                            "type": "boolean"
+                          },
+                          "teamId": {
+                            "type": "string",
+                            "description": "Team id of the current project team. If unsure, ask what Netlify team"
+                          },
+                          "siteId": {
+                            "description": "Site id of the current project site. If unsure, ask what Netlify site",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "extensionSlug",
+                          "shouldBeInstalled",
+                          "teamId"
+                        ]
+                      },
+                      "llmModelName": {
+                        "type": "string"
+                      },
+                      "aiAgentName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "operation"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "operation": {
+                        "type": "string",
+                        "const": "initialize-database"
+                      },
+                      "params": {
+                        "type": "object",
+                        "properties": {}
+                      },
+                      "llmModelName": {
+                        "type": "string"
+                      },
+                      "aiAgentName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "operation"
+                    ]
+                  }
+                ]
+              }
+            },
+            "required": [
+              "selectSchema"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "netlify-project-services-updater": {
+      "description": "Select and run one of the following Netlify write operations update-visitor-access-controls, update-forms, manage-form-submissions, update-project-name, manage-env-vars, create-new-project",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "netlify-project-services-updater"
+          },
+          "arguments": {
+            "type": "object",
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "selectSchema": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "operation": {
+                        "type": "string",
+                        "const": "update-visitor-access-controls"
+                      },
+                      "params": {
+                        "type": "object",
+                        "properties": {
+                          "siteId": {
+                            "type": "string"
+                          },
+                          "appliesTo": {
+                            "type": "string",
+                            "enum": [
+                              "all-projects",
+                              "non-production-projects"
+                            ],
+                            "description": "Which project context this rule applies to"
+                          },
+                          "requireSSOTeamLogin": {
+                            "type": "boolean"
+                          },
+                          "requirePassword": {
+                            "type": "boolean"
+                          },
+                          "passwordValue": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "siteId",
+                          "appliesTo"
+                        ]
+                      },
+                      "llmModelName": {
+                        "type": "string"
+                      },
+                      "aiAgentName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "operation"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "operation": {
+                        "type": "string",
+                        "const": "update-forms"
+                      },
+                      "params": {
+                        "type": "object",
+                        "properties": {
+                          "siteId": {
+                            "type": "string"
+                          },
+                          "forms": {
+                            "type": "string",
+                            "enum": [
+                              "enabled",
+                              "disabled"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "siteId"
+                        ]
+                      },
+                      "llmModelName": {
+                        "type": "string"
+                      },
+                      "aiAgentName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "operation"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "operation": {
+                        "type": "string",
+                        "const": "manage-form-submissions"
+                      },
+                      "params": {
+                        "type": "object",
+                        "properties": {
+                          "action": {
+                            "type": "string",
+                            "enum": [
+                              "get-submissions",
+                              "delete-submission"
+                            ]
+                          },
+                          "siteId": {
+                            "type": "string"
+                          },
+                          "formId": {
+                            "type": "string"
+                          },
+                          "limit": {
+                            "default": 20,
+                            "type": "number"
+                          },
+                          "offset": {
+                            "default": 0,
+                            "type": "number"
+                          },
+                          "submissionId": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "action"
+                        ]
+                      },
+                      "llmModelName": {
+                        "type": "string"
+                      },
+                      "aiAgentName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "operation"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "operation": {
+                        "type": "string",
+                        "const": "update-project-name"
+                      },
+                      "params": {
+                        "type": "object",
+                        "properties": {
+                          "siteId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string",
+                            "pattern": "^[a-z0-9-]+$",
+                            "description": "Name must be hyphenated alphanumeric such as \"my-site\" or \"my-site-2\""
+                          }
+                        },
+                        "required": [
+                          "siteId",
+                          "name"
+                        ]
+                      },
+                      "llmModelName": {
+                        "type": "string"
+                      },
+                      "aiAgentName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "operation"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "operation": {
+                        "type": "string",
+                        "const": "manage-env-vars"
+                      },
+                      "params": {
+                        "type": "object",
+                        "properties": {
+                          "getAllEnvVars": {
+                            "type": "boolean"
+                          },
+                          "deleteEnvVar": {
+                            "type": "boolean"
+                          },
+                          "upsertEnvVar": {
+                            "type": "boolean"
+                          },
+                          "siteId": {
+                            "type": "string"
+                          },
+                          "envVarKey": {
+                            "type": "string"
+                          },
+                          "envVarIsSecret": {
+                            "type": "boolean"
+                          },
+                          "envVarValue": {
+                            "type": "string"
+                          },
+                          "newVarScopes": {
+                            "default": [
+                              "all"
+                            ],
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "all",
+                                "builds",
+                                "functions",
+                                "runtime",
+                                "post_processing"
+                              ]
+                            }
+                          },
+                          "newVarContext": {
+                            "default": "all",
+                            "type": "string",
+                            "enum": [
+                              "all",
+                              "dev",
+                              "branch-deploy",
+                              "deploy-preview",
+                              "production",
+                              "branch"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "siteId"
+                        ]
+                      },
+                      "llmModelName": {
+                        "type": "string"
+                      },
+                      "aiAgentName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "operation"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "operation": {
+                        "type": "string",
+                        "const": "create-new-project"
+                      },
+                      "params": {
+                        "type": "object",
+                        "properties": {
+                          "teamSlug": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "description": "Name must be hyphenated alphanumeric such as \"my-site\" or \"my-site-2\"",
+                            "type": "string",
+                            "pattern": "^[a-z0-9-]+$"
+                          }
+                        }
+                      },
+                      "llmModelName": {
+                        "type": "string"
+                      },
+                      "aiAgentName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "operation"
+                    ]
+                  }
+                ]
+              }
+            },
+            "required": [
+              "selectSchema"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

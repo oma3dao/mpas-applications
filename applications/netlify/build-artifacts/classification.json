@@ -1,0 +1,43 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "get-netlify-coding-context": {
+      "impact": "low",
+      "rationale": "Pass-through (read-public): returns public Netlify coding guidance and does not access account state."
+    },
+    "netlify-deploy-services-reader": {
+      "impact": "medium",
+      "rationale": "Pass-through (read): retrieves deploy metadata without changing deployment state."
+    },
+    "netlify-deploy-services-updater": {
+      "impact": "high",
+      "rationale": "reviewed: deploys site content and can change the publicly served application"
+    },
+    "netlify-extension-services-reader": {
+      "impact": "low",
+      "rationale": "Pass-through (read-public): retrieves extension catalog and installation metadata without changing state."
+    },
+    "netlify-extension-services-updater": {
+      "impact": "high",
+      "rationale": "reviewed: installs or removes extensions and initializes a database"
+    },
+    "netlify-project-services-reader": {
+      "impact": "medium",
+      "rationale": "Pass-through (read): retrieves project and form metadata without changing project state."
+    },
+    "netlify-project-services-updater": {
+      "impact": "critical",
+      "rationale": "reviewed: includes access-control changes, secret environment-variable writes/deletes, form submission deletion, and project creation"
+    },
+    "netlify-team-services-reader": {
+      "impact": "medium",
+      "rationale": "Pass-through (read): retrieves team metadata already available to the scoped Netlify OAuth token."
+    },
+    "netlify-user-services-reader": {
+      "impact": "low",
+      "rationale": "Pass-through (read): retrieves user metadata already available to the scoped Netlify OAuth token."
+    }
+  }
+}
