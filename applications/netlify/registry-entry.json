@@ -1,0 +1,31 @@
+{
+  "version": "1",
+  "application": {
+    "name": "Netlify MCP MPAS Bridge Server",
+    "description": "MPAS-protected bridge for the official hosted Netlify MCP server.",
+    "applicationDid": "did:web:wivity.com:applications:netlify-mcp-server"
+  },
+  "native": false,
+  "protocol": "mcp",
+  "upstream": {
+    "name": "Netlify MCP Server",
+    "protocolVersion": "2024-11-05",
+    "toolSurface": {
+      "alg": "sha-256",
+      "value": "MODlJtKrtuHUTOcWLCXii0JwxW3Mq1T7xKTSszI7EMk"
+    },
+    "repository": "https://github.com/netlify/netlify-mcp",
+    "distributionUrl": "https://netlify-mcp.netlify.app/mcp"
+  },
+  "plugin": {
+    "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/netlify/plugin.json",
+    "artifactDid": "did:artifact:bafkreidzy7n7k5rf2fpq47i4pwla7vuabmca52ydr4vicfda2oglil2i6m",
+    "pluginDid": "did:web:wivity.com:plugins:netlify-mcp-server"
+  },
+  "publisher": {
+    "name": "Wivity",
+    "githubOrg": "wivity",
+    "publisherDid": "did:web:wivity.com"
+  },
+  "status": "beta"
+}

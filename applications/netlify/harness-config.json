@@ -1,0 +1,30 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-remote@0.1.38",
+      "https://netlify-mcp.netlify.app/mcp",
+      "--header",
+      "Authorization: Bearer {{credential:netlifyMcpOAuthAccessToken}}"
+    ],
+    "distribution": {
+      "type": "remote",
+      "endpoint": "https://netlify-mcp.netlify.app/mcp",
+      "client": {
+        "type": "npm",
+        "package": "mcp-remote",
+        "version": "0.1.38"
+      },
+      "versionMatchesServerInfo": false,
+      "reconciliation": "Hosted endpoint: serverInfo.version 0.0.0 is Netlify server metadata and is not client-pinnable. The reproducible pin is mcp-remote 0.1.38."
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": []
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "netlify",
+    "version": "0.0.0"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "npx",
+    "-y",
+    "mcp-remote@0.1.38",
+    "https://netlify-mcp.netlify.app/mcp",
+    "--header",
+    "Authorization: Bearer {{credential:netlifyMcpOAuthAccessToken}}"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-08-09T22:19:22.126Z"
+}
