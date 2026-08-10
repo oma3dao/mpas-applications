@@ -41,6 +41,7 @@ database data planes are separate MPAS surfaces and should be bridged independen
 | Application | Upstream | Upstream Source | Status | Notes |
 | :---------- | :------- | :-------------- | :----- | :---- |
 | GitHub | Official GitHub MCP Server | [github/github-mcp-server](https://github.com/github/github-mcp-server) | 🟢 In Production | Protect merges, branch deletion, releases, and other repository mutations |
+| Netlify | Official hosted Netlify MCP Server | [netlify/netlify-mcp](https://github.com/netlify/netlify-mcp) | 🟢 In Production | Protect deployments, visitor access controls, environment variables, extension management, and project operations |
 | PostgreSQL | Reference PostgreSQL MCP Server | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers/tree/main/src/postgres) | ✅ Tested | Generic data-plane bridge. Protect SQL, DDL, migrations, and destructive writes |
 | BigQuery | Google MCP Toolbox for Databases | [googleapis/mcp-toolbox](https://github.com/googleapis/mcp-toolbox) | ✅ Tested | Protect arbitrary SQL, billable analytics, forecasting, and caller-selected data processing |
 | Supabase | Official Supabase MCP Server | [supabase/mcp](https://github.com/supabase/mcp) | ✅ Tested | Protect SQL, migrations, branches, auth, storage, and project operations |
