@@ -13,7 +13,7 @@
     },
     "netlify-deploy-services-updater": {
       "impact": "high",
-      "rationale": "reviewed: deploys site content and can change the publicly served application"
+      "rationale": "reviewed: single sub-operation deploy-site publishes new site content and immediately changes what is publicly served. All calls to this tool name are writes; there are no read-mode arguments. Operators should match on selectSchema.operation == deploy-site and require at least one non-proposer approval. Optionally restrict by selectSchema.params.siteId to limit which sites the agent may deploy."
     },
     "netlify-extension-services-reader": {
       "impact": "low",
@@ -21,7 +21,7 @@
     },
     "netlify-extension-services-updater": {
       "impact": "high",
-      "rationale": "reviewed: installs or removes extensions and initializes a database"
+      "rationale": "reviewed: two sub-operations, both writes, with different risk profiles. (1) change-extension-installation: installs or removes a team-level extension depending on selectSchema.params.shouldBeInstalled. Removal (shouldBeInstalled == false) is the higher-risk direction — it may disable functionality across all sites on the team. Operators should consider requiring human approval when shouldBeInstalled == false and may relax to an agent signer for installs. (2) initialize-database: one-way operation with no params; the schema provides no scope signal to the approver. The approver cannot tell from the payload which database or extension is being initialized. Operators should treat this as requiring human approval unconditionally and should verify with the agent or user which Netlify extension database is the target before approving."
     },
     "netlify-project-services-reader": {
       "impact": "medium",
@@ -29,7 +29,7 @@
     },
     "netlify-project-services-updater": {
       "impact": "critical",
-      "rationale": "reviewed: includes access-control changes, secret environment-variable writes/deletes, form submission deletion, and project creation"
+      "rationale": "reviewed: six sub-operations under one tool name with significantly different blast radii. Operators should match on selectSchema.operation to differentiate policy. Sub-operation breakdown: (1) update-visitor-access-controls: security-configuration change that can gate or open site access; when selectSchema.params.appliesTo == all-projects the change is team-wide. Requires human approval. (2) update-forms: enables or disables Netlify Forms for a site; bounded and reversible. An agent signer is likely sufficient. (3) manage-form-submissions: contains an embedded read — when selectSchema.params.action == get-submissions the call is effectively read-only and operators may consider routing it with lower scrutiny or relaxing to proposer-only; when selectSchema.params.action == delete-submission the call is irreversible data deletion and requires human approval. (4) update-project-name: renames a site slug; externally visible and affects URLs and integrations that reference the old name. Requires at least one non-proposer approval. (5) manage-env-vars: three modes controlled by boolean flags. getAllEnvVars == true is a read and carries no write effect; operators may consider relaxing this path to proposer-only. upsertEnvVar == true writes or overwrites an environment variable — when envVarIsSecret == true or newVarContext includes production this is a production-credential write and requires human approval. deleteEnvVar == true is irreversible and requires human approval. Operators should inspect all three flags in the same call; the schema permits combinations (e.g. getAllEnvVars and upsertEnvVar both true), so match conditions should be written defensively. (6) create-new-project: provisions a new Netlify site; not destructive but represents a resource-creation action with billing implications. An agent signer is likely sufficient; human approval warranted if teamSlug is unverified."
     },
     "netlify-team-services-reader": {
       "impact": "medium",

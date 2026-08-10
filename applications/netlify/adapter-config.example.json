@@ -1,0 +1,176 @@
+{
+  "version": "1",
+  "type": "MpasAdapterDeploymentConfig",
+  "name": "netlify",
+  "target": {
+    "applicationDid": "did:web:wivity.com:applications:netlify-mcp-server"
+  },
+  "plugin": {
+    "pluginDid": "did:web:wivity.com:plugins:netlify-mcp-server",
+    "pluginVersion": "0.1.0",
+    "artifactDid": "did:artifact:bafkreidzy7n7k5rf2fpq47i4pwla7vuabmca52ydr4vicfda2oglil2i6m",
+    "path": "/absolute/path/to/mpas-applications/applications/netlify/plugin.json"
+  },
+  "credentialBindings": [
+    {
+      "credentialHandle": "netlifyMcpOAuthAccessToken",
+      "provider": "oauth"
+    }
+  ],
+  "executionTarget": {
+    "type": "mcp.stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-remote@0.1.38",
+      "https://netlify-mcp.netlify.app/mcp",
+      "--header",
+      "Authorization: Bearer {{credential:netlifyMcpOAuthAccessToken}}"
+    ]
+  },
+  "policy": {
+    "version": "1",
+    "type": "MpasApplicationPolicy",
+    "policyProfileUrl": "https://github.com/oma3dao/mpas/blob/main/specs/mpas-profile-policy-json.md",
+    "applicationDid": "did:web:wivity.com:applications:netlify-mcp-server",
+    "executionProfile": {
+      "id": "did:web:profiles.oma3.org:mcp",
+      "format": "mcp.toolsCall"
+    },
+    "defaultRequirement": {
+      "type": "threshold",
+      "threshold": 1,
+      "eligibleSignerGroup": "approvers",
+      "decision": "approve"
+    },
+    "signerGroups": {
+      "all": [
+        "REPLACE_WITH_PROPOSER_DID",
+        "REPLACE_WITH_APPROVER_DID",
+        "REPLACE_WITH_HUMAN_APPROVER_DID"
+      ],
+      "proposers": [
+        "REPLACE_WITH_PROPOSER_DID"
+      ],
+      "approvers": [
+        "REPLACE_WITH_APPROVER_DID",
+        "REPLACE_WITH_HUMAN_APPROVER_DID"
+      ],
+      "humanApprovers": [
+        "REPLACE_WITH_HUMAN_APPROVER_DID"
+      ]
+    },
+    "policies": {
+      "netlify-project-services-updater": [
+        {
+          "description": "update-visitor-access-controls is a security-configuration change; team-wide when appliesTo == all-projects. Requires human approval.",
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/selectSchema/operation",
+                "op": "eq",
+                "value": "update-visitor-access-controls"
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "humanApprovers",
+            "decision": "approve"
+          }
+        },
+        {
+          "description": "manage-form-submissions with action == delete-submission is irreversible data deletion. Requires human approval.",
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/selectSchema/operation",
+                "op": "eq",
+                "value": "manage-form-submissions"
+              },
+              {
+                "source": "executionPayload",
+                "path": "/arguments/selectSchema/params/action",
+                "op": "eq",
+                "value": "delete-submission"
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "humanApprovers",
+            "decision": "approve"
+          }
+        },
+        {
+          "description": "manage-env-vars with upsertEnvVar == true writes or overwrites an environment variable. Requires human approval.",
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/selectSchema/operation",
+                "op": "eq",
+                "value": "manage-env-vars"
+              },
+              {
+                "source": "executionPayload",
+                "path": "/arguments/selectSchema/params/upsertEnvVar",
+                "op": "eq",
+                "value": true
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "humanApprovers",
+            "decision": "approve"
+          }
+        },
+        {
+          "description": "manage-env-vars with deleteEnvVar == true is irreversible. Requires human approval regardless of other flags.",
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/selectSchema/operation",
+                "op": "eq",
+                "value": "manage-env-vars"
+              },
+              {
+                "source": "executionPayload",
+                "path": "/arguments/selectSchema/params/deleteEnvVar",
+                "op": "eq",
+                "value": true
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "humanApprovers",
+            "decision": "approve"
+          }
+        }
+      ]
+    }
+  },
+  "signerKeys": [
+    {
+      "did": "REPLACE_WITH_PROPOSER_DID",
+      "label": "Proposer Signer"
+    },
+    {
+      "did": "REPLACE_WITH_APPROVER_DID",
+      "label": "Approver Signer"
+    },
+    {
+      "did": "REPLACE_WITH_HUMAN_APPROVER_DID",
+      "label": "Human Approver Signer"
+    }
+  ]
+}
