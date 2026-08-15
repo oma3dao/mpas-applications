@@ -1,5 +1,18 @@
 # Changelog — netlify
 
+## 2026-08-14 — Migrated to the official MCP Tasks extension
+
+- Replaced the proprietary wait interface with
+  `io.modelcontextprotocol/tasks` on MCP 2026-07-28.
+- Preserved the exact discovered Netlify tool surface and added transparent
+  `org.oma3/mpas` task metadata, DID-scoped task reads, cooperative
+  cancellation, and background retry behavior.
+- Updated the bridge source for `@oma3/mpas@0.1.0-alpha.5` and
+  `@modelcontextprotocol/server@2.0.0`. Until alpha.5 is published, the bridge
+  links the sibling `mpas/sdk/protocol` package through the repositories'
+  shared parent directory. Build that SDK before building this bridge. Replace
+  the file dependency and refresh the lockfile after publication.
+
 ## 2026-08-09 — Initial official hosted Netlify MCP bridge
 
 - Captured all 9 tools from `https://netlify-mcp.netlify.app/mcp` through
