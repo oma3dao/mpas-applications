@@ -11,8 +11,8 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.13.0",
-    "@oma3/mpas": "^0.1.0-alpha.4"
+    "@oma3/mpas": "0.1.0-alpha.6",
+    "@modelcontextprotocol/server": "2.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",
