@@ -2,6 +2,12 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-08-15 — Migrated to the official MCP Tasks extension
+
+- Replaced the proprietary wait tool and result wrappers with `io.modelcontextprotocol/tasks` on MCP 2026-07-28.
+- Restored the exact upstream tool definitions and added durable, DID-scoped task reads and cancellation.
+- Updated the bridge runtime to `@oma3/mpas@0.1.0-alpha.6` and `@modelcontextprotocol/server@2.0.0`.
+
 ## 2026-08-03 — Pin the tsx launch runtime
 
 - Launch still used bare `tsx` via `npx`, which floats. Pinned to

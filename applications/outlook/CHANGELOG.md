@@ -1,5 +1,11 @@
 # Changelog — outlook
 
+## 2026-08-15 — Migrated to the official MCP Tasks extension
+
+- Replaced the proprietary wait tool and result wrappers with `io.modelcontextprotocol/tasks` on MCP 2026-07-28.
+- Restored the exact upstream tool definitions and added durable, DID-scoped task reads and cancellation.
+- Updated the bridge runtime to `@oma3/mpas@0.1.0-alpha.6` and `@modelcontextprotocol/server@2.0.0`.
+
 ## 2026-07-31 — Completed the impact classification
 
 - Reviewed all 62 entries in `build-artifacts/classification.json`,

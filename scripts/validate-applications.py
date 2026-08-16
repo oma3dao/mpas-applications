@@ -53,11 +53,8 @@ REASON_TAGS = {
     "simulated",
 }
 
-DEFAULT_MPAS_SDK_VERSION = "^0.1.0-alpha.4"
-MPAS_SDK_VERSION_OVERRIDES = {
-    "github": "0.1.0-alpha.6",
-    "netlify": "0.1.0-alpha.6",
-}
+DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.6"
+MPAS_SDK_VERSION_OVERRIDES = {}
 # Absolute paths that only exist on the machine that ran discovery. Matched
 # anywhere in a string, since these appear inside argv arrays.
 LOCAL_PATH_RE = re.compile(
