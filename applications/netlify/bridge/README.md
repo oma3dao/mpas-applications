@@ -14,6 +14,8 @@ npm run build
 node dist/index.js --config <path-to-bridge-config.json>
 ```
 
-The bridge config format matches the MPAS demo proposer bridge (plugin path, adapter URL, agent key, coordination URL, approval strategy). All tool calls are routed through the MPAS protocol: the bridge signs an Action Package and submits it to the configured Credential Adapter; nothing is proxied directly to the upstream server.
+The bridge config provides the plugin path, adapter URL, agent key, Coordination URL, and durable workflow storage. It speaks MCP 2026-07-28 using the official Tasks extension. Every application call is routed through MPAS; nothing is proxied directly to the upstream server.
+
+One bridge serves exactly one MCP client or agent identity and holds one private key for one proposer DID. Do not share a bridge process or key across independent clients; deploy a separate bridge instance and key for each agent.
 
 This file is generated then checked in. Edit freely; regeneration preserves files listed in `.generator-keep`.

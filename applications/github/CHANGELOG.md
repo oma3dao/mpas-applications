@@ -2,6 +2,20 @@
 
 Record manual review decisions and regenerations here.
 
+## 2026-08-14 — Migrated to the official MCP Tasks extension
+
+- Replaced the proprietary wait tool and result wrappers with
+  `io.modelcontextprotocol/tasks` on MCP 2026-07-28.
+- Restored the exact upstream GitHub tool definitions; no MPAS descriptions,
+  output-schema unions, or added tools remain.
+- Added transparent `org.oma3/mpas` task metadata, DID-scoped task reads,
+  durable cancellation, and background retry behavior.
+- Updated the bridge source for `@oma3/mpas@0.1.0-alpha.5` and
+  `@modelcontextprotocol/server@2.0.0`. Until alpha.5 is published, the bridge
+  links the sibling `mpas/sdk/protocol` package through the repositories'
+  shared parent directory. Build that SDK before building this bridge. Replace
+  the file dependency and refresh the lockfile after publication.
+
 ## 2026-08-02 — Pinned the upstream launch command
 
 - Pinned to `ghcr.io/github/github-mcp-server@sha256:2b0c48b0…`, the digest the

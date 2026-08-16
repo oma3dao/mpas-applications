@@ -25,6 +25,13 @@
   "intentionalDeviations": {
     "renamedTools": {},
     "wrappedSchemas": [],
-    "modifiedDescriptions": []
+    "modifiedDescriptions": [],
+    "addedTools": [],
+    "outputSchemaUnions": [],
+    "extensionCapabilities": [
+      "io.modelcontextprotocol/tasks",
+      "org.oma3/mpas"
+    ],
+    "note": "The bridge uses the official MCP Tasks extension and exposes transparent MPAS authorization metadata through org.oma3/mpas. Upstream tool definitions are unchanged."
   }
 }

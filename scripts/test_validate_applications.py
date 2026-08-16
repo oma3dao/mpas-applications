@@ -65,5 +65,15 @@ class ExactNpmVersionTests(unittest.TestCase):
         )
 
 
+class MpasSdkVersionTests(unittest.TestCase):
+    def test_tasks_bridges_require_alpha_6(self):
+        for app in ("github", "netlify"):
+            with self.subTest(app=app):
+                self.assertEqual(validate.expected_mpas_sdk_version(app), "0.1.0-alpha.6")
+
+    def test_unmigrated_bridges_keep_existing_version(self):
+        self.assertEqual(validate.expected_mpas_sdk_version("railway"), "^0.1.0-alpha.4")
+
+
 if __name__ == "__main__":
     raise SystemExit(unittest.main())

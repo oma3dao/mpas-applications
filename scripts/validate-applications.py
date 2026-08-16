@@ -52,6 +52,12 @@ REASON_TAGS = {
     "validation-only",
     "simulated",
 }
+
+DEFAULT_MPAS_SDK_VERSION = "^0.1.0-alpha.4"
+MPAS_SDK_VERSION_OVERRIDES = {
+    "github": "0.1.0-alpha.6",
+    "netlify": "0.1.0-alpha.6",
+}
 # Absolute paths that only exist on the machine that ran discovery. Matched
 # anywhere in a string, since these appear inside argv arrays.
 LOCAL_PATH_RE = re.compile(
@@ -489,8 +495,14 @@ def check_bridge_auth(app_dir: Path, report: Report) -> None:
     if package is None:
         return
     version = package.get("dependencies", {}).get("@oma3/mpas")
-    if version != "^0.1.0-alpha.4":
-        report.error(package_rel, f"@oma3/mpas must be ^0.1.0-alpha.4, got {version!r}")
+    expected_version = expected_mpas_sdk_version(app)
+    if version != expected_version:
+        report.error(package_rel, f"@oma3/mpas must be {expected_version}, got {version!r}")
+
+
+def expected_mpas_sdk_version(app: str) -> str:
+    """Return the reviewed SDK version for a bridge migration cohort."""
+    return MPAS_SDK_VERSION_OVERRIDES.get(app, DEFAULT_MPAS_SDK_VERSION)
 
 
 def main() -> int:
