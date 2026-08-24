@@ -1,2 +1,0 @@
-# This bridge has an application-specific guard for qstash_get_user_token.
-bridge/src/index.ts
