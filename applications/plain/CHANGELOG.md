@@ -1,5 +1,13 @@
 # Changelog — plain
 
+## 2026-08-23 — Added automatic conventional-client compatibility
+
+- Updated the bridge runtime for `@oma3/mpas@0.1.0-alpha.7`. Wire-level
+  detection keeps MCP Tasks primary and exposes the temporary wait-tool
+  compatibility surface only after a conventional `initialize` handshake.
+- Preserved the application command, tool snapshot, plugin policy, DIDs,
+  workflow storage, and Credential Adapter boundary.
+
 ## 2026-08-15 — Migrated to the official MCP Tasks extension
 
 - Replaced the proprietary wait tool and result wrappers with `io.modelcontextprotocol/tasks` on MCP 2026-07-28.

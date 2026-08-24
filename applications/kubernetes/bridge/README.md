@@ -14,7 +14,7 @@ npm run build
 node dist/index.js --config <path-to-bridge-config.json>
 ```
 
-The bridge config format matches the MPAS demo proposer bridge (plugin path, adapter URL, agent key, coordination URL, and workflow storage). The server uses MCP 2026-07-28 with the official Tasks extension. All tool calls are routed through MPAS: the bridge signs an Action Package and submits it to the configured Credential Adapter; nothing is proxied directly to the upstream server.
+The bridge config format matches the MPAS demo proposer bridge (plugin path, adapter URL, agent key, coordination URL, and workflow storage). The server auto-detects MCP 2026-07-28 Tasks clients and conventional MCP clients that need the MPAS wait-tool compatibility surface. All tool calls are routed through MPAS: the bridge signs an Action Package and submits it to the configured Credential Adapter; nothing is proxied directly to the upstream server.
 
 One bridge serves exactly one MCP client or agent identity and holds one private key for one proposer DID. Do not share a bridge process or key across independent clients; deploy a separate bridge instance and key for each agent.
 

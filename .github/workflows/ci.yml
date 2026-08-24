@@ -31,7 +31,9 @@ jobs:
       # rationales, unrecognised pass-through reason tags, author-local
       # absolute paths in harness-config.json or metadata.json, and floating
       # npx package specs (an upstream nobody can relaunch identically is a
-      # classification nobody can reproduce).
+      # classification nobody can reproduce). Generated bridges must also use
+      # the adaptive selector while preserving Coordination signing and the
+      # Credential Adapter-only execution boundary.
       # Warns without failing on classification/plugin impact drift.
       - name: Validate application artifacts
         run: python3 scripts/validate-applications.py --github
@@ -39,13 +41,37 @@ jobs:
       - name: Test artifact validator helpers
         run: python3 scripts/test_validate_applications.py
 
-  # Smoke-build one bridge; not required by the critical ruleset.
-  test:
-    name: test
+  bridge-protocols:
+    name: bridge-protocols (${{ matrix.application }})
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: applications/github/bridge
+    strategy:
+      fail-fast: false
+      matrix:
+        application:
+          - alpaca
+          - bigquery
+          - coinbase-advanced-trade
+          - coinbase
+          - fastly
+          - firebase
+          - github
+          - kraken-cli
+          - kubernetes
+          - mongodb
+          - n8n
+          - neon
+          - netlify
+          - outlook
+          - plain
+          - planetscale
+          - postgres
+          - railway
+          - slack
+          - stripe
+          - supabase
+          - upstash
+          - vercel
+          - x-twitter
 
     steps:
       - name: Checkout
@@ -56,10 +82,13 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: applications/github/bridge/package-lock.json
+          cache-dependency-path: applications/${{ matrix.application }}/bridge/package-lock.json
 
       - name: Install
-        run: npm ci
+        run: npm ci --prefix applications/${{ matrix.application }}/bridge
 
       - name: Build
-        run: npm run build
+        run: npm run --prefix applications/${{ matrix.application }}/bridge build
+
+      - name: Probe Tasks and conventional MCP surfaces
+        run: node scripts/probe-bridge-protocols.mjs applications/${{ matrix.application }}

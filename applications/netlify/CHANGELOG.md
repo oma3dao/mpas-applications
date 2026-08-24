@@ -1,5 +1,13 @@
 # Changelog — netlify
 
+## 2026-08-24 — Documented `deploy-site` continuation handling
+
+- Documented the pinned `@netlify/mcp@1.15.1` continuation command, safe JWE
+  extraction and diagnostics, and the Git worktree archive limitation.
+- Corrected the example deployment target to use managed HTTP OAuth with
+  explicit `read` and `write` scopes; the Credential Adapter adds advertised
+  refresh scope during operator login.
+
 ## 2026-08-23 — Added automatic conventional-client compatibility
 
 - Updated the bridge runtime for `@oma3/mpas@0.1.0-alpha.7` wire-level

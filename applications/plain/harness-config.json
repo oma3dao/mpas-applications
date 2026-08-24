@@ -28,15 +28,38 @@
   "intentionalDeviations": {
     "renamedTools": {},
     "wrappedSchemas": [],
-    "modifiedDescriptions": [
-      "*"
+    "modifiedDescriptions": [],
+    "addedTools": [],
+    "outputSchemaUnions": [],
+    "note": "The bridge auto-detects MCP Tasks or the conventional MPAS wait-tool compatibility surface. Tasks mode preserves upstream tool definitions.",
+    "extensionCapabilities": [
+      "io.modelcontextprotocol/tasks",
+      "org.oma3/mpas"
     ],
-    "addedTools": [
-      "mpas_wait_for_action_result"
-    ],
-    "outputSchemaUnions": [
-      "*"
-    ],
-    "note": "Profile-defined client-interface differences per the MPAS MCP Proposer Bridge Client Interface Profile: every tool description gains the standard MPAS notice, the reserved result tool is added, and advertised output schemas union the upstream schema with the profile result objects. Upstream tool names and input schemas remain exact."
+    "protocolModes": {
+      "tasks": {
+        "handshake": "server/discover",
+        "addedTools": [],
+        "modifiedDescriptions": [],
+        "outputSchemaUnions": [],
+        "extensionCapabilities": [
+          "io.modelcontextprotocol/tasks",
+          "org.oma3/mpas"
+        ]
+      },
+      "compatibility": {
+        "handshake": "initialize",
+        "addedTools": [
+          "mpas_wait_for_action_result"
+        ],
+        "modifiedDescriptions": [
+          "application-tools"
+        ],
+        "outputSchemaUnions": [
+          "application-tools-with-output-schema"
+        ],
+        "extensionCapabilities": []
+      }
+    }
   }
 }

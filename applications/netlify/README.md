@@ -44,6 +44,47 @@ resulting deployment config is operator-owned and should not be committed. For
 `did:jwk` Signers, the DID contains the public verification key, so no
 separate public key is needed in `signerKeys`.
 
+## `deploy-site` continuation
+
+`deploy-site` prepares a deployment but does not upload the site. After MPAS
+executes the approved Action, the Task result contains a JSON-wrapped command:
+
+```sh
+npx -y @netlify/mcp@1.15.1 --site-id <id> --proxy-path "https://netlify-mcp.netlify.app/proxy/<jwe>"
+```
+
+The JWE in `--proxy-path` is the continuation secret. Proposers must run the
+returned command; they must not send the continuation URL to `/mcp` or replace
+it with the operator's OAuth token. Do not log, commit, or share the JWE.
+
+Parse each JSON string layer in the Task result before extracting the URL. A
+naive expression such as `[^"]+` can retain the backslash from an escaped
+quote (`\"`), producing a 474-character JWE instead of the expected
+approximately 473-character value. With the decoded URL in `proxy_path`, an
+operator can distinguish the common failures using an existing deploy ID:
+
+```sh
+curl -sS -D - "$proxy_path/api/v1/deploys/<existing-deploy-id>"
+```
+
+A `200` JSON response confirms that the JWE is intact. A `401` means the JWE
+was mangled during extraction. A `403` response with a `text/plain` body of
+`Forbidden` means the HTTP method or path is not on the JWE allow-list.
+
+Run the returned `npx` command from a normal Git checkout, where `.git` is a
+directory. `@netlify/mcp` ignores `.git/**`, but it does not ignore the `.git`
+pointer file used by a Git worktree; that file embeds a local gitdir path in
+the archive and causes the Netlify build to fail. As a temporary workaround,
+move the worktree's `.git` pointer outside the checkout immediately before
+running the command and restore it afterward, including on failure. The
+durable fix belongs upstream in `netlify/netlify-mcp`.
+
+Pin continuation execution to `@netlify/mcp@1.15.1`. Configure the OAuth
+execution target with `read` and `write` scopes only. The Credential Adapter
+adds `offline_access` during operator login when Netlify advertises it; adding
+it to or removing it from the deployment config neither grants deploy rights
+nor requires a new login.
+
 ## Upstream MCP server
 
 The reviewed upstream is a hosted endpoint accessed through a pinned client:

@@ -66,10 +66,40 @@ class ExactNpmVersionTests(unittest.TestCase):
 
 
 class MpasSdkVersionTests(unittest.TestCase):
-    def test_tasks_bridges_require_alpha_6(self):
+    def test_compatibility_bridges_require_alpha_7(self):
         for app in ("github", "netlify", "railway", "stripe"):
             with self.subTest(app=app):
-                self.assertEqual(validate.expected_mpas_sdk_version(app), "0.1.0-alpha.6")
+                self.assertEqual(validate.expected_mpas_sdk_version(app), "0.1.0-alpha.7")
+
+
+class ProtocolModeTests(unittest.TestCase):
+    def test_accepts_distinct_adaptive_surfaces(self):
+        deviations = {
+            "addedTools": [],
+            "extensionCapabilities": ["io.modelcontextprotocol/tasks", "org.oma3/mpas"],
+            "protocolModes": {
+                "tasks": {
+                    "handshake": "server/discover",
+                    "addedTools": [],
+                    "extensionCapabilities": ["io.modelcontextprotocol/tasks", "org.oma3/mpas"],
+                },
+                "compatibility": {
+                    "handshake": "initialize",
+                    "addedTools": ["mpas_wait_for_action_result"],
+                    "modifiedDescriptions": ["application-tools"],
+                    "outputSchemaUnions": ["application-tools-with-output-schema"],
+                    "extensionCapabilities": [],
+                },
+            },
+        }
+        self.assertEqual(validate.protocol_mode_errors(deviations), [])
+
+    def test_rejects_a_merged_surface(self):
+        deviations = {
+            "addedTools": ["mpas_wait_for_action_result"],
+            "extensionCapabilities": ["io.modelcontextprotocol/tasks", "org.oma3/mpas"],
+        }
+        self.assertTrue(validate.protocol_mode_errors(deviations))
 
 
 if __name__ == "__main__":

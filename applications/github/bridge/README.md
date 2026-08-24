@@ -18,7 +18,7 @@ npm run build
 node dist/index.js --config <path-to-bridge-config.json>
 ```
 
-The bridge config provides the plugin path, adapter URL, agent key, Coordination URL, and durable workflow storage. It speaks MCP 2026-07-28 using the official Tasks extension. Every application call is routed through MPAS; nothing is proxied directly to the upstream server.
+The bridge config provides the plugin path, adapter URL, agent key, Coordination URL, and durable workflow storage. It automatically selects MCP 2026-07-28 Tasks for Tasks-capable clients or the conventional MCP wait-tool compatibility surface after an `initialize` handshake. Every application call is routed through MPAS; nothing is proxied directly to the upstream server.
 
 One bridge serves exactly one MCP client or agent identity and holds one private key for one proposer DID. Do not share a bridge process or key across independent clients; deploy a separate bridge instance and key for each agent.
 
