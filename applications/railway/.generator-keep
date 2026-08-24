@@ -1,0 +1,2 @@
+# This bridge has an application-specific guard for list_variables.
+bridge/src/index.ts

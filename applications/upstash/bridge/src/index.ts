@@ -146,6 +146,9 @@ export class GeneratedBridge {
 
   async handleToolCall(toolName: string, args: object): Promise<CreateTaskResult> {
     log("info", "tool_call_received", { toolName });
+    if (toolName === "qstash_get_user_token") {
+      throw new Error("This bridge does not return reusable QStash credentials to proposers.");
+    }
     const bridge = await this.bridgePromise;
     return bridge.handleToolCall(toolName, args);
   }

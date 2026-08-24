@@ -59,6 +59,20 @@ REASON_TAGS = {
 
 DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.7"
 MPAS_SDK_VERSION_OVERRIDES = {}
+
+# Application-specific result guards that must remain ahead of MPAS dispatch.
+# Authorization controls whether an operation executes; it does not make a
+# reusable credential safe to return to the proposer.
+BRIDGE_RESULT_GUARDS = {
+    "railway": (
+        'toolName === "list_variables"',
+        "This bridge does not return Railway environment-variable values to proposers.",
+    ),
+    "upstash": (
+        'toolName === "qstash_get_user_token"',
+        "This bridge does not return reusable QStash credentials to proposers.",
+    ),
+}
 # Absolute paths that only exist on the machine that ran discovery. Matched
 # anywhere in a string, since these appear inside argv arrays.
 LOCAL_PATH_RE = re.compile(
@@ -509,6 +523,9 @@ def check_bridge_auth(app_dir: Path, report: Report) -> None:
         for forbidden in ("StdioClientTransport", "{{credential:"):
             if forbidden in source:
                 report.error(index_rel, f"proposer bridge source must not contain direct upstream/credential path {forbidden!r}")
+        for fragment in BRIDGE_RESULT_GUARDS.get(app, ()):
+            if fragment not in source:
+                report.error(index_rel, f"secret-return guard is missing required fragment {fragment!r}")
 
     package = load(package_path, package_rel, report)
     if package is None:
