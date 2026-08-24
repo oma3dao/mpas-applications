@@ -146,9 +146,6 @@ export class GeneratedBridge {
 
   async handleToolCall(toolName: string, args: object): Promise<CreateTaskResult> {
     log("info", "tool_call_received", { toolName });
-    if (toolName === "list_variables") {
-      throw new Error("This bridge does not return Railway environment-variable values to proposers.");
-    }
     const bridge = await this.bridgePromise;
     return bridge.handleToolCall(toolName, args);
   }

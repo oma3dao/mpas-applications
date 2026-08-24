@@ -1,19 +1,23 @@
 {
   "version": "1",
   "type": "MpasAdapterDeploymentConfig",
-  "name": "railway",
+  "name": "upstash",
   "target": {
-    "applicationDid": "did:web:wivity.com:applications:railway-mcp-server"
+    "applicationDid": "did:web:wivity.com:applications:upstash-mcp-server"
   },
   "plugin": {
-    "pluginDid": "did:web:wivity.com:plugins:railway-mcp-server",
+    "pluginDid": "did:web:wivity.com:plugins:upstash-mcp-server",
     "pluginVersion": "0.1.0",
-    "artifactDid": "did:artifact:bafkreibeskh2l5jqb63bpfj4isbkwg72lkyrko7jgk7hjv7aaszfbgh2hy",
-    "path": "/absolute/path/to/mpas-applications/applications/railway/plugin.json"
+    "artifactDid": "did:artifact:bafkreidstznmolvneqrgwcrpoi45ixoglclqyf7qiudgaqeysq6rvy6xe4",
+    "path": "/absolute/path/to/mpas-applications/applications/upstash/plugin.json"
   },
   "credentialBindings": [
     {
-      "credentialHandle": "railwayApiToken",
+      "credentialHandle": "upstashEmail",
+      "provider": "file"
+    },
+    {
+      "credentialHandle": "upstashApiKey",
       "provider": "file"
     }
   ],
@@ -22,18 +26,22 @@
     "command": "npx",
     "args": [
       "-y",
-      "@railway/cli@5.28.1",
-      "mcp"
+      "@upstash/mcp-server@0.2.4",
+      "--email",
+      "{{credential:upstashEmail}}",
+      "--api-key",
+      "{{credential:upstashApiKey}}"
     ],
     "env": {
-      "RAILWAY_TOKEN": "{{credential:railwayApiToken}}"
+      "UPSTASH_EMAIL": "{{credential:upstashEmail}}",
+      "UPSTASH_API_KEY": "{{credential:upstashApiKey}}"
     }
   },
   "policy": {
     "version": "1",
     "type": "MpasApplicationPolicy",
     "policyProfileUrl": "https://github.com/oma3dao/mpas/blob/main/specs/mpas-profile-policy-json.md",
-    "applicationDid": "did:web:wivity.com:applications:railway-mcp-server",
+    "applicationDid": "did:web:wivity.com:applications:upstash-mcp-server",
     "executionProfile": {
       "id": "did:web:profiles.oma3.org:mcp",
       "format": "mcp.toolsCall"
@@ -57,10 +65,10 @@
       ]
     },
     "policies": {
-      "list_variables": [
+      "qstash_get_user_token": [
         {
           "reject": true,
-          "description": "Returning Railway environment-variable values can disclose reusable credentials and is disabled for proposer deployments.",
+          "description": "Returning a reusable QStash token would let a proposer bypass MPAS and is disabled for proposer deployments.",
           "match": {}
         }
       ]
