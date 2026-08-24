@@ -20,7 +20,13 @@ Errors (exit 1):
   - npx launch package specs in harness-config.json / metadata.json carry an
     exact version (not bare names or @latest)
   - generated bridges pass their existing lazy KeyManager to
-    CoordinationClient and depend on an auth-capable @oma3/mpas release
+    CoordinationClient, use the adaptive protocol selector, retain the
+    Adapter-only execution boundary, and depend on the reviewed @oma3/mpas
+    release
+  - credential-returning tools have deterministic reject entries in their
+    checked-in Credential Adapter configuration examples
+  - harness metadata describes distinct Tasks and conventional compatibility
+    surfaces rather than a union exposed to one client
 
 Warnings (exit 0):
   - classification impact disagrees with plugin impact. Drift is not intended
@@ -53,8 +59,12 @@ REASON_TAGS = {
     "simulated",
 }
 
-DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.6"
+DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.7"
 MPAS_SDK_VERSION_OVERRIDES = {}
+REQUIRED_CA_REJECTS = {
+    "railway": "list_variables",
+    "upstash": "qstash_get_user_token",
+}
 # Absolute paths that only exist on the machine that ran discovery. Matched
 # anywhere in a string, since these appear inside argv arrays.
 LOCAL_PATH_RE = re.compile(
@@ -351,6 +361,7 @@ def check_app(app_dir: Path, report: Report) -> None:
     check_local_paths(app_dir, report)
     check_floating_npm_specs(app_dir, report)
     check_bridge_auth(app_dir, report)
+    check_credential_return_deny(app_dir, report)
 
     plugin_path = app_dir / "plugin.json"
     plugin_rel = f"applications/{app}/plugin.json"
@@ -476,7 +487,7 @@ def check_app(app_dir: Path, report: Report) -> None:
 
 
 def check_bridge_auth(app_dir: Path, report: Report) -> None:
-    """Every generated bridge must sign coordination requests with its agent key."""
+    """Every generated bridge must preserve signing, Adapter custody, and protocol selection."""
     app = app_dir.name
     index_path = app_dir / "bridge" / "src" / "index.ts"
     package_path = app_dir / "bridge" / "package.json"
@@ -485,8 +496,26 @@ def check_bridge_auth(app_dir: Path, report: Report) -> None:
 
     if not index_path.exists():
         report.error(index_rel, f"{index_rel} is missing")
-    elif "new CoordinationClient({ url: config.coordinationUrl, signer: keyManagerPromise })" not in index_path.read_text():
-        report.error(index_rel, "CoordinationClient must use the bridge's keyManagerPromise signer")
+    else:
+        source = index_path.read_text()
+        required_fragments = {
+            "new CoordinationClient({ url: config.coordinationUrl, signer: keyManagerPromise })":
+                "CoordinationClient must use the bridge's keyManagerPromise signer",
+            "new AdapterClient({ url: config.adapterUrl })":
+                "application execution must remain behind the configured AdapterClient",
+            "new ActionPackageBuilder(":
+                "application calls must still construct signed MPAS Action Packages",
+            "MpasProtocolServer":
+                "bridge must use automatic MCP protocol selection",
+            'log("info", "mcp_protocol_mode_selected"':
+                "bridge must log sanitized protocol mode selection",
+        }
+        for fragment, message in required_fragments.items():
+            if fragment not in source:
+                report.error(index_rel, message)
+        for forbidden in ("StdioClientTransport", "{{credential:"):
+            if forbidden in source:
+                report.error(index_rel, f"proposer bridge source must not contain direct upstream/credential path {forbidden!r}")
 
     package = load(package_path, package_rel, report)
     if package is None:
@@ -495,6 +524,83 @@ def check_bridge_auth(app_dir: Path, report: Report) -> None:
     expected_version = expected_mpas_sdk_version(app)
     if version != expected_version:
         report.error(package_rel, f"@oma3/mpas must be {expected_version}, got {version!r}")
+
+    harness_path = app_dir / "harness-config.json"
+    harness_rel = f"applications/{app}/harness-config.json"
+    harness = load(harness_path, harness_rel, report)
+    if harness is not None:
+        deviations = harness.get("intentionalDeviations")
+        for message in protocol_mode_errors(deviations):
+            report.error(harness_rel, message)
+
+
+def credential_return_deny_errors(config, tool_name: str) -> list[str]:
+    """Return errors when a CA deployment example does not reject a tool."""
+    if not isinstance(config, dict):
+        return ["adapter configuration must be an object"]
+    entries = config.get("policy", {}).get("policies", {}).get(tool_name)
+    if not isinstance(entries, list) or not entries:
+        return [f"policy.policies.{tool_name} must contain a reject entry"]
+    for entry in entries:
+        if (
+            isinstance(entry, dict)
+            and entry.get("reject") is True
+            and entry.get("match") == {}
+            and "requirements" not in entry
+        ):
+            return []
+    return [
+        f"policy.policies.{tool_name} must include reject: true with match: {{}} and no requirements"
+    ]
+
+
+def check_credential_return_deny(app_dir: Path, report: Report) -> None:
+    app = app_dir.name
+    tool_name = REQUIRED_CA_REJECTS.get(app)
+    if tool_name is None:
+        return
+    config_path = app_dir / "adapter-config.example.json"
+    config_rel = f"applications/{app}/adapter-config.example.json"
+    config = load(config_path, config_rel, report)
+    if config is None:
+        return
+    for message in credential_return_deny_errors(config, tool_name):
+        report.error(config_rel, message)
+
+
+def protocol_mode_errors(deviations) -> list[str]:
+    """Return errors for a merged or incomplete adaptive harness surface."""
+    if not isinstance(deviations, dict):
+        return ["intentionalDeviations must be an object"]
+    errors = []
+    modes = deviations.get("protocolModes")
+    if not isinstance(modes, dict):
+        return ["intentionalDeviations.protocolModes must describe Tasks and compatibility separately"]
+    tasks = modes.get("tasks")
+    compatibility = modes.get("compatibility")
+    if not isinstance(tasks, dict) or not isinstance(compatibility, dict):
+        return ["protocolModes must contain tasks and compatibility objects"]
+
+    task_extensions = {"io.modelcontextprotocol/tasks", "org.oma3/mpas"}
+    if tasks.get("handshake") != "server/discover":
+        errors.append("Tasks mode handshake must be server/discover")
+    if tasks.get("addedTools") != []:
+        errors.append("Tasks mode must not add tools")
+    if set(tasks.get("extensionCapabilities") or []) != task_extensions:
+        errors.append("Tasks mode must advertise the Tasks and MPAS extensions")
+    if compatibility.get("handshake") != "initialize":
+        errors.append("compatibility mode handshake must be initialize")
+    if compatibility.get("addedTools") != ["mpas_wait_for_action_result"]:
+        errors.append("compatibility mode must add exactly one MPAS wait tool")
+    if compatibility.get("extensionCapabilities") != []:
+        errors.append("compatibility mode must not advertise Tasks extensions")
+    if "application-tools" not in (compatibility.get("modifiedDescriptions") or []):
+        errors.append("compatibility mode must record application description notices")
+    if compatibility.get("outputSchemaUnions") != ["application-tools-with-output-schema"]:
+        errors.append("compatibility mode must record conditional output-schema unions")
+    if deviations.get("addedTools") != [] or set(deviations.get("extensionCapabilities") or []) != task_extensions:
+        errors.append("top-level deviations must continue to describe the primary Tasks surface")
+    return errors
 
 
 def expected_mpas_sdk_version(app: str) -> str:

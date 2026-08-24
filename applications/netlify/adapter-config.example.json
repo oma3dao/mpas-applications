@@ -14,19 +14,20 @@
   "credentialBindings": [
     {
       "credentialHandle": "netlifyMcpOAuthAccessToken",
-      "provider": "oauth"
+      "provider": "file"
     }
   ],
   "executionTarget": {
-    "type": "mcp.stdio",
-    "command": "npx",
-    "args": [
-      "-y",
-      "mcp-remote@0.1.38",
-      "https://netlify-mcp.netlify.app/mcp",
-      "--header",
-      "Authorization: Bearer {{credential:netlifyMcpOAuthAccessToken}}"
-    ]
+    "type": "mcp.http",
+    "url": "https://netlify-mcp.netlify.app/mcp",
+    "auth": {
+      "type": "oauth2",
+      "session": "netlify",
+      "scopes": [
+        "read",
+        "write"
+      ]
+    }
   },
   "policy": {
     "version": "1",

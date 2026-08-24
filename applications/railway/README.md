@@ -71,8 +71,9 @@ by [`railway deploy`](https://docs.railway.com/cli/deploy).
 ## Railway-specific security behavior
 
 - `list_variables` remains governed because Railway variables commonly
-  contain reusable credentials for other systems. The generated bridge
-  intentionally refuses to return those values to the Proposer.
+  contain reusable credentials for other systems. The generated bridge remains
+  generic; the checked-in Credential Adapter policy example rejects this tool
+  before upstream execution, so its values cannot reach the Proposer.
 - `link_environment` and `link_service` are governed because they change the
   defaults used by later calls that omit explicit target identifiers.
 - The complete governed/pass-through decision record is in
@@ -83,3 +84,27 @@ by [`railway deploy`](https://docs.railway.com/cli/deploy).
 Railway's own [MCP security guidance](https://docs.railway.com/ai/mcp-server#security-considerations)
 also applies to the upstream server. MPAS adds signed Actions and Verifier
 policy; it does not expand the authority of the Railway token.
+
+## Denying credential-returning tools
+
+[`adapter-config.example.json`](adapter-config.example.json) contains a
+deterministic reject policy for `list_variables`:
+
+```json
+"policies": {
+  "list_variables": [
+    {
+      "reject": true,
+      "description": "Returning Railway environment-variable values can disclose reusable credentials and is disabled for proposer deployments.",
+      "match": {}
+    }
+  ]
+}
+```
+
+This is deliberately stronger than an approval requirement. Marking the tool
+`critical` requires authorization but would still permit an approved result to
+return `KEY=VALUE` pairs. A deterministic rejection prevents execution and
+therefore prevents reusable credentials from crossing the Credential Adapter
+boundary. The checked-in file is an operator template; the deployed Credential
+Adapter configuration must retain this reject entry.

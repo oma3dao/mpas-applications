@@ -66,10 +66,86 @@ class ExactNpmVersionTests(unittest.TestCase):
 
 
 class MpasSdkVersionTests(unittest.TestCase):
-    def test_tasks_bridges_require_alpha_6(self):
+    def test_compatibility_bridges_require_alpha_7(self):
         for app in ("github", "netlify", "railway", "stripe"):
             with self.subTest(app=app):
-                self.assertEqual(validate.expected_mpas_sdk_version(app), "0.1.0-alpha.6")
+                self.assertEqual(validate.expected_mpas_sdk_version(app), "0.1.0-alpha.7")
+
+
+class CredentialReturnDenyTests(unittest.TestCase):
+    def test_accepts_unconditional_reject(self):
+        config = {
+            "policy": {
+                "policies": {
+                    "secret_tool": [
+                        {"reject": True, "match": {}, "description": "blocked"}
+                    ]
+                }
+            }
+        }
+        self.assertEqual(validate.credential_return_deny_errors(config, "secret_tool"), [])
+
+    def test_rejects_missing_or_approvable_policy(self):
+        for config in (
+            {"policy": {"policies": {}}},
+            {
+                "policy": {
+                    "policies": {
+                        "secret_tool": [
+                            {
+                                "requirements": {
+                                    "type": "proposerOnly",
+                                    "decision": "approve",
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "policy": {
+                    "policies": {
+                        "secret_tool": [
+                            {"reject": True, "match": {"conditions": []}}
+                        ]
+                    }
+                }
+            },
+        ):
+            with self.subTest(config=config):
+                self.assertTrue(
+                    validate.credential_return_deny_errors(config, "secret_tool")
+                )
+
+
+class ProtocolModeTests(unittest.TestCase):
+    def test_accepts_distinct_adaptive_surfaces(self):
+        deviations = {
+            "addedTools": [],
+            "extensionCapabilities": ["io.modelcontextprotocol/tasks", "org.oma3/mpas"],
+            "protocolModes": {
+                "tasks": {
+                    "handshake": "server/discover",
+                    "addedTools": [],
+                    "extensionCapabilities": ["io.modelcontextprotocol/tasks", "org.oma3/mpas"],
+                },
+                "compatibility": {
+                    "handshake": "initialize",
+                    "addedTools": ["mpas_wait_for_action_result"],
+                    "modifiedDescriptions": ["application-tools"],
+                    "outputSchemaUnions": ["application-tools-with-output-schema"],
+                    "extensionCapabilities": [],
+                },
+            },
+        }
+        self.assertEqual(validate.protocol_mode_errors(deviations), [])
+
+    def test_rejects_a_merged_surface(self):
+        deviations = {
+            "addedTools": ["mpas_wait_for_action_result"],
+            "extensionCapabilities": ["io.modelcontextprotocol/tasks", "org.oma3/mpas"],
+        }
+        self.assertTrue(validate.protocol_mode_errors(deviations))
 
 
 if __name__ == "__main__":

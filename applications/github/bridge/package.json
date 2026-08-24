@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.0.0",
-    "@oma3/mpas": "0.1.0-alpha.6"
+    "@oma3/mpas": "0.1.0-alpha.7"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",

@@ -41,7 +41,7 @@
     },
     "qstash_get_user_token": {
       "impact": "critical",
-      "rationale": "Credential disclosure. Returns a reusable QSTASH_TOKEN. The bridge also refuses it in code, but that protects only this proposer implementation; the plugin entry is what stops another proposer being routed pass-through."
+      "rationale": "Credential disclosure. Returns a reusable QSTASH_TOKEN, so the tool remains critical and governed rather than pass-through. Deployments must enforce the trusted Credential Adapter reject: true policy in the live operator configuration to prevent dispatch and disclosure."
     },
     "qstash_logs_get": {
       "impact": "low",

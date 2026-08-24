@@ -1,5 +1,23 @@
 # Changelog — netlify
 
+## 2026-08-24 — Documented `deploy-site` continuation handling
+
+- Documented the pinned `@netlify/mcp@1.15.1` continuation command, safe JWE
+  extraction and diagnostics, and the Git worktree archive limitation.
+- Corrected the example deployment target to use managed HTTP OAuth with
+  explicit `read` and `write` scopes; the Credential Adapter adds advertised
+  refresh scope during operator login.
+
+## 2026-08-23 — Added automatic conventional-client compatibility
+
+- Updated the bridge runtime for `@oma3/mpas@0.1.0-alpha.7` wire-level
+  detection. `server/discover` keeps the primary MCP Tasks surface;
+  conventional `initialize` selects the temporary deferred-result and
+  `mpas_wait_for_action_result` surface for that connection.
+- Preserved the Netlify command, tool snapshot, plugin, policy, application
+  DID, workflow storage, and Credential Adapter OAuth placeholder. The
+  proposer bridge still has no Netlify token or direct upstream path.
+
 ## 2026-08-14 — Migrated to the official MCP Tasks extension
 
 - Replaced the proprietary wait interface with

@@ -32,6 +32,31 @@
       "io.modelcontextprotocol/tasks",
       "org.oma3/mpas"
     ],
-    "note": "The bridge uses the official MCP Tasks extension and exposes transparent MPAS authorization metadata through org.oma3/mpas. Upstream tool definitions are unchanged."
+    "protocolModes": {
+      "tasks": {
+        "handshake": "server/discover",
+        "addedTools": [],
+        "modifiedDescriptions": [],
+        "outputSchemaUnions": [],
+        "extensionCapabilities": [
+          "io.modelcontextprotocol/tasks",
+          "org.oma3/mpas"
+        ]
+      },
+      "compatibility": {
+        "handshake": "initialize",
+        "addedTools": [
+          "mpas_wait_for_action_result"
+        ],
+        "modifiedDescriptions": [
+          "application-tools"
+        ],
+        "outputSchemaUnions": [
+          "application-tools-with-output-schema"
+        ],
+        "extensionCapabilities": []
+      }
+    },
+    "note": "The bridge auto-detects MCP Tasks or the conventional MPAS wait-tool compatibility surface. Tasks mode preserves upstream tool definitions."
   }
 }
