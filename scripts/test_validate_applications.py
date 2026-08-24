@@ -72,6 +72,52 @@ class MpasSdkVersionTests(unittest.TestCase):
                 self.assertEqual(validate.expected_mpas_sdk_version(app), "0.1.0-alpha.7")
 
 
+class CredentialReturnDenyTests(unittest.TestCase):
+    def test_accepts_unconditional_reject(self):
+        config = {
+            "policy": {
+                "policies": {
+                    "secret_tool": [
+                        {"reject": True, "match": {}, "description": "blocked"}
+                    ]
+                }
+            }
+        }
+        self.assertEqual(validate.credential_return_deny_errors(config, "secret_tool"), [])
+
+    def test_rejects_missing_or_approvable_policy(self):
+        for config in (
+            {"policy": {"policies": {}}},
+            {
+                "policy": {
+                    "policies": {
+                        "secret_tool": [
+                            {
+                                "requirements": {
+                                    "type": "proposerOnly",
+                                    "decision": "approve",
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "policy": {
+                    "policies": {
+                        "secret_tool": [
+                            {"reject": True, "match": {"conditions": []}}
+                        ]
+                    }
+                }
+            },
+        ):
+            with self.subTest(config=config):
+                self.assertTrue(
+                    validate.credential_return_deny_errors(config, "secret_tool")
+                )
+
+
 class ProtocolModeTests(unittest.TestCase):
     def test_accepts_distinct_adaptive_surfaces(self):
         deviations = {

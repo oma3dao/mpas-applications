@@ -65,11 +65,10 @@ Record manual review decisions and regenerations here.
   `workflow_dlq_get`, `workflow_dlq_list`, `workflow_logs_*`), plus
   `util_dates_to_timestamps` and `util_timestamps_to_date`, which are pure
   local date conversions that touch no account at all.
-- Kept `qstash_get_user_token` at critical even though `bridge/src/index.ts`
-  already refuses it. That block protects only this proposer implementation;
-  `plugin.json` is consumed by the Credential Adapter, and removing the
-  operation would route it as pass-through for any other proposer and return
-  a live `QSTASH_TOKEN`.
+- Kept `qstash_get_user_token` at critical so it remains governed rather than
+  pass-through. Proposer deployments must retain the trusted Credential
+  Adapter `reject: true` policy that prevents execution and disclosure of a
+  live `QSTASH_TOKEN`.
 - Kept `box_preview` at high because it mints public URLs for services running
   inside a box, with `basic_auth` / `bearer_token` as opt-in flags. This is
   the publish-to-the-internet case governance exists for; it is high rather
@@ -90,7 +89,8 @@ Record manual review decisions and regenerations here.
 - Classified arbitrary Redis commands, database deletion/password rotation,
   backup restore/delete, Box shell/agent/lifecycle, and snapshot restore/delete
   as critical.
-- Preserved `qstash_get_user_token` in the advertised tool surface but return a
-  safe error so reusable QStash credentials never reach the proposer.
+- Preserved `qstash_get_user_token` in the advertised, critical tool surface
+  and documented a trusted Credential Adapter `reject: true` policy that
+  prevents reusable QStash credentials from reaching the proposer.
 - Added credential-adapter substitution for the Upstash account email and API
   key; no credential value is included in the package.

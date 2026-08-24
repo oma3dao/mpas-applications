@@ -88,7 +88,8 @@ Record manual review decisions and regenerations here.
   deployment, variable, storage, networking, domain, and observability tools.
 - Classified destructive resource removals and environment-variable writes as
   critical; classified infrastructure and deployment mutations as high.
-- Preserved `list_variables` in the advertised tool surface but return a safe
-  error so environment-variable values never reach the proposer.
+- Preserved `list_variables` in the advertised, critical tool surface and
+  documented a trusted Credential Adapter `reject: true` policy that prevents
+  execution and disclosure in proposer deployments.
 - Added credential-adapter substitution for the Railway API token; no
   credential value is included in the package.

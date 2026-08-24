@@ -23,6 +23,8 @@ Errors (exit 1):
     CoordinationClient, use the adaptive protocol selector, retain the
     Adapter-only execution boundary, and depend on the reviewed @oma3/mpas
     release
+  - credential-returning tools have deterministic reject entries in their
+    checked-in Credential Adapter configuration examples
   - harness metadata describes distinct Tasks and conventional compatibility
     surfaces rather than a union exposed to one client
 
@@ -59,6 +61,10 @@ REASON_TAGS = {
 
 DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.7"
 MPAS_SDK_VERSION_OVERRIDES = {}
+REQUIRED_CA_REJECTS = {
+    "railway": "list_variables",
+    "upstash": "qstash_get_user_token",
+}
 # Absolute paths that only exist on the machine that ran discovery. Matched
 # anywhere in a string, since these appear inside argv arrays.
 LOCAL_PATH_RE = re.compile(
@@ -355,6 +361,7 @@ def check_app(app_dir: Path, report: Report) -> None:
     check_local_paths(app_dir, report)
     check_floating_npm_specs(app_dir, report)
     check_bridge_auth(app_dir, report)
+    check_credential_return_deny(app_dir, report)
 
     plugin_path = app_dir / "plugin.json"
     plugin_rel = f"applications/{app}/plugin.json"
@@ -525,6 +532,40 @@ def check_bridge_auth(app_dir: Path, report: Report) -> None:
         deviations = harness.get("intentionalDeviations")
         for message in protocol_mode_errors(deviations):
             report.error(harness_rel, message)
+
+
+def credential_return_deny_errors(config, tool_name: str) -> list[str]:
+    """Return errors when a CA deployment example does not reject a tool."""
+    if not isinstance(config, dict):
+        return ["adapter configuration must be an object"]
+    entries = config.get("policy", {}).get("policies", {}).get(tool_name)
+    if not isinstance(entries, list) or not entries:
+        return [f"policy.policies.{tool_name} must contain a reject entry"]
+    for entry in entries:
+        if (
+            isinstance(entry, dict)
+            and entry.get("reject") is True
+            and entry.get("match") == {}
+            and "requirements" not in entry
+        ):
+            return []
+    return [
+        f"policy.policies.{tool_name} must include reject: true with match: {{}} and no requirements"
+    ]
+
+
+def check_credential_return_deny(app_dir: Path, report: Report) -> None:
+    app = app_dir.name
+    tool_name = REQUIRED_CA_REJECTS.get(app)
+    if tool_name is None:
+        return
+    config_path = app_dir / "adapter-config.example.json"
+    config_rel = f"applications/{app}/adapter-config.example.json"
+    config = load(config_path, config_rel, report)
+    if config is None:
+        return
+    for message in credential_return_deny_errors(config, tool_name):
+        report.error(config_rel, message)
 
 
 def protocol_mode_errors(deviations) -> list[str]:
