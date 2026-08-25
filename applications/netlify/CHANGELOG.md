@@ -4,6 +4,9 @@
 
 - Documented the pinned `@netlify/mcp@1.15.1` continuation command, safe JWE
   extraction and diagnostics, and the Git worktree archive limitation.
+- Added proposer failure-mode guidance for recognizing the authorized upload
+  continuation, consuming scoped capabilities before expiry, and avoiding
+  unnecessary bridge rebuilds or disclosure of continuation secrets.
 - Corrected the example deployment target to use managed HTTP OAuth with
   explicit `read` and `write` scopes; the Credential Adapter adds advertised
   refresh scope during operator login.

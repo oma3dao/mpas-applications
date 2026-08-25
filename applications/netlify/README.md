@@ -85,6 +85,27 @@ adds `offline_access` during operator login when Netlify advertises it; adding
 it to or removing it from the deployment config neither grants deploy rights
 nor requires a new login.
 
+### Proposer failure modes
+
+- **Treat the returned upload command as the authorized continuation.** After
+  the Maintainer Approves `deploy-site`, the Action result is a short-lived,
+  scoped proxy plus a local upload command. Running that exact command is the
+  rest of the same MPAS Action, not a CLI bypass. Do not invent a different
+  CLI, send the proxy URL to `/mcp`, or use operator OAuth.
+- **Consume the capability immediately.** It expires, so a delayed `401` is
+  expected expiry rather than evidence of a broken bridge. If it expires,
+  propose a new `deploy-site` Action, notify the Maintainer, and run the new
+  continuation as soon as it returns. Never re-call `deploy-site` to check an
+  existing Action; observe it with `mpas_wait_for_action_result` on the same
+  `netlify-mpas` bridge.
+- **Use the documented recovery steps before rebuilding anything.** For a
+  `401`, a mangled `--proxy-path`, or a worktree `.git` packaging failure,
+  decode the nested JSON correctly, pin `@netlify/mcp@1.15.1`, and exclude the
+  worktree `.git` pointer during upload before restoring it. Read this section
+  and the current daily operational notes before declaring the bridge broken.
+- **Keep the continuation secret.** Never put the proxy URL, JWE, or command
+  arguments in Slack, git, logs, or other shared output.
+
 ## Upstream MCP server
 
 The reviewed upstream is a hosted endpoint accessed through a pinned client:
