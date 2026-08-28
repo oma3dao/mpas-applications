@@ -17,7 +17,8 @@ import { pathToFileURL } from "node:url";
 import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
 import {
   ActionPackageBuilder,
-  AdapterClient,
+  ActionEndpointClient,
+  buildDeliveryEnvelope,
   CoordinationClient,
   KeyManager,
   MemoryWorkflowStore,
@@ -26,10 +27,13 @@ import {
 } from "@oma3/mpas";
 import type {
   BridgeUpstreamTool,
+  ActionRequest,
   CreateTaskResult,
+  Did,
   MpasApplicationPlugin,
   ProposerConfig,
   WorkflowCoordination,
+  WorkflowActionEndpoint,
   WorkflowStore,
 } from "@oma3/mpas";
 import { SqliteWorkflowStore } from "./sqlite-workflow-store.js";
@@ -52,7 +56,14 @@ interface WorkflowConfig {
 }
 
 interface BridgeConfig extends Omit<ProposerConfig, "approvalStrategy" | "approvalTimeoutMs"> {
+  actionEndpoint?: RelayActionEndpointConfig;
   workflow?: WorkflowConfig;
+}
+
+interface RelayActionEndpointConfig {
+  url: string;
+  verifierDid: Did;
+  additionalRecipients?: Did[];
 }
 
 interface CliConfig {
@@ -73,6 +84,7 @@ interface CliConfig {
   };
   applicationDid?: string;
   adapterUrl?: string;
+  actionEndpoint?: { url?: string; verifierDid?: string; additionalRecipients?: string[] };
   agentKey?: string;
   executionProfile?: {
     id: string;
@@ -97,8 +109,10 @@ export class GeneratedBridge {
 
   constructor(config: BridgeConfig) {
     const plugin = loadPlugin(config.plugin);
-    const adapterClient = new AdapterClient({ url: config.adapterUrl });
     const keyManagerPromise = loadKeyManager(config.agentKey);
+    const actionEndpoint: WorkflowActionEndpoint = config.actionEndpoint
+      ? relayActionEndpoint(config.actionEndpoint, keyManagerPromise)
+      : new ActionEndpointClient({ url: config.adapterUrl });
     const coordination: WorkflowCoordination = config.coordinationUrl
       ? new CoordinationClient({ url: config.coordinationUrl, signer: keyManagerPromise })
       : unconfiguredCoordination();
@@ -127,7 +141,7 @@ export class GeneratedBridge {
               : {}),
           }).buildFromToolCall(toolName, args),
         store: this.store,
-        adapter: adapterClient,
+        actionEndpoint,
         coordination,
         proposerDid: keyManager.did,
         resultRetentionSeconds: workflow.resultRetentionSeconds ?? 86_400,
@@ -206,6 +220,17 @@ function unconfiguredCoordination(): WorkflowCoordination {
   };
 }
 
+function relayActionEndpoint(config: RelayActionEndpointConfig, keyManagerPromise: Promise<KeyManager>): WorkflowActionEndpoint {
+  const client = new ActionEndpointClient({ url: config.url, signer: keyManagerPromise });
+  const recipients = [...new Set([config.verifierDid, ...(config.additionalRecipients ?? [])])];
+  return {
+    async submitActionRequest(request: ActionRequest) {
+      const keyManager = await keyManagerPromise;
+      return client.submitActionRequest(buildDeliveryEnvelope({ sender: keyManager.did, recipients, payload: request }));
+    },
+  };
+}
+
 export async function createBridgeFromConfig(configPath: string): Promise<GeneratedBridge> {
   const absoluteConfigPath = resolve(configPath);
   const configDir = dirname(absoluteConfigPath);
@@ -238,9 +263,14 @@ function toBridgeConfig(config: CliConfig, configDir: string): BridgeConfig {
   const pluginPath = resolve(configDir, config.plugin);
   const plugin = loadPlugin(pluginPath);
   const adapterUrl = config.adapter?.url ?? config.adapterUrl;
+  const actionEndpointUrl = config.actionEndpoint?.url;
+  const verifierDid = config.actionEndpoint?.verifierDid;
   const agentKey = config.agent?.keyFile ?? config.agentKey;
-  if (!adapterUrl) {
-    throw new Error('Proposer bridge config requires "adapter.url".');
+  if (!adapterUrl && !actionEndpointUrl) {
+    throw new Error('Proposer bridge config requires either "actionEndpoint.url" or "adapter.url".');
+  }
+  if (actionEndpointUrl && !verifierDid) {
+    throw new Error('Relay action endpoint config requires "actionEndpoint.verifierDid".');
   }
   if (!agentKey) {
     throw new Error('Proposer bridge config requires "agent.keyFile".');
@@ -254,7 +284,8 @@ function toBridgeConfig(config: CliConfig, configDir: string): BridgeConfig {
   return {
     plugin: pluginPath,
     applicationDid: (config.target?.applicationDid ?? config.applicationDid ?? plugin.applicationDid) as BridgeConfig["applicationDid"],
-    adapterUrl,
+    adapterUrl: adapterUrl ?? actionEndpointUrl!,
+    ...(actionEndpointUrl && verifierDid ? { actionEndpoint: { url: actionEndpointUrl, verifierDid: verifierDid as Did, additionalRecipients: (config.actionEndpoint?.additionalRecipients ?? []) as Did[] } } : {}),
     agentKey: resolve(configDir, agentKey),
     coordinationUrl: config.coordination?.url,
     executionProfile: (config.executionProfile ?? {
