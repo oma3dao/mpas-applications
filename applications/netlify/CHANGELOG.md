@@ -1,5 +1,12 @@
 # Changelog — netlify
 
+## 2026-08-28 — Updated MPAS SDK runtime
+
+- Updated the bridge runtime to the exact reviewed release
+  `@oma3/mpas@0.1.0-alpha.9` and refreshed the lockfile.
+- Preserved bridge source, plugin policy, DIDs, registry artifacts, and the
+  Credential Adapter execution boundary.
+
 ## 2026-08-24 — Documented `deploy-site` continuation handling
 
 - Documented the pinned `@netlify/mcp@1.15.1` continuation command, safe JWE
