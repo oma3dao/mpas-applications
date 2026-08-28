@@ -19,10 +19,10 @@ Errors (exit 1):
     (LOCAL_PATH_EXEMPT holds the not-yet-migrated applications)
   - npx launch package specs in harness-config.json / metadata.json carry an
     exact version (not bare names or @latest)
-  - generated bridges pass their existing lazy KeyManager to
-    CoordinationClient, use the adaptive protocol selector, retain the
-    Adapter-only execution boundary, and depend on the reviewed @oma3/mpas
-    release
+  - generated bridges pass their existing lazy KeyManager to signed relay
+    clients, use the adaptive protocol selector, retain the direct-topology
+    Adapter compatibility path behind ActionEndpointClient, construct routed
+    Delivery Envelopes, and depend on the reviewed @oma3/mpas release
   - credential-returning tools have deterministic reject entries in their
     checked-in Credential Adapter configuration examples
   - harness metadata describes distinct Tasks and conventional compatibility
@@ -487,7 +487,7 @@ def check_app(app_dir: Path, report: Report) -> None:
 
 
 def check_bridge_auth(app_dir: Path, report: Report) -> None:
-    """Every generated bridge must preserve signing, Adapter custody, and protocol selection."""
+    """Every bridge must preserve signed relay, direct compatibility, and protocol selection."""
     app = app_dir.name
     index_path = app_dir / "bridge" / "src" / "index.ts"
     package_path = app_dir / "bridge" / "package.json"
@@ -501,8 +501,20 @@ def check_bridge_auth(app_dir: Path, report: Report) -> None:
         required_fragments = {
             "new CoordinationClient({ url: config.coordinationUrl, signer: keyManagerPromise })":
                 "CoordinationClient must use the bridge's keyManagerPromise signer",
-            "new AdapterClient({ url: config.adapterUrl })":
-                "application execution must remain behind the configured AdapterClient",
+            ": new ActionEndpointClient({ url: config.adapterUrl })":
+                "direct topology must submit bare Action requests through ActionEndpointClient at adapter.url",
+            "new ActionEndpointClient({ url: config.url, signer: keyManagerPromise })":
+                "relay topology must sign Action endpoint requests with the Proposer key",
+            "buildDeliveryEnvelope({":
+                "relay topology must construct DeliveryEnvelope<ActionRequest>",
+            "new Set([config.verifierDid, ...(config.additionalRecipients ?? [])])":
+                "relay recipients must include the designated Verifier and deduplicate optional additions",
+            "if (!adapterUrl && !actionEndpointUrl)":
+                "bridge config must require either actionEndpoint.url or adapter.url",
+            "if (actionEndpointUrl && !verifierDid)":
+                "relay config must require actionEndpoint.verifierDid",
+            "actionEndpoint,":
+                "ProposerBridge must use the WorkflowActionEndpoint execution boundary",
             "new ActionPackageBuilder(":
                 "application calls must still construct signed MPAS Action Packages",
             "MpasProtocolServer":
@@ -513,7 +525,7 @@ def check_bridge_auth(app_dir: Path, report: Report) -> None:
         for fragment, message in required_fragments.items():
             if fragment not in source:
                 report.error(index_rel, message)
-        for forbidden in ("StdioClientTransport", "{{credential:"):
+        for forbidden in ("StdioClientTransport", "{{credential:", "new AdapterClient("):
             if forbidden in source:
                 report.error(index_rel, f"proposer bridge source must not contain direct upstream/credential path {forbidden!r}")
 
