@@ -109,7 +109,7 @@ For any existing MCP server, the generated bridge preserves the upstream tool na
 ```
 Agent
   → Generated MPAS Bridge (tool-input compatible)
-  → Credential Adapter (Verifier)
+  → SignerSet relay or direct Credential Adapter (Verifier)
   → Original MCP Server
   → Application API
 ```
@@ -206,13 +206,19 @@ for a complete Credential Adapter deployment-config example.
 5. Store the real upstream credential under the configured handle in the
    Credential Adapter's credential store. Prefer a separate OS account, VM,
    or other trust domain that the Proposer cannot read.
-6. Create a Proposer bridge configuration. A typical configuration is:
+6. Create a Proposer bridge configuration. For relay topology, configure the
+   common Action endpoint, the designated Verifier DID, and any explicitly
+   authorized additional delivery recipients:
 
    ```json
    {
      "mode": "proposer",
      "plugin": "/absolute/path/to/applications/<application>/plugin.json",
-     "adapter": { "url": "http://127.0.0.1:7544" },
+     "actionEndpoint": {
+       "url": "https://api.signerset.com",
+       "verifierDid": "did:web:verifier.example",
+       "additionalRecipients": ["did:web:observer.example"]
+     },
      "agent": {
        "did": "did:jwk:...",
        "keyFile": "/path/visible/only/to/the/proposer/proposer-key.json"
@@ -222,6 +228,13 @@ for a complete Credential Adapter deployment-config example.
      "workflow": { "dbPath": "/path/to/proposer-workflows.db" }
    }
    ```
+
+   The bridge constructs `DeliveryEnvelope<ActionRequest>`, always includes
+   `verifierDid` in its deduplicated recipient list, and signs submission with
+   the Proposer key through `ActionEndpointClient`. Omit `additionalRecipients`
+   when none are authorized. For a direct topology, omit `actionEndpoint` and
+   retain `"adapter": { "url": "http://127.0.0.1:7544" }`; that compatibility
+   path sends the bare Action request directly to the Verifier.
 
 7. Start the Credential Adapter and a Coordination Service reachable by the
    participants, then any Signer servers required by policy.
