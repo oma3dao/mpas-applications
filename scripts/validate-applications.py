@@ -19,10 +19,11 @@ Errors (exit 1):
     (LOCAL_PATH_EXEMPT holds the not-yet-migrated applications)
   - npx launch package specs in harness-config.json / metadata.json carry an
     exact version (not bare names or @latest)
-  - generated bridges pass their existing lazy KeyManager to signed relay
-    clients, use the adaptive protocol selector, retain the direct-topology
-    Adapter compatibility path behind ActionEndpointClient, construct routed
-    Delivery Envelopes, and depend on the reviewed @oma3/mpas release
+  - generated bridges pass their existing lazy KeyManager to independent
+    Action Relay and Coordination Service clients, use the adaptive protocol
+    selector, retain the direct-topology Adapter compatibility path behind
+    ActionEndpointClient, construct routed Delivery Envelopes, and depend on
+    the reviewed @oma3/mpas release
   - credential-returning tools have deterministic reject entries in their
     checked-in Credential Adapter configuration examples
   - harness metadata describes distinct Tasks and conventional compatibility
@@ -59,7 +60,7 @@ REASON_TAGS = {
     "simulated",
 }
 
-DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.9"
+DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.10"
 MPAS_SDK_VERSION_OVERRIDES = {}
 REQUIRED_CA_REJECTS = {
     "railway": "list_variables",
@@ -487,7 +488,7 @@ def check_app(app_dir: Path, report: Report) -> None:
 
 
 def check_bridge_auth(app_dir: Path, report: Report) -> None:
-    """Every bridge must preserve signed relay, direct compatibility, and protocol selection."""
+    """Every bridge must preserve separate signed relay and coordination clients."""
     app = app_dir.name
     index_path = app_dir / "bridge" / "src" / "index.ts"
     package_path = app_dir / "bridge" / "package.json"
@@ -499,12 +500,16 @@ def check_bridge_auth(app_dir: Path, report: Report) -> None:
     else:
         source = index_path.read_text()
         required_fragments = {
-            "new CoordinationClient({ url: config.coordinationUrl, signer: keyManagerPromise })":
-                "CoordinationClient must use the bridge's keyManagerPromise signer",
+            "new CoordinationServiceClient({ url: config.coordinationUrl, signer: keyManagerPromise })":
+                "CoordinationServiceClient must use the bridge's keyManagerPromise signer",
+            "coordinationService,":
+                "ProposerBridge must receive coordination through its explicit coordinationService port",
             ": new ActionEndpointClient({ url: config.adapterUrl })":
                 "direct topology must submit bare Action requests through ActionEndpointClient at adapter.url",
-            "new ActionEndpointClient({ url: config.url, signer: keyManagerPromise })":
-                "relay topology must sign Action endpoint requests with the Proposer key",
+            "new ActionRelayClient({ url: config.url, signer: keyManagerPromise })":
+                "relay topology must use the dedicated signed ActionRelayClient",
+            "client.submitAction(buildDeliveryEnvelope({":
+                "relay topology must submit routed envelopes through ActionRelayClient",
             "buildDeliveryEnvelope({":
                 "relay topology must construct DeliveryEnvelope<ActionRequest>",
             "new Set([config.verifierDid, ...(config.additionalRecipients ?? [])])":

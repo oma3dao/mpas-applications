@@ -17,8 +17,9 @@ import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
 import {
   ActionPackageBuilder,
   ActionEndpointClient,
+  ActionRelayClient,
   buildDeliveryEnvelope,
-  CoordinationClient,
+  CoordinationServiceClient,
   KeyManager,
   MemoryWorkflowStore,
   MpasProtocolServer,
@@ -31,7 +32,7 @@ import type {
   Did,
   MpasApplicationPlugin,
   ProposerConfig,
-  WorkflowCoordination,
+  WorkflowCoordinationService,
   WorkflowActionEndpoint,
   WorkflowStore,
 } from "@oma3/mpas";
@@ -116,9 +117,9 @@ export class GeneratedBridge {
     const actionEndpoint: WorkflowActionEndpoint = config.actionEndpoint
       ? relayActionEndpoint(config.actionEndpoint, keyManagerPromise)
       : new ActionEndpointClient({ url: config.adapterUrl });
-    const coordination: WorkflowCoordination = config.coordinationUrl
-      ? new CoordinationClient({ url: config.coordinationUrl, signer: keyManagerPromise })
-      : unconfiguredCoordination();
+    const coordinationService: WorkflowCoordinationService = config.coordinationUrl
+      ? new CoordinationServiceClient({ url: config.coordinationUrl, signer: keyManagerPromise })
+      : unconfiguredCoordinationService();
     const workflow = config.workflow ?? {};
     this.store = workflow.dbPath ? new SqliteWorkflowStore(workflow.dbPath) : new MemoryWorkflowStore();
     if (!workflow.dbPath) {
@@ -145,7 +146,7 @@ export class GeneratedBridge {
           }).buildFromToolCall(toolName, args),
         store: this.store,
         actionEndpoint,
-        coordination,
+        coordinationService,
         proposerDid: keyManager.did,
         resultRetentionSeconds: workflow.resultRetentionSeconds ?? 86_400,
         ...(workflow.pollIntervalMs !== undefined ? { pollIntervalMs: workflow.pollIntervalMs } : {}),
@@ -204,12 +205,12 @@ export class GeneratedBridge {
  * Actions stay durably recorded in created/awaitingApprovals and are retried
  * by reconciliation; they cannot complete until coordination exists.
  */
-function unconfiguredCoordination(): WorkflowCoordination {
+function unconfiguredCoordinationService(): WorkflowCoordinationService {
   return {
-    submitAction() {
+    createApprovalWorkflow() {
       return Promise.reject(new Error("Coordination Service is not configured (coordination.url)."));
     },
-    poll() {
+    pollWork() {
       return Promise.resolve({
         version: "1" as const,
         type: "CoordinationPollResponse" as const,
@@ -227,12 +228,12 @@ function relayActionEndpoint(
   config: RelayActionEndpointConfig,
   keyManagerPromise: Promise<KeyManager>,
 ): WorkflowActionEndpoint {
-  const client = new ActionEndpointClient({ url: config.url, signer: keyManagerPromise });
+  const client = new ActionRelayClient({ url: config.url, signer: keyManagerPromise });
   const recipients = [...new Set([config.verifierDid, ...(config.additionalRecipients ?? [])])];
   return {
     async submitActionRequest(request: ActionRequest) {
       const keyManager = await keyManagerPromise;
-      return client.submitActionRequest(buildDeliveryEnvelope({
+      return client.submitAction(buildDeliveryEnvelope({
         sender: keyManager.did,
         recipients,
         payload: request,
