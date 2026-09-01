@@ -66,10 +66,10 @@ class ExactNpmVersionTests(unittest.TestCase):
 
 
 class MpasSdkVersionTests(unittest.TestCase):
-    def test_compatibility_bridges_require_alpha_10(self):
+    def test_compatibility_bridges_require_alpha_11(self):
         for app in ("github", "netlify", "railway", "stripe"):
             with self.subTest(app=app):
-                self.assertEqual(validate.expected_mpas_sdk_version(app), "0.1.0-alpha.10")
+                self.assertEqual(validate.expected_mpas_sdk_version(app), "0.1.0-alpha.11")
 
 
 class CredentialReturnDenyTests(unittest.TestCase):

@@ -123,6 +123,14 @@ A bridge is **tool-input compatible, not a transparent drop-in**. Multi-party ap
 
 Native results are relayed verbatim whenever one exists. Agent integrations must understand the profile even when they already understand the upstream server.
 
+When a Verifier returns `additionalApprovalsRequired` for A1, a generated bridge
+retires A1 and constructs A2 with a new Action ID, Action Envelope hash,
+expiration, and Proposer Approval. It explicitly creates A2's Coordination
+workflow, then submits completed A2 to the configured Action endpoint for the
+first time when Coordination reports `readyForSubmission`. One separate MCP
+Task ID remains stable while the bridge moves from A1 to A2; clients must not
+use that Task ID as an MPAS Action or Coordination correlation key.
+
 ## Operating a Generated Bridge
 
 This repository contains application-specific bridge artifacts, but a usable
