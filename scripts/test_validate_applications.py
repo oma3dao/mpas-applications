@@ -66,10 +66,18 @@ class ExactNpmVersionTests(unittest.TestCase):
 
 
 class MpasSdkVersionTests(unittest.TestCase):
-    def test_compatibility_bridges_require_alpha_10(self):
+    def test_compatibility_bridges_require_default_sdk_version(self):
+        """These bridges carry no per-app override, so they track the default.
+
+        Asserts against DEFAULT_MPAS_SDK_VERSION rather than a literal so the
+        reviewed-release gate lives in one place (validate-applications.py).
+        """
         for app in ("github", "netlify", "railway", "stripe"):
             with self.subTest(app=app):
-                self.assertEqual(validate.expected_mpas_sdk_version(app), "0.1.0-alpha.10")
+                self.assertEqual(
+                    validate.expected_mpas_sdk_version(app),
+                    validate.DEFAULT_MPAS_SDK_VERSION,
+                )
 
 
 class CredentialReturnDenyTests(unittest.TestCase):
