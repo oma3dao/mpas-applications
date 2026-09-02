@@ -29,7 +29,6 @@ import {
 import type {
   BridgeUpstreamTool,
   ActionRequest,
-  CreateTaskResult,
   Did,
   MpasApplicationPlugin,
   ProposerConfig,
@@ -166,7 +165,10 @@ export class GeneratedBridge {
     return structuredClone(TOOLS);
   }
 
-  async handleToolCall(toolName: string, args: object): Promise<CreateTaskResult> {
+  async handleToolCall(
+    toolName: string,
+    args: object,
+  ): Promise<Awaited<ReturnType<ProposerBridge["handleToolCall"]>>> {
     log("info", "tool_call_received", { toolName });
     const bridge = await this.bridgePromise;
     return bridge.handleToolCall(toolName, args);
