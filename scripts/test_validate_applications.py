@@ -6,6 +6,10 @@ Standard library only. Run: python3 scripts/test_validate_applications.py
 from __future__ import annotations
 
 import importlib.util
+import contextlib
+import io
+import shutil
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -78,6 +82,29 @@ class MpasSdkVersionTests(unittest.TestCase):
                     validate.expected_mpas_sdk_version(app),
                     validate.DEFAULT_MPAS_SDK_VERSION,
                 )
+
+
+class DirectSigningTests(unittest.TestCase):
+    def test_rejects_a_bridge_that_drops_its_direct_http_signer(self):
+        original = ROOT.parent / "applications" / "github"
+        with tempfile.TemporaryDirectory() as scratch:
+            app = Path(scratch) / "github"
+            (app / "bridge" / "src").mkdir(parents=True)
+            for relative in ("bridge/src/index.ts", "bridge/package.json", "harness-config.json"):
+                shutil.copyfile(original / relative, app / relative)
+            report = validate.Report(github=False)
+            validate.check_bridge_auth(app, report)
+            self.assertEqual(report.errors, 0)
+            source = app / "bridge" / "src" / "index.ts"
+            source.write_text(source.read_text().replace(
+                "new ActionEndpointClient({ url: config.adapterUrl, signer: keyManagerPromise })",
+                "new ActionEndpointClient({ url: config.adapterUrl })",
+            ))
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                validate.check_bridge_auth(app, report)
+            self.assertEqual(report.errors, 1)
+            self.assertIn("direct topology must sign", output.getvalue())
 
 
 class CredentialReturnDenyTests(unittest.TestCase):

@@ -1,0 +1,22 @@
+{
+  "label": "proposer",
+  "did": "did:jwk:eyJjcnYiOiJFZDI1NTE5Iiwia3R5IjoiT0tQIiwieCI6Ims2TzdjaVFrbXBodUVFdDFpM3lBaW1KSldlR0ttT3EzdF9mc05renphNm8ifQ",
+  "kid": "did:jwk:eyJjcnYiOiJFZDI1NTE5Iiwia3R5IjoiT0tQIiwieCI6Ims2TzdjaVFrbXBodUVFdDFpM3lBaW1KSldlR0ttT3EzdF9mc05renphNm8ifQ#0",
+  "privateJwk": {
+    "crv": "Ed25519",
+    "d": "UA1VsxVt4yqqnFyc4xENa10rWJOqNnWO27v-f1_nUmk",
+    "x": "k6O7ciQkmphuEEt1i3yAimJJWeGKmOq3t_fsNkzza6o",
+    "kty": "OKP",
+    "alg": "EdDSA",
+    "use": "sig",
+    "kid": "did:jwk:eyJjcnYiOiJFZDI1NTE5Iiwia3R5IjoiT0tQIiwieCI6Ims2TzdjaVFrbXBodUVFdDFpM3lBaW1KSldlR0ttT3EzdF9mc05renphNm8ifQ#0"
+  },
+  "publicJwk": {
+    "crv": "Ed25519",
+    "x": "k6O7ciQkmphuEEt1i3yAimJJWeGKmOq3t_fsNkzza6o",
+    "kty": "OKP",
+    "alg": "EdDSA",
+    "use": "sig",
+    "kid": "did:jwk:eyJjcnYiOiJFZDI1NTE5Iiwia3R5IjoiT0tQIiwieCI6Ims2TzdjaVFrbXBodUVFdDFpM3lBaW1KSldlR0ttT3EzdF9mc05renphNm8ifQ#0"
+  }
+}

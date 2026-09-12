@@ -60,7 +60,7 @@ REASON_TAGS = {
     "simulated",
 }
 
-DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.12"
+DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.13"
 MPAS_SDK_VERSION_OVERRIDES = {}
 REQUIRED_CA_REJECTS = {
     "railway": "list_variables",
@@ -488,7 +488,7 @@ def check_app(app_dir: Path, report: Report) -> None:
 
 
 def check_bridge_auth(app_dir: Path, report: Report) -> None:
-    """Every bridge must preserve separate signed relay and coordination clients."""
+    """Every bridge must preserve signed direct, relay and coordination clients."""
     app = app_dir.name
     index_path = app_dir / "bridge" / "src" / "index.ts"
     package_path = app_dir / "bridge" / "package.json"
@@ -504,8 +504,8 @@ def check_bridge_auth(app_dir: Path, report: Report) -> None:
                 "CoordinationServiceClient must use the bridge's keyManagerPromise signer",
             "coordinationService,":
                 "ProposerBridge must receive coordination through its explicit coordinationService port",
-            ": new ActionEndpointClient({ url: config.adapterUrl })":
-                "direct topology must submit bare Action requests through ActionEndpointClient at adapter.url",
+            ": new ActionEndpointClient({ url: config.adapterUrl, signer: keyManagerPromise })":
+                "direct topology must sign bare Action requests through ActionEndpointClient at adapter.url",
             "new ActionRelayClient({ url: config.url, signer: keyManagerPromise })":
                 "relay topology must use the dedicated signed ActionRelayClient",
             "client.submitAction(buildDeliveryEnvelope({":

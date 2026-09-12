@@ -133,6 +133,10 @@ use that Task ID as an MPAS Action or Coordination correlation key.
 
 ## Operating a Generated Bridge
 
+For testing the unpublished ES256/P-256 SDK in every bridge, see
+[local SDK linking and cutover](docs/es256-local-testing.md). Direct and relay
+Action submissions both use the configured participant signer.
+
 This repository contains application-specific bridge artifacts, but a usable
 deployment also needs participant keys, a Credential Adapter deployment
 configuration, a Coordination Service, and local operator policy. The
