@@ -112,7 +112,7 @@ export class GeneratedBridge {
     const keyManagerPromise = loadKeyManager(config.agentKey);
     const actionEndpoint: WorkflowActionEndpoint = config.actionEndpoint
       ? relayActionEndpoint(config.actionEndpoint, keyManagerPromise)
-      : new ActionEndpointClient({ url: config.adapterUrl });
+      : new ActionEndpointClient({ url: config.adapterUrl, signer: keyManagerPromise });
     const coordinationService: WorkflowCoordinationService = config.coordinationUrl
       ? new CoordinationServiceClient({ url: config.coordinationUrl, signer: keyManagerPromise })
       : unconfiguredCoordinationService();
