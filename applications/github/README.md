@@ -30,15 +30,11 @@ for other write tools and for protected branches.
    a live policy wholesale with this example.
 3. Review/reload the deployment through its supported operator flow. Publishing
    this repository does not update a running Verifier or its trusted policy.
-4. If adopting the updated plugin description/version, update its trusted
-   artifact pin too; `registry-entry.json` contains the new canonical artifact DID.
-5. In a designated test repository, verify `push_files` to `main` is rejected and
+4. In a designated test repository, verify `push_files` to `main` is rejected and
    the normal feature-branch → PR → approved merge flow succeeds. Do not probe
    production `main` with a real write.
 
 No live policy, deployment, signer registration, or credential is changed here.
-The plugin schemas remain tool-input compatible; their branch descriptions point
-to the policy example rather than pretending to enforce policy in the schema.
 
 ## Tests
 

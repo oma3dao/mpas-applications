@@ -2,7 +2,7 @@
   "version": "1",
   "type": "MpasApplicationPlugin",
   "pluginDid": "did:web:wivity.com:plugins:github-mcp-server",
-  "pluginVersion": "0.1.1",
+  "pluginVersion": "0.1.0",
   "publisherDid": "did:web:wivity.com",
   "applicationDid": "did:web:wivity.com:applications:github-mcp-server",
   "executionProfile": {
@@ -220,7 +220,7 @@
             "properties": {
               "branch": {
                 "type": "string",
-                "description": "Branch to create/update the file in. Governance requirements are configured in the Verifier policy (see verifier-policy.example.json)."
+                "description": "Branch to create/update the file in"
               },
               "content": {
                 "type": "string",
@@ -396,7 +396,7 @@
             "properties": {
               "branch": {
                 "type": "string",
-                "description": "Branch to delete the file from. Governance requirements are configured in the Verifier policy (see verifier-policy.example.json)."
+                "description": "Branch to delete the file from"
               },
               "message": {
                 "type": "string",
@@ -755,7 +755,7 @@
             "properties": {
               "branch": {
                 "type": "string",
-                "description": "Branch to push to. Governance requirements are configured in the Verifier policy (see verifier-policy.example.json)."
+                "description": "Branch to push to"
               },
               "files": {
                 "type": "array",
