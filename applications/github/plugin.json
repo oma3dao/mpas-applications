@@ -220,7 +220,7 @@
             "properties": {
               "branch": {
                 "type": "string",
-                "description": "Branch to create/update the file in. Approval requirements for main are configured in the Verifier policy (see verifier-policy.example.json); this schema intentionally also accepts feature branches."
+                "description": "Branch to create/update the file in. Governance requirements are configured in the Verifier policy (see verifier-policy.example.json)."
               },
               "content": {
                 "type": "string",
@@ -396,7 +396,7 @@
             "properties": {
               "branch": {
                 "type": "string",
-                "description": "Branch to delete the file from. Approval requirements for main are configured in the Verifier policy (see verifier-policy.example.json); this schema intentionally also accepts feature branches."
+                "description": "Branch to delete the file from. Governance requirements are configured in the Verifier policy (see verifier-policy.example.json)."
               },
               "message": {
                 "type": "string",
@@ -755,7 +755,7 @@
             "properties": {
               "branch": {
                 "type": "string",
-                "description": "Branch to push to. Approval requirements for main are configured in the Verifier policy (see verifier-policy.example.json); this schema intentionally also accepts feature branches."
+                "description": "Branch to push to. Governance requirements are configured in the Verifier policy (see verifier-policy.example.json)."
               },
               "files": {
                 "type": "array",

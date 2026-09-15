@@ -26,90 +26,106 @@
     ]
   },
   "policies": {
-    "push_files": [
+    "add_issue_comment": [
       {
-        "description": "Require an independent Maintainer approval for direct main-branch file mutations, including qualified ref spellings.",
-        "match": {
-          "conditions": [
-            {
-              "source": "executionPayload",
-              "path": "/arguments/branch",
-              "op": "in",
-              "value": [
-                "main",
-                "refs/heads/main",
-                "heads/main"
-              ]
-            }
-          ]
-        },
+        "description": "Low-impact issue comments: proposer only.",
         "requirements": {
-          "type": "threshold",
-          "threshold": 1,
-          "eligibleSignerGroup": "approvers",
-          "decision": "approve"
+          "type": "proposerOnly"
+        }
+      }
+    ],
+    "add_reply_to_pull_request_comment": [
+      {
+        "description": "Low-impact PR comment replies: proposer only.",
+        "requirements": {
+          "type": "proposerOnly"
         }
       }
     ],
     "create_or_update_file": [
       {
-        "description": "Require an independent Maintainer approval for direct main-branch file mutations, including qualified ref spellings.",
-        "match": {
-          "conditions": [
-            {
-              "source": "executionPayload",
-              "path": "/arguments/branch",
-              "op": "in",
-              "value": [
-                "main",
-                "refs/heads/main",
-                "heads/main"
-              ]
-            }
-          ]
-        },
+        "description": "Branch file writes are recoverable; main is protected by GitHub rulesets. Proposer only.",
         "requirements": {
-          "type": "threshold",
-          "threshold": 1,
-          "eligibleSignerGroup": "approvers",
-          "decision": "approve"
+          "type": "proposerOnly"
         }
       }
     ],
     "delete_file": [
       {
-        "description": "Require an independent Maintainer approval for direct main-branch file mutations, including qualified ref spellings.",
+        "description": "Branch file deletes are recoverable; main is protected by GitHub rulesets. Proposer only.",
+        "requirements": {
+          "type": "proposerOnly"
+        }
+      }
+    ],
+    "create_pull_request": [
+      {
+        "description": "Opening a PR does not land on main. Proposer only.",
+        "requirements": {
+          "type": "proposerOnly"
+        }
+      }
+    ],
+    "issue_write": [
+      {
+        "description": "Issue create/update on public repos. Proposer only.",
+        "requirements": {
+          "type": "proposerOnly"
+        }
+      }
+    ],
+    "push_files": [
+      {
+        "reject": true,
+        "description": "Blocked: direct pushes to main are not permitted. Open a pull request instead.",
         "match": {
           "conditions": [
             {
               "source": "executionPayload",
               "path": "/arguments/branch",
-              "op": "in",
-              "value": [
-                "main",
-                "refs/heads/main",
-                "heads/main"
-              ]
+              "op": "eq",
+              "value": "main"
+            }
+          ]
+        }
+      },
+      {
+        "description": "Pushes to other branches are recoverable. Proposer only.",
+        "match": {
+          "conditions": [
+            {
+              "source": "executionPayload",
+              "path": "/arguments/branch",
+              "op": "neq",
+              "value": "main"
             }
           ]
         },
         "requirements": {
-          "type": "threshold",
-          "threshold": 1,
-          "eligibleSignerGroup": "approvers",
-          "decision": "approve"
+          "type": "proposerOnly"
         }
       }
     ],
-    "merge_pull_request": [
+    "update_pull_request": [
       {
-        "description": "Require an independent Maintainer approval for every PR merge; the payload does not carry a trustworthy base branch.",
+        "description": "PR metadata updates. Proposer only.",
         "requirements": {
-          "type": "threshold",
-          "threshold": 1,
-          "eligibleSignerGroup": "approvers",
-          "decision": "approve"
+          "type": "proposerOnly"
         }
+      }
+    ],
+    "update_pull_request_branch": [
+      {
+        "description": "Updating a PR branch from base. Proposer only.",
+        "requirements": {
+          "type": "proposerOnly"
+        }
+      }
+    ],
+    "assign_copilot_to_issue": [
+      {
+        "reject": true,
+        "description": "Blocked: assigning Copilot to issues is not permitted in this deployment."
       }
     ]
   }

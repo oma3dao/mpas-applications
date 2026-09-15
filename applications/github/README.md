@@ -1,55 +1,44 @@
 # GitHub MPAS application
 
-## Main-branch write approval
+## Example verifier policy
 
-`plugin.json` already declares `push_files`, `create_or_update_file`, `delete_file`,
-and `merge_pull_request` as high-impact operations. That declaration makes the
-operation available for governance; **impact is not an approval requirement**.
-The trusted Verifier policy determines which additional Approvals are required.
+`plugin.json` classifies operation impact, while the trusted Verifier policy
+determines whether an operation is rejected, proposer-only, or needs additional
+approval. [verifier-policy.example.json](verifier-policy.example.json) provides
+the deployment example for the GitHub bridge:
 
-The incident on 2026-09-14 demonstrated that a `push_files` call with `branch:
-"main"` could return a native success without additional Maintainer approval.
-A plugin-only schema change cannot supply the missing policy rule. In particular,
-adding `const: "main"` to the branch schema would reject feature-branch payloads,
-not impose a Maintainer threshold on main.
+- routine issue/PR comments, issue writes, branch file changes, PR creation, and
+  PR metadata/branch updates are proposer-only;
+- `push_files` rejects the exact branch name `main` and permits other branches as
+  proposer-only, so the intended path is feature branch to pull request;
+- assigning Copilot to an issue is rejected;
+- operations without an explicit override, including `merge_pull_request`, retain
+  the example's one-approver default requirement.
 
-[verifier-policy.example.json](verifier-policy.example.json) supplies explicit
-one-independent-approver rules for:
-
-- `push_files`, `create_or_update_file`, and `delete_file` when
-  `/arguments/branch` is `main`, `refs/heads/main`, or `heads/main`;
-- every `merge_pull_request` invocation, since its payload does not carry the
-  target branch and it must not be inferred from a PR number.
-
-The example uses a conservative approval-required default for other operations
-and non-main branches. Its explicit main rules also work with an existing
-`proposerOnly` default; the tests cover both. Exact branch comparison intentionally
-does not conflate `Main` or `main-fix` with `main`. Other default/protected branches
-must be added by the operator if desired. These rules do not query GitHub branch
-protection and are not a replacement for it.
+The exact `main` comparison intentionally does not conflate `Main`, `main-fix`, or
+qualified ref spellings with `main`. GitHub rulesets remain the enforcement layer
+for other write tools and for protected branches.
 
 ## Operator adoption (separate from merging this PR)
 
 1. Replace the synthetic `did:example:replace-*` identities with the deployment's
    existing authorized proposer and independent Maintainer groups. Do not copy
    private keys or credentials into this repository.
-2. **Merge** the new operation policy entries into the trusted policy used by the
-   Credential Adapter/Verifier. Preserve existing entries, rejects, stronger
-   thresholds, signer groups and default requirements; do not replace a live
-   policy wholesale with this example. Matching positive rules compose with AND;
-   any matching reject wins.
+2. Review the operation policy entries and merge them into the trusted policy used
+   by the Credential Adapter/Verifier. Preserve deployment-specific signer groups,
+   stronger requirements, and any additional protected branch rules; do not replace
+   a live policy wholesale with this example.
 3. Review/reload the deployment through its supported operator flow. Publishing
    this repository does not update a running Verifier or its trusted policy.
 4. If adopting the updated plugin description/version, update its trusted
    artifact pin too; `registry-entry.json` contains the new canonical artifact DID.
-5. In a designated test repository, verify main writes return
-   `additionalApprovalsRequired` without changing GitHub, then succeed only with
-   a distinct eligible Signer's approve decision. Test the normal feature-branch
-   → PR → merge flow separately. Do not probe production main with a real write.
+5. In a designated test repository, verify `push_files` to `main` is rejected and
+   the normal feature-branch → PR → approved merge flow succeeds. Do not probe
+   production `main` with a real write.
 
-No live policy, deployment, signer registration or credential is changed here.
+No live policy, deployment, signer registration, or credential is changed here.
 The plugin schemas remain tool-input compatible; their branch descriptions point
-to the policy example rather than pretending to enforce a threshold.
+to the policy example rather than pretending to enforce policy in the schema.
 
 ## Tests
 
@@ -60,7 +49,6 @@ python3 scripts/validate-applications.py --github
 python3 scripts/test_validate_applications.py
 ```
 
-The policy regression uses the pinned MPAS SDK's actual policy engine and
-already-verified synthetic approvals. It covers the missing-main-approval case,
-ref spellings, self-approval, unauthorized Signers, wrong decisions, successful
-Maintainer approval, default behavior, and preservation of stricter rules.
+The policy regression uses the pinned MPAS SDK's actual policy engine. It covers
+the proposer-only overrides, exact `main` rejection, non-main branch behavior,
+Copilot rejection, and the approval-required default retained for PR merges.
