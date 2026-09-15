@@ -2,7 +2,7 @@
   "version": "1",
   "type": "MpasApplicationPlugin",
   "pluginDid": "did:web:wivity.com:plugins:github-mcp-server",
-  "pluginVersion": "0.1.0",
+  "pluginVersion": "0.1.1",
   "publisherDid": "did:web:wivity.com",
   "applicationDid": "did:web:wivity.com:applications:github-mcp-server",
   "executionProfile": {
@@ -220,7 +220,7 @@
             "properties": {
               "branch": {
                 "type": "string",
-                "description": "Branch to create/update the file in"
+                "description": "Branch to create/update the file in. Approval requirements for main are configured in the Verifier policy (see verifier-policy.example.json); this schema intentionally also accepts feature branches."
               },
               "content": {
                 "type": "string",
@@ -396,7 +396,7 @@
             "properties": {
               "branch": {
                 "type": "string",
-                "description": "Branch to delete the file from"
+                "description": "Branch to delete the file from. Approval requirements for main are configured in the Verifier policy (see verifier-policy.example.json); this schema intentionally also accepts feature branches."
               },
               "message": {
                 "type": "string",
@@ -755,7 +755,7 @@
             "properties": {
               "branch": {
                 "type": "string",
-                "description": "Branch to push to"
+                "description": "Branch to push to. Approval requirements for main are configured in the Verifier policy (see verifier-policy.example.json); this schema intentionally also accepts feature branches."
               },
               "files": {
                 "type": "array",

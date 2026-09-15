@@ -1,0 +1,116 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPolicy",
+  "policyProfileUrl": "https://github.com/oma3dao/mpas/blob/main/specs/mpas-profile-policy-json.md",
+  "applicationDid": "did:web:wivity.com:applications:github-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall"
+  },
+  "defaultRequirement": {
+    "type": "threshold",
+    "threshold": 1,
+    "eligibleSignerGroup": "approvers",
+    "decision": "approve"
+  },
+  "signerGroups": {
+    "all": [
+      "did:example:replace-proposer",
+      "did:example:replace-approver"
+    ],
+    "proposers": [
+      "did:example:replace-proposer"
+    ],
+    "approvers": [
+      "did:example:replace-approver"
+    ]
+  },
+  "policies": {
+    "push_files": [
+      {
+        "description": "Require an independent Maintainer approval for direct main-branch file mutations, including qualified ref spellings.",
+        "match": {
+          "conditions": [
+            {
+              "source": "executionPayload",
+              "path": "/arguments/branch",
+              "op": "in",
+              "value": [
+                "main",
+                "refs/heads/main",
+                "heads/main"
+              ]
+            }
+          ]
+        },
+        "requirements": {
+          "type": "threshold",
+          "threshold": 1,
+          "eligibleSignerGroup": "approvers",
+          "decision": "approve"
+        }
+      }
+    ],
+    "create_or_update_file": [
+      {
+        "description": "Require an independent Maintainer approval for direct main-branch file mutations, including qualified ref spellings.",
+        "match": {
+          "conditions": [
+            {
+              "source": "executionPayload",
+              "path": "/arguments/branch",
+              "op": "in",
+              "value": [
+                "main",
+                "refs/heads/main",
+                "heads/main"
+              ]
+            }
+          ]
+        },
+        "requirements": {
+          "type": "threshold",
+          "threshold": 1,
+          "eligibleSignerGroup": "approvers",
+          "decision": "approve"
+        }
+      }
+    ],
+    "delete_file": [
+      {
+        "description": "Require an independent Maintainer approval for direct main-branch file mutations, including qualified ref spellings.",
+        "match": {
+          "conditions": [
+            {
+              "source": "executionPayload",
+              "path": "/arguments/branch",
+              "op": "in",
+              "value": [
+                "main",
+                "refs/heads/main",
+                "heads/main"
+              ]
+            }
+          ]
+        },
+        "requirements": {
+          "type": "threshold",
+          "threshold": 1,
+          "eligibleSignerGroup": "approvers",
+          "decision": "approve"
+        }
+      }
+    ],
+    "merge_pull_request": [
+      {
+        "description": "Require an independent Maintainer approval for every PR merge; the payload does not carry a trustworthy base branch.",
+        "requirements": {
+          "type": "threshold",
+          "threshold": 1,
+          "eligibleSignerGroup": "approvers",
+          "decision": "approve"
+        }
+      }
+    ]
+  }
+}
