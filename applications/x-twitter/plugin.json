@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "xApiCredential",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "tweets:read",
         "tweets:write",
         "users:read",

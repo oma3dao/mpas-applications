@@ -18,7 +18,7 @@
   },
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/bigquery/plugin.json",
-    "artifactDid": "did:artifact:bafkreigdgutnoyrk5bydr7d65xyf52fulra37tb7y2g47bisnmqahvydcm",
+    "artifactDid": "did:artifact:bafkreiaadn76ukoh3gwxk4n3gdbnogzfncf7256bqi4oafmhtb5ijmgqgy",
     "pluginDid": "did:web:wivity.com:plugins:bigquery-mcp-server"
   },
   "publisher": {

@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "postgresConnectionString",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "database:connect",
         "query:execute"
       ],

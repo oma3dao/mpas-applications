@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "neonApiKey",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "organizations:read",
         "projects:write",
         "branches:write",

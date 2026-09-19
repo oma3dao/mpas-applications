@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "krakenSpotApiKey",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "account:read",
         "orders:write",
         "funding:write",
@@ -24,7 +24,7 @@
     },
     {
       "type": "krakenSpotApiSecret",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "account:read",
         "orders:write",
         "funding:write",
@@ -35,7 +35,7 @@
     },
     {
       "type": "krakenFuturesApiKey",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "futures:read",
         "futures:trade",
         "futures:transfer"
@@ -44,7 +44,7 @@
     },
     {
       "type": "krakenFuturesApiSecret",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "futures:read",
         "futures:trade",
         "futures:transfer"

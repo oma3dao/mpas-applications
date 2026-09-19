@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "railwayApiToken",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "projects:read",
         "projects:write",
         "services:write",

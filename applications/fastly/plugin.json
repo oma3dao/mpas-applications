@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "fastlyApiToken",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "fastly:api"
       ],
       "description": "Fastly API token supplied only within the credential adapter and scoped to the intended Fastly account and services with least-privileged permissions. The token must never be returned to the proposer."

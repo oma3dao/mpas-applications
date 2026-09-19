@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "googleCloudBigQueryCredential",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "bigquery.jobs.create",
         "bigquery.datasets.get",
         "bigquery.tables.get",

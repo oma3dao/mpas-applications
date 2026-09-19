@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "coinbaseAgenticWalletSession",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "wallet:authenticate",
         "wallet:pay",
         "wallet:send",
