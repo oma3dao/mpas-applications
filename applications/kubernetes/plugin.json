@@ -25,6 +25,33 @@
       "description": "Kubernetes credential supplied only within the credential adapter and scoped by cluster, namespace, and RBAC to the intended workloads. Bearer tokens, client keys, certificates, and kubeconfig contents must never be returned to the proposer."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "rCcMGghxqjqFIS5vNju8hsKBsGKTE6LB_UEQhuHRfXw"
+    },
+    "toolNames": [
+      "events_list",
+      "namespaces_list",
+      "nodes_log",
+      "nodes_stats_summary",
+      "nodes_top",
+      "pods_delete",
+      "pods_exec",
+      "pods_get",
+      "pods_list",
+      "pods_list_in_namespace",
+      "pods_log",
+      "pods_run",
+      "pods_top",
+      "projects_list",
+      "resources_create_or_update",
+      "resources_delete",
+      "resources_get",
+      "resources_list",
+      "resources_scale"
+    ]
+  },
   "operations": {
     "pods_delete": {
       "description": "Delete a Kubernetes Pod in the current or provided namespace with the provided name",

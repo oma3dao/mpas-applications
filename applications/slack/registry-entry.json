@@ -19,7 +19,7 @@
   },
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/slack/plugin.json",
-    "artifactDid": "did:artifact:bafkreigpctiuiit6oqjxddhlu3cajoux3skthx567i45r5bazo5yv33n7e",
+    "artifactDid": "did:artifact:bafkreiha5tmrtfjxmc2ttl2b2vv57itb3p62qjm7wr6rm6cdt7h56kf7ea",
     "pluginDid": "did:web:wivity.com:plugins:slack-mcp-server"
   },
   "publisher": {

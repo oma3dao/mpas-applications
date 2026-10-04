@@ -22,8 +22,12 @@ try {
     const { GeneratedBridge } = await import(pathToFileURL(join(bridgeDir, "dist/index.js")));
     // Resolve exactly the SDK installed for this bridge, not a script-global dependency.
     const sdk = await import(pathToFileURL(join(bridgeDir, "node_modules/@oma3/mpas/dist/index.js")));
-    const candidate = JSON.parse(await readFile(join(bridgeDir, "node_modules/@oma3/mpas/package.json"), "utf8"));
-    assert.equal(candidate.version, "0.1.0-alpha.13", "Probe requires the alpha.13 candidate SDK");
+    const installed = JSON.parse(await readFile(join(bridgeDir, "node_modules/@oma3/mpas/package.json"), "utf8"));
+    const pinned = JSON.parse(await readFile(join(bridgeDir, "package.json"), "utf8")).dependencies["@oma3/mpas"];
+    assert.equal(installed.version, pinned, "Probe requires the bridge's pinned SDK release to be installed");
+    // Generated bridges accept only plugins validated by the SDK loader.
+    const loaded = await sdk.loadPlugin(join(app, "plugin.json"));
+    assert.ok(loaded.ok, `Plugin must load: ${loaded.ok ? "" : `[${loaded.error.code}] ${loaded.error.message}`}`);
     assert.equal(sdk.didJwkToJwk(edKey.did).alg, undefined);
     const p256 = await sdk.generateP256Key();
     const p256File = join(scratch, `${basename(app)}-p256.json`);
@@ -48,6 +52,8 @@ try {
             const request = JSON.parse(body.toString("utf8"));
             assert.equal(request.type, relay ? "DeliveryEnvelope" : "ActionRequest");
             const pkg = relay ? request.payload.actionPackage : request.actionPackage;
+            assert.deepEqual((relay ? request.payload : request).upstreamBinding?.toolSurface, loaded.plugin.toolSurface?.hash,
+              "Every submission must carry the plugin's attested tool surface");
             assert.equal(pkg.actionEnvelope.proposer.did, key.did);
             const approval = pkg.approvalBundle.approvals[0];
             assert.equal(JSON.parse(Buffer.from(approval.signature.value.split(".")[0], "base64url")).alg, jwsAlg);
@@ -60,7 +66,7 @@ try {
             }), { status: 200, headers: { "content-type": "application/json" } });
           };
           const bridge = new GeneratedBridge({
-            plugin: join(app, "plugin.json"), applicationDid: "did:web:signature-probe.example",
+            plugin: loaded.plugin, applicationDid: "did:web:signature-probe.example",
             adapterUrl: "https://adapter.example", agentKey,
             ...(relay ? { actionEndpoint: { url: "https://relay.example", verifierDid: key.did } } : {}),
           });

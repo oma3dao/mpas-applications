@@ -21,6 +21,43 @@
       "description": "A Coinbase Developer Platform API key scoped to the intended Advanced Trade portfolio. The Credential Adapter must retain the private key and execute the local Coinbase CLI MCP server; credentials must never be disclosed to the proposer."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "3M7WDikD1sIGuhH9Ig67aYdmMXyZ_d4U0NmlD7BoqXg"
+    },
+    "toolNames": [
+      "coinbase_balance",
+      "coinbase_convert_execute",
+      "coinbase_convert_get",
+      "coinbase_convert_quote",
+      "coinbase_env",
+      "coinbase_fees",
+      "coinbase_help",
+      "coinbase_orders_cancel",
+      "coinbase_orders_close_position",
+      "coinbase_orders_create",
+      "coinbase_orders_edit",
+      "coinbase_orders_fills",
+      "coinbase_orders_get",
+      "coinbase_orders_list",
+      "coinbase_orders_preview",
+      "coinbase_portfolios_create",
+      "coinbase_portfolios_delete",
+      "coinbase_portfolios_edit",
+      "coinbase_portfolios_get",
+      "coinbase_portfolios_list",
+      "coinbase_products_best_bid_ask",
+      "coinbase_products_book",
+      "coinbase_products_candles",
+      "coinbase_products_get",
+      "coinbase_products_list",
+      "coinbase_products_ticker",
+      "coinbase_set_env",
+      "coinbase_template",
+      "coinbase_transfer"
+    ]
+  },
   "operations": {
     "coinbase_convert_execute": {
       "description": "POST /convert/execute/{quote_id} — Executes a previously quoted conversion using the quote id from convert_quote. This moves funds at the quoted rate — always get a fresh quote first, since quotes expire. The from/to currencies must match the original quote. (2 fields, 2 required)",

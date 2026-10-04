@@ -23,6 +23,37 @@
       "description": "Neon API key supplied only within the credential adapter and scoped to the intended account or organization. The reusable API key and any resolved database connection string must never be returned to the proposer."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "AM3Qjl_LHcE9WzM4lYFIrWNWgeE-MlUHJIjMtVOq5Pg"
+    },
+    "toolNames": [
+      "complete_database_migration",
+      "complete_query_tuning",
+      "create_branch",
+      "create_project",
+      "delete_branch",
+      "delete_project",
+      "describe_branch",
+      "describe_project",
+      "describe_table_schema",
+      "explain_sql_statement",
+      "get_connection_string",
+      "get_database_tables",
+      "list_branch_computes",
+      "list_organizations",
+      "list_projects",
+      "list_shared_projects",
+      "list_slow_queries",
+      "prepare_database_migration",
+      "prepare_query_tuning",
+      "provision_neon_auth",
+      "reset_from_parent",
+      "run_sql",
+      "run_sql_transaction"
+    ]
+  },
   "operations": {
     "complete_database_migration": {
       "description": "Complete a database migration when the user confirms the migration is ready to be applied to the main branch. This tool also lets the client know that the temporary branch created by the `prepare_database_migration` tool has been deleted.",

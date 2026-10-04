@@ -19,6 +19,23 @@
       "description": "An OAuth access token for the official hosted Netlify MCP server. The Credential Adapter must retain the token and execute the hosted MCP request; the token must never be disclosed to the proposer."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "MODlJtKrtuHUTOcWLCXii0JwxW3Mq1T7xKTSszI7EMk"
+    },
+    "toolNames": [
+      "get-netlify-coding-context",
+      "netlify-deploy-services-reader",
+      "netlify-deploy-services-updater",
+      "netlify-extension-services-reader",
+      "netlify-extension-services-updater",
+      "netlify-project-services-reader",
+      "netlify-project-services-updater",
+      "netlify-team-services-reader",
+      "netlify-user-services-reader"
+    ]
+  },
   "operations": {
     "netlify-deploy-services-updater": {
       "description": "Select and run one of the following Netlify write operations deploy-site",

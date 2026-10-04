@@ -24,6 +24,38 @@
       "description": "X API credentials supplied only within the credential adapter and scoped to the intended X application and user account. API keys, secrets, access tokens, and bearer tokens must never be returned to the proposer. Bookmark operations additionally require an OAuth 2.0 user access token."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "BRv4A1bg5-wDJWcfXfcLcQFSo439hZp-_xjk_Mp-Eks"
+    },
+    "toolNames": [
+      "bookmark_tweet",
+      "create_poll_tweet",
+      "delete_all_bookmarks",
+      "delete_bookmark",
+      "delete_tweet",
+      "favorite_tweet",
+      "get_bookmarks",
+      "get_highlights_tweets",
+      "get_latest_timeline",
+      "get_timeline",
+      "get_trends",
+      "get_tweet_details",
+      "get_user_by_id",
+      "get_user_by_screen_name",
+      "get_user_followers",
+      "get_user_followers_you_know",
+      "get_user_following",
+      "get_user_mentions",
+      "get_user_profile",
+      "get_user_subscriptions",
+      "post_tweet",
+      "search_twitter",
+      "unfavorite_tweet",
+      "vote_on_poll"
+    ]
+  },
   "operations": {
     "create_poll_tweet": {
       "description": "Create a tweet with a poll",

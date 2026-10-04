@@ -26,6 +26,23 @@
       "description": "Google Cloud credential scoped to the intended project and datasets with least-privileged BigQuery, Dataplex catalog, and optional Conversational Analytics permissions. Access tokens, service-account keys, query results, and dataset contents must never be disclosed outside the authorized action result."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "X8tlSzRy_CJTuM4PB67_Zf7kC2gcjcad6lv82sDdTnc"
+    },
+    "toolNames": [
+      "analyze_contribution",
+      "ask_data_insights",
+      "execute_sql",
+      "forecast",
+      "get_dataset_info",
+      "get_table_info",
+      "list_dataset_ids",
+      "list_table_ids",
+      "search_catalog"
+    ]
+  },
   "operations": {
     "execute_sql": {
       "description": "Use this tool to execute sql statement.",

@@ -20,7 +20,7 @@
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/postgres/plugin.json",
     "pluginDid": "did:web:wivity.com:plugins:postgres-mcp-server",
-    "artifactDid": "did:artifact:bafkreibdq7et4z52odjt24c67if5ivccch763ogjtljscm3wtvyzkb36xe"
+    "artifactDid": "did:artifact:bafkreib4eg3cvlhpv7fvcsv7xxythtzw45fn374plnng667a6qcnukoyyy"
   },
   "publisher": {
     "name": "Wivity",

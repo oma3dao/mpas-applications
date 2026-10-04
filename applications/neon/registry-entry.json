@@ -20,7 +20,7 @@
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/neon/plugin.json",
     "pluginDid": "did:web:wivity.com:plugins:neon-mcp-server",
-    "artifactDid": "did:artifact:bafkreif2datnd64xdxbi3rshu7hoshxv22xx4ewlus4e4grhbotznu4yxa"
+    "artifactDid": "did:artifact:bafkreih6k6zk36eugyranfatwvfhd5tihqvzxi2w5qasl266x6qbcy2qva"
   },
   "publisher": {
     "name": "Wivity",

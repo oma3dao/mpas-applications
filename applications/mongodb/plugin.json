@@ -23,6 +23,43 @@
       "description": "MongoDB connection string supplied only within the credential adapter and scoped to the intended deployment and least-privileged database user. The reusable connection string must never be returned to the proposer."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "3vXoVcHoHzWbmUMDhbSxw3okPNk-4NSoqZQaxkk4zfo"
+    },
+    "toolNames": [
+      "aggregate",
+      "aggregate-db",
+      "atlas-local-connect-deployment",
+      "atlas-local-create-deployment",
+      "atlas-local-delete-deployment",
+      "atlas-local-list-deployments",
+      "collection-indexes",
+      "collection-schema",
+      "collection-storage-size",
+      "connect",
+      "count",
+      "create-collection",
+      "create-index",
+      "db-stats",
+      "delete-many",
+      "drop-collection",
+      "drop-database",
+      "drop-index",
+      "explain",
+      "export",
+      "find",
+      "insert-many",
+      "list-collections",
+      "list-databases",
+      "list-knowledge-sources",
+      "mongodb-logs",
+      "rename-collection",
+      "search-knowledge",
+      "update-many"
+    ]
+  },
   "operations": {
     "atlas-local-connect-deployment": {
       "description": "Connect to a MongoDB Atlas Local deployment",

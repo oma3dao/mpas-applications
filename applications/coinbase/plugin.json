@@ -22,6 +22,27 @@
       "description": "Authenticated Coinbase Agentic Wallet session managed by the upstream Payments MCP application. Payment, transfer, and trade capabilities are subject to the wallet account’s configured spending limits and supported networks."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "kyqEzyMm8y3WcEYf2ZOyc1IUAunsnPM0ERmIDiF4F-8"
+    },
+    "toolNames": [
+      "bazaar_get_resource_details",
+      "bazaar_list",
+      "bazaar_search",
+      "check_session_status",
+      "get_wallet_address",
+      "get_wallet_balance",
+      "make_http_request_with_x402",
+      "send",
+      "show_wallet_app",
+      "sign_in_with_email",
+      "trade",
+      "verify_email_otp",
+      "x402_discover_payment_requirements"
+    ]
+  },
   "operations": {
     "make_http_request_with_x402": {
       "description": "Call a paid API endpoint with automatic USDC payment. For bazaar services, call bazaar_get_resource_details first to get the schema and costs. For non-bazaar endpoints, call discover_x402_payment_requirements first. If the endpoint requires parameters, ask the user to provide them — pass them in body (POST/PUT/PATCH) or queryParams (GET). Payment amounts are in USDC atomic units (6 decimals). 1,000,000 atomic units = $1.00 USDC. Use preferredNetwork to force payment settlement on a specific chain (e.g., \"solana\" to pay via Solana instead of EVM). Use preferredScheme to choose exact, upto, batch-settlement, or auth-capture when the endpoint advertises multiple schemes.",

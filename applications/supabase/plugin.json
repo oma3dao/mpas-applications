@@ -24,6 +24,43 @@
       "description": "Supabase personal access token supplied only within the credential adapter and scoped to the intended organizations and projects. The reusable token must never be returned to the proposer."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "x37T0hoDYs67TEZMuSovfyQjXB6oIIYBDqyO9jFYU3Q"
+    },
+    "toolNames": [
+      "apply_migration",
+      "confirm_cost",
+      "create_branch",
+      "create_project",
+      "delete_branch",
+      "deploy_edge_function",
+      "execute_sql",
+      "generate_typescript_types",
+      "get_advisors",
+      "get_cost",
+      "get_edge_function",
+      "get_logs",
+      "get_organization",
+      "get_project",
+      "get_project_url",
+      "get_publishable_keys",
+      "list_branches",
+      "list_edge_functions",
+      "list_extensions",
+      "list_migrations",
+      "list_organizations",
+      "list_projects",
+      "list_tables",
+      "merge_branch",
+      "pause_project",
+      "rebase_branch",
+      "reset_branch",
+      "restore_project",
+      "search_docs"
+    ]
+  },
   "operations": {
     "apply_migration": {
       "description": "Applies a migration to the database. Use this when executing DDL operations. Do not hardcode references to generated IDs in data migrations.",
