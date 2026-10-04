@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "kubernetesClusterCredential",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "pods:create",
         "pods:delete",
         "pods:exec",

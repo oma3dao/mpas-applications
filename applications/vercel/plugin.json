@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "vercelMcpOAuthAccessToken",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "vercel:mcp"
       ],
       "description": "An OAuth access token for the official hosted Vercel MCP server. The Credential Adapter must retain the token and execute the hosted MCP request; the token must never be disclosed to the proposer."

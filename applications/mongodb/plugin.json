@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "mongodbConnectionString",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "databases:read",
         "databases:write",
         "collections:write",

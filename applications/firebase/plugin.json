@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "firebaseToken",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "projects:read",
         "projects:write",
         "apps:write",

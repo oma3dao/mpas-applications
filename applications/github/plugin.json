@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "fineGrainedPersonalAccessToken",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "administration:write",
         "contents:write",
         "issues:write",

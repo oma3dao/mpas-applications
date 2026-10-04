@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "planetScaleOAuthAccessToken",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "databases:read",
         "databases:write",
         "insights:read",

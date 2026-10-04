@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "n8nMcpBearerToken",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "n8n:mcp"
       ],
       "description": "A bearer token for the intended n8n instance MCP endpoint. The Credential Adapter must retain the token and execute the hosted MCP request; the token must never be disclosed to the proposer."

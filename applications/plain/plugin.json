@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "plainApiKey",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "customers:read",
         "customers:write",
         "threads:read",

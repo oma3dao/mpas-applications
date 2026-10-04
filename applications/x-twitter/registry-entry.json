@@ -18,7 +18,7 @@
   },
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/x-twitter/plugin.json",
-    "artifactDid": "did:artifact:bafkreibopet4t4ppqhjtfcb522t4kgnrkhhrxn4rrxxh6cea52gegabb5u",
+    "artifactDid": "did:artifact:bafkreigxeoihhvahuznpiosori6qrjskzkydm4aw2vzttk5rngvg2uabba",
     "pluginDid": "did:web:wivity.com:plugins:x-twitter-mcp-server"
   },
   "publisher": {
