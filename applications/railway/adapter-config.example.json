@@ -7,8 +7,8 @@
   },
   "plugin": {
     "pluginDid": "did:web:wivity.com:plugins:railway-mcp-server",
-    "pluginVersion": "0.1.0",
-    "artifactDid": "did:artifact:bafkreig45op5g5khxldtuqvt7mdfckgfi55hpplpzxmmbnqufpwtz6eknu",
+    "pluginVersion": "0.1.1",
+    "artifactDid": "did:artifact:bafkreieeqiyqg7hokno6tw3ay3bxsoaegq4lbguiayfvfpaitvvnborgea",
     "path": "/absolute/path/to/mpas-applications/applications/railway/plugin.json"
   },
   "credentialBindings": [
@@ -22,11 +22,12 @@
     "command": "npx",
     "args": [
       "-y",
-      "@railway/cli@5.28.1",
-      "mcp"
+      "@railway/cli@5.63.1",
+      "mcp",
+      "local"
     ],
     "env": {
-      "RAILWAY_TOKEN": "{{credential:railwayApiToken}}"
+      "RAILWAY_API_TOKEN": "{{credential:railwayApiToken}}"
     }
   },
   "policy": {

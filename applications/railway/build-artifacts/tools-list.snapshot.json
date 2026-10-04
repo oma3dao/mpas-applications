@@ -3,7 +3,7 @@
   "type": "McpToolsListSnapshot",
   "toolSurface": {
     "alg": "sha-256",
-    "value": "2grqAIw94nut062Bz16X73--5vldaWmuIOTevojoDQc"
+    "value": "qg5xx1WvUeVleSKTZnMNTKdmyoKSehbCs_imo-Z9nXo"
   },
   "tools": [
     {
@@ -1281,7 +1281,7 @@
     },
     {
       "name": "list_variables",
-      "description": "List all environment variables for a service. Returns KEY=VALUE pairs. If no IDs are provided, uses the currently linked project/service/environment.",
+      "description": "List all environment variables for a service. Returns KEY=VALUE pairs. Sealed variables are listed by name only, in a trailing 'Sealed' section: they are already set on the service and their value cannot be read back by anyone, so treat them as present and never recreate them. If no IDs are provided, uses the currently linked project/service/environment.",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "properties": {

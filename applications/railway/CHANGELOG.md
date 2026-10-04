@@ -1,5 +1,17 @@
 # Changelog — railway
 
+## 2026-10-04 — Account/workspace-token default (plugin 0.1.1)
+
+- Aligned harness and CA example with `@railway/cli@5.63.1 mcp local` and
+  `RAILWAY_API_TOKEN`, supplied only by the CA `railwayApiToken` file handle.
+- Recaptured all 47 tools without credentials; names and input schemas are
+  unchanged. Only the `list_variables` description changed (sealed values).
+- Regenerated plugin surface, bridge binding/tools, discovery metadata, and
+  registry artifact. Preserved reviewed impacts, governance classification,
+  DIDs, the alpha.14 SDK dependency, and the example `list_variables` rejection.
+- New artifact: `did:artifact:bafkreieeqiyqg7hokno6tw3ay3bxsoaegq4lbguiayfvfpaitvvnborgea`.
+- No live CA changes or authenticated resource calls performed.
+
 ## 2026-10-03 — Updated MPAS SDK runtime to alpha.14
 
 - Updated the bridge runtime to the exact reviewed release

@@ -5,16 +5,17 @@
     "command": "npx",
     "args": [
       "-y",
-      "@railway/cli@5.28.1",
-      "mcp"
+      "@railway/cli@5.63.1",
+      "mcp",
+      "local"
     ],
     "env": {
-      "RAILWAY_TOKEN": "{{credential:railwayApiToken}}"
+      "RAILWAY_API_TOKEN": "{{credential:railwayApiToken}}"
     },
     "distribution": {
       "type": "npm",
       "package": "@railway/cli",
-      "version": "5.28.1",
+      "version": "5.63.1",
       "registry": "https://registry.npmjs.org/",
       "versionMatchesServerInfo": true
     }
