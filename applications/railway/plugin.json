@@ -2,7 +2,7 @@
   "version": "1",
   "type": "MpasApplicationPlugin",
   "pluginDid": "did:web:wivity.com:plugins:railway-mcp-server",
-  "pluginVersion": "0.1.0",
+  "pluginVersion": "0.1.1",
   "publisherDid": "did:web:wivity.com",
   "applicationDid": "did:web:wivity.com:applications:railway-mcp-server",
   "executionProfile": {
@@ -29,7 +29,7 @@
   "toolSurface": {
     "hash": {
       "alg": "sha-256",
-      "value": "2grqAIw94nut062Bz16X73--5vldaWmuIOTevojoDQc"
+      "value": "qg5xx1WvUeVleSKTZnMNTKdmyoKSehbCs_imo-Z9nXo"
     },
     "toolNames": [
       "add_reference_variable",
@@ -932,7 +932,7 @@
       }
     },
     "list_variables": {
-      "description": "List all environment variables for a service. Returns KEY=VALUE pairs. If no IDs are provided, uses the currently linked project/service/environment.",
+      "description": "List all environment variables for a service. Returns KEY=VALUE pairs. Sealed variables are listed by name only, in a trailing 'Sealed' section: they are already set on the service and their value cannot be read back by anyone, so treat them as present and never recreate them. If no IDs are provided, uses the currently linked project/service/environment.",
       "impact": "critical",
       "executionPayloadSchema": {
         "type": "object",
