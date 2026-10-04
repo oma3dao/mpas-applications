@@ -25,6 +25,47 @@
       "description": "Upstash account email and API key supplied only within the credential adapter and scoped to the intended account. API keys, database passwords, REST tokens, and QStash tokens must never be returned to the proposer."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "Bi2lizjCJsAWeA1VvGwe58w7J9nrbi7SPiLUxs6-inE"
+    },
+    "toolNames": [
+      "box_agent_run",
+      "box_exec",
+      "box_logs",
+      "box_manage",
+      "box_preview",
+      "box_runs",
+      "box_snapshots",
+      "qstash_dlq_get",
+      "qstash_dlq_list",
+      "qstash_get_user_token",
+      "qstash_logs_get",
+      "qstash_logs_list",
+      "qstash_publish_message",
+      "qstash_schedules_list",
+      "qstash_schedules_manage",
+      "redis_database_create_new",
+      "redis_database_delete",
+      "redis_database_get_details",
+      "redis_database_get_statistics",
+      "redis_database_list_backups",
+      "redis_database_list_databases",
+      "redis_database_manage_backup",
+      "redis_database_reset_password",
+      "redis_database_run_redis_commands",
+      "redis_database_set_daily_backup",
+      "redis_database_update_regions",
+      "util_dates_to_timestamps",
+      "util_timestamps_to_date",
+      "workflow_dlq_get",
+      "workflow_dlq_list",
+      "workflow_dlq_manage",
+      "workflow_logs_get",
+      "workflow_logs_list"
+    ]
+  },
   "operations": {
     "box_agent_run": {
       "description": "Run an AI agent prompt inside an Upstash Box. The agent has access to shell, filesystem, and git inside the box. It reasons, executes commands, and iterates until the task is complete. This is a synchronous call that may take a while depending on the complexity of the prompt.",

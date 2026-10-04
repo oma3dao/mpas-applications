@@ -23,6 +23,33 @@
       "description": "Firebase access token supplied only within the credential adapter and scoped to the intended projects. The reusable token must never be returned to the proposer."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "B2QQ7WzuiegdD_GMqh7AhaNnEhNn_57at5X5j5Pdjg0"
+    },
+    "toolNames": [
+      "developerknowledge_answer_query",
+      "developerknowledge_get_documents",
+      "developerknowledge_search_documents",
+      "firebase_create_android_sha",
+      "firebase_create_app",
+      "firebase_create_project",
+      "firebase_deploy",
+      "firebase_deploy_status",
+      "firebase_get_environment",
+      "firebase_get_project",
+      "firebase_get_sdk_config",
+      "firebase_get_security_rules",
+      "firebase_init",
+      "firebase_list_apps",
+      "firebase_list_projects",
+      "firebase_login",
+      "firebase_logout",
+      "firebase_read_resources",
+      "firebase_update_environment"
+    ]
+  },
   "operations": {
     "firebase_create_android_sha": {
       "description": "Use this to add the specified SHA certificate hash to the specified Firebase Android App.",

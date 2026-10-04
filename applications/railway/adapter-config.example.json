@@ -8,7 +8,7 @@
   "plugin": {
     "pluginDid": "did:web:wivity.com:plugins:railway-mcp-server",
     "pluginVersion": "0.1.0",
-    "artifactDid": "did:artifact:bafkreih7ti7jqlbkau6uchoewhb44wg7fnuqrilax7y43mngblxpqbc3fy",
+    "artifactDid": "did:artifact:bafkreig45op5g5khxldtuqvt7mdfckgfi55hpplpzxmmbnqufpwtz6eknu",
     "path": "/absolute/path/to/mpas-applications/applications/railway/plugin.json"
   },
   "credentialBindings": [

@@ -1,5 +1,26 @@
 # Changelog — stripe
 
+## 2026-10-03 — Updated MPAS SDK runtime to alpha.14
+
+- Updated the bridge runtime to the exact reviewed release
+  `@oma3/mpas@0.1.0-alpha.14` and refreshed the lockfile, including
+  `fast-uri` 3.1.8 for GHSA-hrr3-gc8f-f4qj.
+- Regenerated the bridge with the alpha.14 bridge generator. The bridge now
+  loads its plugin through the SDK validator, requires any configured
+  `applicationDid` and `executionProfile` to equal the plugin's, and applies
+  the configured submission timeout and claim lease to its Action and
+  Coordination clients.
+- Added `toolSurface` to `plugin.json`, attesting the complete captured
+  `tools/list` surface. The bridge binds every submission to that surface. Credential Adapters reject
+  ungoverned tools absent from the attested surface with
+  `OPERATION_NOT_ATTESTED`.
+- Renamed credential requirement `requiredCapabilities` to
+  `expectedAuthority`, as required by the alpha.14 plugin profile. It remains
+  review-only metadata and is never transmitted as an OAuth scope.
+- Updated `plugin.artifactDid` in `registry-entry.json`. Governed operations,
+  DIDs, registry identity, harness configuration, and the Credential Adapter
+  execution boundary are unchanged.
+
 ## 2026-08-28 — Updated MPAS SDK runtime
 
 - Updated the bridge runtime to the exact reviewed release

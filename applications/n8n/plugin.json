@@ -19,6 +19,48 @@
       "description": "A bearer token for the intended n8n instance MCP endpoint. The Credential Adapter must retain the token and execute the hosted MCP request; the token must never be disclosed to the proposer."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "aFws1EtOwk3wIfFsuABrkVktOgx5vaiJu-hYnf3dj84"
+    },
+    "toolNames": [
+      "add_data_table_column",
+      "add_data_table_rows",
+      "archive_workflow",
+      "create_data_table",
+      "create_workflow_from_code",
+      "delete_data_table_column",
+      "execute_workflow",
+      "explore_node_resources",
+      "get_execution",
+      "get_node_types",
+      "get_sdk_reference",
+      "get_workflow_best_practices",
+      "get_workflow_details",
+      "get_workflow_history",
+      "get_workflow_version",
+      "list_credentials",
+      "list_n8n_connect_services",
+      "list_tags",
+      "prepare_test_pin_data",
+      "publish_workflow",
+      "rename_data_table",
+      "rename_data_table_column",
+      "restore_workflow_version",
+      "search_data_tables",
+      "search_executions",
+      "search_folders",
+      "search_nodes",
+      "search_projects",
+      "search_workflows",
+      "test_workflow",
+      "unpublish_workflow",
+      "update_workflow",
+      "validate_node_config",
+      "validate_workflow"
+    ]
+  },
   "operations": {
     "add_data_table_column": {
       "description": "Add a new column to an existing data table.",
@@ -859,7 +901,7 @@
                       "description": "For setNodeCredential."
                     },
                     "position": {
-                      "$ref": "#/properties/operations/items/properties/node/properties/position",
+                      "$ref": "#/properties/arguments/properties/operations/items/properties/node/properties/position",
                       "description": "For setNodePosition."
                     },
                     "disabled": {

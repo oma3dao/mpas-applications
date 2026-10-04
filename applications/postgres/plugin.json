@@ -20,6 +20,15 @@
       "description": "PostgreSQL connection string supplied only within the credential adapter and scoped to the intended database and least-privileged database role. The reusable connection string must never be returned to the proposer."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "_zfKzzpCg2fQPCguGRVA7Uhhs80ONHJX_UkA7gpNEV4"
+    },
+    "toolNames": [
+      "query"
+    ]
+  },
   "operations": {
     "query": {
       "description": "Run a read-only SQL query",

@@ -20,6 +20,23 @@
       "description": "A Stripe restricted API key scoped to the intended account and resources. The Credential Adapter must retain the key and execute the official Stripe MCP proxy; the key must never be disclosed to the proposer."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "gEniIYw5zZWVTq_OuuKbJI0HEDxy-n21D2t_4_JSsjk"
+    },
+    "toolNames": [
+      "create_refund",
+      "get_stripe_account_info",
+      "search_stripe_documentation",
+      "send_stripe_mcp_feedback",
+      "stripe_api_details",
+      "stripe_api_read",
+      "stripe_api_search",
+      "stripe_api_write",
+      "stripe_implementation_planner"
+    ]
+  },
   "operations": {
     "create_refund": {
       "description": "This tool will refund a payment intent in Stripe.\n",

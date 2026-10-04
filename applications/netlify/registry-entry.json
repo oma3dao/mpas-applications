@@ -19,7 +19,7 @@
   },
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/netlify/plugin.json",
-    "artifactDid": "did:artifact:bafkreiahcqixunqrqi7wq2jj6t7ghuntrkf3fj5jcdpkafwtj5zi2czu5i",
+    "artifactDid": "did:artifact:bafkreifxiki3rwiqjyd3hkecbuvpl5kfjue2mjbqmqhonzqkoagzebb45a",
     "pluginDid": "did:web:wivity.com:plugins:netlify-mcp-server"
   },
   "publisher": {

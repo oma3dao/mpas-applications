@@ -8,6 +8,8 @@ from __future__ import annotations
 import importlib.util
 import contextlib
 import io
+import json
+import re
 import shutil
 import tempfile
 import unittest
@@ -96,10 +98,14 @@ class DirectSigningTests(unittest.TestCase):
             validate.check_bridge_auth(app, report)
             self.assertEqual(report.errors, 0)
             source = app / "bridge" / "src" / "index.ts"
-            source.write_text(source.read_text().replace(
-                "new ActionEndpointClient({ url: config.adapterUrl, signer: keyManagerPromise })",
-                "new ActionEndpointClient({ url: config.adapterUrl })",
-            ))
+            original_source = source.read_text()
+            unsigned_source = re.sub(
+                r"(new ActionEndpointClient\(\{\s*url: config\.adapterUrl,)\s*signer: keyManagerPromise,",
+                r"\1",
+                original_source,
+            )
+            self.assertNotEqual(unsigned_source, original_source)
+            source.write_text(unsigned_source)
             output = io.StringIO()
             with contextlib.redirect_stdout(output):
                 validate.check_bridge_auth(app, report)
@@ -181,6 +187,75 @@ class ProtocolModeTests(unittest.TestCase):
             "extensionCapabilities": ["io.modelcontextprotocol/tasks", "org.oma3/mpas"],
         }
         self.assertTrue(validate.protocol_mode_errors(deviations))
+
+
+class AdapterExampleArtifactDidTests(unittest.TestCase):
+    def test_rejects_an_adapter_example_pinned_to_stale_plugin_bytes(self):
+        original = ROOT.parent / "applications" / "railway"
+        with tempfile.TemporaryDirectory() as scratch:
+            app = Path(scratch) / "railway"
+            shutil.copytree(original, app, ignore=shutil.ignore_patterns("node_modules", "dist"))
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                report = validate.Report(github=False)
+                validate.check_app(app, report)
+            self.assertEqual(report.errors, 0, output.getvalue())
+            example = app / "adapter-config.example.json"
+            config = json.loads(example.read_text())
+            config["plugin"]["artifactDid"] = "did:artifact:bafkreistale"
+            example.write_text(json.dumps(config))
+            with contextlib.redirect_stdout(output):
+                report = validate.Report(github=False)
+                validate.check_app(app, report)
+            self.assertEqual(report.errors, 1)
+            self.assertIn("adapter-config.example.json", output.getvalue())
+
+
+class UpstreamBindingTests(unittest.TestCase):
+    APP = ROOT.parent / "applications" / "github"
+
+    def load(self):
+        plugin = json.loads((self.APP / "plugin.json").read_text())
+        snapshot = json.loads((self.APP / "build-artifacts" / "tools-list.snapshot.json").read_text())
+        source = (self.APP / "bridge" / "src" / "index.ts").read_text()
+        command = json.loads((self.APP / "build-artifacts" / "metadata.json").read_text())["upstreamCommand"]
+        return plugin, snapshot, source, command
+
+    def test_checked_in_binding_is_consistent(self):
+        self.assertEqual(validate.upstream_binding_errors(*self.load()), [])
+
+    def test_rejects_bridge_binding_for_a_different_surface(self):
+        plugin, snapshot, source, command = self.load()
+        value = plugin["toolSurface"]["hash"]["value"]
+        stale = source.replace(value, "A" * 43)
+        errors = validate.upstream_binding_errors(plugin, snapshot, stale, command)
+        self.assertIn("bridge upstreamBinding.toolSurface must equal plugin.json toolSurface.hash", errors)
+
+    def test_rejects_binding_without_the_image_digest_pin(self):
+        plugin, snapshot, source, command = self.load()
+        unpinned = re.sub(r',"upstreamDigest":"sha256:[0-9a-f]{64}"', "", source)
+        self.assertNotEqual(unpinned, source)
+        errors = validate.upstream_binding_errors(plugin, snapshot, unpinned, command)
+        self.assertTrue(any("upstreamDigest" in error for error in errors))
+
+    def test_rejects_unbound_bridge_for_a_surface_aware_plugin(self):
+        plugin, snapshot, source, command = self.load()
+        unbound = validate.UPSTREAM_BINDING_RE.sub("", source)
+        errors = validate.upstream_binding_errors(plugin, snapshot, unbound, command)
+        self.assertIn("bridge must bind every submission to plugin.json toolSurface (upstreamBinding)", errors)
+
+    def test_rejects_bound_bridge_for_a_legacy_plugin(self):
+        plugin, snapshot, source, command = self.load()
+        del plugin["toolSurface"]
+        errors = validate.upstream_binding_errors(plugin, snapshot, source, command)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("no toolSurface", errors[0])
+
+    def test_rejects_tool_names_that_omit_ungoverned_tools(self):
+        plugin, snapshot, source, command = self.load()
+        plugin["toolSurface"]["toolNames"] = sorted(plugin["operations"])
+        errors = validate.upstream_binding_errors(plugin, snapshot, source, command)
+        self.assertIn("plugin.json toolSurface.toolNames must list exactly the snapshot tools", errors)
 
 
 if __name__ == "__main__":

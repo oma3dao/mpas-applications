@@ -8,8 +8,9 @@ Errors (exit 1):
   - plugin.json structure per the MPAS Application Plugin Profile
   - operation keys match their executionPayloadSchema name.const
   - every governed operation exists in the upstream tool snapshot
-  - registry-entry.json plugin.artifactDid matches the canonical hash of
-    plugin.json (the Credential Adapter rejects a mismatch at startup)
+  - registry-entry.json and adapter-config.example.json plugin.artifactDid
+    match the canonical hash of plugin.json (the Credential Adapter rejects a
+    mismatch at startup)
   - registry-entry.json optional upstream pointers are upstream.repository 
     and upstream.distributionUrl (URI if set)
   - classification.json covers exactly the upstream surface
@@ -22,8 +23,12 @@ Errors (exit 1):
   - generated bridges pass their existing lazy KeyManager to independent
     Action Relay and Coordination Service clients, use the adaptive protocol
     selector, retain the direct-topology Adapter compatibility path behind
-    ActionEndpointClient, construct routed Delivery Envelopes, and depend on
-    the reviewed @oma3/mpas release
+    ActionEndpointClient, construct routed Delivery Envelopes, load their
+    plugin through the SDK validator, and depend on the reviewed @oma3/mpas
+    release
+  - a plugin toolSurface matches the snapshot, and the bridge's
+    upstreamBinding matches the plugin surface and the upstream image digest
+    pin (a legacy plugin without toolSurface must have an unbound bridge)
   - credential-returning tools have deterministic reject entries in their
     checked-in Credential Adapter configuration examples
   - harness metadata describes distinct Tasks and conventional compatibility
@@ -60,7 +65,7 @@ REASON_TAGS = {
     "simulated",
 }
 
-DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.13"
+DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.14"
 MPAS_SDK_VERSION_OVERRIDES = {}
 REQUIRED_CA_REJECTS = {
     "railway": "list_variables",
@@ -417,6 +422,8 @@ def check_app(app_dir: Path, report: Report) -> None:
         if name not in upstream:
             report.error(plugin_rel, f"{name}: governed but absent from the upstream tool snapshot")
 
+    check_upstream_binding(app_dir, plugin, snapshot_raw, report)
+
     # artifactDid + optional upstream pointers
     registry = load(registry_path, registry_rel, report)
     if registry is not None:
@@ -429,6 +436,21 @@ def check_app(app_dir: Path, report: Report) -> None:
                 "The Credential Adapter rejects a mismatch at startup.",
             )
         check_registry_upstream(registry, registry_rel, report)
+
+    # Checked-in Credential Adapter examples pin the same plugin bytes.
+    adapter_example_path = app_dir / "adapter-config.example.json"
+    if adapter_example_path.exists():
+        adapter_example_rel = f"applications/{app}/adapter-config.example.json"
+        adapter_example = load(adapter_example_path, adapter_example_rel, report)
+        if adapter_example is not None:
+            recorded = adapter_example.get("plugin", {}).get("artifactDid")
+            computed = artifact_did(plugin_path.read_text())
+            if recorded != computed:
+                report.error(
+                    adapter_example_rel,
+                    f"adapter-config.example.json plugin.artifactDid is stale: recorded {recorded}, computed {computed}. "
+                    "The Credential Adapter rejects a mismatch at startup.",
+                )
 
     # classification
     classification = load(classification_path, classification_rel, report)
@@ -487,6 +509,66 @@ def check_app(app_dir: Path, report: Report) -> None:
             )
 
 
+UPSTREAM_BINDING_RE = re.compile(r"upstreamBinding: (\{.*?\}),\n")
+OCI_DIGEST_PIN_RE = re.compile(r"^[^\s]+@(sha256:[a-fA-F0-9]{64})$")
+
+
+def upstream_binding_errors(plugin: dict, snapshot, index_source: str, upstream_command) -> list[str]:
+    """Return errors when plugin, snapshot and bridge disagree on the upstream binding.
+
+    Mirrors the SDK's upstreamBindingMatches: a legacy plugin without
+    toolSurface accepts only unbound submissions, and a surface-aware plugin
+    accepts only submissions bound to its exact surface hash and digest pin.
+    Any disagreement is rejected by the Credential Adapter on every call.
+    """
+    match = UPSTREAM_BINDING_RE.search(index_source)
+    binding = json.loads(match.group(1)) if match else None
+    surface = plugin.get("toolSurface")
+    if surface is None:
+        if binding is not None:
+            return ["bridge binds submissions to an upstream surface but plugin.json has no toolSurface"]
+        return []
+
+    errors = []
+    snapshot_surface = snapshot.get("toolSurface") if isinstance(snapshot, dict) else None
+    tools = snapshot if isinstance(snapshot, list) else snapshot.get("tools", [])
+    names = [tool["name"] for tool in tools]
+    if surface.get("hash") != snapshot_surface:
+        errors.append("plugin.json toolSurface.hash must equal the snapshot toolSurface")
+    tool_names = surface.get("toolNames")
+    if not isinstance(tool_names, list) or sorted(tool_names) != sorted(names) or len(set(tool_names)) != len(tool_names):
+        errors.append("plugin.json toolSurface.toolNames must list exactly the snapshot tools")
+
+    if binding is None:
+        errors.append("bridge must bind every submission to plugin.json toolSurface (upstreamBinding)")
+        return errors
+    if binding.get("toolSurface") != surface.get("hash"):
+        errors.append("bridge upstreamBinding.toolSurface must equal plugin.json toolSurface.hash")
+    pins = sorted({m.group(1).lower() for arg in (upstream_command or [])[1:] if (m := OCI_DIGEST_PIN_RE.match(arg))})
+    expected_digest = pins[0] if len(pins) == 1 else None
+    if len(pins) > 1:
+        errors.append("upstream command pins more than one image digest")
+    elif binding.get("upstreamDigest") != expected_digest:
+        errors.append(
+            f"bridge upstreamBinding.upstreamDigest must be {expected_digest!r} "
+            f"(the upstream command's image pin), got {binding.get('upstreamDigest')!r}"
+        )
+    return errors
+
+
+def check_upstream_binding(app_dir: Path, plugin: dict, snapshot, report: Report) -> None:
+    app = app_dir.name
+    index_path = app_dir / "bridge" / "src" / "index.ts"
+    if not index_path.exists():
+        return  # reported by check_bridge_auth
+    metadata_path = app_dir / "build-artifacts" / "metadata.json"
+    upstream_command = None
+    if metadata_path.exists():
+        upstream_command = json.loads(metadata_path.read_text()).get("upstreamCommand")
+    for message in upstream_binding_errors(plugin, snapshot, index_path.read_text(), upstream_command):
+        report.error(f"applications/{app}/plugin.json", message)
+
+
 def check_bridge_auth(app_dir: Path, report: Report) -> None:
     """Every bridge must preserve signed direct, relay and coordination clients."""
     app = app_dir.name
@@ -498,15 +580,18 @@ def check_bridge_auth(app_dir: Path, report: Report) -> None:
     if not index_path.exists():
         report.error(index_rel, f"{index_rel} is missing")
     else:
-        source = index_path.read_text()
+        # Fragments are matched against whitespace-collapsed source so that
+        # generator formatting (single- or multi-line calls, trailing options
+        # such as timeoutMs) does not affect the checks.
+        source = re.sub(r"\s+", " ", index_path.read_text())
         required_fragments = {
-            "new CoordinationServiceClient({ url: config.coordinationUrl, signer: keyManagerPromise })":
+            "new CoordinationServiceClient({ url: config.coordinationUrl, signer: keyManagerPromise":
                 "CoordinationServiceClient must use the bridge's keyManagerPromise signer",
             "coordinationService,":
                 "ProposerBridge must receive coordination through its explicit coordinationService port",
-            ": new ActionEndpointClient({ url: config.adapterUrl, signer: keyManagerPromise })":
+            ": new ActionEndpointClient({ url: config.adapterUrl, signer: keyManagerPromise":
                 "direct topology must sign bare Action requests through ActionEndpointClient at adapter.url",
-            "new ActionRelayClient({ url: config.url, signer: keyManagerPromise })":
+            "new ActionRelayClient({ url: config.url, signer: keyManagerPromise":
                 "relay topology must use the dedicated signed ActionRelayClient",
             "client.submitAction(buildDeliveryEnvelope({":
                 "relay topology must submit routed envelopes through ActionRelayClient",
@@ -526,6 +611,8 @@ def check_bridge_auth(app_dir: Path, report: Report) -> None:
                 "bridge must use automatic MCP protocol selection",
             'log("info", "mcp_protocol_mode_selected"':
                 "bridge must log sanitized protocol mode selection",
+            "await loadSdkPlugin(":
+                "bridge must load its plugin through the SDK plugin validator",
         }
         for fragment, message in required_fragments.items():
             if fragment not in source:

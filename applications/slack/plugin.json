@@ -13,7 +13,7 @@
   "credentialRequirements": [
     {
       "type": "slackBotToken",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "channels:read",
         "chat:write",
         "reactions:write",
@@ -23,12 +23,28 @@
     },
     {
       "type": "slackTeamId",
-      "requiredCapabilities": [
+      "expectedAuthority": [
         "workspace:target"
       ],
       "description": "Slack workspace/team identifier bound by the credential adapter so approved actions cannot be redirected to another workspace."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "U3rGFIaR7KneoFkpkWqJrd4lGFg1Ni3Zfkyg1yvWJng"
+    },
+    "toolNames": [
+      "slack_add_reaction",
+      "slack_get_channel_history",
+      "slack_get_thread_replies",
+      "slack_get_user_profile",
+      "slack_get_users",
+      "slack_list_channels",
+      "slack_post_message",
+      "slack_reply_to_thread"
+    ]
+  },
   "operations": {
     "slack_add_reaction": {
       "description": "Add a reaction emoji to a message",

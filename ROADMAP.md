@@ -11,6 +11,7 @@ To request a new application or volunteer to build one, open a PR updating this 
 | :----- | :------ |
 | 🟢 In Production | Deployed and available for production use |
 | ✅ Tested | Bridge implementation is complete and validated, but production availability is not claimed |
+| 🔧 Implemented | Bridge is built and passes repository checks, but known work remains before it is considered tested |
 | 🚧 In Development | Actively being built |
 | 📋 Planned | Prioritized, not yet started |
 | 💡 Requested | Requested, not yet prioritized |
@@ -42,6 +43,7 @@ database data planes are separate MPAS surfaces and should be bridged independen
 | :---------- | :------- | :-------------- | :----- | :---- |
 | GitHub | Official GitHub MCP Server | [github/github-mcp-server](https://github.com/github/github-mcp-server) | 🟢 In Production | Protect merges, branch deletion, releases, and other repository mutations |
 | Netlify | Official hosted Netlify MCP Server | [netlify/netlify-mcp](https://github.com/netlify/netlify-mcp) | 🟢 In Production | Protect deployments, visitor access controls, environment variables, extension management, and project operations |
+| Railway | Official Railway MCP Server | [railwayapp/cli](https://github.com/railwayapp/cli) | 🟢 In Production | Protect projects, services, deployments, variables, volumes, and backups |
 | PostgreSQL | Reference PostgreSQL MCP Server | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers/tree/main/src/postgres) | ✅ Tested | Generic data-plane bridge. Protect SQL, DDL, migrations, and destructive writes |
 | BigQuery | Google MCP Toolbox for Databases | [googleapis/mcp-toolbox](https://github.com/googleapis/mcp-toolbox) | ✅ Tested | Protect arbitrary SQL, billable analytics, forecasting, and caller-selected data processing |
 | Supabase | Official Supabase MCP Server | [supabase/mcp](https://github.com/supabase/mcp) | ✅ Tested | Protect SQL, migrations, branches, auth, storage, and project operations |
@@ -50,7 +52,6 @@ database data planes are separate MPAS surfaces and should be bridged independen
 | PlanetScale | Official PlanetScale MCP Server | [planetscale/mcp-server](https://github.com/planetscale/mcp-server) | ✅ Tested | Protect writes, DDL, and database branch operations |
 | Firebase / Firestore | Official Firebase MCP Server | [firebase/firebase-tools](https://github.com/firebase/firebase-tools) | ✅ Tested | Protect database writes plus project, rules, auth, and service operations |
 | Upstash | Official Upstash MCP Server | [upstash/mcp-server](https://github.com/upstash/mcp-server) | ✅ Tested | Protect flush/delete, database lifecycle, and credential operations |
-| Railway | Official Railway MCP Server | [railwayapp/cli](https://github.com/railwayapp/cli) | ✅ Tested | Protect projects, services, deployments, variables, volumes, and backups |
 | n8n | Official n8n Instance MCP Server | [n8n-io/n8n](https://github.com/n8n-io/n8n) | ✅ Tested | Protect workflow execution, publication, mutation, restoration, and data-table writes |
 | Fastly | Official Fastly MCP Server | [fastly/mcp](https://github.com/fastly/mcp) | ✅ Tested | Protect arbitrary authenticated Fastly API execution, including configuration, deployment, purge, and security changes |
 | Vercel | Official hosted Vercel MCP Server | [mcp.vercel.com](https://mcp.vercel.com) | ✅ Tested | Protect deployments, deployment protection, temporary access grants, and purchases |
@@ -72,8 +73,8 @@ This segment covers marketing, customer communications, collaboration, and publi
 | :---------- | :------- | :-------------- | :----- | :---- |
 | Plain | Plain.com MCP Server | [tellahq/plain-mcp](https://github.com/tellahq/plain-mcp) | ✅ Tested | Protect customer communications, records, help centers, automations, and webhooks |
 | X / Twitter | X (Twitter) MCP Server | [rafaljanicki/x-twitter-mcp-server](https://github.com/rafaljanicki/x-twitter-mcp-server) | ✅ Tested | Protect public publishing, deletion, and engagement |
-| Outlook | Outlook Graph MCP Server | [mpalermiti/outlook-mcp](https://github.com/mpalermiti/outlook-mcp) | ✅ Tested | Protect email, calendar, contact, task, attachment, and mailbox mutations |
-| Slack | Slack MCP Server | [modelcontextprotocol/servers-archived/slack](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/slack) | ✅ Tested | Protect messages and reactions; this archived upstream exposes no invitation or workspace-admin tools |
+| Outlook | Outlook Graph MCP Server | [mpalermiti/outlook-mcp](https://github.com/mpalermiti/outlook-mcp) | 🔧 Implemented | Protect email, calendar, contact, task, attachment, and mailbox mutations. Credential requirements still list provider OAuth scopes ([mpas#57](https://github.com/oma3dao/mpas/issues/57)) |
+| Slack | Slack MCP Server | [modelcontextprotocol/servers-archived/slack](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/slack) | 🔧 Implemented | Protect messages and reactions; this archived upstream exposes no invitation or workspace-admin tools. Credential requirements still list provider OAuth scopes ([mpas#57](https://github.com/oma3dao/mpas/issues/57)) |
 | HubSpot | HubSpot MCP Server | TBD | 💡 Requested | Protect CRM, marketing, sales, and customer communication workflows |
 | Klaviyo | Klaviyo MCP Server | TBD | 💡 Requested | Protect campaigns, flows, audiences, and customer messaging |
 | beehiiv | beehiiv MCP Server | TBD | 💡 Requested | Protect newsletter publishing, automations, audiences, and subscriptions |
@@ -150,4 +151,4 @@ To build an application:
 2. Output lands in `applications/<name>/`.
 3. Open a PR for review.
 4. Update the status in this file as the bridge moves through 🚧 In Development,
-   ✅ Tested, and 🟢 In Production.
+   🔧 Implemented, ✅ Tested, and 🟢 In Production.

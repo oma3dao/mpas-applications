@@ -19,6 +19,47 @@
       "description": "An OAuth access token for the official hosted Vercel MCP server. The Credential Adapter must retain the token and execute the hosted MCP request; the token must never be disclosed to the proposer."
     }
   ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "QZ71n5kfNiOJQ9P0kXatLc5obApdbyxhig667pj2r6M"
+    },
+    "toolNames": [
+      "add_toolbar_reaction",
+      "buy_addon",
+      "buy_credits",
+      "buy_domain",
+      "buy_pro",
+      "change_toolbar_thread_resolve_status",
+      "check_domain_availability_and_price",
+      "deploy_to_vercel",
+      "edit_toolbar_message",
+      "get_access_to_vercel_url",
+      "get_agent_run",
+      "get_agent_run_trace",
+      "get_deployment",
+      "get_deployment_build_logs",
+      "get_domain_order",
+      "get_project",
+      "get_project_deployment_protection",
+      "get_purchase_quote",
+      "get_runtime_errors",
+      "get_runtime_logs",
+      "get_toolbar_thread",
+      "get_web_analytics",
+      "import-claude-design-from-url",
+      "list_agent_run_projects",
+      "list_agent_runs",
+      "list_deployments",
+      "list_projects",
+      "list_teams",
+      "list_toolbar_threads",
+      "reply_to_toolbar_thread",
+      "search_vercel_documentation",
+      "update_project_deployment_protection",
+      "web_fetch_vercel_url"
+    ]
+  },
   "operations": {
     "buy_addon": {
       "description": "Executes a Vercel add-on purchase (currently only \"siem\"), by integer quantity, previously quoted by get_purchase_quote — quoting first is REQUIRED; this tool rejects un-quoted calls. Get the quote, present it to the user for explicit approval (use a structured question tool such as AskUserQuestion when available), then call with confirm:true, the quote's idempotencyKey, and the same parameters. The team must be on the Flex plan. No price quote exists for add-ons; the charge is non-refundable.",
