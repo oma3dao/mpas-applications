@@ -141,7 +141,7 @@ This repository contains application-specific bridge artifacts, but a usable
 deployment also needs participant keys, a Credential Adapter deployment
 configuration, a Coordination Service, and local operator policy. The
 reference implementations and management CLI live in
-[`oma3dao/mpas`](https://github.com/oma3dao/mpas/tree/main/examples/demo).
+[`oma3dao/mpas`](https://github.com/oma3dao/mpas/tree/main/cli).
 
 ### Runtime roles and credential custody
 
@@ -191,7 +191,7 @@ repository. The config identifies Signers by DID; it does not contain their
 private keys.
 
 See the MPAS repository's
-[`github-mirror-adapter-config.json`](https://github.com/oma3dao/mpas/blob/main/examples/demo/configs/github-mirror-adapter-config.json)
+[`github-mirror-adapter-config.json`](https://github.com/oma3dao/mpas/blob/main/cli/configs/github-mirror-adapter-config.json)
 for a complete Credential Adapter deployment-config example.
 
 ### Generic setup sequence
@@ -271,6 +271,10 @@ workflows unable to survive a bridge restart.
 - When independent approval is required, it must come from a different Signer
   with a different key and trust domain. A Signer may otherwise serve as both
   Proposer and Maintainer.
+- Application examples use only the `all`, `proposers`, and `approvers`
+  signer groups. They say which operations are risky and why, and they do not
+  recommend human, agent, or other signer types for an operation. Any further
+  signer groups, and who belongs to them, are the operator's decision.
 
 ### Application README convention
 
@@ -617,6 +621,10 @@ graded.
       resolvable by someone other than you, and `upstream.distribution`
       records the pin
       (see [Upstreams must be pinned and resolvable](#upstreams-must-be-pinned-and-resolvable)).
+- [ ] Example configs and the application README use only the `all`,
+      `proposers`, and `approvers` signer groups and do not recommend a signer
+      type for any operation
+      (see [Policy and deployment safety](#policy-and-deployment-safety)).
 - [ ] `CHANGELOG.md` records what was left as pass-through and why.
 
 ## Artifact DID
