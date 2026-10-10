@@ -47,24 +47,19 @@
     "signerGroups": {
       "all": [
         "REPLACE_WITH_PROPOSER_DID",
-        "REPLACE_WITH_APPROVER_DID",
-        "REPLACE_WITH_HUMAN_APPROVER_DID"
+        "REPLACE_WITH_APPROVER_DID"
       ],
       "proposers": [
         "REPLACE_WITH_PROPOSER_DID"
       ],
       "approvers": [
-        "REPLACE_WITH_APPROVER_DID",
-        "REPLACE_WITH_HUMAN_APPROVER_DID"
-      ],
-      "humanApprovers": [
-        "REPLACE_WITH_HUMAN_APPROVER_DID"
+        "REPLACE_WITH_APPROVER_DID"
       ]
     },
     "policies": {
       "netlify-project-services-updater": [
         {
-          "description": "update-visitor-access-controls is a security-configuration change; team-wide when appliesTo == all-projects. Requires human approval.",
+          "description": "Security-configuration change; team-wide when appliesTo == all-projects.",
           "match": {
             "conditions": [
               {
@@ -78,12 +73,12 @@
           "requirements": {
             "type": "threshold",
             "threshold": 1,
-            "eligibleSignerGroup": "humanApprovers",
+            "eligibleSignerGroup": "approvers",
             "decision": "approve"
           }
         },
         {
-          "description": "manage-form-submissions with action == delete-submission is irreversible data deletion. Requires human approval.",
+          "description": "Irreversible data deletion: deletes a form submission.",
           "match": {
             "conditions": [
               {
@@ -103,12 +98,12 @@
           "requirements": {
             "type": "threshold",
             "threshold": 1,
-            "eligibleSignerGroup": "humanApprovers",
+            "eligibleSignerGroup": "approvers",
             "decision": "approve"
           }
         },
         {
-          "description": "manage-env-vars with upsertEnvVar == true writes or overwrites an environment variable. Requires human approval.",
+          "description": "Writes or overwrites an environment variable, which may hold a credential or production configuration.",
           "match": {
             "conditions": [
               {
@@ -128,12 +123,12 @@
           "requirements": {
             "type": "threshold",
             "threshold": 1,
-            "eligibleSignerGroup": "humanApprovers",
+            "eligibleSignerGroup": "approvers",
             "decision": "approve"
           }
         },
         {
-          "description": "manage-env-vars with deleteEnvVar == true is irreversible. Requires human approval regardless of other flags.",
+          "description": "Irreversible: deletes an environment variable, regardless of other flags.",
           "match": {
             "conditions": [
               {
@@ -153,7 +148,7 @@
           "requirements": {
             "type": "threshold",
             "threshold": 1,
-            "eligibleSignerGroup": "humanApprovers",
+            "eligibleSignerGroup": "approvers",
             "decision": "approve"
           }
         }
@@ -168,10 +163,6 @@
     {
       "did": "REPLACE_WITH_APPROVER_DID",
       "label": "Approver Signer"
-    },
-    {
-      "did": "REPLACE_WITH_HUMAN_APPROVER_DID",
-      "label": "Human Approver Signer"
     }
   ]
 }

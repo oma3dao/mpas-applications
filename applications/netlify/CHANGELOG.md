@@ -1,5 +1,21 @@
 # Changelog — netlify
 
+## 2026-10-10 — Example policy classifies risk only
+
+- Removed the `humanApprovers` signer group, its placeholder DID, and its
+  `signerKeys` entry from `adapter-config.example.json`. With the two
+  remaining placeholder DIDs replaced, the config now loads; before, the
+  leftover placeholder failed schema validation.
+- The four high-risk `netlify-project-services-updater` policy entries keep
+  their match conditions and now use the `approvers` group. Their
+  descriptions state only the risk. Operators who want a different group or
+  threshold for these paths change `eligibleSignerGroup` or `threshold`.
+- README: dropped the "Recommended approver" column and rewrote the
+  sub-operation notes to describe consequences without naming a signer type.
+  The policy example matches the template.
+- Who approves what is the operator's decision (oma3dao/mpas-applications#61).
+  Plugin, bridge, DIDs, and registry artifacts are unchanged.
+
 ## 2026-10-03 — Updated MPAS SDK runtime to alpha.14
 
 - Updated the bridge runtime to the exact reviewed release

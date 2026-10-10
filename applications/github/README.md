@@ -1,11 +1,39 @@
 # GitHub MPAS application
 
-## Example verifier policy
+## GitHub credential
+
+The Credential Adapter holds one GitHub personal access token per deployment
+config and uses it for every Action that deployment dispatches. The Proposer
+never chooses or sees the token. GitHub offers two token types:
+
+- **Fine-grained token**: covers repositories in one GitHub account or
+  organization. Grant Administration, Contents, Workflows, Issues, and Pull
+  requests write; Metadata read is added automatically. Use it when the
+  deployment works in a single account or organization. It has the smallest
+  blast radius.
+- **Classic token**: covers every repository your account can access. Grant
+  the `repo` and `workflow` scopes, plus `read:org` for `get_teams` and
+  `get_team_members`. Use it when one deployment works across several
+  organizations. A compromised adapter host exposes more.
+
+GitHub's documentation explains the two types and how to create each one:
+
+- [Personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+- [Creating a fine-grained token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token)
+- [Creating a classic token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic)
+
+The credential requirement in [`plugin.json`](plugin.json) describes the
+fine-grained token; a classic token is an equally valid choice for the
+multi-organization case.
+
+## Example deployment config
 
 `plugin.json` classifies operation impact, while the trusted Verifier policy
 determines whether an operation is rejected, proposer-only, or needs additional
-approval. [verifier-policy.example.json](verifier-policy.example.json) provides
-the deployment example for the GitHub bridge:
+approval. [adapter-config.example.json](adapter-config.example.json) is the
+Credential Adapter deployment config template for the GitHub bridge. It runs
+the pinned upstream image with the token bound as `githubPersonalAccessToken`,
+and its policy works as follows:
 
 - routine issue/PR comments, issue writes, branch file changes, PR creation, and
   PR metadata/branch updates are proposer-only;
@@ -21,9 +49,9 @@ for other write tools and for protected branches.
 
 ## Operator adoption (separate from merging this PR)
 
-1. Replace the synthetic `did:example:replace-*` identities with the deployment's
-   existing authorized proposer and independent Maintainer groups. Do not copy
-   private keys or credentials into this repository.
+1. Replace the `REPLACE_WITH_*` placeholder DIDs with the deployment's existing
+   authorized proposer and independent Maintainer groups, and set the absolute
+   plugin path. Do not copy private keys or credentials into this repository.
 2. Review the operation policy entries and merge them into the trusted policy used
    by the Credential Adapter/Verifier. Preserve deployment-specific signer groups,
    stronger requirements, and any additional protected branch rules; do not replace

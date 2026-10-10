@@ -35,7 +35,7 @@ mpas oauth logout --application-did did:web:wivity.com:applications:netlify-mcp-
 ```
 
 For full OAuth operator guidance see the
-[Credential Adapter operator guide](https://github.com/oma3dao/mpas/blob/main/examples/demo/guides/credential-adapter.md).
+[Credential Adapter operator guide](https://github.com/oma3dao/mpas/blob/main/cli/guides/credential-adapter.md).
 
 Copy [`adapter-config.example.json`](adapter-config.example.json) into the
 Credential Adapter operator's configuration directory, then replace its Signer
@@ -163,16 +163,16 @@ should not be treated uniformly. Operators **must** match on
 `selectSchema.operation` (and in some cases on nested parameter values) to
 apply appropriate approval requirements. The sub-operations are:
 
-| Sub-operation | Risk | Recommended approver |
-| :--- | :--- | :--- |
-| `update-visitor-access-controls` | High — security configuration; team-wide when `appliesTo == all-projects` | Human |
-| `manage-form-submissions` with `action == delete-submission` | High — irreversible data deletion | Human |
-| `manage-env-vars` with `upsertEnvVar == true` or `deleteEnvVar == true` | High — credential or irreversible write | Human (see notes below) |
-| `update-project-name` | Medium — externally visible, affects URLs and integrations | At least one non-proposer |
-| `update-forms` | Medium — bounded and reversible toggle | Agent signer is sufficient |
-| `create-new-project` | Medium — resource creation with billing implications | Agent signer is sufficient |
-| `manage-form-submissions` with `action == get-submissions` | Low — effectively read-only | `proposerOnly` or agent signer |
-| `manage-env-vars` with `getAllEnvVars == true` only | Low — effectively read-only | `proposerOnly` or agent signer |
+| Sub-operation | Risk |
+| :--- | :--- |
+| `update-visitor-access-controls` | High — security configuration; team-wide when `appliesTo == all-projects` |
+| `manage-form-submissions` with `action == delete-submission` | High — irreversible data deletion |
+| `manage-env-vars` with `upsertEnvVar == true` or `deleteEnvVar == true` | High — credential or irreversible write (see notes below) |
+| `update-project-name` | Medium — externally visible, affects URLs and integrations |
+| `update-forms` | Medium — bounded and reversible toggle |
+| `create-new-project` | Medium — resource creation with billing implications |
+| `manage-form-submissions` with `action == get-submissions` | Low — effectively read-only |
+| `manage-env-vars` with `getAllEnvVars == true` only | Low — effectively read-only |
 
 **`manage-env-vars` flag combinations.** The schema permits `getAllEnvVars`,
 `upsertEnvVar`, and `deleteEnvVar` to appear in the same call. Write the
@@ -182,32 +182,33 @@ are true in the same call, both matching policy entries fire and their
 requirements stack (logical AND). Treat any call with `deleteEnvVar == true`
 as irreversible regardless of other flags. Additionally, when
 `envVarIsSecret == true` or `newVarContext` includes `production`, the write
-touches a live credential or production configuration and warrants human
-approval.
+touches a live credential or production configuration.
 
 **`netlify-extension-services-updater` — removal vs. install.** The
 `change-extension-installation` sub-operation has a `shouldBeInstalled`
 boolean. Removal (`shouldBeInstalled == false`) may disable functionality
-across all sites on the team and warrants human approval. Installation can
-be relaxed to an agent signer. The `initialize-database` sub-operation
-provides no scope signal to the approver; treat it as requiring human
-approval unconditionally.
+across all sites on the team. Installation adds functionality and is lower
+risk. The `initialize-database` sub-operation is one-way and provides no scope
+signal to the approver: the payload does not say which database or extension
+is being initialized.
 
 ## Policy example — differentiating sub-operations
 
 The `adapter-config.example.json` in this folder contains a complete
 `MpasApplicationPolicy` with per-sub-operation match conditions for
-`netlify-project-services-updater`. The policy entries below cover the three
-paths that require elevated approval. Everything else falls through to
-`defaultRequirement`, which in the example requires one non-proposer approval
-from the `approvers` signer group — replace that group with a human or agent
-signer DID as appropriate for the deployment.
+`netlify-project-services-updater`. The policy entries below identify the
+high-risk paths, and each description states the risk. In the example
+they require one approval from the `approvers` signer group, the same as
+`defaultRequirement`, which covers everything else. Who approves, and how many
+approvals each path needs, is the operator's decision: to route these paths
+differently, change their `eligibleSignerGroup` or `threshold` and keep the
+match conditions.
 
 ```json
 "policies": {
   "netlify-project-services-updater": [
     {
-      "description": "update-visitor-access-controls is a security-configuration change; team-wide when appliesTo == all-projects. Requires human approval.",
+      "description": "Security-configuration change; team-wide when appliesTo == all-projects.",
       "match": {
         "conditions": [
           {
@@ -221,12 +222,12 @@ signer DID as appropriate for the deployment.
       "requirements": {
         "type": "threshold",
         "threshold": 1,
-        "eligibleSignerGroup": "humanApprovers",
+        "eligibleSignerGroup": "approvers",
         "decision": "approve"
       }
     },
     {
-      "description": "manage-form-submissions with action == delete-submission is irreversible data deletion. Requires human approval.",
+      "description": "Irreversible data deletion: deletes a form submission.",
       "match": {
         "conditions": [
           {
@@ -246,12 +247,12 @@ signer DID as appropriate for the deployment.
       "requirements": {
         "type": "threshold",
         "threshold": 1,
-        "eligibleSignerGroup": "humanApprovers",
+        "eligibleSignerGroup": "approvers",
         "decision": "approve"
       }
     },
     {
-      "description": "manage-env-vars with upsertEnvVar == true writes or overwrites an environment variable. Requires human approval.",
+      "description": "Writes or overwrites an environment variable, which may hold a credential or production configuration.",
       "match": {
         "conditions": [
           {
@@ -271,12 +272,12 @@ signer DID as appropriate for the deployment.
       "requirements": {
         "type": "threshold",
         "threshold": 1,
-        "eligibleSignerGroup": "humanApprovers",
+        "eligibleSignerGroup": "approvers",
         "decision": "approve"
       }
     },
     {
-      "description": "manage-env-vars with deleteEnvVar == true is irreversible. Requires human approval regardless of other flags.",
+      "description": "Irreversible: deletes an environment variable, regardless of other flags.",
       "match": {
         "conditions": [
           {
@@ -296,7 +297,7 @@ signer DID as appropriate for the deployment.
       "requirements": {
         "type": "threshold",
         "threshold": 1,
-        "eligibleSignerGroup": "humanApprovers",
+        "eligibleSignerGroup": "approvers",
         "decision": "approve"
       }
     }

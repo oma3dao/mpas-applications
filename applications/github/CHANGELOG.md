@@ -1,5 +1,20 @@
 # Changelog — github
 
+## 2026-10-10 — Token guidance for multi-organization deployments
+
+- README: added a GitHub credential section comparing fine-grained tokens
+  (one account or organization) with classic tokens (`repo`, `workflow`, and
+  `read:org`, for deployments across several organizations), with links to
+  GitHub's token documentation (oma3dao/mpas-applications#43).
+- `plugin.json` and its `artifactDid` are unchanged. Its credential
+  requirement still describes the fine-grained token.
+- Renamed `verifier-policy.example.json` to `adapter-config.example.json`
+  and made it a complete Credential Adapter deployment config, matching the
+  other applications: plugin pin, `githubPersonalAccessToken` credential
+  binding, the pinned upstream image from `harness-config.json`, signer keys,
+  and the unchanged policy. Placeholder DIDs now use `REPLACE_WITH_*` like the
+  other templates.
+
 ## 2026-10-03 — Updated MPAS SDK runtime to alpha.14
 
 - Updated the bridge runtime to the exact reviewed release

@@ -4,7 +4,11 @@ import { evaluatePolicy, validatePolicyConfig } from '../applications/github/bri
 
 // Use the installed policy engine, not a second implementation of matching.
 // Inputs model already-verified approvals; cryptographic verification is upstream.
-const policy = JSON.parse(await readFile(new URL('../applications/github/verifier-policy.example.json', import.meta.url)));
+// The template's signer placeholders are not DIDs; substitute test DIDs before validating.
+const template = await readFile(new URL('../applications/github/adapter-config.example.json', import.meta.url), 'utf8');
+const policy = JSON.parse(template
+  .replaceAll('REPLACE_WITH_PROPOSER_DID', 'did:example:proposer')
+  .replaceAll('REPLACE_WITH_APPROVER_DID', 'did:example:approver')).policy;
 const plugin = JSON.parse(await readFile(new URL('../applications/github/plugin.json', import.meta.url)));
 assert.equal(validatePolicyConfig(policy).ok, true);
 const proposer = policy.signerGroups.proposers[0];
