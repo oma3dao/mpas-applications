@@ -1,5 +1,27 @@
 # Changelog — kraken-cli
 
+## 2026-10-17 — Updated MPAS SDK runtime to alpha.15
+
+- Updated the bridge runtime to the exact reviewed release
+  `@oma3/mpas@0.1.0-alpha.15` and refreshed the lockfile.
+- Regenerated the bridge with the alpha.15 bridge generator. The bridge
+  implements MPAS proposer-bridge profile version 3: MCP clients that declare
+  the `org.oma3/mpas` extension must declare version `"3"`. Clients using the
+  `mpas_wait_for_action_result` compatibility surface are unaffected.
+- A tool call returns the result directly when the Action finishes within one
+  second, and otherwise returns a Task.
+- The bridge no longer polls on a timer. It checks the Coordination Service
+  and retries failed submissions only when a client checks a Task, at most
+  every 10 seconds, so an approved Action executes when the proposer's client
+  next checks it. `workflow.pollIntervalMs` is ignored; new optional settings
+  are `processingTaskPollIntervalMs`, `coordinationRefreshMinIntervalMs` and
+  `shutdownGraceMs`.
+- The bridge exits when its MCP client goes away (stdin closes, writing to
+  stdout fails, or SIGTERM, SIGINT or SIGHUP), after letting requests already
+  sent finish for up to 5 seconds.
+- Action requests time out after 45 seconds by default, up from 30.
+- `plugin.json` and its `artifactDid` are unchanged.
+
 ## 2026-10-03 — Updated MPAS SDK runtime to alpha.14
 
 - Updated the bridge runtime to the exact reviewed release

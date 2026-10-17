@@ -65,7 +65,7 @@ REASON_TAGS = {
     "simulated",
 }
 
-DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.14"
+DEFAULT_MPAS_SDK_VERSION = "0.1.0-alpha.15"
 MPAS_SDK_VERSION_OVERRIDES = {}
 REQUIRED_CA_REJECTS = {
     "railway": "list_variables",
