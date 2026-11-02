@@ -96,13 +96,10 @@ boundaries; workspace hints alone are not an authorization boundary.
 
 ## Approval policy
 
-`policy.example.json` is a reviewable policy template, **not an installed
-adapter deployment configuration**. The operator substitutes distinct signer
-DIDs, retains only `all`, `proposers` and `approvers` groups, and incorporates
-it into their own deployment. All 10 governed operations require one approval
-from `approvers`; the proposer must not belong to that group. Impact labels
-alone do not enforce approvals. The conservative default covers newly governed
-operations pending operator review.
+`plugin.json` identifies the 10 governed operations. The operator's adapter
+policy determines the required independent approvals; plugin impact labels
+alone do not enforce approvals. This package does not supply a separate
+policy template or adapter deployment configuration.
 
 - **Creation:** review workspace, plan/capacity, region, repository/branch,
   commands, environment, and cron schedule. Approving `autoDeploy: yes` (also
@@ -139,7 +136,6 @@ npm run build --prefix applications/render/bridge
 python3 scripts/validate-applications.py
 python3 scripts/test_validate_applications.py
 node scripts/probe-bridge-protocols.mjs applications/render
-node scripts/test-render-policy.mjs
 ```
 
 The package is locally validated, not live-deployed. No real API key, account

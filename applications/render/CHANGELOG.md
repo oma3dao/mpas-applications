@@ -7,4 +7,4 @@
 - Govern 10 operations: five resource creation tools, trigger_deploy, update_environment_variables, select_workspace, list_workspaces (implicit selection), and query_render_postgres (unrestricted SQL/function execution despite a read-only transaction).
 - Leave 13 getters/listing tools pass-through: get_deploy, get_key_value, get_metrics, get_postgres, get_selected_workspace, get_service, list_deploys, list_events, list_key_value, list_log_label_values, list_logs, list_postgres_instances, list_services. Individual schema/source-review rationales are recorded in classification.json.
 - Document absent plan-update/Blueprint tools, creation plan defaults, destructive replace mode, deploy side effects, implicit workspace state and auto-deploy scope. Preserve every upstream tool definition verbatim.
-- Provide an independent-approval policy template, executable policy/schema regression checks, and CI protocol coverage. No live adapter configuration or credentials changed.
+- Provide CI build/protocol coverage through automatic bridge discovery. No live adapter configuration or credentials changed.
