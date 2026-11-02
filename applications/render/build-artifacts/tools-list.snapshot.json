@@ -1,0 +1,1368 @@
+{
+  "version": "1",
+  "type": "McpToolsListSnapshot",
+  "toolSurface": {
+    "alg": "sha-256",
+    "value": "oMmWYMW0bvudI9ipOAFjK0paPEvcd-NByTANSjZ1A_U"
+  },
+  "tools": [
+    {
+      "annotations": {
+        "title": "Create cron job",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Create a new cron job in your Render account. A cron job is a scheduled task that runs on a recurring schedule specified using cron syntax. Cron jobs are ideal for background tasks like data processing, cleanup operations, sending emails, or generating reports. By default, these services are automatically deployed when the specified branch is updated. This tool is currently limited to support only a subset of the cron job configuration parameters. Deploying prebuilt images from a container registry is not supported. To create a cron job without those limitations, please use the dashboard at: https://dashboard.render.com/create",
+      "inputSchema": {
+        "properties": {
+          "autoDeploy": {
+            "default": "yes",
+            "description": "Whether to automatically deploy the cron job when the specified branch is updated. Defaults to 'yes'.",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "type": "string"
+          },
+          "branch": {
+            "description": "The repository branch to deploy. This branch will be deployed when you manually trigger deploys and when auto-deploy is enabled. If left empty, this will fall back to the default branch of the repository.",
+            "type": "string"
+          },
+          "buildCommand": {
+            "description": "The command used to build your cron job. For example, 'npm install' for Node.js or 'pip install -r requirements.txt' for Python. Required unless runtime is 'docker'.",
+            "type": "string"
+          },
+          "dockerCommand": {
+            "default": "",
+            "description": "Overrides the image's startup command. When omitted, uses the Dockerfile's ENTRYPOINT and CMD. An empty string also uses that default. Applies when runtime is 'docker'.",
+            "type": "string"
+          },
+          "dockerContext": {
+            "default": ".",
+            "description": "Build context directory, relative to the repository root. Defaults to '.'. Applies when runtime is 'docker'.",
+            "type": "string"
+          },
+          "dockerfilePath": {
+            "default": "./Dockerfile",
+            "description": "Path to the Dockerfile, relative to the repository root. Defaults to './Dockerfile'. Applies when runtime is 'docker'.",
+            "type": "string"
+          },
+          "envVars": {
+            "description": "Environment variables to set for your cron job. These are exposed during builds and at runtime.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "key": {
+                  "description": "The name of the environment variable",
+                  "type": "string"
+                },
+                "value": {
+                  "description": "The value of the environment variable",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key",
+                "value"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "name": {
+            "description": "A unique name for your cron job.",
+            "type": "string"
+          },
+          "plan": {
+            "default": "starter",
+            "description": "The pricing plan for your cron job. Different plans offer different levels of resources and features.",
+            "enum": [
+              "free",
+              "starter",
+              "standard",
+              "pro",
+              "pro_plus",
+              "pro_max",
+              "pro_ultra",
+              "0.5c-512mb",
+              "1c-2g",
+              "2c-4g",
+              "2c-8g",
+              "2c-16g",
+              "4c-8g",
+              "4c-16g",
+              "4c-32g",
+              "8c-16g",
+              "8c-32g",
+              "8c-64g",
+              "12c-24g",
+              "12c-48g",
+              "12c-96g"
+            ],
+            "type": "string"
+          },
+          "region": {
+            "default": "oregon",
+            "description": "The geographic region where your cron job will be deployed. Defaults to Oregon.",
+            "enum": [
+              "oregon",
+              "frankfurt",
+              "singapore",
+              "ohio",
+              "virginia"
+            ],
+            "type": "string"
+          },
+          "repo": {
+            "description": "The repository containing the source code for your cron job. Must be a valid Git URL that Render can clone and deploy. Do not include the branch in the repo string. You can instead supply a 'branch' parameter.",
+            "type": "string"
+          },
+          "runtime": {
+            "description": "The runtime environment for your cron job. This determines how your job is built and run.",
+            "enum": [
+              "node",
+              "python",
+              "go",
+              "rust",
+              "ruby",
+              "elixir",
+              "docker"
+            ],
+            "type": "string"
+          },
+          "schedule": {
+            "description": "The cron schedule expression that determines when the job runs. Uses standard cron syntax with 5 fields: minute (0-59), hour (0-23), day of month (1-31), month (1-12), day of week (0-6, Sunday=0). Examples: '0 0 * * *' (daily at midnight), '*/15 * * * *' (every 15 minutes), '0 9 * * 1-5' (weekdays at 9am), '0 0 1 * *' (first day of each month at midnight). For natural language requests like 'every hour' or 'daily at 3pm', convert to cron syntax.",
+            "type": "string"
+          },
+          "startCommand": {
+            "description": "The command that runs when your cron job executes. For example, 'node scripts/cleanup.js' for Node.js or 'python scripts/process_data.py' for Python. Required unless runtime is 'docker'.",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "schedule",
+          "runtime"
+        ],
+        "type": "object"
+      },
+      "name": "create_cron_job"
+    },
+    {
+      "annotations": {
+        "title": "Create Key Value instance",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Create a new Key Value instance in your Render account",
+      "inputSchema": {
+        "properties": {
+          "maxmemoryPolicy": {
+            "description": "The eviction policy for the Key Value store",
+            "enum": [
+              "noeviction",
+              "allkeys_lfu",
+              "allkeys_lru",
+              "allkeys_random",
+              "volatile_lfu",
+              "volatile_lru",
+              "volatile_random",
+              "volatile_ttl"
+            ],
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the Key Value instance",
+            "type": "string"
+          },
+          "persistenceMode": {
+            "description": "The data persistence behavior for the Key Value store",
+            "enum": [
+              "journal_snapshot",
+              "snapshot",
+              "off"
+            ],
+            "type": "string"
+          },
+          "plan": {
+            "default": "free",
+            "description": "Pricing plan for the Key Value instance",
+            "enum": [
+              "free",
+              "starter",
+              "standard",
+              "pro",
+              "pro_plus",
+              "256mb",
+              "1g",
+              "5g",
+              "10g",
+              "20g",
+              "40g"
+            ],
+            "type": "string"
+          },
+          "region": {
+            "default": "oregon",
+            "description": "Region where the Key Value instance will be deployed",
+            "enum": [
+              "oregon",
+              "frankfurt",
+              "singapore",
+              "ohio",
+              "virginia"
+            ],
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "name": "create_key_value"
+    },
+    {
+      "annotations": {
+        "title": "Create Postgres instance",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Create a new Postgres instance in your Render account",
+      "inputSchema": {
+        "properties": {
+          "diskSizeGb": {
+            "description": "Your database's capacity, in GB. You can increase storage at any time, but you can't decrease it. Specify 1 GB or any multiple of 5 GB.",
+            "type": "number"
+          },
+          "name": {
+            "description": "The name of the database as it will appear in the Render Dashboard",
+            "type": "string"
+          },
+          "plan": {
+            "default": "free",
+            "description": "Pricing plan for the database",
+            "enum": [
+              "free",
+              "basic_256mb",
+              "basic_1gb",
+              "basic_4gb",
+              "pro_4gb",
+              "pro_8gb",
+              "pro_16gb",
+              "pro_32gb",
+              "pro_64gb",
+              "pro_128gb",
+              "pro_192gb",
+              "pro_256gb",
+              "pro_384gb",
+              "pro_512gb",
+              "accelerated_16gb",
+              "accelerated_32gb",
+              "accelerated_64gb",
+              "accelerated_128gb",
+              "accelerated_256gb",
+              "accelerated_384gb",
+              "accelerated_512gb",
+              "accelerated_768gb",
+              "accelerated_1024gb",
+              "0.1c-256mb",
+              "0.5c-1g",
+              "1c-2g",
+              "1c-4g",
+              "2c-4g",
+              "2c-8g",
+              "2c-16g",
+              "4c-16g",
+              "4c-32g",
+              "8c-32g",
+              "8c-64g",
+              "16c-64g",
+              "16c-128g",
+              "32c-128g",
+              "32c-256g",
+              "48c-192g",
+              "48c-384g",
+              "64c-256g",
+              "64c-512g",
+              "96c-384g",
+              "96c-768g",
+              "128c-512g",
+              "128c-1024g"
+            ],
+            "type": "string"
+          },
+          "region": {
+            "description": "Region where the database will be deployed",
+            "enum": [
+              "oregon",
+              "frankfurt",
+              "singapore",
+              "ohio",
+              "virginia"
+            ],
+            "type": "string"
+          },
+          "version": {
+            "default": 18,
+            "description": "PostgreSQL version to use (e.g., 14, 15)",
+            "maximum": 18,
+            "minimum": 13,
+            "type": "number"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "name": "create_postgres"
+    },
+    {
+      "annotations": {
+        "title": "Create static site",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Create a new static site in your Render account. Apps that consist entirely of statically served assets (commonly HTML, CSS, and JS). Static sites have a public onrender.com subdomain and are served over a global CDN. Create a static site if you're building with a framework like: Create React App, Vue.js, Gatsby, etc.This tool is currently limited to support only a subset of the static site configuration parameters.To create a static site without those limitations, please use the dashboard at: https://dashboard.render.com/static/new",
+      "inputSchema": {
+        "properties": {
+          "autoDeploy": {
+            "default": "yes",
+            "description": "Whether to automatically deploy the service when the specified branch is updated. Defaults to 'yes'.",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "type": "string"
+          },
+          "branch": {
+            "description": "The repository branch to deploy. This branch will be deployed when you manually trigger deploys and when auto-deploy is enabled. If left empty, this will fall back to the default branch of the repository.",
+            "type": "string"
+          },
+          "buildCommand": {
+            "description": "Render runs this command to build your app before each deploy. For example, 'yarn; yarn build' a React app.",
+            "type": "string"
+          },
+          "envVars": {
+            "description": "Environment variables to set for your service. These are exposed during builds and at runtime.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "key": {
+                  "description": "The name of the environment variable",
+                  "type": "string"
+                },
+                "value": {
+                  "description": "The value of the environment variable",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key",
+                "value"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "name": {
+            "description": "A unique name for your service. This will be used to generate the service's URL if it is public.",
+            "type": "string"
+          },
+          "publishPath": {
+            "default": "public",
+            "description": "The relative path of the directory containing built assets to publish. Examples: ./, ./build, dist and frontend/build. This is the directory that will be served to the public.",
+            "type": "string"
+          },
+          "repo": {
+            "description": "The repository containing the source code for your service. Must be a valid Git URL that Render can clone and deploy. Do not include the branch in the repo string. You can instead supply a 'branch' parameter.",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "buildCommand"
+        ],
+        "type": "object"
+      },
+      "name": "create_static_site"
+    },
+    {
+      "annotations": {
+        "title": "Create web service",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Create a new web service in your Render account. A web service is a public-facing service that can be accessed by users on the internet. By default, these services are automatically deployed when the specified branch is updated and do not require a manual trigger of a deploy. The user should only be prompted to manually trigger a deploy if auto-deploy is disabled. This tool is currently limited to support only a subset of the web service configuration parameters. Deploying prebuilt images from a container registry is not supported. To create a service without those limitations, please use the dashboard at: https://dashboard.render.com/web/new",
+      "inputSchema": {
+        "properties": {
+          "autoDeploy": {
+            "default": "yes",
+            "description": "Whether to automatically deploy the service when the specified branch is updated. Defaults to 'yes'.",
+            "enum": [
+              "yes",
+              "no"
+            ],
+            "type": "string"
+          },
+          "branch": {
+            "description": "The repository branch to deploy. This branch will be deployed when you manually trigger deploys and when auto-deploy is enabled. If left empty, this will fall back to the default branch of the repository.",
+            "type": "string"
+          },
+          "buildCommand": {
+            "description": "The command used to build your service. For example, 'npm run build' for Node.js or 'pip install -r requirements.txt' for Python. Required unless runtime is 'docker'.",
+            "type": "string"
+          },
+          "dockerCommand": {
+            "default": "",
+            "description": "Overrides the image's startup command. When omitted, uses the Dockerfile's ENTRYPOINT and CMD. An empty string also uses that default. Applies when runtime is 'docker'.",
+            "type": "string"
+          },
+          "dockerContext": {
+            "default": ".",
+            "description": "Build context directory, relative to the repository root. Defaults to '.'. Applies when runtime is 'docker'.",
+            "type": "string"
+          },
+          "dockerfilePath": {
+            "default": "./Dockerfile",
+            "description": "Path to the Dockerfile, relative to the repository root. Defaults to './Dockerfile'. Applies when runtime is 'docker'.",
+            "type": "string"
+          },
+          "envVars": {
+            "description": "Environment variables to set for your service. These are exposed during builds and at runtime.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "key": {
+                  "description": "The name of the environment variable",
+                  "type": "string"
+                },
+                "value": {
+                  "description": "The value of the environment variable",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key",
+                "value"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "name": {
+            "description": "A unique name for your service. This will be used to generate the service's URL if it is public.",
+            "type": "string"
+          },
+          "plan": {
+            "default": "free",
+            "description": "The pricing plan for your service. Different plans offer different levels of resources and features.",
+            "enum": [
+              "free",
+              "starter",
+              "standard",
+              "pro",
+              "pro_plus",
+              "pro_max",
+              "pro_ultra",
+              "0.5c-512mb",
+              "1c-2g",
+              "2c-4g",
+              "2c-8g",
+              "2c-16g",
+              "4c-8g",
+              "4c-16g",
+              "4c-32g",
+              "8c-16g",
+              "8c-32g",
+              "8c-64g",
+              "12c-24g",
+              "12c-48g",
+              "12c-96g"
+            ],
+            "type": "string"
+          },
+          "region": {
+            "default": "oregon",
+            "description": "The geographic region where your service will be deployed. Defaults to Oregon. Choose the region closest to your users for best performance.",
+            "enum": [
+              "oregon",
+              "frankfurt",
+              "singapore",
+              "ohio",
+              "virginia"
+            ],
+            "type": "string"
+          },
+          "repo": {
+            "description": "The repository containing the source code for your service. Must be a valid Git URL that Render can clone and deploy. Do not include the branch in the repo string. You can instead supply a 'branch' parameter.",
+            "type": "string"
+          },
+          "runtime": {
+            "description": "The runtime environment for your service. This determines how your service is built and run.",
+            "enum": [
+              "node",
+              "python",
+              "go",
+              "rust",
+              "ruby",
+              "elixir",
+              "docker"
+            ],
+            "type": "string"
+          },
+          "startCommand": {
+            "description": "The command used to start your service. For example, 'npm start' for Node.js or 'gunicorn app:app' for Python. Required unless runtime is 'docker'.",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "runtime"
+        ],
+        "type": "object"
+      },
+      "name": "create_web_service"
+    },
+    {
+      "annotations": {
+        "title": "Get deploy details",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "Retrieve the details of a particular deploy for a particular service.",
+      "inputSchema": {
+        "properties": {
+          "deployId": {
+            "description": "The ID of the deployment to retrieve",
+            "type": "string"
+          },
+          "serviceId": {
+            "description": "The ID of the service to get deployments for",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "serviceId",
+          "deployId"
+        ],
+        "type": "object"
+      },
+      "name": "get_deploy"
+    },
+    {
+      "annotations": {
+        "title": "Get Key Value instance details",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "Retrieve a Key Value instance by ID",
+      "inputSchema": {
+        "properties": {
+          "keyValueId": {
+            "description": "The ID of the Key Value instance to retrieve",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyValueId"
+        ],
+        "type": "object"
+      },
+      "name": "get_key_value"
+    },
+    {
+      "annotations": {
+        "title": "Get resource metrics",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "description": "Get performance metrics for any Render resource (services, Postgres databases, key-value stores). Supports CPU usage/limits/targets, memory usage/limits/targets, service instance counts, HTTP request counts and response time metrics, bandwidth usage metrics, database active connection counts for debugging, capacity planning, and performance optimization. Returns time-series data with timestamps and values for the specified time range. HTTP metrics support filtering by host and path for more granular analysis. Limits and targets help understand resource constraints and autoscaling thresholds. Metrics may be empty if the metric is not valid for the given resource.",
+      "inputSchema": {
+        "properties": {
+          "aggregateHttpRequestCountsBy": {
+            "description": "Field to aggregate HTTP request metrics by. Only supported for http_request_count metric. Options: host (aggregate by request host), statusCode (aggregate by HTTP status code). When not specified, returns total request counts.",
+            "enum": [
+              "host",
+              "statusCode"
+            ],
+            "type": "string"
+          },
+          "cpuUsageAggregationMethod": {
+            "default": "AVG",
+            "description": "Method for aggregating metric values over time intervals. Only supported for CPU usage metrics. Options: AVG, MAX, MIN. Defaults to AVG.",
+            "enum": [
+              "AVG",
+              "MAX",
+              "MIN"
+            ],
+            "type": "string"
+          },
+          "endTime": {
+            "description": "End time for metrics query in RFC3339 format (e.g., '2024-01-01T13:00:00Z'). Defaults to the current time. The end time must be within the last 30 days.",
+            "type": "string"
+          },
+          "httpHost": {
+            "description": "Filter HTTP metrics to specific request hosts. Supported for http_request_count and http_latency metrics. Example: 'api.example.com' or 'myapp.render.com'. When not specified, includes all hosts.",
+            "type": "string"
+          },
+          "httpLatencyQuantile": {
+            "default": 0.95,
+            "description": "The quantile/percentile of HTTP latency to fetch. Only supported for http_latency metric. Common values: 0.5 (median), 0.95 (95th percentile), 0.99 (99th percentile). Defaults to 0.95 if not specified.",
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "httpPath": {
+            "description": "Filter HTTP metrics to specific request paths. Supported for http_request_count and http_latency metrics. Example: '/api/users' or '/health'. When not specified, includes all paths.",
+            "type": "string"
+          },
+          "metricTypes": {
+            "description": "Which metrics to fetch. CPU usage/limits/targets, memory usage/limits/targets, and instance count metrics are available for all resources. HTTP request counts and response time metrics, and bandwidth usage metrics are only available for services. Active connection metrics are only available for databases and key-value stores. Limits show resource constraints, targets show autoscaling thresholds.",
+            "items": {
+              "enum": [
+                "cpu_usage",
+                "memory_usage",
+                "http_request_count",
+                "active_connections",
+                "instance_count",
+                "http_latency",
+                "cpu_limit",
+                "cpu_target",
+                "memory_limit",
+                "memory_target",
+                "bandwidth_usage"
+              ],
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "resolution": {
+            "description": "Time resolution for data points in seconds. Lower values provide more granular data. Higher values provide more aggregated data points. API defaults to 60 seconds if not provided. There is a limit to the number of data points that can be returned, after which the metrics endpoint will return a 500. If you are getting a 500, try reducing granularity (increasing the value of resolution).",
+            "minimum": 30,
+            "type": "number"
+          },
+          "resourceId": {
+            "description": "The ID of the resource to get metrics for (service ID, Postgres ID, or key-value store ID)",
+            "type": "string"
+          },
+          "startTime": {
+            "description": "Start time for metrics query in RFC3339 format (e.g., '2024-01-01T12:00:00Z'). Defaults to 1 hour ago. The start time must be within the last 30 days.",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "resourceId",
+          "metricTypes"
+        ],
+        "type": "object"
+      },
+      "name": "get_metrics"
+    },
+    {
+      "annotations": {
+        "title": "Get Postgres instance details",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "Retrieve a Postgres instance by ID",
+      "inputSchema": {
+        "properties": {
+          "postgresId": {
+            "description": "The ID of the Postgres instance to retrieve",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "postgresId"
+        ],
+        "type": "object"
+      },
+      "name": "get_postgres"
+    },
+    {
+      "annotations": {
+        "title": "Get selected workspace",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "Get the workspace stored in the session compatibility fallback. Request-scoped workspaces supplied with an explicit workspaceId are not reflected by this tool.",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "name": "get_selected_workspace"
+    },
+    {
+      "annotations": {
+        "title": "Get service details",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "description": "Get details about a specific service",
+      "inputSchema": {
+        "properties": {
+          "serviceId": {
+            "description": "The ID of the service to retrieve",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "serviceId"
+        ],
+        "type": "object"
+      },
+      "name": "get_service"
+    },
+    {
+      "annotations": {
+        "title": "List deploys",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "List deploys matching the provided filters. If no filters are provided, all deploys for the service are returned.",
+      "inputSchema": {
+        "properties": {
+          "cursor": {
+            "default": "",
+            "description": "A unique string that corresponds to a position in the result list. If provided, the endpoint returns results that appear after the corresponding position. To fetch the first page of results, set to the empty string.",
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "The maximum number of deploys to return in a single page. To fetch additional pages of results, set the cursor to the last deploy in the previous page. It should be rare to need to set this value greater than 20.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "serviceId": {
+            "description": "The ID of the service to get deployments for",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "serviceId"
+        ],
+        "type": "object"
+      },
+      "name": "list_deploys"
+    },
+    {
+      "annotations": {
+        "title": "List service events",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "List a service's event history: deploys, builds, restarts, failures, scaling, suspensions, and disk changes. Use it to find out what happened to a service and why. Failure events carry the reason a service went down, such as out-of-memory kills, non-zero exits, failed health checks, and evictions, which may not show up in logs. The first page covers the last 7 days unless startTime says otherwise. For older events, page with the cursor from the previous call. If the first page comes back empty there is no cursor to follow, so set an earlier startTime instead. Events cover services only, not Postgres or Key Value instances.",
+      "inputSchema": {
+        "properties": {
+          "cursor": {
+            "default": "",
+            "description": "A unique string that corresponds to a position in the result list. If provided, the endpoint returns results that appear after the corresponding position. To fetch the first page of results, set to the empty string.",
+            "type": "string"
+          },
+          "endTime": {
+            "description": "End of the time range in RFC3339 format (e.g. '2024-01-01T13:00:00Z'). Defaults to the current time.",
+            "type": "string"
+          },
+          "eventTypes": {
+            "description": "Filter to specific event types. Returns all types when omitted. For debugging a failure, server_failed, deploy_ended, build_ended, and image_pull_failed carry the most detail.",
+            "items": {
+              "enum": [
+                "artifact_fetch_failed",
+                "artifact_source_changed",
+                "autoscaling_config_changed",
+                "autoscaling_ended",
+                "autoscaling_started",
+                "branch_deleted",
+                "build_ended",
+                "build_started",
+                "commit_ignored",
+                "cron_job_run_ended",
+                "cron_job_run_started",
+                "deploy_ended",
+                "deploy_started",
+                "disk_created",
+                "disk_updated",
+                "disk_deleted",
+                "disk_snapshot_restored",
+                "service_disk_usage_high",
+                "service_disk_usage_recovered",
+                "image_pull_failed",
+                "initial_deploy_hook_ended",
+                "initial_deploy_hook_started",
+                "instance_count_changed",
+                "job_run_ended",
+                "maintenance_mode_enabled",
+                "maintenance_mode_uri_updated",
+                "maintenance_ended",
+                "maintenance_started",
+                "pipeline_minutes_exhausted",
+                "plan_changed",
+                "pre_deploy_ended",
+                "pre_deploy_started",
+                "server_available",
+                "server_failed",
+                "server_hardware_failure",
+                "server_restarted",
+                "service_resumed",
+                "service_suspended",
+                "suspender_added",
+                "suspender_removed",
+                "zero_downtime_redeploy_ended",
+                "zero_downtime_redeploy_started",
+                "auto_deploy_disabled",
+                "auto_deploy_enabled"
+              ],
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "default": 20,
+            "description": "The maximum number of events to return, newest first.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "serviceId": {
+            "description": "The ID of the service to list events for",
+            "type": "string"
+          },
+          "startTime": {
+            "description": "Start of the time range in RFC3339 format (e.g. '2024-01-01T12:00:00Z'). Defaults to 7 days ago on the first page. Set it to reach events older than that.",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "serviceId"
+        ],
+        "type": "object"
+      },
+      "name": "list_events"
+    },
+    {
+      "annotations": {
+        "title": "List Key Value instances",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "List all Key Value instances in your Render account",
+      "inputSchema": {
+        "properties": {
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "list_key_value"
+    },
+    {
+      "annotations": {
+        "title": "List log label values",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "List all values for a given log label in the logs matching the provided filters. This can be used to discover what values are available for filtering logs using the list_logs tool. You can query for logs across multiple resources, but all resources must be in the same region and belong to the same owner.",
+      "inputSchema": {
+        "properties": {
+          "direction": {
+            "default": "backward",
+            "description": "The direction to query logs for. Backward will return most recent logs first. Forward will start with the oldest logs in the time range.",
+            "enum": [
+              "backward",
+              "forward"
+            ],
+            "type": "string"
+          },
+          "endTime": {
+            "description": "End time for log query (RFC3339 format). Defaults to the current time. The end time must be within the last 30 days.",
+            "type": "string"
+          },
+          "host": {
+            "description": "Filter request logs by their host. Wildcards and regex are supported.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "instance": {
+            "description": "Filter logs by the instance they were emitted from.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "label": {
+            "description": "The label to list values for.",
+            "enum": [
+              "host",
+              "instance",
+              "level",
+              "method",
+              "statusCode",
+              "type"
+            ],
+            "type": "string"
+          },
+          "level": {
+            "description": "Filter logs by their severity level. Wildcards and regex are supported.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "method": {
+            "description": "Filter request logs by their requests method. Wildcards and regex are supported.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "path": {
+            "description": "Filter request logs by their path. Wildcards and regex are supported.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "resource": {
+            "description": "Filter by resource. A resource is the id of a server, cronjob, job, postgres, or redis.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "startTime": {
+            "description": "Start time for log query (RFC3339 format). Defaults to 1 hour ago. The start time must be within the last 30 days.",
+            "type": "string"
+          },
+          "statusCode": {
+            "description": "Filter request logs by their status code. Wildcards and regex are supported.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "text": {
+            "description": "Filter by the text of the logs. Wildcards and regex are supported.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "type": {
+            "description": "Filter logs by their type.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "resource"
+        ],
+        "type": "object"
+      },
+      "name": "list_log_label_values"
+    },
+    {
+      "annotations": {
+        "title": "List logs",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "List logs matching the provided filters. Logs are paginated by start and end timestamps. There are more logs to fetch if hasMore is true in the response. Provide the nextStartTime and nextEndTime timestamps as the startTime and endTime query parameters to fetch the next page of logs. You can query for logs across multiple resources, but all resources must be in the same region and belong to the same owner.",
+      "inputSchema": {
+        "properties": {
+          "direction": {
+            "default": "backward",
+            "description": "The direction to query logs for. Backward will return most recent logs first. Forward will start with the oldest logs in the time range.",
+            "enum": [
+              "backward",
+              "forward"
+            ],
+            "type": "string"
+          },
+          "endTime": {
+            "description": "End time for log query (RFC3339 format). Defaults to the current time. The end time must be within the last 30 days.",
+            "type": "string"
+          },
+          "host": {
+            "description": "Filter request logs by their host. Wildcards and regex are supported.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "instance": {
+            "description": "Filter logs by the instance they were emitted from. An instance is the id of a specific running server.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "level": {
+            "description": "Filter logs by their severity level. Wildcards and regex are supported.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "description": "Maximum number of logs to return",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "number"
+          },
+          "method": {
+            "description": "Filter request logs by their requests method. Wildcards and regex are supported.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "path": {
+            "description": "Filter request logs by their path. Wildcards and regex are supported.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "resource": {
+            "description": "Filter logs by their resource. A resource is the id of a server, cronjob, job, postgres, or redis.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "startTime": {
+            "description": "Start time for log query (RFC3339 format). Defaults to 1 hour ago. The start time must be within the last 30 days.",
+            "type": "string"
+          },
+          "statusCode": {
+            "description": "Filter request logs by their status code. Wildcards and regex are supported.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "text": {
+            "description": "Filter by the text of the logs. Wildcards and regex are supported.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "type": {
+            "description": "Filter logs by their type. Types include app for application logs, request for request logs, and build for build logs. You can find the full set of types available for a query by using the list_log_label_values tool.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "type": "object"
+      },
+      "name": "list_logs"
+    },
+    {
+      "annotations": {
+        "title": "List Postgres instances",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "List all Postgres databases in your Render account",
+      "inputSchema": {
+        "properties": {
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "list_postgres_instances"
+    },
+    {
+      "annotations": {
+        "title": "List services",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "description": "List all services in your Render account",
+      "inputSchema": {
+        "properties": {
+          "includePreviews": {
+            "default": false,
+            "description": "Whether to include preview services in the response. Defaults to false.",
+            "type": "boolean"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "name": "list_services"
+    },
+    {
+      "annotations": {
+        "title": "List workspaces",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "List the workspaces that you have access to",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "name": "list_workspaces"
+    },
+    {
+      "annotations": {
+        "title": "Query Postgres",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "Run a read-only SQL query against a Render-hosted Postgres database. This tool creates a new connection for each query and closes it after the query completes.",
+      "inputSchema": {
+        "properties": {
+          "postgresId": {
+            "description": "The ID of the Postgres instance to query",
+            "type": "string"
+          },
+          "sql": {
+            "description": "The SQL query to run. Note that the query will be wrapped in a read-only transaction.",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "postgresId",
+          "sql"
+        ],
+        "type": "object"
+      },
+      "name": "query_render_postgres"
+    },
+    {
+      "annotations": {
+        "title": "Select workspace",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "Deprecated: this tool is scheduled for removal; pass the confirmed workspaceId directly on each tool call instead. Select a workspace for clients that rely on MCP session state. This tool should only be used after explicitly asking the user to select one, it should not be invoked as part of an automated process. Having the wrong workspace selected can lead to destructive actions being performed on unintended resources.",
+      "inputSchema": {
+        "properties": {
+          "ownerID": {
+            "description": "The ID of the workspace to select",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ownerID"
+        ],
+        "type": "object"
+      },
+      "name": "select_workspace"
+    },
+    {
+      "annotations": {
+        "title": "Trigger deploy",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "description": "Trigger a new deploy for a service. Services with autoDeploy enabled deploy automatically when their branch or image is updated, so do NOT use this tool after pushing code to such a service — the push already triggers a deploy. Use it only when a deploy won't happen automatically: services with autoDeploy disabled, redeploying without a code change, or redeploying with a cleared build cache.",
+      "inputSchema": {
+        "properties": {
+          "clearCache": {
+            "default": false,
+            "description": "Whether to clear the build cache before deploying. Defaults to false.",
+            "type": "boolean"
+          },
+          "serviceId": {
+            "description": "The ID of the service to trigger a deploy for",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "serviceId"
+        ],
+        "type": "object"
+      },
+      "name": "trigger_deploy"
+    },
+    {
+      "annotations": {
+        "title": "Update environment variables",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "description": "Update environment variables for a service. By default, environment variables passed in will be merged with the service's existing environment variables. This makes it safe to update environment variableswithout pulling the existing ones into the MCP host's context. To replace all existing environment variables, set the 'replace' parameter to 'true'.",
+      "inputSchema": {
+        "properties": {
+          "envVars": {
+            "description": "The list of environment variables to update or set for the service.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "key": {
+                  "description": "The name of the environment variable",
+                  "type": "string"
+                },
+                "value": {
+                  "description": "The value of the environment variable",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key",
+                "value"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "replace": {
+            "default": false,
+            "description": "Whether to replace all existing environment variables with the provided list, or merge with the existing ones. Defaults to false.",
+            "type": "boolean"
+          },
+          "serviceId": {
+            "description": "The ID of the service to update",
+            "type": "string"
+          },
+          "workspaceId": {
+            "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "serviceId",
+          "envVars"
+        ],
+        "type": "object"
+      },
+      "name": "update_environment_variables"
+    }
+  ]
+}

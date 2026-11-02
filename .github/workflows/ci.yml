@@ -12,6 +12,8 @@ permissions:
 jobs:
   ci:
     name: ci
+    outputs:
+      applications: ${{ steps.bridges.outputs.applications }}
     runs-on: ubuntu-latest
 
     steps:
@@ -41,37 +43,23 @@ jobs:
       - name: Test artifact validator helpers
         run: python3 scripts/test_validate_applications.py
 
+      - name: Test bridge discovery
+        run: python3 scripts/test_discover_bridges.py
+
+      - name: Discover bridges
+        id: bridges
+        run: |
+          applications=$(python3 scripts/discover-bridges.py)
+          echo "applications=$applications" >> "$GITHUB_OUTPUT"
+
   bridge-protocols:
+    needs: ci
     name: bridge-protocols (${{ matrix.application }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        application:
-          - alpaca
-          - bigquery
-          - coinbase-advanced-trade
-          - coinbase
-          - fastly
-          - firebase
-          - github
-          - kraken-cli
-          - kubernetes
-          - mongodb
-          - n8n
-          - neon
-          - netlify
-          - outlook
-          - plain
-          - planetscale
-          - postgres
-          - railway
-          - slack
-          - stripe
-          - supabase
-          - upstash
-          - vercel
-          - x-twitter
+        application: ${{ fromJSON(needs.ci.outputs.applications) }}
 
     steps:
       - name: Checkout

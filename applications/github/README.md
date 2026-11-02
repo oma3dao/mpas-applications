@@ -20,11 +20,20 @@ GitHub's documentation explains the two types and how to create each one:
 
 - [Personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
 - [Creating a fine-grained token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token)
-- [Creating a classic token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic)
+- [Creating a classic token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic) (see the [classic-token note below](#classic-token-note))
 
 The credential requirement in [`plugin.json`](plugin.json) describes the
 fine-grained token; a classic token is an equally valid choice for the
 multi-organization case.
+
+### Classic-token note
+
+The linked GitHub guide's navigation is outdated: use **Settings → Credentials
+→ Personal access tokens → Tokens (classic)**, not **Developer settings**
+([direct link](https://github.com/settings/tokens)). In addition to `repo`,
+select the **`workflow` checkbox** so the token can publish changes to
+`.github/workflows/`. When editing an existing token, click **Update token**.
+This is a token scope, not a repository role; Write access alone does not grant it.
 
 ## Example deployment config
 

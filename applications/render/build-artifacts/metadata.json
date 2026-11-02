@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "render-mcp-server",
+    "version": "dev"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "render-mcp-server"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-11-02T18:04:22.180Z",
+  "generatorCommit": "96bc20d8df9bd62e7901ce69c8194c17de18ad4f",
+  "discoveryNotes": "Official upstream compiled from pinned source. initialize/tools/list only, with a non-secret dummy API key and RENDER_HOST=127.0.0.1:1. No Render account calls or real credentials used. Launch path normalized to the reproducible installed binary name."
+}
