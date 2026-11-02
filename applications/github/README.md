@@ -26,6 +26,39 @@ The credential requirement in [`plugin.json`](plugin.json) describes the
 fine-grained token; a classic token is an equally valid choice for the
 multi-organization case.
 
+## Find the token and enable workflow updates
+
+Sign in as the account that owns the token. Open your personal **Settings →
+Credentials → Personal access tokens**, then select the token used by the
+Credential Adapter. These are account credential settings, not the repository's
+collaborator-role settings. Direct links are also available:
+
+- [Fine-grained personal access tokens](https://github.com/settings/personal-access-tokens)
+- [Personal access tokens (classic)](https://github.com/settings/tokens)
+
+For a **classic token**, select the **`workflow` checkbox** in its scopes,
+retain the required `repo` scope, and click **Update token**. For a
+**fine-grained token**, grant **Repository permissions → Workflows → Read and
+write**, retain the required Contents write permission and repository access,
+and save the changes. Complete any organization approval required for the
+updated permissions.
+
+Workflow permission is needed when publishing files under `.github/workflows/`,
+including a change that only adds a bridge to an existing CI matrix. Repository
+**Write**, **Maintain**, and **Admin** roles are separate from token permissions;
+promoting the account to Maintain or Admin is not a substitute for enabling
+workflow access on the token.
+
+A missing workflow permission can surface as `404 Not Found` from
+`POST /repos/{owner}/{repo}/git/trees`, even when creating a branch at an existing
+commit succeeds. Check token workflow permission along with expiration,
+repository access, and Contents write permission; a 404 alone is not a diagnosis.
+
+The adapter's example credential handle is `githubPersonalAccessToken`, resolved
+into `GITHUB_PERSONAL_ACCESS_TOKEN` for the upstream server. Confirm that the
+operator is updating the token actually bound to that deployment. Keep the token
+value in the adapter's credential store, never in chat or the repository.
+
 ## Example deployment config
 
 `plugin.json` classifies operation impact, while the trusted Verifier policy
