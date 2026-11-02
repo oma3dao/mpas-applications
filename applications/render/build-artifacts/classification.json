@@ -1,0 +1,99 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "create_cron_job": {
+      "impact": "high",
+      "rationale": "Creates billable standing automation with caller-selected repository, schedule and commands; auto-deploy defaults to yes. Review plan, schedule and code source."
+    },
+    "create_key_value": {
+      "impact": "high",
+      "rationale": "Provisions a database with a caller-selected plan, eviction policy and persistence mode (including off). Free-tier creation is still a resource mutation."
+    },
+    "create_postgres": {
+      "impact": "high",
+      "rationale": "Provisions a database with a caller-selected plan, version and disk size. Review capacity and recurring spend, including omitted/default plan."
+    },
+    "create_static_site": {
+      "impact": "high",
+      "rationale": "Builds and publishes caller-selected repository content to a public site; auto-deploy defaults to yes."
+    },
+    "create_web_service": {
+      "impact": "high",
+      "rationale": "Creates public executable infrastructure with a selected plan, repository and build/start commands; auto-deploy defaults to yes."
+    },
+    "get_deploy": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Deployment metadata for a specified service and deploy."
+    },
+    "get_key_value": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Database configuration without connection credentials; upstream returns KeyValueDetail, not KeyValueConnectionInfo."
+    },
+    "get_metrics": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Filtered performance metrics; resourceId is an identifier, not a URL or executable expression."
+    },
+    "get_postgres": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Database configuration without password or connection URI; upstream returns PostgresDetail, not PostgresConnectionInfo."
+    },
+    "get_selected_workspace": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Reads only the current session fallback; does not report request-scoped workspaceId."
+    },
+    "get_service": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Service configuration; does not call the environment-variable or credential endpoints."
+    },
+    "list_deploys": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Paginated deployment history for a service."
+    },
+    "list_events": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Service event history, including plan_changed events; observing events cannot change a plan."
+    },
+    "list_key_value": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Database inventory without connection credentials."
+    },
+    "list_log_label_values": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Log label values; path and text are log filters, not filesystem paths or commands."
+    },
+    "list_logs": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Filtered service logs; path/text/resource are query filters, not execution or file-write primitives. Applications must avoid logging secrets."
+    },
+    "list_postgres_instances": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Database inventory without connection credentials."
+    },
+    "list_services": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Service inventory with optional previews; does not select a workspace."
+    },
+    "list_workspaces": {
+      "impact": "medium",
+      "rationale": "Despite its name, automatically sets the selected workspace when exactly one workspace is returned (pkg/owner/tools.go). This mutates the target fallback for subsequent calls."
+    },
+    "query_render_postgres": {
+      "impact": "high",
+      "rationale": "Accepts unrestricted SQL using database connection credentials obtained internally. Upstream begins a READ ONLY transaction, but SQL can still invoke functions with external effects (for example dblink where installed and authorized); READ ONLY is not a general SQL sandbox. Govern execution, not ordinary data sensitivity."
+    },
+    "select_workspace": {
+      "impact": "high",
+      "rationale": "Changes persisted/session workspace fallback and therefore the target of later calls lacking workspaceId. Govern re-targeting even though this tool is deprecated."
+    },
+    "trigger_deploy": {
+      "impact": "high",
+      "rationale": "Rebuilds and deploys service code, optionally clearing cache. Affects live service availability and code; recoverable rather than inherently irreversible."
+    },
+    "update_environment_variables": {
+      "impact": "critical",
+      "rationale": "Merges variables by default; replace=true deletes omitted variables, including secrets that may not be recoverable. Both modes trigger a deployment. Success returns deploy metadata, not the existing secret values."
+    }
+  }
+}

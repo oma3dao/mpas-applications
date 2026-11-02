@@ -1,0 +1,822 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:render-mcp-server",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:render-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2024-11-05"
+  },
+  "credentialRequirements": [
+    {
+      "type": "renderApiKey",
+      "expectedAuthority": [
+        "Render API access to the intended workspaces and resources"
+      ],
+      "description": "Render API key supplied only by the Credential Adapter as RENDER_API_KEY. The authority text describes access, not a Render OAuth scope. Do not place a real key in proposer configuration or discovery artifacts."
+    }
+  ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "oMmWYMW0bvudI9ipOAFjK0paPEvcd-NByTANSjZ1A_U"
+    },
+    "toolNames": [
+      "create_cron_job",
+      "create_key_value",
+      "create_postgres",
+      "create_static_site",
+      "create_web_service",
+      "get_deploy",
+      "get_key_value",
+      "get_metrics",
+      "get_postgres",
+      "get_selected_workspace",
+      "get_service",
+      "list_deploys",
+      "list_events",
+      "list_key_value",
+      "list_log_label_values",
+      "list_logs",
+      "list_postgres_instances",
+      "list_services",
+      "list_workspaces",
+      "query_render_postgres",
+      "select_workspace",
+      "trigger_deploy",
+      "update_environment_variables"
+    ]
+  },
+  "operations": {
+    "create_cron_job": {
+      "description": "Create a new cron job in your Render account. A cron job is a scheduled task that runs on a recurring schedule specified using cron syntax. Cron jobs are ideal for background tasks like data processing, cleanup operations, sending emails, or generating reports. By default, these services are automatically deployed when the specified branch is updated. This tool is currently limited to support only a subset of the cron job configuration parameters. Deploying prebuilt images from a container registry is not supported. To create a cron job without those limitations, please use the dashboard at: https://dashboard.render.com/create",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_cron_job"
+          },
+          "arguments": {
+            "properties": {
+              "autoDeploy": {
+                "default": "yes",
+                "description": "Whether to automatically deploy the cron job when the specified branch is updated. Defaults to 'yes'.",
+                "enum": [
+                  "yes",
+                  "no"
+                ],
+                "type": "string"
+              },
+              "branch": {
+                "description": "The repository branch to deploy. This branch will be deployed when you manually trigger deploys and when auto-deploy is enabled. If left empty, this will fall back to the default branch of the repository.",
+                "type": "string"
+              },
+              "buildCommand": {
+                "description": "The command used to build your cron job. For example, 'npm install' for Node.js or 'pip install -r requirements.txt' for Python. Required unless runtime is 'docker'.",
+                "type": "string"
+              },
+              "dockerCommand": {
+                "default": "",
+                "description": "Overrides the image's startup command. When omitted, uses the Dockerfile's ENTRYPOINT and CMD. An empty string also uses that default. Applies when runtime is 'docker'.",
+                "type": "string"
+              },
+              "dockerContext": {
+                "default": ".",
+                "description": "Build context directory, relative to the repository root. Defaults to '.'. Applies when runtime is 'docker'.",
+                "type": "string"
+              },
+              "dockerfilePath": {
+                "default": "./Dockerfile",
+                "description": "Path to the Dockerfile, relative to the repository root. Defaults to './Dockerfile'. Applies when runtime is 'docker'.",
+                "type": "string"
+              },
+              "envVars": {
+                "description": "Environment variables to set for your cron job. These are exposed during builds and at runtime.",
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "key": {
+                      "description": "The name of the environment variable",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "The value of the environment variable",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "value"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "name": {
+                "description": "A unique name for your cron job.",
+                "type": "string"
+              },
+              "plan": {
+                "default": "starter",
+                "description": "The pricing plan for your cron job. Different plans offer different levels of resources and features.",
+                "enum": [
+                  "free",
+                  "starter",
+                  "standard",
+                  "pro",
+                  "pro_plus",
+                  "pro_max",
+                  "pro_ultra",
+                  "0.5c-512mb",
+                  "1c-2g",
+                  "2c-4g",
+                  "2c-8g",
+                  "2c-16g",
+                  "4c-8g",
+                  "4c-16g",
+                  "4c-32g",
+                  "8c-16g",
+                  "8c-32g",
+                  "8c-64g",
+                  "12c-24g",
+                  "12c-48g",
+                  "12c-96g"
+                ],
+                "type": "string"
+              },
+              "region": {
+                "default": "oregon",
+                "description": "The geographic region where your cron job will be deployed. Defaults to Oregon.",
+                "enum": [
+                  "oregon",
+                  "frankfurt",
+                  "singapore",
+                  "ohio",
+                  "virginia"
+                ],
+                "type": "string"
+              },
+              "repo": {
+                "description": "The repository containing the source code for your cron job. Must be a valid Git URL that Render can clone and deploy. Do not include the branch in the repo string. You can instead supply a 'branch' parameter.",
+                "type": "string"
+              },
+              "runtime": {
+                "description": "The runtime environment for your cron job. This determines how your job is built and run.",
+                "enum": [
+                  "node",
+                  "python",
+                  "go",
+                  "rust",
+                  "ruby",
+                  "elixir",
+                  "docker"
+                ],
+                "type": "string"
+              },
+              "schedule": {
+                "description": "The cron schedule expression that determines when the job runs. Uses standard cron syntax with 5 fields: minute (0-59), hour (0-23), day of month (1-31), month (1-12), day of week (0-6, Sunday=0). Examples: '0 0 * * *' (daily at midnight), '*/15 * * * *' (every 15 minutes), '0 9 * * 1-5' (weekdays at 9am), '0 0 1 * *' (first day of each month at midnight). For natural language requests like 'every hour' or 'daily at 3pm', convert to cron syntax.",
+                "type": "string"
+              },
+              "startCommand": {
+                "description": "The command that runs when your cron job executes. For example, 'node scripts/cleanup.js' for Node.js or 'python scripts/process_data.py' for Python. Required unless runtime is 'docker'.",
+                "type": "string"
+              },
+              "workspaceId": {
+                "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "schedule",
+              "runtime"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_key_value": {
+      "description": "Create a new Key Value instance in your Render account",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_key_value"
+          },
+          "arguments": {
+            "properties": {
+              "maxmemoryPolicy": {
+                "description": "The eviction policy for the Key Value store",
+                "enum": [
+                  "noeviction",
+                  "allkeys_lfu",
+                  "allkeys_lru",
+                  "allkeys_random",
+                  "volatile_lfu",
+                  "volatile_lru",
+                  "volatile_random",
+                  "volatile_ttl"
+                ],
+                "type": "string"
+              },
+              "name": {
+                "description": "Name of the Key Value instance",
+                "type": "string"
+              },
+              "persistenceMode": {
+                "description": "The data persistence behavior for the Key Value store",
+                "enum": [
+                  "journal_snapshot",
+                  "snapshot",
+                  "off"
+                ],
+                "type": "string"
+              },
+              "plan": {
+                "default": "free",
+                "description": "Pricing plan for the Key Value instance",
+                "enum": [
+                  "free",
+                  "starter",
+                  "standard",
+                  "pro",
+                  "pro_plus",
+                  "256mb",
+                  "1g",
+                  "5g",
+                  "10g",
+                  "20g",
+                  "40g"
+                ],
+                "type": "string"
+              },
+              "region": {
+                "default": "oregon",
+                "description": "Region where the Key Value instance will be deployed",
+                "enum": [
+                  "oregon",
+                  "frankfurt",
+                  "singapore",
+                  "ohio",
+                  "virginia"
+                ],
+                "type": "string"
+              },
+              "workspaceId": {
+                "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_postgres": {
+      "description": "Create a new Postgres instance in your Render account",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_postgres"
+          },
+          "arguments": {
+            "properties": {
+              "diskSizeGb": {
+                "description": "Your database's capacity, in GB. You can increase storage at any time, but you can't decrease it. Specify 1 GB or any multiple of 5 GB.",
+                "type": "number"
+              },
+              "name": {
+                "description": "The name of the database as it will appear in the Render Dashboard",
+                "type": "string"
+              },
+              "plan": {
+                "default": "free",
+                "description": "Pricing plan for the database",
+                "enum": [
+                  "free",
+                  "basic_256mb",
+                  "basic_1gb",
+                  "basic_4gb",
+                  "pro_4gb",
+                  "pro_8gb",
+                  "pro_16gb",
+                  "pro_32gb",
+                  "pro_64gb",
+                  "pro_128gb",
+                  "pro_192gb",
+                  "pro_256gb",
+                  "pro_384gb",
+                  "pro_512gb",
+                  "accelerated_16gb",
+                  "accelerated_32gb",
+                  "accelerated_64gb",
+                  "accelerated_128gb",
+                  "accelerated_256gb",
+                  "accelerated_384gb",
+                  "accelerated_512gb",
+                  "accelerated_768gb",
+                  "accelerated_1024gb",
+                  "0.1c-256mb",
+                  "0.5c-1g",
+                  "1c-2g",
+                  "1c-4g",
+                  "2c-4g",
+                  "2c-8g",
+                  "2c-16g",
+                  "4c-16g",
+                  "4c-32g",
+                  "8c-32g",
+                  "8c-64g",
+                  "16c-64g",
+                  "16c-128g",
+                  "32c-128g",
+                  "32c-256g",
+                  "48c-192g",
+                  "48c-384g",
+                  "64c-256g",
+                  "64c-512g",
+                  "96c-384g",
+                  "96c-768g",
+                  "128c-512g",
+                  "128c-1024g"
+                ],
+                "type": "string"
+              },
+              "region": {
+                "description": "Region where the database will be deployed",
+                "enum": [
+                  "oregon",
+                  "frankfurt",
+                  "singapore",
+                  "ohio",
+                  "virginia"
+                ],
+                "type": "string"
+              },
+              "version": {
+                "default": 18,
+                "description": "PostgreSQL version to use (e.g., 14, 15)",
+                "maximum": 18,
+                "minimum": 13,
+                "type": "number"
+              },
+              "workspaceId": {
+                "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_static_site": {
+      "description": "Create a new static site in your Render account. Apps that consist entirely of statically served assets (commonly HTML, CSS, and JS). Static sites have a public onrender.com subdomain and are served over a global CDN. Create a static site if you're building with a framework like: Create React App, Vue.js, Gatsby, etc.This tool is currently limited to support only a subset of the static site configuration parameters.To create a static site without those limitations, please use the dashboard at: https://dashboard.render.com/static/new",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_static_site"
+          },
+          "arguments": {
+            "properties": {
+              "autoDeploy": {
+                "default": "yes",
+                "description": "Whether to automatically deploy the service when the specified branch is updated. Defaults to 'yes'.",
+                "enum": [
+                  "yes",
+                  "no"
+                ],
+                "type": "string"
+              },
+              "branch": {
+                "description": "The repository branch to deploy. This branch will be deployed when you manually trigger deploys and when auto-deploy is enabled. If left empty, this will fall back to the default branch of the repository.",
+                "type": "string"
+              },
+              "buildCommand": {
+                "description": "Render runs this command to build your app before each deploy. For example, 'yarn; yarn build' a React app.",
+                "type": "string"
+              },
+              "envVars": {
+                "description": "Environment variables to set for your service. These are exposed during builds and at runtime.",
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "key": {
+                      "description": "The name of the environment variable",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "The value of the environment variable",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "value"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "name": {
+                "description": "A unique name for your service. This will be used to generate the service's URL if it is public.",
+                "type": "string"
+              },
+              "publishPath": {
+                "default": "public",
+                "description": "The relative path of the directory containing built assets to publish. Examples: ./, ./build, dist and frontend/build. This is the directory that will be served to the public.",
+                "type": "string"
+              },
+              "repo": {
+                "description": "The repository containing the source code for your service. Must be a valid Git URL that Render can clone and deploy. Do not include the branch in the repo string. You can instead supply a 'branch' parameter.",
+                "type": "string"
+              },
+              "workspaceId": {
+                "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "buildCommand"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "create_web_service": {
+      "description": "Create a new web service in your Render account. A web service is a public-facing service that can be accessed by users on the internet. By default, these services are automatically deployed when the specified branch is updated and do not require a manual trigger of a deploy. The user should only be prompted to manually trigger a deploy if auto-deploy is disabled. This tool is currently limited to support only a subset of the web service configuration parameters. Deploying prebuilt images from a container registry is not supported. To create a service without those limitations, please use the dashboard at: https://dashboard.render.com/web/new",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "create_web_service"
+          },
+          "arguments": {
+            "properties": {
+              "autoDeploy": {
+                "default": "yes",
+                "description": "Whether to automatically deploy the service when the specified branch is updated. Defaults to 'yes'.",
+                "enum": [
+                  "yes",
+                  "no"
+                ],
+                "type": "string"
+              },
+              "branch": {
+                "description": "The repository branch to deploy. This branch will be deployed when you manually trigger deploys and when auto-deploy is enabled. If left empty, this will fall back to the default branch of the repository.",
+                "type": "string"
+              },
+              "buildCommand": {
+                "description": "The command used to build your service. For example, 'npm run build' for Node.js or 'pip install -r requirements.txt' for Python. Required unless runtime is 'docker'.",
+                "type": "string"
+              },
+              "dockerCommand": {
+                "default": "",
+                "description": "Overrides the image's startup command. When omitted, uses the Dockerfile's ENTRYPOINT and CMD. An empty string also uses that default. Applies when runtime is 'docker'.",
+                "type": "string"
+              },
+              "dockerContext": {
+                "default": ".",
+                "description": "Build context directory, relative to the repository root. Defaults to '.'. Applies when runtime is 'docker'.",
+                "type": "string"
+              },
+              "dockerfilePath": {
+                "default": "./Dockerfile",
+                "description": "Path to the Dockerfile, relative to the repository root. Defaults to './Dockerfile'. Applies when runtime is 'docker'.",
+                "type": "string"
+              },
+              "envVars": {
+                "description": "Environment variables to set for your service. These are exposed during builds and at runtime.",
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "key": {
+                      "description": "The name of the environment variable",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "The value of the environment variable",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "value"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "name": {
+                "description": "A unique name for your service. This will be used to generate the service's URL if it is public.",
+                "type": "string"
+              },
+              "plan": {
+                "default": "free",
+                "description": "The pricing plan for your service. Different plans offer different levels of resources and features.",
+                "enum": [
+                  "free",
+                  "starter",
+                  "standard",
+                  "pro",
+                  "pro_plus",
+                  "pro_max",
+                  "pro_ultra",
+                  "0.5c-512mb",
+                  "1c-2g",
+                  "2c-4g",
+                  "2c-8g",
+                  "2c-16g",
+                  "4c-8g",
+                  "4c-16g",
+                  "4c-32g",
+                  "8c-16g",
+                  "8c-32g",
+                  "8c-64g",
+                  "12c-24g",
+                  "12c-48g",
+                  "12c-96g"
+                ],
+                "type": "string"
+              },
+              "region": {
+                "default": "oregon",
+                "description": "The geographic region where your service will be deployed. Defaults to Oregon. Choose the region closest to your users for best performance.",
+                "enum": [
+                  "oregon",
+                  "frankfurt",
+                  "singapore",
+                  "ohio",
+                  "virginia"
+                ],
+                "type": "string"
+              },
+              "repo": {
+                "description": "The repository containing the source code for your service. Must be a valid Git URL that Render can clone and deploy. Do not include the branch in the repo string. You can instead supply a 'branch' parameter.",
+                "type": "string"
+              },
+              "runtime": {
+                "description": "The runtime environment for your service. This determines how your service is built and run.",
+                "enum": [
+                  "node",
+                  "python",
+                  "go",
+                  "rust",
+                  "ruby",
+                  "elixir",
+                  "docker"
+                ],
+                "type": "string"
+              },
+              "startCommand": {
+                "description": "The command used to start your service. For example, 'npm start' for Node.js or 'gunicorn app:app' for Python. Required unless runtime is 'docker'.",
+                "type": "string"
+              },
+              "workspaceId": {
+                "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "runtime"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "list_workspaces": {
+      "description": "List the workspaces that you have access to",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "list_workspaces"
+          },
+          "arguments": {
+            "properties": {},
+            "required": [],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "query_render_postgres": {
+      "description": "Run a read-only SQL query against a Render-hosted Postgres database. This tool creates a new connection for each query and closes it after the query completes.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "query_render_postgres"
+          },
+          "arguments": {
+            "properties": {
+              "postgresId": {
+                "description": "The ID of the Postgres instance to query",
+                "type": "string"
+              },
+              "sql": {
+                "description": "The SQL query to run. Note that the query will be wrapped in a read-only transaction.",
+                "type": "string"
+              },
+              "workspaceId": {
+                "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "postgresId",
+              "sql"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "select_workspace": {
+      "description": "Deprecated: this tool is scheduled for removal; pass the confirmed workspaceId directly on each tool call instead. Select a workspace for clients that rely on MCP session state. This tool should only be used after explicitly asking the user to select one, it should not be invoked as part of an automated process. Having the wrong workspace selected can lead to destructive actions being performed on unintended resources.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "select_workspace"
+          },
+          "arguments": {
+            "properties": {
+              "ownerID": {
+                "description": "The ID of the workspace to select",
+                "type": "string"
+              }
+            },
+            "required": [
+              "ownerID"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "trigger_deploy": {
+      "description": "Trigger a new deploy for a service. Services with autoDeploy enabled deploy automatically when their branch or image is updated, so do NOT use this tool after pushing code to such a service \u2014 the push already triggers a deploy. Use it only when a deploy won't happen automatically: services with autoDeploy disabled, redeploying without a code change, or redeploying with a cleared build cache.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "trigger_deploy"
+          },
+          "arguments": {
+            "properties": {
+              "clearCache": {
+                "default": false,
+                "description": "Whether to clear the build cache before deploying. Defaults to false.",
+                "type": "boolean"
+              },
+              "serviceId": {
+                "description": "The ID of the service to trigger a deploy for",
+                "type": "string"
+              },
+              "workspaceId": {
+                "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "serviceId"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "update_environment_variables": {
+      "description": "Update environment variables for a service. By default, environment variables passed in will be merged with the service's existing environment variables. This makes it safe to update environment variableswithout pulling the existing ones into the MCP host's context. To replace all existing environment variables, set the 'replace' parameter to 'true'.",
+      "impact": "critical",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "update_environment_variables"
+          },
+          "arguments": {
+            "properties": {
+              "envVars": {
+                "description": "The list of environment variables to update or set for the service.",
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "key": {
+                      "description": "The name of the environment variable",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "The value of the environment variable",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "value"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "replace": {
+                "default": false,
+                "description": "Whether to replace all existing environment variables with the provided list, or merge with the existing ones. Defaults to false.",
+                "type": "boolean"
+              },
+              "serviceId": {
+                "description": "The ID of the service to update",
+                "type": "string"
+              },
+              "workspaceId": {
+                "description": "The ID of the Render workspace to use. Reuse the workspaceId the user confirmed from list_workspaces.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "serviceId",
+              "envVars"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

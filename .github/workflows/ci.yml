@@ -66,6 +66,7 @@ jobs:
           - planetscale
           - postgres
           - railway
+          - render
           - slack
           - stripe
           - supabase
@@ -92,3 +93,7 @@ jobs:
 
       - name: Probe Tasks and conventional MCP surfaces
         run: node scripts/probe-bridge-protocols.mjs applications/${{ matrix.application }}
+
+      - name: Test Render approval policy
+        if: matrix.application == 'render'
+        run: node scripts/test-render-policy.mjs
