@@ -16,13 +16,11 @@ an observation, not a plan mutation. Do not substitute direct API calls or add
 invented tools. If upstream adds an update tool, rediscover, review its schema
 and policy, regenerate the bridge, and refresh the artifact DID before rollout.
 
-The creation tools `create_web_service`, `create_cron_job`, `create_postgres`
-and `create_key_value` accept `plan`; all are governed even for free or omitted
-plans. Web service/Postgres/Key Value default to `free`; cron defaults to
-`starter`. The cron schema also advertises `free`, but its handler validates
-paid plans: schema acceptance alone does not guarantee provider acceptance.
-Static sites have no `plan` argument. See the captured schemas for exact enums;
-this bridge preserves rather than fixes upstream inconsistencies.
+`create_web_service`, `create_cron_job`, `create_postgres`, and
+`create_key_value` accept a `plan` argument. Resource creation is governed for
+every value, including when `plan` is omitted. See the captured tool schemas
+for the enum values and defaults in this snapshot. No plan-update tool is
+registered in this snapshot.
 
 Blueprint code exists in the pinned source but is not registered by
 `cmd/server.go`, so no Blueprint tools are advertised either. The independently
