@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Target the official hosted endpoint `https://mcp.render.com/mcp` via pinned `mcp-remote@0.1.38`, replacing the adapter-side Render binary and Go build requirement.
+- Record authenticated operator discovery at `2026-11-02T22:14:06.531Z` using generator commit `4d4cd8d10d926ee060858dd8ef27eea5542f831d`. Operator-reported byte-identical schemas retain the existing generated runtime, plugin and tool-surface hash.
+- Keep credentials adapter-side; hosted application execution and end-to-end MPAS validation remain untested.
+
 ## 0.1.0 — 2026-11-02
 
 - Generated with the MPAS repository's bridge generator (commit `96bc20d8df9bd62e7901ce69c8194c17de18ad4f`), wrapping unmodified official Render MCP source at `2e131d6d8aae723542957c5c0f537c61cbfb4f36`.

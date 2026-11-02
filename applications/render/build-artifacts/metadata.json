@@ -7,10 +7,15 @@
   },
   "protocolVersion": "2024-11-05",
   "upstreamCommand": [
-    "render-mcp-server"
+    "npx",
+    "-y",
+    "mcp-remote@0.1.38",
+    "https://mcp.render.com/mcp",
+    "--header",
+    "Authorization: Bearer ${RENDER_API_KEY}"
   ],
   "generatorVersion": "0.2.0",
-  "capturedAt": "2026-11-02T18:04:22.180Z",
-  "generatorCommit": "96bc20d8df9bd62e7901ce69c8194c17de18ad4f",
-  "discoveryNotes": "Official upstream compiled from pinned source. initialize/tools/list only, with a non-secret dummy API key and RENDER_HOST=127.0.0.1:1. No Render account calls or real credentials used. Launch path normalized to the reproducible installed binary name."
+  "capturedAt": "2026-11-02T22:14:06.531Z",
+  "generatorCommit": "4d4cd8d10d926ee060858dd8ef27eea5542f831d",
+  "discoveryNotes": "Authenticated hosted initialize/tools/list capture performed by Cursor in the adapter account, reported by Alftom. Generator source tree clean. Operator reports tools-list.snapshot.json and bridge/src/tools.json byte-for-byte identical to the existing application; definitions and governance retained unchanged. Credentials remained in the adapter account. No application tool calls or end-to-end MPAS execution tested."
 }

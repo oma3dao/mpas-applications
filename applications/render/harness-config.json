@@ -2,19 +2,27 @@
   "version": "1",
   "type": "HarnessConfig",
   "upstream": {
-    "command": "render-mcp-server",
-    "args": [],
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-remote@0.1.38",
+      "https://mcp.render.com/mcp",
+      "--header",
+      "Authorization: Bearer ${RENDER_API_KEY}"
+    ],
     "env": {
       "RENDER_API_KEY": "{{credential:renderApiKey}}"
     },
     "distribution": {
-      "type": "source",
-      "repository": "https://github.com/render-oss/render-mcp-server",
-      "commit": "2e131d6d8aae723542957c5c0f537c61cbfb4f36",
-      "goVersion": "1.27.3",
-      "build": "go build -trimpath -o render-mcp-server .",
+      "type": "remote",
+      "endpoint": "https://mcp.render.com/mcp",
+      "client": {
+        "type": "npm",
+        "package": "mcp-remote",
+        "version": "0.1.38"
+      },
       "versionMatchesServerInfo": false,
-      "reconciliation": "Official source pinned by commit, compiled without version ldflags; upstream reports dev. See README for checkout/build and discovery reproduction. No vendor code is changed."
+      "reconciliation": "Hosted server reports dev and updates independently; its implementation is not client-pinnable. Pin mcp-remote 0.1.38 and review hosted schema changes. Authenticated operator capture at 2026-11-02T22:14:06.531Z reported byte-identical tool definitions; see metadata.json."
     }
   },
   "intentionalDeviations": {

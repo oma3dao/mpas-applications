@@ -1,17 +1,27 @@
 # Render
 
-Generated MPAS bridge around the [official Render MCP server](https://github.com/render-oss/render-mcp-server), **not** a Render API implementation. See the [shared operating guide](../../README.md#operating-a-generated-bridge) for MPAS setup and credential custody.
+Generated MPAS bridge targeting the [official hosted Render MCP server](https://render.com/docs/mcp-server) at `https://mcp.render.com/mcp`, **not** a Render API implementation. See the [shared operating guide](../../README.md#operating-a-generated-bridge) for MPAS setup and credential custody.
 
 ## Upstream and schema evidence
 
-Captured 23 tools from official source commit
-`2e131d6d8aae723542957c5c0f537c61cbfb4f36` on 2026-11-02.
-`bridge/src/tools.json` and `build-artifacts/tools-list.snapshot.json` preserve the complete discovered definitions. Tool names, arguments, descriptions and annotations are unchanged. The generated bridge uses SDK `0.1.0-alpha.15` and negotiates Tasks or conventional MCP compatibility mode.
+The adapter operator captured 23 tools from `https://mcp.render.com/mcp` at
+`2026-11-02T22:14:06.531Z`, using bridge-generator `0.2.0` from MPAS commit
+`4d4cd8d10d926ee060858dd8ef27eea5542f831d` (clean generator source).
+The authenticated capture negotiated MCP `2024-11-05`; Render reported
+`render-mcp-server` version `dev`. This is not an implementation version pin.
+
+The operator reported `bridge/src/tools.json` and
+`build-artifacts/tools-list.snapshot.json` byte-for-byte identical to the prior
+local capture. Those definitions, generated runtime and 10 governed/13
+pass-through classifications are retained unchanged. The bridge uses SDK
+`0.1.0-alpha.15` and negotiates Tasks or conventional MCP compatibility mode.
+The original implementation review used official source commit
+`2e131d6d8aae723542957c5c0f537c61cbfb4f36`; matching schemas do not establish
+that the hosted implementation runs that commit or has identical internals.
 
 **Service-plan updates are not available in this snapshot.** There is no
 `update_web_service`, `update_static_site`, or plan-update tool in the actual
-`tools/list` response. The upstream README mentions update helpers, but
-`pkg/service/tools.go` does not register them. A `plan_changed` event filter is
+`tools/list` response. A `plan_changed` event filter is
 an observation, not a plan mutation. Do not substitute direct API calls or add
 invented tools. If upstream adds an update tool, rediscover, review its schema
 and policy, regenerate the bridge, and refresh the artifact DID before rollout.
@@ -22,50 +32,37 @@ every value, including when `plan` is omitted. See the captured tool schemas
 for the enum values and defaults in this snapshot. No plan-update tool is
 registered in this snapshot.
 
-Blueprint code exists in the pinned source but is not registered by
-`cmd/server.go`, so no Blueprint tools are advertised either. The independently
-updated [hosted server](https://render.com/docs/mcp-server) is not the pinned
-execution target, and its tool surface is not claimed to match this capture.
+No Blueprint tools are advertised in the captured hosted surface either.
 
-## Reproduce the official upstream and generation
+## Capture the hosted upstream and regenerate
 
-Use Go 1.27.3, Git and Node 22+. Build the unmodified official source:
+No Render binary, Go toolchain, or provider container is required on the
+adapter account. The adapter launches the pinned `mcp-remote@0.1.38` transport
+client against `https://mcp.render.com/mcp`.
 
-```sh
-git clone https://github.com/render-oss/render-mcp-server.git
-cd render-mcp-server
-git checkout --detach 2e131d6d8aae723542957c5c0f537c61cbfb4f36
-go build -trimpath -o render-mcp-server .
-```
-
-Install that binary as `render-mcp-server` on the adapter's controlled PATH.
-Do not replace it with the latest release, a floating container tag, or a
-hosted endpoint without recapturing and reviewing the surface. With no version
-linker override it reports `dev`; the source commit, not that string, is the
-version pin. Source and dependencies remain upstream-owned; no binaries or
-vendor implementation are included here.
-
-Build `bridge-generator` from MPAS commit
-`96bc20d8df9bd62e7901ce69c8194c17de18ad4f`. With the built official binary on PATH,
-run from the MPAS repository:
+Run discovery inside the credential-holding operator environment with
+`RENDER_API_KEY` already supplied by its secret store. Never send the key to
+an agent or place it in a committed file. From the MPAS repository, build the
+bridge generator at the capture revision above (or a newly reviewed revision)
+and capture into a separate directory:
 
 ```sh
 npm ci --prefix bridge-generator
 npm run build --prefix bridge-generator
-RENDER_API_KEY=mpas-schema-discovery-not-a-real-key RENDER_HOST=127.0.0.1:1 \
-  node bridge-generator/dist/index.js generate \
-  --app render --out ../mpas-applications/applications \
+node bridge-generator/dist/index.js generate \
+  --app render --out /tmp/render-hosted-discovery \
   --application-did did:web:wivity.com:applications:render-mcp-server \
-  -- render-mcp-server
+  -- npx -y mcp-remote@0.1.38 https://mcp.render.com/mcp \
+  --header 'Authorization: Bearer ${RENDER_API_KEY}'
 ```
 
-Only `initialize` and `tools/list` are needed. The dummy string satisfies
-upstream's startup check; the unreachable API host prevents real Render API
-access. Do not use either discovery setting for live execution. Preserve the
-reviewed identity, credential requirements and classification, normalize the
-command to the installed binary, restore the distribution metadata and registry
-pointers, and recompute the artifact DID after regeneration. `metadata.json`
-records the generator commit and capture conditions.
+Keep the header single-quoted: `mcp-remote` expands the variable at runtime,
+so the generator records the variable reference, not a literal credential.
+Discovery performs `initialize` and `tools/list`, not resource mutations.
+Review the resulting tool snapshot and metadata, compare every tool/schema
+with the previous capture, then regenerate the application with reviewed
+governance membership and refresh its artifact DID. Hosted versions are not
+client-pinnable; a local source checkout is not evidence of hosted parity.
 
 ## Render credentials and targeting
 
@@ -73,13 +70,14 @@ An adapter operator obtains a Render API key from the Render Dashboard's
 **Account Settings → API Keys**, following [Render API authentication](https://render.com/docs/api#1-create-an-api-key).
 Store it under the adapter credential handle `renderApiKey` and resolve it as
 `RENDER_API_KEY`, as in `harness-config.json`. The harness contains a handle,
-not a credential. Render API access is determined by the key/account's actual
+not a credential; the transport sends it as a Bearer authorization header.
+Render API access is determined by the key/account's actual
 permissions; `expectedAuthority` is descriptive, not an invented OAuth scope.
 
 Keep the key and any Render CLI login in the adapter trust domain. Do not
 register the official server directly in the proposer. The adapter owns the
-binary, environment and config path; proposers must not control `RENDER_HOST`
-or the upstream executable.
+transport client, endpoint, authentication header and environment. Proposers
+must not control the upstream URL or authentication settings.
 
 Prefer an explicit, confirmed `workspaceId` on every resource call. It is
 optional upstream; absent values use the selected workspace fallback. The
@@ -93,6 +91,9 @@ to `workspaceId` by the wrapper. Use provider-side access isolation for tenant
 boundaries; workspace hints alone are not an authorization boundary.
 
 ## Approval policy
+
+The side-effect notes below retain the original schema/source review; the
+hosted capture validated tool definitions, not live execution behavior.
 
 `plugin.json` identifies the 10 governed operations. The operator's adapter
 policy determines the required independent approvals; plugin impact labels
@@ -118,7 +119,8 @@ policy template or adapter deployment configuration.
   arbitrary SQL, including function calls; read-only transactions do not
   sandbox external function effects. This executable surface remains governed.
   Inspect SQL and database identity. Provider IP allowlists must permit the
-  adapter's connection; do not broadly open database access for this bridge.
+  hosted server's database connection; do not broadly open database access for
+  this bridge. Verify the provider's hosted-network requirements before SQL use.
 
 The 13 remaining getters/listing tools are pass-through reads, with individual
 rationales in `build-artifacts/classification.json`. Postgres/Key Value getters
@@ -136,9 +138,15 @@ python3 scripts/test_validate_applications.py
 node scripts/probe-bridge-protocols.mjs applications/render
 ```
 
-The package is locally validated, not live-deployed. No real API key, account
-mutation, paid resource, hosted-server capture or live approval/execution test
-was used. Operator configuration and credential binding remain deployment work.
+Authenticated hosted discovery was performed by Cursor in the adapter account;
+its metadata and byte-comparison report were supplied by the operator. Local
+build/artifact/protocol tests do not authenticate to Render. No application
+tool calls, paid-resource mutations or end-to-end MPAS approval/execution test
+were performed for this migration. Operator installation and credential binding
+remain deployment work.
+
+The pinned npm package is `mcp-remote@0.1.38`; its bundled client version string
+is `0.1.37`. Record the package pin separately from that reported client string.
 
 Dependency audit: the generator pins `@modelcontextprotocol/server@2.0.0`.
 `npm audit` reports high-severity HTTP-server advisories for that dependency
