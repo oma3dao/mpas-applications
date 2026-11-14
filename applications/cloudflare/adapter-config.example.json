@@ -1,0 +1,1842 @@
+{
+  "version": "1",
+  "type": "MpasAdapterDeploymentConfig",
+  "name": "cloudflare-dns-pages",
+  "target": {
+    "applicationDid": "did:web:wivity.com:applications:cloudflare-mcp-server"
+  },
+  "plugin": {
+    "pluginDid": "did:web:wivity.com:plugins:cloudflare-mcp-server",
+    "pluginVersion": "0.1.0",
+    "artifactDid": "did:artifact:bafkreifil5enhostwwyn2x6nkkeebwhymezszptbimlga4n2cirbru3ooy",
+    "path": "/absolute/path/to/mpas-applications/applications/cloudflare/plugin.json"
+  },
+  "passThrough": "deny",
+  "credentialBindings": [
+    {
+      "credentialHandle": "cloudflareApiToken",
+      "provider": "file"
+    }
+  ],
+  "executionTarget": {
+    "type": "mcp.stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-remote@0.1.38",
+      "https://mcp.cloudflare.com/mcp?codemode=false",
+      "--header",
+      "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}"
+    ],
+    "env": {
+      "CLOUDFLARE_API_TOKEN": "{{credential:cloudflareApiToken}}"
+    }
+  },
+  "policy": {
+    "version": "1",
+    "type": "MpasApplicationPolicy",
+    "policyProfileUrl": "https://github.com/oma3dao/mpas/blob/main/specs/mpas-profile-policy-json.md",
+    "applicationDid": "did:web:wivity.com:applications:cloudflare-mcp-server",
+    "executionProfile": {
+      "id": "did:web:profiles.oma3.org:mcp",
+      "format": "mcp.toolsCall"
+    },
+    "defaultRequirement": {
+      "type": "threshold",
+      "threshold": 1,
+      "eligibleSignerGroup": "approvers",
+      "decision": "approve"
+    },
+    "signerGroups": {
+      "all": [
+        "REPLACE_WITH_PROPOSER_DID",
+        "REPLACE_WITH_APPROVER_DID"
+      ],
+      "proposers": [
+        "REPLACE_WITH_PROPOSER_DID"
+      ],
+      "approvers": [
+        "REPLACE_WITH_APPROVER_DID"
+      ]
+    },
+    "policies": {
+      "accounts_get": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        }
+      ],
+      "dns_records_create": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/name",
+                "op": "neq",
+                "value": "REPLACE_WITH_DNS_NAME"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/type",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/type",
+                "op": "notIn",
+                "value": [
+                  "A",
+                  "AAAA",
+                  "CNAME",
+                  "TXT"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "dns_records_delete": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/dns_record_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/dns_record_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_DNS_RECORD_ID"
+              }
+            ]
+          }
+        }
+      ],
+      "dns_records_edit": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/name",
+                "op": "neq",
+                "value": "REPLACE_WITH_DNS_NAME"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/type",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/type",
+                "op": "notIn",
+                "value": [
+                  "A",
+                  "AAAA",
+                  "CNAME",
+                  "TXT"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/dns_record_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/dns_record_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_DNS_RECORD_ID"
+              }
+            ]
+          }
+        }
+      ],
+      "dns_records_get": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/dns_record_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/dns_record_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_DNS_RECORD_ID"
+              }
+            ]
+          }
+        }
+      ],
+      "dns_records_list": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        }
+      ],
+      "dns_records_update": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/name",
+                "op": "neq",
+                "value": "REPLACE_WITH_DNS_NAME"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/type",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/type",
+                "op": "notIn",
+                "value": [
+                  "A",
+                  "AAAA",
+                  "CNAME",
+                  "TXT"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/dns_record_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/dns_record_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_DNS_RECORD_ID"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_create": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/deployment_configs",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/build_config/web_analytics_token",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/production_branch",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/production_branch",
+                "op": "neq",
+                "value": "REPLACE_WITH_PRODUCTION_BRANCH"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_delete": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_deployments_create": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/branch",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/branch",
+                "op": "neq",
+                "value": "REPLACE_WITH_PRODUCTION_BRANCH"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/_worker.js",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/_worker.bundle",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/functions-filepath-routing-config.json",
+                "op": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_deployments_delete": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_deployments_get": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_deployments_list": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_deployments_retry": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_deployments_rollback": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_domains_create": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/name",
+                "op": "neq",
+                "value": "REPLACE_WITH_CUSTOM_DOMAIN"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_domains_delete": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/domain_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/domain_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_CUSTOM_DOMAIN"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_domains_get": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/domain_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/domain_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_CUSTOM_DOMAIN"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_domains_list": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_domains_validation_retry": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/domain_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/domain_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_CUSTOM_DOMAIN"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_edit": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/deployment_configs",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/build_config/web_analytics_token",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/name",
+                "op": "exists"
+              },
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_get": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_list": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_source_connect": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_source_disconnect": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/project_name",
+                "op": "neq",
+                "value": "REPLACE_WITH_PAGES_PROJECT"
+              }
+            ]
+          }
+        }
+      ],
+      "zones_get": [
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject calls outside the configured explicit scope.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        }
+      ],
+      "execute": [
+        {
+          "description": "Generic code execution is forbidden.",
+          "reject": true
+        }
+      ]
+    }
+  },
+  "signerKeys": []
+}

@@ -1,0 +1,27 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "cloudflare-api",
+    "version": "0.1.0"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "npx",
+    "-y",
+    "mcp-remote@0.1.38",
+    "https://mcp.cloudflare.com/mcp?codemode=false",
+    "--header",
+    "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}"
+  ],
+  "generatorVersion": "0.2.0",
+  "capturedAt": "2026-11-14T17:11:01.217Z",
+  "generatorCommit": "c7ffdd9a635dc66539fc74252a9641255029f7a6",
+  "sourceToolSurface": {
+    "alg": "sha-256",
+    "value": "7v5PpBBCS17UGZcRCjj_xp75d_OpAMPI1UDX_DEPegY"
+  },
+  "sourceToolCount": 3042,
+  "selectedToolCount": 26,
+  "discoveryNotes": "Operator-supplied authenticated hosted capture. Offline generator replay uses the explicit tool-selection.json subset, preserving full selected Tool objects. The committed snapshot is the selected surface, not the full hosted list. Generator revision follows the operator capture handoff; no fresh live discovery or tools/call was performed locally."
+}

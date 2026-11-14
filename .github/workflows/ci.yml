@@ -80,3 +80,9 @@ jobs:
 
       - name: Probe Tasks and conventional MCP surfaces
         run: node scripts/probe-bridge-protocols.mjs applications/${{ matrix.application }}
+
+      - name: Check Cloudflare restricted surface and scoped policy
+        if: matrix.application == 'cloudflare'
+        run: |
+          node applications/cloudflare/scripts/test-policy.mjs
+          node scripts/probe-bridge-protocols.mjs applications/cloudflare applications/cloudflare/tool-selection.json

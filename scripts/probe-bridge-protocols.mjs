@@ -2,7 +2,7 @@
 
 import { spawn } from "node:child_process";
 import { generateKeyPairSync } from "node:crypto";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, writeFile, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 
@@ -60,6 +60,21 @@ async function main() {
         JSON.stringify(compatibilityTools.filter((name) => name !== WAIT_TOOL)) === JSON.stringify(tasksTools),
         "Application tool names differ between protocol surfaces",
       );
+
+      // Optional restricted-surface contract: test exact exposure and rejection in
+      // both transports, not just tools/list hiding. No provider is configured.
+      if (process.argv[3]) {
+        const selection = JSON.parse(await readFile(resolve(process.argv[3]), "utf8"));
+        assert(JSON.stringify([...tasksTools].sort()) === JSON.stringify(Object.keys(selection.tools).sort()), "Unexpected restricted tool surface");
+        for (const client of [tasks, compatibility]) {
+          for (const name of ["execute", "dns_records_batch", "accounts_tokens_create", "workers_scripts_delete"]) {
+            let outcome;
+            try { outcome = await client.request("tools/call", { name, arguments: {}, ...(client === tasks ? { _meta: { "io.modelcontextprotocol/protocolVersion": "2026-07-28", "io.modelcontextprotocol/clientCapabilities": { extensions: { "io.modelcontextprotocol/tasks": {}, "org.oma3/mpas": { version: "3" } } } } } : {}) }); }
+            catch (error) { outcome = { error: error.message, code: error.code, data: error.data, ...error }; }
+            assert(/Unknown tool/.test(JSON.stringify(outcome)), `Excluded ${name} did not fail as an unknown tool: ${JSON.stringify(outcome)}`);
+          }
+        }
+      }
 
       process.stdout.write(
         `${JSON.stringify({

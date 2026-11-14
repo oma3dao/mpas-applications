@@ -1,0 +1,96 @@
+{
+  "version": "1",
+  "type": "HarnessConfig",
+  "upstream": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-remote@0.1.38",
+      "https://mcp.cloudflare.com/mcp?codemode=false",
+      "--header",
+      "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}"
+    ],
+    "env": {
+      "CLOUDFLARE_API_TOKEN": "{{credential:cloudflareApiToken}}"
+    },
+    "distribution": {
+      "type": "remote",
+      "endpoint": "https://mcp.cloudflare.com/mcp?codemode=false",
+      "client": {
+        "type": "npm",
+        "package": "mcp-remote",
+        "version": "0.1.38"
+      },
+      "versionMatchesServerInfo": false,
+      "reconciliation": "Hosted implementation updates independently. This application intentionally exposes a reviewed subset; metadata records original and selected surface hashes."
+    }
+  },
+  "intentionalDeviations": {
+    "renamedTools": {},
+    "wrappedSchemas": [],
+    "modifiedDescriptions": [],
+    "addedTools": [],
+    "outputSchemaUnions": [],
+    "extensionCapabilities": [
+      "io.modelcontextprotocol/tasks",
+      "org.oma3/mpas"
+    ],
+    "protocolModes": {
+      "tasks": {
+        "handshake": "server/discover",
+        "addedTools": [],
+        "modifiedDescriptions": [],
+        "outputSchemaUnions": [],
+        "extensionCapabilities": [
+          "io.modelcontextprotocol/tasks",
+          "org.oma3/mpas"
+        ]
+      },
+      "compatibility": {
+        "handshake": "initialize",
+        "addedTools": [
+          "mpas_wait_for_action_result"
+        ],
+        "modifiedDescriptions": [
+          "application-tools"
+        ],
+        "outputSchemaUnions": [
+          "application-tools-with-output-schema"
+        ],
+        "extensionCapabilities": []
+      }
+    },
+    "note": "The bridge auto-detects MCP Tasks or the conventional MPAS wait-tool compatibility surface. Tasks mode preserves upstream tool definitions. This is a selected subset, not the complete hosted inventory. Selected upstream Tool objects are unchanged; omitted operations are not pass-through.",
+    "selectedToolNames": [
+      "accounts_get",
+      "dns_records_create",
+      "dns_records_delete",
+      "dns_records_edit",
+      "dns_records_get",
+      "dns_records_list",
+      "dns_records_update",
+      "pages_create",
+      "pages_delete",
+      "pages_deployments_create",
+      "pages_deployments_delete",
+      "pages_deployments_get",
+      "pages_deployments_list",
+      "pages_deployments_retry",
+      "pages_deployments_rollback",
+      "pages_domains_create",
+      "pages_domains_delete",
+      "pages_domains_get",
+      "pages_domains_list",
+      "pages_domains_validation_retry",
+      "pages_edit",
+      "pages_get",
+      "pages_list",
+      "pages_source_connect",
+      "pages_source_disconnect",
+      "zones_get"
+    ],
+    "pluginSchemaRestrictions": [
+      "DNS create/edit/update accept only explicit name/type/content for A, AAAA, CNAME, TXT; optional ttl/proxied/comment/tags; reject other fields. Upstream tool definitions stay unchanged."
+    ]
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "accounts_get": {
+      "impact": "medium",
+      "rationale": "Governed: Read account metadata; explicit account required by deployment policy."
+    },
+    "dns_records_create": {
+      "impact": "high",
+      "rationale": "Governed: Create a single DNS record, affecting traffic or domain verification."
+    },
+    "dns_records_delete": {
+      "impact": "critical",
+      "rationale": "Governed: Delete a single DNS record by explicit zone and record ID; verify record identity before approval."
+    },
+    "dns_records_edit": {
+      "impact": "high",
+      "rationale": "Governed: PATCH a DNS record; omitted fields may retain existing values."
+    },
+    "dns_records_get": {
+      "impact": "medium",
+      "rationale": "Governed: Read a single DNS record; content may include sensitive verification values."
+    },
+    "dns_records_list": {
+      "impact": "medium",
+      "rationale": "Governed: Read records in an explicit zone; query filters and pagination affect visibility."
+    },
+    "dns_records_update": {
+      "impact": "high",
+      "rationale": "Governed: PUT a DNS record; review full replacement rather than assuming PATCH semantics."
+    },
+    "pages_create": {
+      "impact": "high",
+      "rationale": "Governed: Create a Pages project; build commands, source integration and deployment configuration can enable executable automation."
+    },
+    "pages_delete": {
+      "impact": "critical",
+      "rationale": "Governed: Delete a project and its deployments."
+    },
+    "pages_deployments_create": {
+      "impact": "high",
+      "rationale": "Governed: Create a Git-branch or direct-manifest deployment; branch uses HEAD, not necessarily commit_hash as a pinned revision. Body may contain executable Worker content."
+    },
+    "pages_deployments_delete": {
+      "impact": "critical",
+      "rationale": "Governed: Delete a deployment, potentially affecting available rollback targets."
+    },
+    "pages_deployments_get": {
+      "impact": "medium",
+      "rationale": "Governed: Read deployment status/configuration; results may contain project environment metadata."
+    },
+    "pages_deployments_list": {
+      "impact": "medium",
+      "rationale": "Governed: Read deployment history and configuration metadata."
+    },
+    "pages_deployments_retry": {
+      "impact": "high",
+      "rationale": "Governed: Retry a deployment; executes build/deploy automation again."
+    },
+    "pages_deployments_rollback": {
+      "impact": "high",
+      "rationale": "Governed: Change production to a previous deployment."
+    },
+    "pages_domains_create": {
+      "impact": "high",
+      "rationale": "Governed: Attach a custom hostname to a Pages project."
+    },
+    "pages_domains_delete": {
+      "impact": "critical",
+      "rationale": "Governed: Remove a custom hostname from a Pages project."
+    },
+    "pages_domains_get": {
+      "impact": "medium",
+      "rationale": "Governed: Read domain configuration and validation status."
+    },
+    "pages_domains_list": {
+      "impact": "medium",
+      "rationale": "Governed: List custom domains for an explicit project."
+    },
+    "pages_domains_validation_retry": {
+      "impact": "high",
+      "rationale": "Governed: Retry domain validation; an operational action, not a pure getter."
+    },
+    "pages_edit": {
+      "impact": "high",
+      "rationale": "Governed: Change build/source/deployment settings; setting an environment variable key to null deletes it."
+    },
+    "pages_get": {
+      "impact": "medium",
+      "rationale": "Governed: Read project configuration; environment values may be sensitive, so retain governance."
+    },
+    "pages_list": {
+      "impact": "medium",
+      "rationale": "Governed: List projects and configuration in an explicit account; retain governance for sensitive metadata."
+    },
+    "pages_source_connect": {
+      "impact": "high",
+      "rationale": "Governed: Connect a preauthorized Git provider repository and configure automatic deployments and PR comments."
+    },
+    "pages_source_disconnect": {
+      "impact": "high",
+      "rationale": "Governed: Disconnect the repository and stop Git-based deployment integration."
+    },
+    "zones_get": {
+      "impact": "medium",
+      "rationale": "Governed: Read metadata of an explicit zone. Zone creation, deletion and global settings are excluded."
+    }
+  }
+}
