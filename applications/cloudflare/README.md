@@ -47,68 +47,89 @@ ungoverned tools; `adapter-config.example.json` additionally sets
 Do not add policy-only allowances for omitted tools. Operator configuration is
 trusted: a different operator policy can change these protections.
 
-The example is a **template, not an installed configuration**. It provides:
+The example remains a **template, not an installed configuration**. The current
+adapter token is the broad **read token used for discovery**, not a production
+zone-scoped credential. No policy, credential or Cloudflare resource is changed
+by publishing these files. The operator must provision production account/zone
+permissions separately and keep token-management authority unavailable.
 
-- One independent approver for every selected call; no automatic read exemption.
-- Explicit account and zone IDs (no upstream single-account fallback).
-- Explicit project/domain targeting; exact DNS name and existing record ID.
-- DNS writes limited to A, AAAA, CNAME and TXT.
-- Rejection of Pages deployment configuration/environment changes and analytics
-  token submission; deployment creation rejects Worker/function file fields.
-- An explicit production branch for project/deployment creation.
+### Reads, writes and scope
 
-Replace all `REPLACE_WITH_*` values, use distinct proposer/approver DIDs, and
-populate `signerKeys` under operator control. Configure additional narrowly
-reviewed scopes where needed rather than removing scope guards. The example
-allows one record name/ID and project; a newly created record requires a later
-operator update before scoped edit/delete. It does not claim to constrain every
-nested build/source parameter or prove a Git deployment is static content.
-Independent approval still reviews all arguments and repository content.
+- Pin `account_id` and `zone_id`; require explicit scope. Names, record IDs,
+  project names and domains remain open within that boundary. Record IDs are
+  resource handles, not secrets or hostnames. A created record can immediately
+  be edited without reconfiguring an ID allowlist.
+- Reads use the verified proposer signature only, with no independent approval.
+- Muse and Grok have separate DIDs in `trustedWriters` and `proposers`; their own
+  verified proposer signature suffices for writes. Other proposers require one
+  independent approver. Replace placeholders and populate signer keys on the CA;
+  keep the independent approver group disjoint from all proposer identities.
+- Token-minting tools (`accounts_tokens_*`, `user_tokens_*`, `builds_tokens_*`,
+  upload tokens and any other tools outside the selected surface) remain
+  rejected, even with approval. Do not add policy-only allowances for them.
+- Optional tighter hostname form: merge `optional-hostnames.policy-fragment.json`
+  into the named write policies to allow `www.example.com` and `api.example.com`
+  only. **This is not the default and does not restrict reads.** ID-only deletes
+  cannot prove the current hostname from their payload. Strict hostname isolation
+  also needs a trusted record-ID/name lookup at execution, not an ID string
+  interpreted as a hostname. The fragment rejects PATCH without an allowed name.
 
-Importantly, *plugin membership and impact labels do not enforce approval counts*.
-The independent-approval and scope rules live in the operator-owned policy.
-We ship this example because restricted routing and target policies are an
-explicit requirement, not as a redundant uniform threshold template.
+Policy rejection overrides approvals, including trusted-writer signatures.
+Impact labels alone do not establish approval counts.
 
-### DNS schema restriction
+### All captured DNS types
 
-Cloudflare composes DNS record schemas using `allOf` shared-field branches.
-The SDK's default per-object `additionalProperties: false` rejects sibling
-fields in those branches. Rather than disable fail-closed validation, this
-plugin deliberately narrows create/edit/update bodies to required `name`,
-`type`, `content`, plus optional `ttl`, `proxied`, `comment`, `tags`.
-Only A/AAAA/CNAME/TXT are accepted. Unknown body fields and other record types
-are rejected by the plugin. The exposed upstream schemas remain unchanged;
-this additional restriction is recorded in harness deviations and tested.
-PATCH still retains omitted optional fields; PUT must not be assumed to do so.
+All 21 captured types are supported: A, AAAA, CAA, CERT, CNAME, DNSKEY, DS, HTTPS,
+LOC, MX, NAPTR, NS, OPENPGPKEY, PTR, SMIMEA, SRV, SSHFP, SVCB, TLSA, TXT and URI.
+NS delegation is **critical**, inside the pinned zone, with its target visible
+in the payload. All DNS writes are conservatively critical, including PATCH
+without `type`. There is no four-type allowlist.
 
-## Credentials and operational limits
+The plugin flattens captured object `allOf` intersections for SDK fail-closed
+validation, retains all captured subtype fields, prunes unused definitions and
+compacts schema annotations to fit SDK resource limits. Unknown fields remain
+rejected. The hosted Tool definitions and selected snapshot are unchanged.
 
-Only the Credential Adapter holds `cloudflareApiToken`, resolved as
-`CLOUDFLARE_API_TOKEN`. The transport header contains a literal environment
-reference, never the credential. Scope provider permissions to intended zones
-and accounts; do not grant token-management or unrelated resource permissions.
-No credential enters the proposer configuration or these artifacts.
+### Credential-side Pages filtering
 
-Pages project/deployment getters can return environment/configuration metadata;
-this is why they remain governed. Do not store secrets as plaintext environment
-values or request credential-bearing results. Reads are not a response-redaction
-boundary. Build/source settings and deployments can run code even without a
-Code Mode executor. Inspect repository, branch, commands, deployment contents
-and resulting URLs. A `commit_hash` field is metadata, not proof that Git HEAD
-is pinned to that commit. Domain attachment can change public routing.
+The example launches `adapter/transport.mjs` on the **Credential Adapter host**.
+It launches pinned `mcp-remote@0.1.38` against the same hosted endpoint, filters
+results before they leave the CA, and reads unchanged Tool definitions from
+`bridge/src/tools.json`. Install the application directory on that host.
+This is a filtering transport, not a replacement Cloudflare API server.
+A filter in the proposer bridge would not be a sufficient boundary.
 
-DNS deletes identify a record by ID, not name/value: read and verify that ID
-before approval. Concurrent changes require renewed review as appropriate.
-Errors/timeouts are not proof that a write did not happen; verify target state
-before retrying. Do not replay uncertain deployments automatically.
+All Pages responses (reads, writes, lists and nested deployments) use a positive
+projection of ordinary identity/status/timestamp/URL fields. Configuration maps,
+`secret_text`, plaintext environment values, `deployment_configs.env_vars`, and
+`web_analytics_token` are never forwarded. Unknown output fields, raw errors,
+resource blocks, `structuredContent`, `_meta`, annotations, logs and notifications
+are withheld. Unexpected or malformed Pages responses yield a constant error;
+there is no raw-response fallback. Normal DNS results remain intact. Additional
+Pages fields require a reviewed projection change; the result body is deliberately
+reduced without rewriting hosted schemas.
 
-The captured Pages deployment tool supports a Git branch or Direct Upload
-manifest, but this subset does **not** supply a complete static-asset upload
-pipeline or short-lived upload credentials. Git repository authorization must
-already exist in Cloudflare. No Netlify-style upload continuation is assumed.
-OxRunner hosting, account/domain provisioning and DNS migration are separate
-operational work; none occurred during implementation.
+### Server secrets and build commands
+
+Policy and the execution guard reject environment-value and analytics-token
+writes. The guard recursively checks nested fields independently of approval.
+`build_command` changes are rejected even with approval or a trusted-writer
+signature. A command-name allowlist such as `npm run build` cannot prove that
+repository scripts or dependencies will not export build secrets. The Pages
+create/edit tools remain available for other fields; configure build commands
+through a trusted server-side process.
+
+Existing builds, source changes, retries and deployments can execute code already
+configured in Cloudflare. Operators must isolate secrets from untrusted build
+code or use a separate trusted build pipeline. This bridge does not sandbox
+Cloudflare builders or guarantee arbitrary repository content is safe. Absence
+of the build-log tool does not prevent network exfiltration by build scripts.
+
+Only the CA receives `CLOUDFLARE_API_TOKEN`. The transport passes a literal env
+reference, never the token value, in its command arguments. The wrapper suppresses
+upstream stderr. No credentials belong in the proposer, examples or artifacts.
+Timeouts do not prove writes failed: verify state before retrying uncertain writes.
+The subset does not provide upload credentials or a complete asset-upload pipeline.
 
 ## Reproduction and validation
 
@@ -140,14 +161,15 @@ python3 scripts/validate-applications.py
 python3 scripts/test_validate_applications.py
 python3 scripts/test_discover_bridges.py
 node applications/cloudflare/scripts/test-policy.mjs
+node applications/cloudflare/scripts/test-transport.mjs
 node scripts/probe-bridge-protocols.mjs applications/cloudflare applications/cloudflare/tool-selection.json
 ```
 
-Checks exercise the installed SDK schema/policy engine, explicit-scope failures,
-missing/proposer/unrelated/independent approvals and unknown-tool rejection in
-both bridge modes. They do not constitute live adapter dispatch or hosted
-Cloudflare end-to-end approval tests. Standard CI auto-discovers this bridge;
-a Cloudflare-specific step checks the restrictive policy and negative surface.
+Checks exercise the SDK policy/schema engine, all DNS types, scope boundaries,
+trusted writers and independent approvals, secret-bearing writes, result projection,
+and the stdio guard against a **fake local upstream**. They do not constitute live
+CA or Cloudflare tests. CI runs policy/transport checks and both protocol probes.
+No new discovery or Cloudflare application calls were performed for this revision.
 
 The pinned dependency tree reports two high-severity npm advisories. This bridge
 uses stdio; that is not an audit-clean claim. Shared generator/SDK dependency

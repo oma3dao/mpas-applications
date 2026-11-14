@@ -20,7 +20,7 @@
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/cloudflare/plugin.json",
     "pluginDid": "did:web:wivity.com:plugins:cloudflare-mcp-server",
-    "artifactDid": "did:artifact:bafkreifil5enhostwwyn2x6nkkeebwhymezszptbimlga4n2cirbru3ooy"
+    "artifactDid": "did:artifact:bafkreicvb2nkkgqgs26su6vy3anpv27i2yufd64xkk3lcakwuazuynzrw4"
   },
   "publisher": {
     "name": "Wivity",

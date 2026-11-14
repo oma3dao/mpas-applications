@@ -90,7 +90,7 @@
       "zones_get"
     ],
     "pluginSchemaRestrictions": [
-      "DNS create/edit/update accept only explicit name/type/content for A, AAAA, CNAME, TXT; optional ttl/proxied/comment/tags; reject other fields. Upstream tool definitions stay unchanged."
+      "DNS object allOf intersections are flattened for SDK fail-closed validation; every captured subtype and field remains available. Credential-side guard projects Pages results and denies secret-bearing writes and build-command changes."
     ]
   }
 }

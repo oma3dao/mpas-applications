@@ -85,4 +85,5 @@ jobs:
         if: matrix.application == 'cloudflare'
         run: |
           node applications/cloudflare/scripts/test-policy.mjs
+          node applications/cloudflare/scripts/test-transport.mjs
           node scripts/probe-bridge-protocols.mjs applications/cloudflare applications/cloudflare/tool-selection.json

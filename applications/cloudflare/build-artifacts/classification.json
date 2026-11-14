@@ -4,32 +4,32 @@
   "draft": false,
   "operations": {
     "accounts_get": {
-      "impact": "medium",
-      "rationale": "Governed: Read account metadata; explicit account required by deployment policy."
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
     },
     "dns_records_create": {
-      "impact": "high",
-      "rationale": "Governed: Create a single DNS record, affecting traffic or domain verification."
+      "impact": "critical",
+      "rationale": "Governed: Govern all captured DNS types, including NS delegation, inside the pinned zone. PATCH may omit type; conservatively critical for all DNS writes."
     },
     "dns_records_delete": {
       "impact": "critical",
       "rationale": "Governed: Delete a single DNS record by explicit zone and record ID; verify record identity before approval."
     },
     "dns_records_edit": {
-      "impact": "high",
-      "rationale": "Governed: PATCH a DNS record; omitted fields may retain existing values."
+      "impact": "critical",
+      "rationale": "Governed: Govern all captured DNS types, including NS delegation, inside the pinned zone. PATCH may omit type; conservatively critical for all DNS writes."
     },
     "dns_records_get": {
-      "impact": "medium",
-      "rationale": "Governed: Read a single DNS record; content may include sensitive verification values."
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
     },
     "dns_records_list": {
-      "impact": "medium",
-      "rationale": "Governed: Read records in an explicit zone; query filters and pagination affect visibility."
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
     },
     "dns_records_update": {
-      "impact": "high",
-      "rationale": "Governed: PUT a DNS record; review full replacement rather than assuming PATCH semantics."
+      "impact": "critical",
+      "rationale": "Governed: Govern all captured DNS types, including NS delegation, inside the pinned zone. PATCH may omit type; conservatively critical for all DNS writes."
     },
     "pages_create": {
       "impact": "high",
@@ -48,12 +48,12 @@
       "rationale": "Governed: Delete a deployment, potentially affecting available rollback targets."
     },
     "pages_deployments_get": {
-      "impact": "medium",
-      "rationale": "Governed: Read deployment status/configuration; results may contain project environment metadata."
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
     },
     "pages_deployments_list": {
-      "impact": "medium",
-      "rationale": "Governed: Read deployment history and configuration metadata."
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
     },
     "pages_deployments_retry": {
       "impact": "high",
@@ -72,12 +72,12 @@
       "rationale": "Governed: Remove a custom hostname from a Pages project."
     },
     "pages_domains_get": {
-      "impact": "medium",
-      "rationale": "Governed: Read domain configuration and validation status."
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
     },
     "pages_domains_list": {
-      "impact": "medium",
-      "rationale": "Governed: List custom domains for an explicit project."
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
     },
     "pages_domains_validation_retry": {
       "impact": "high",
@@ -88,12 +88,12 @@
       "rationale": "Governed: Change build/source/deployment settings; setting an environment variable key to null deletes it."
     },
     "pages_get": {
-      "impact": "medium",
-      "rationale": "Governed: Read project configuration; environment values may be sensitive, so retain governance."
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
     },
     "pages_list": {
-      "impact": "medium",
-      "rationale": "Governed: List projects and configuration in an explicit account; retain governance for sensitive metadata."
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
     },
     "pages_source_connect": {
       "impact": "high",
@@ -104,8 +104,8 @@
       "rationale": "Governed: Disconnect the repository and stop Git-based deployment integration."
     },
     "zones_get": {
-      "impact": "medium",
-      "rationale": "Governed: Read metadata of an explicit zone. Zone creation, deletion and global settings are excluded."
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
     }
   }
 }

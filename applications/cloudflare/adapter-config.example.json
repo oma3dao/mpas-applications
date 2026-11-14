@@ -8,7 +8,7 @@
   "plugin": {
     "pluginDid": "did:web:wivity.com:plugins:cloudflare-mcp-server",
     "pluginVersion": "0.1.0",
-    "artifactDid": "did:artifact:bafkreifil5enhostwwyn2x6nkkeebwhymezszptbimlga4n2cirbru3ooy",
+    "artifactDid": "did:artifact:bafkreicvb2nkkgqgs26su6vy3anpv27i2yufd64xkk3lcakwuazuynzrw4",
     "path": "/absolute/path/to/mpas-applications/applications/cloudflare/plugin.json"
   },
   "passThrough": "deny",
@@ -20,13 +20,9 @@
   ],
   "executionTarget": {
     "type": "mcp.stdio",
-    "command": "npx",
+    "command": "node",
     "args": [
-      "-y",
-      "mcp-remote@0.1.38",
-      "https://mcp.cloudflare.com/mcp?codemode=false",
-      "--header",
-      "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}"
+      "/absolute/path/to/mpas-applications/applications/cloudflare/adapter/transport.mjs"
     ],
     "env": {
       "CLOUDFLARE_API_TOKEN": "{{credential:cloudflareApiToken}}"
@@ -50,10 +46,18 @@
     "signerGroups": {
       "all": [
         "REPLACE_WITH_PROPOSER_DID",
+        "REPLACE_WITH_MUSE_DID",
+        "REPLACE_WITH_GROK_DID",
         "REPLACE_WITH_APPROVER_DID"
       ],
       "proposers": [
-        "REPLACE_WITH_PROPOSER_DID"
+        "REPLACE_WITH_PROPOSER_DID",
+        "REPLACE_WITH_MUSE_DID",
+        "REPLACE_WITH_GROK_DID"
+      ],
+      "trustedWriters": [
+        "REPLACE_WITH_MUSE_DID",
+        "REPLACE_WITH_GROK_DID"
       ],
       "approvers": [
         "REPLACE_WITH_APPROVER_DID"
@@ -62,7 +66,25 @@
     "policies": {
       "accounts_get": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -75,7 +97,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -86,12 +108,36 @@
                 "value": "REPLACE_WITH_ACCOUNT_ID"
               }
             ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
           }
         }
       ],
       "dns_records_create": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -104,7 +150,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -118,68 +164,68 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/body/name",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/name",
-                "op": "neq",
-                "value": "REPLACE_WITH_DNS_NAME"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/type",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/type",
-                "op": "notIn",
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
                 "value": [
-                  "A",
-                  "AAAA",
-                  "CNAME",
-                  "TXT"
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
                 ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "dns_records_delete": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -192,7 +238,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -206,36 +252,68 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/dns_record_id",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/dns_record_id",
-                "op": "neq",
-                "value": "REPLACE_WITH_DNS_RECORD_ID"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "dns_records_edit": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -248,7 +326,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -262,295 +340,262 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/body/name",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/name",
-                "op": "neq",
-                "value": "REPLACE_WITH_DNS_NAME"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/type",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/type",
-                "op": "notIn",
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
                 "value": [
-                  "A",
-                  "AAAA",
-                  "CNAME",
-                  "TXT"
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
                 ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/dns_record_id",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/dns_record_id",
-                "op": "neq",
-                "value": "REPLACE_WITH_DNS_RECORD_ID"
-              }
-            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "dns_records_get": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
           "reject": true,
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/zone_id",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/zone_id",
-                "op": "neq",
-                "value": "REPLACE_WITH_ZONE_ID"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/dns_record_id",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/dns_record_id",
-                "op": "neq",
-                "value": "REPLACE_WITH_DNS_RECORD_ID"
-              }
-            ]
-          }
-        }
-      ],
-      "dns_records_list": [
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/zone_id",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/zone_id",
-                "op": "neq",
-                "value": "REPLACE_WITH_ZONE_ID"
-              }
-            ]
-          }
-        }
-      ],
-      "dns_records_update": [
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/zone_id",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/zone_id",
-                "op": "neq",
-                "value": "REPLACE_WITH_ZONE_ID"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/name",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/name",
-                "op": "neq",
-                "value": "REPLACE_WITH_DNS_NAME"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/type",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/type",
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
                 "op": "notIn",
                 "value": [
-                  "A",
-                  "AAAA",
-                  "CNAME",
-                  "TXT"
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
                 ]
               }
             ]
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
               {
                 "source": "executionPayload",
-                "path": "/arguments/path/dns_record_id",
+                "path": "/arguments/path/zone_id",
                 "op": "notExists"
               }
             ]
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
               {
                 "source": "executionPayload",
-                "path": "/arguments/path/dns_record_id",
+                "path": "/arguments/path/zone_id",
                 "op": "neq",
-                "value": "REPLACE_WITH_DNS_RECORD_ID"
+                "value": "REPLACE_WITH_ZONE_ID"
               }
             ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        }
+      ],
+      "dns_records_list": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        }
+      ],
+      "dns_records_update": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "pages_create": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -563,7 +608,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -577,47 +622,61 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/body/name",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/body/name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
           "reject": true,
           "match": {
             "conditions": [
               {
                 "source": "executionPayload",
-                "path": "/arguments/body/deployment_configs",
+                "path": "/arguments/body/build_config/build_command",
                 "op": "exists"
               }
             ]
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
           "reject": true,
           "match": {
             "conditions": [
@@ -630,28 +689,27 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
           "reject": true,
           "match": {
             "conditions": [
               {
                 "source": "executionPayload",
-                "path": "/arguments/body/production_branch",
-                "op": "notExists"
+                "path": "/arguments/body/deployment_configs/preview/env_vars",
+                "op": "exists"
               }
             ]
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
           "reject": true,
           "match": {
             "conditions": [
               {
                 "source": "executionPayload",
-                "path": "/arguments/body/production_branch",
-                "op": "neq",
-                "value": "REPLACE_WITH_PRODUCTION_BRANCH"
+                "path": "/arguments/body/deployment_configs/production/env_vars",
+                "op": "exists"
               }
             ]
           }
@@ -659,7 +717,25 @@
       ],
       "pages_delete": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -672,7 +748,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -686,36 +762,68 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "pages_deployments_create": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -728,7 +836,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -742,102 +850,68 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/branch",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/branch",
-                "op": "neq",
-                "value": "REPLACE_WITH_PRODUCTION_BRANCH"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/_worker.js",
-                "op": "exists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/_worker.bundle",
-                "op": "exists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/functions-filepath-routing-config.json",
-                "op": "exists"
-              }
-            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "pages_deployments_delete": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -850,7 +924,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -864,36 +938,68 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "pages_deployments_get": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -906,7 +1012,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -920,36 +1026,33 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
-              }
-            ]
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
           }
         }
       ],
       "pages_deployments_list": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -962,7 +1065,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -976,36 +1079,33 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
-              }
-            ]
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
           }
         }
       ],
       "pages_deployments_retry": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1018,7 +1118,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1032,36 +1132,68 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "pages_deployments_rollback": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1074,7 +1206,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1088,36 +1220,68 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "pages_domains_create": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1130,7 +1294,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1144,63 +1308,68 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/name",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/name",
-                "op": "neq",
-                "value": "REPLACE_WITH_CUSTOM_DOMAIN"
-              }
-            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "pages_domains_delete": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1213,7 +1382,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1227,63 +1396,68 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/domain_name",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/domain_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_CUSTOM_DOMAIN"
-              }
-            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "pages_domains_get": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1296,7 +1470,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1310,63 +1484,33 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/domain_name",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/domain_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_CUSTOM_DOMAIN"
-              }
-            ]
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
           }
         }
       ],
       "pages_domains_list": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1379,7 +1523,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1393,36 +1537,33 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
-              }
-            ]
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
           }
         }
       ],
       "pages_domains_validation_retry": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1435,7 +1576,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1449,63 +1590,68 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/domain_name",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/domain_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_CUSTOM_DOMAIN"
-              }
-            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "pages_edit": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1518,7 +1664,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1532,47 +1678,61 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
           "reject": true,
           "match": {
             "conditions": [
               {
                 "source": "executionPayload",
-                "path": "/arguments/body/deployment_configs",
+                "path": "/arguments/body/build_config/build_command",
                 "op": "exists"
               }
             ]
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1585,20 +1745,27 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
           "reject": true,
           "match": {
             "conditions": [
               {
                 "source": "executionPayload",
-                "path": "/arguments/body/name",
+                "path": "/arguments/body/deployment_configs/preview/env_vars",
                 "op": "exists"
-              },
+              }
+            ]
+          }
+        },
+        {
+          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
+          "reject": true,
+          "match": {
+            "conditions": [
               {
                 "source": "executionPayload",
-                "path": "/arguments/body/name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "path": "/arguments/body/deployment_configs/production/env_vars",
+                "op": "exists"
               }
             ]
           }
@@ -1606,7 +1773,25 @@
       ],
       "pages_get": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1619,7 +1804,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1633,36 +1818,33 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
-              }
-            ]
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
           }
         }
       ],
       "pages_list": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1675,7 +1857,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1686,12 +1868,36 @@
                 "value": "REPLACE_WITH_ACCOUNT_ID"
               }
             ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
           }
         }
       ],
       "pages_source_connect": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1704,7 +1910,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1718,36 +1924,68 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "pages_source_disconnect": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1760,7 +1998,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1774,36 +2012,68 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Muse and Grok use their own verified proposer signature.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "notExists"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
-          "reject": true,
+          "description": "Other proposers need an independent approver.",
           "match": {
             "conditions": [
               {
-                "source": "executionPayload",
-                "path": "/arguments/path/project_name",
-                "op": "neq",
-                "value": "REPLACE_WITH_PAGES_PROJECT"
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
               }
             ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
           }
         }
       ],
       "zones_get": [
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1816,7 +2086,7 @@
           }
         },
         {
-          "description": "Reject calls outside the configured explicit scope.",
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1828,12 +2098,18 @@
               }
             ]
           }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
         }
       ],
       "execute": [
         {
-          "description": "Generic code execution is forbidden.",
-          "reject": true
+          "reject": true,
+          "description": "Arbitrary code tool is not supported."
         }
       ]
     }

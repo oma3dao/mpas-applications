@@ -1,3 +1,12 @@
+## Policy revision (2026-11-14)
+
+- Preserve hosted capture and all 26 exposed schemas.
+- Open scoped reads; remove hostname/record-ID/project pins.
+- Govern all 21 DNS types at critical impact, including NS.
+- Trust Muse/Grok proposer signatures for writes; others need independent approval.
+- Add CA-side Pages projection and server-secret/build-command rejection.
+- Add offline policy/schema and mock stdio integration regressions.
+
 # Changelog — Cloudflare
 
 ## 0.1.0 — 2026-11-14
