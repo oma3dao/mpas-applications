@@ -90,7 +90,7 @@
       "zones_get"
     ],
     "pluginSchemaRestrictions": [
-      "DNS object allOf intersections are flattened for SDK fail-closed validation; every captured subtype and field remains available. Credential-side guard projects Pages results and denies secret-bearing writes and build-command changes."
+      "DNS object allOf intersections are flattened for SDK fail-closed validation; every captured subtype and field remains available. Plugin restricts path formats, direct uploads, secret_text writes, build commands and analytics-token writes. Transport sanitizes responses only; plaintext environment variables are supported."
     ]
   }
 }

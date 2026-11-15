@@ -74,7 +74,10 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   }
                 },
                 "type": "object"
@@ -109,7 +112,10 @@
                 "additionalProperties": false,
                 "properties": {
                   "zone_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   }
                 },
                 "required": [
@@ -1365,10 +1371,16 @@
                 "additionalProperties": false,
                 "properties": {
                   "dns_record_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "zone_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   }
                 },
                 "required": [
@@ -1410,10 +1422,16 @@
                 "additionalProperties": false,
                 "properties": {
                   "dns_record_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "zone_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   }
                 },
                 "required": [
@@ -2670,10 +2688,16 @@
                 "additionalProperties": false,
                 "properties": {
                   "dns_record_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "zone_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   }
                 },
                 "required": [
@@ -2721,7 +2745,10 @@
                 "additionalProperties": false,
                 "properties": {
                   "zone_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   }
                 },
                 "required": [
@@ -2918,10 +2945,16 @@
                 "additionalProperties": false,
                 "properties": {
                   "dns_record_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "zone_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   }
                 },
                 "required": [
@@ -4181,9 +4214,7 @@
                       "build_caching": {
                         "type": "boolean"
                       },
-                      "build_command": {
-                        "type": "string"
-                      },
+                      "build_command": false,
                       "destination_dir": {
                         "type": "string"
                       },
@@ -4200,16 +4231,7 @@
                           }
                         ]
                       },
-                      "web_analytics_token": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      }
+                      "web_analytics_token": false
                     },
                     "type": "object"
                   },
@@ -4319,7 +4341,10 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   }
                 },
                 "type": "object"
@@ -4443,16 +4468,22 @@
                   },
                   "env_vars": {
                     "additionalProperties": {
-                      "oneOf": [
+                      "anyOf": [
                         {
-                          "oneOf": [
-                            {
-                              "$ref": "#/properties/arguments/$defs/pages_plain_text_env_var"
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "value"
+                          ],
+                          "properties": {
+                            "type": {
+                              "const": "plain_text"
                             },
-                            {
-                              "$ref": "#/properties/arguments/$defs/pages_secret_text_env_var"
+                            "value": {
+                              "type": "string"
                             }
-                          ]
+                          }
                         },
                         {
                           "type": "null"
@@ -4670,56 +4701,6 @@
                   }
                 },
                 "type": "object"
-              },
-              "pages_plain_text_env_var": {
-                "oneOf": [
-                  {
-                    "properties": {
-                      "type": {
-                        "enum": [
-                          "plain_text"
-                        ],
-                        "type": "string"
-                      },
-                      "value": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "type",
-                      "value"
-                    ],
-                    "type": "object"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "pages_secret_text_env_var": {
-                "oneOf": [
-                  {
-                    "properties": {
-                      "type": {
-                        "enum": [
-                          "secret_text"
-                        ],
-                        "type": "string"
-                      },
-                      "value": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "type",
-                      "value"
-                    ],
-                    "type": "object"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
               }
             },
             "required": [
@@ -4750,10 +4731,15 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -4789,131 +4775,11 @@
             "properties": {
               "body": {
                 "properties": {
-                  "_headers": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "additionalProperties": false,
-                        "properties": {
-                          "content": {
-                            "type": "string"
-                          },
-                          "contentType": {
-                            "type": "string"
-                          },
-                          "filename": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "content"
-                        ],
-                        "type": "object"
-                      }
-                    ]
-                  },
-                  "_redirects": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "additionalProperties": false,
-                        "properties": {
-                          "content": {
-                            "type": "string"
-                          },
-                          "contentType": {
-                            "type": "string"
-                          },
-                          "filename": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "content"
-                        ],
-                        "type": "object"
-                      }
-                    ]
-                  },
-                  "_routes.json": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "additionalProperties": false,
-                        "properties": {
-                          "content": {
-                            "type": "string"
-                          },
-                          "contentType": {
-                            "type": "string"
-                          },
-                          "filename": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "content"
-                        ],
-                        "type": "object"
-                      }
-                    ]
-                  },
-                  "_worker.bundle": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "additionalProperties": false,
-                        "properties": {
-                          "content": {
-                            "type": "string"
-                          },
-                          "contentType": {
-                            "type": "string"
-                          },
-                          "filename": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "content"
-                        ],
-                        "type": "object"
-                      }
-                    ]
-                  },
-                  "_worker.js": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "additionalProperties": false,
-                        "properties": {
-                          "content": {
-                            "type": "string"
-                          },
-                          "contentType": {
-                            "type": "string"
-                          },
-                          "filename": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "content"
-                        ],
-                        "type": "object"
-                      }
-                    ]
-                  },
+                  "_headers": false,
+                  "_redirects": false,
+                  "_routes.json": false,
+                  "_worker.bundle": false,
+                  "_worker.js": false,
                   "branch": {
                     "type": "string"
                   },
@@ -4930,40 +4796,10 @@
                   "commit_message": {
                     "type": "string"
                   },
-                  "functions-filepath-routing-config.json": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "additionalProperties": false,
-                        "properties": {
-                          "content": {
-                            "type": "string"
-                          },
-                          "contentType": {
-                            "type": "string"
-                          },
-                          "filename": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "content"
-                        ],
-                        "type": "object"
-                      }
-                    ]
-                  },
-                  "manifest": {
-                    "type": "string"
-                  },
-                  "pages_build_output_dir": {
-                    "type": "string"
-                  },
-                  "wrangler_config_hash": {
-                    "type": "string"
-                  }
+                  "functions-filepath-routing-config.json": false,
+                  "manifest": false,
+                  "pages_build_output_dir": false,
+                  "wrangler_config_hash": false
                 },
                 "type": "object"
               },
@@ -4971,10 +4807,15 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -5013,14 +4854,22 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "deployment_id": {
                     "format": "uuid",
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 36,
+                    "maxLength": 36,
+                    "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -5068,14 +4917,22 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "deployment_id": {
                     "format": "uuid",
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 36,
+                    "maxLength": 36,
+                    "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -5114,10 +4971,15 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -5174,14 +5036,22 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "deployment_id": {
                     "format": "uuid",
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 36,
+                    "maxLength": 36,
+                    "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -5220,14 +5090,22 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "deployment_id": {
                     "format": "uuid",
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 36,
+                    "maxLength": 36,
+                    "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -5277,10 +5155,15 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -5319,13 +5202,21 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "domain_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 253,
+                    "pattern": "^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.?$(?![\\s\\S])"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -5364,13 +5255,21 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "domain_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 253,
+                    "pattern": "^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.?$(?![\\s\\S])"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -5409,10 +5308,15 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -5450,13 +5354,21 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "domain_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 253,
+                    "pattern": "^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.?$(?![\\s\\S])"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -5498,9 +5410,7 @@
                       "build_caching": {
                         "type": "boolean"
                       },
-                      "build_command": {
-                        "type": "string"
-                      },
+                      "build_command": false,
                       "destination_dir": {
                         "type": "string"
                       },
@@ -5517,16 +5427,7 @@
                           }
                         ]
                       },
-                      "web_analytics_token": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      }
+                      "web_analytics_token": false
                     },
                     "type": "object"
                   },
@@ -5632,10 +5533,15 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -5762,16 +5668,22 @@
                   },
                   "env_vars": {
                     "additionalProperties": {
-                      "oneOf": [
+                      "anyOf": [
                         {
-                          "oneOf": [
-                            {
-                              "$ref": "#/properties/arguments/$defs/pages_plain_text_env_var"
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "value"
+                          ],
+                          "properties": {
+                            "type": {
+                              "const": "plain_text"
                             },
-                            {
-                              "$ref": "#/properties/arguments/$defs/pages_secret_text_env_var"
+                            "value": {
+                              "type": "string"
                             }
-                          ]
+                          }
                         },
                         {
                           "type": "null"
@@ -5989,56 +5901,6 @@
                   }
                 },
                 "type": "object"
-              },
-              "pages_plain_text_env_var": {
-                "oneOf": [
-                  {
-                    "properties": {
-                      "type": {
-                        "enum": [
-                          "plain_text"
-                        ],
-                        "type": "string"
-                      },
-                      "value": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "type",
-                      "value"
-                    ],
-                    "type": "object"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "pages_secret_text_env_var": {
-                "oneOf": [
-                  {
-                    "properties": {
-                      "type": {
-                        "enum": [
-                          "secret_text"
-                        ],
-                        "type": "string"
-                      },
-                      "value": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "type",
-                      "value"
-                    ],
-                    "type": "object"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
               }
             },
             "required": [
@@ -6070,10 +5932,15 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -6111,7 +5978,10 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   }
                 },
                 "type": "object"
@@ -6158,10 +6028,15 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -6298,10 +6173,15 @@
                 "additionalProperties": false,
                 "properties": {
                   "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   },
                   "project_name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[a-z0-9][a-z0-9-]*$(?![\\s\\S])"
                   }
                 },
                 "type": "object",
@@ -6339,7 +6219,10 @@
                 "additionalProperties": false,
                 "properties": {
                   "zone_id": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "pattern": "^[A-Za-z0-9_-]{1,32}$(?![\\s\\S])"
                   }
                 },
                 "required": [

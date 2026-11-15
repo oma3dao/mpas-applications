@@ -8,7 +8,7 @@
   "plugin": {
     "pluginDid": "did:web:wivity.com:plugins:cloudflare-mcp-server",
     "pluginVersion": "0.1.0",
-    "artifactDid": "did:artifact:bafkreicvb2nkkgqgs26su6vy3anpv27i2yufd64xkk3lcakwuazuynzrw4",
+    "artifactDid": "did:artifact:bafkreigg7itx3ldprhistqpewyferllnxspnmf34jya3htw4qiggn43nim",
     "path": "/absolute/path/to/mpas-applications/applications/cloudflare/plugin.json"
   },
   "passThrough": "deny",
@@ -663,7 +663,7 @@
           }
         },
         {
-          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
+          "description": "Reject build-command and analytics-token writes even with approval.",
           "reject": true,
           "match": {
             "conditions": [
@@ -676,39 +676,13 @@
           }
         },
         {
-          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
+          "description": "Reject build-command and analytics-token writes even with approval.",
           "reject": true,
           "match": {
             "conditions": [
               {
                 "source": "executionPayload",
                 "path": "/arguments/body/build_config/web_analytics_token",
-                "op": "exists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/deployment_configs/preview/env_vars",
-                "op": "exists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/deployment_configs/production/env_vars",
                 "op": "exists"
               }
             ]
@@ -888,6 +862,123 @@
             "threshold": 1,
             "eligibleSignerGroup": "approvers",
             "decision": "approve"
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/_headers",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/_redirects",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/_routes.json",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/_worker.bundle",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/_worker.js",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/functions-filepath-routing-config.json",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/manifest",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/pages_build_output_dir",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/wrangler_config_hash",
+                "op": "exists"
+              }
+            ]
           }
         }
       ],
@@ -1719,7 +1810,7 @@
           }
         },
         {
-          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
+          "description": "Reject build-command and analytics-token writes even with approval.",
           "reject": true,
           "match": {
             "conditions": [
@@ -1732,39 +1823,13 @@
           }
         },
         {
-          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
+          "description": "Reject build-command and analytics-token writes even with approval.",
           "reject": true,
           "match": {
             "conditions": [
               {
                 "source": "executionPayload",
                 "path": "/arguments/body/build_config/web_analytics_token",
-                "op": "exists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/deployment_configs/preview/env_vars",
-                "op": "exists"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Server-only secrets and build-command changes are rejected even with approval; guarded again at execution.",
-          "reject": true,
-          "match": {
-            "conditions": [
-              {
-                "source": "executionPayload",
-                "path": "/arguments/body/deployment_configs/production/env_vars",
                 "op": "exists"
               }
             ]

@@ -4,6 +4,7 @@ import path from 'node:path';
 import {pathToFileURL, fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
 import {normalizeDnsSchema} from './dns-schema.mjs';
+import {restrictRequests} from './request-restrictions.mjs';
 const [generatorDir, captureDir, outputDir] = process.argv.slice(2);
 if (!generatorDir || !captureDir || !outputDir) throw new Error('Usage: node generate.mjs <built-mpas/bridge-generator> <capture-dir containing metadata.json and tools-list.snapshot.json> <new-applications-output-dir>');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -36,16 +37,18 @@ for (const name of ['dns_records_create','dns_records_edit','dns_records_update'
   const op=plugin.operations[name];
   op.executionPayloadSchema.properties.arguments=normalizeDnsSchema(op.executionPayloadSchema.properties.arguments);
 }
+restrictRequests(plugin);
 // Annotation-only compaction keeps the expanded DNS validation within SDK
 // resource limits. Full descriptions/examples remain in unchanged Tool schemas.
 function compact(v) {
  if(Array.isArray(v))return v.map(compact);
  if(!v||typeof v!=='object')return v;
- return Object.fromEntries(Object.entries(v).filter(([k])=>!['description','examples','example','default','title'].includes(k)).map(([k,x])=>[k,compact(x)]));
+ return Object.fromEntries(Object.entries(v).filter(([k])=>!['description','examples','example','default','title'].includes(k)).map(([k,x])=>[k,['properties','$defs','patternProperties'].includes(k)?Object.fromEntries(Object.entries(x).map(([name,schema])=>[name,compact(schema)])):compact(x)]));
 }
 for(const op of Object.values(plugin.operations))op.executionPayloadSchema=compact(op.executionPayloadSchema);
 await put('plugin.json',plugin);await put('build-artifacts/classification.json',classification);
-const h=await get('harness-config.json');h.upstream.env={CLOUDFLARE_API_TOKEN:'{{credential:cloudflareApiToken}}'};h.upstream.distribution={type:'remote',endpoint:selection.endpoint,client:{type:'npm',package:'mcp-remote',version:'0.1.38'},versionMatchesServerInfo:false,reconciliation:'Hosted implementation updates independently. This application intentionally exposes a reviewed subset; metadata records original and selected surface hashes.'};h.intentionalDeviations.selectedToolNames=names;h.intentionalDeviations.pluginSchemaRestrictions=['DNS object allOf intersections are flattened for SDK fail-closed validation; every captured subtype and field remains available. Credential-side guard projects Pages results and denies secret-bearing writes and build-command changes.'];h.intentionalDeviations.note+=' This is a selected subset, not the complete hosted inventory. Selected upstream Tool objects are unchanged; omitted operations are not pass-through.';await put('harness-config.json',h);
+const h=await get('harness-config.json');h.upstream.env={CLOUDFLARE_API_TOKEN:'{{credential:cloudflareApiToken}}'};h.upstream.distribution={type:'remote',endpoint:selection.endpoint,client:{type:'npm',package:'mcp-remote',version:'0.1.38'},versionMatchesServerInfo:false,reconciliation:'Hosted implementation updates independently. This application intentionally exposes a reviewed subset; metadata records original and selected surface hashes.'};h.intentionalDeviations.selectedToolNames=names;h.intentionalDeviations.pluginSchemaRestrictions=['DNS object allOf intersections are flattened for SDK fail-closed validation; every captured subtype and field remains available. Plugin restricts path formats, direct uploads, secret_text writes, build commands and analytics-token writes. Transport sanitizes responses only; plaintext environment variables are supported.'];h.intentionalDeviations.note+=' This is a selected subset, not the complete hosted inventory. Selected upstream Tool objects are unchanged; omitted operations are not pass-through.';await put('harness-config.json',h);
 const m=await get('build-artifacts/metadata.json');m.generatorCommit='c7ffdd9a635dc66539fc74252a9641255029f7a6';m.sourceToolSurface=snapshot.toolSurface;m.sourceToolCount=snapshot.tools.length;m.selectedToolCount=tools.length;m.discoveryNotes='Operator-supplied authenticated hosted capture. Offline generator replay uses the explicit tool-selection.json subset, preserving full selected Tool objects. The committed snapshot is the selected surface, not the full hosted list. Generator revision follows the operator capture handoff; no fresh live discovery or tools/call was performed locally.';await put('build-artifacts/metadata.json',m);
 const r=await get('registry-entry.json');r.application={name:'Cloudflare DNS and Pages MCP MPAS Bridge',description:'Restricted DNS and Pages subset of the official Cloudflare MCP non-Code-Mode interface.',applicationDid:plugin.applicationDid};r.publisher={name:'Wivity',githubOrg:'wivity',publisherDid:plugin.publisherDid};r.plugin={repository:'https://github.com/signerset/mpas-applications/blob/feat/cloudflare-no-code/applications/cloudflare/plugin.json',pluginDid:plugin.pluginDid,artifactDid:await computeArtifactDid(plugin)};r.upstream.repository='https://github.com/cloudflare/mcp';r.upstream.distributionUrl=selection.endpoint;r.status='beta';await put('registry-entry.json',r);
+const config=await read(path.join(root,'adapter-config.example.json'));config.plugin.artifactDid=r.plugin.artifactDid;await put('adapter-config.example.json',config);
 console.log(`Verified ${snapshot.tools.length} source tools; selected ${tools.length} unchanged definitions. All selected tools governed.`);
