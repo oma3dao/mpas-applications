@@ -708,3 +708,13 @@ that it may be distributed under the Apache License 2.0.
 Final OMA3 Specifications are separately governed by
 [OMA3's Intellectual Property Rights Policy](https://www.oma3.org/intellectual-property-rights-policy)
 and applicable OMA3 review and approval processes.
+
+### Application-owned CI checks
+
+CI automatically discovers bridges under `applications/` and runs their install,
+build and both MCP protocol probes. Applications needing additional offline tests
+can add `applications/<name>/scripts/test-ci.mjs`. The shared matrix invokes this
+optional hook after the standard probes; a nonzero exit fails the job. No
+application-name condition or matrix edit is needed. Hooks must not require live
+provider credentials or make live mutations. Keep generator replay checks that
+require a separate pinned generator checkout documented separately.

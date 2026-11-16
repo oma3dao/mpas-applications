@@ -18,7 +18,7 @@
     "distributionUrl": "https://mcp.cloudflare.com/mcp?codemode=false"
   },
   "plugin": {
-    "repository": "https://github.com/signerset/mpas-applications/blob/feat/cloudflare-no-code/applications/cloudflare/plugin.json",
+    "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/cloudflare/plugin.json",
     "pluginDid": "did:web:wivity.com:plugins:cloudflare-mcp-server",
     "artifactDid": "did:artifact:bafkreiaans7k4yaje4vxwpcjxeni3twdivcqn6ynp4uoqp76oikn6wk4nm"
   },

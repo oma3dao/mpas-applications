@@ -301,3 +301,8 @@ claim. Dependency upgrades remain a separate shared-generator/SDK change.
 Provider contract references: [DNS record identifiers](https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/delete/)
 and [Pages deployment arguments](https://developers.cloudflare.com/api/resources/pages/subresources/projects/subresources/deployments/methods/create/).
 These are contract references, not a claim of fresh hosted discovery.
+
+CI discovers this bridge automatically and runs its extra offline policy, response,
+transport and restricted-surface checks through `scripts/test-ci.mjs`. Run the same
+hook locally with `node applications/cloudflare/scripts/test-ci.mjs` from the
+repository root. Full generator replay remains a separate pinned-checkout check.
