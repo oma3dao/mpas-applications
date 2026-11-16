@@ -2,14 +2,18 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {loadPlugin,validatePayloadAgainstPlugin,evaluatePolicy,validatePolicyConfig,computeToolSurfaceHash} from '../bridge/node_modules/@oma3/mpas/dist/index.js';
+// No local-SDK override: test the released dependency installed from the lockfile.
 import {DIRECT_UPLOAD_FIELDS,PATH_CONSTRAINTS} from './request-restrictions.mjs';
 const read=async p=>JSON.parse(await fs.readFile(new URL('../'+p,import.meta.url),'utf8'));
 const loaded=await loadPlugin(fileURLToPath(new URL('../plugin.json',import.meta.url)));assert.equal(loaded.ok,true,JSON.stringify(loaded));
 const plugin=loaded.plugin,selection=await read('tool-selection.json'),snapshot=await read('build-artifacts/tools-list.snapshot.json');
+assert.equal(plugin.version,'1');
+assert(Object.values(plugin.operations).every(op=>!Object.hasOwn(op,'display')));
+const blocked=new Set(['pages_create','pages_edit']);
 const account='a'.repeat(32),zone='b'.repeat(32),record='c'.repeat(32),deployment='12345678-1234-1234-1234-123456789abc';
 let config=JSON.stringify(await read('adapter-config.example.json'));
 for(const [key,val] of Object.entries({PROPOSER_DID:'did:example:proposer',APPROVER_DID:'did:example:approver',MUSE_DID:'did:example:muse',GROK_DID:'did:example:grok',ACCOUNT_ID:account,ZONE_ID:zone}))config=config.replaceAll('REPLACE_WITH_'+key,val);
-config=JSON.parse(config);assert.equal(config.passThrough,'deny');assert.equal(validatePolicyConfig(config.policy).ok,true);
+config=JSON.parse(config);assert.equal(config.passThrough,'deny');assert.equal(validatePolicyConfig(config.policy).ok,true,'Restricted v1 config must validate with the released SDK');
 assert.deepEqual(Object.keys(plugin.operations).sort(),Object.keys(selection.tools).sort());assert.deepEqual(plugin.toolSurface.hash,computeToolSurfaceHash(snapshot.tools));
 const approved=[{signerDid:'did:example:approver',decision:'approve'}];let count=0;
 const status=(name,args,approvals=[],who='proposer',policy=config.policy)=>evaluatePolicy({executionPayload:{name,arguments:args},actionEnvelope:{proposer:{did:'did:example:'+who}}},{approvals},policy).status;
@@ -30,8 +34,8 @@ function argsFor(name){
 for(const name of Object.keys(plugin.operations)){
  const args=argsFor(name),read=name.endsWith('_get')||name.endsWith('_list');
  assert(valid(name,args),'valid baseline '+name);
- for(const ap of [[],[{signerDid:'did:example:proposer',decision:'approve'}],[{signerDid:'did:example:other',decision:'approve'}]])expect(name,args,ap,read?'satisfied':'additionalApprovalsRequired');
- expect(name,args,approved,'satisfied');for(const who of ['muse','grok'])expect(name,args,[],'satisfied',who);
+ for(const ap of [[],[{signerDid:'did:example:proposer',decision:'approve'}],[{signerDid:'did:example:other',decision:'approve'}]])expect(name,args,ap,blocked.has(name)?'rejected':read?'satisfied':'additionalApprovalsRequired');
+ expect(name,args,approved,blocked.has(name)?'rejected':'satisfied');for(const who of ['muse','grok'])for(const ap of [[],approved])expect(name,args,ap,blocked.has(name)?'rejected':'satisfied',who);
  expect(name,args,approved,'rejected','unknown');
  const scope='zone_id' in args.path?'zone_id':'account_id';
  for(const who of ['proposer','muse','grok']){
@@ -46,7 +50,7 @@ for(const name of Object.keys(plugin.operations)){
 // Demonstrate the cited URL-normalization effect without making a request.
 assert.equal(new URL('https://api.cloudflare.com/client/v4/zones/'+zone+'/dns_records/'+encodeURIComponent('..')).pathname,'/client/v4/zones/'+zone+'/');
 // No identifier allowlist: new provider-issued IDs and names remain usable.
-for(const id of [record,'0123456789abcdef0123456789abcdef']){
+for(const id of [record,'0123456789abcdef0123456789abcdef','id.with~unreserved-chars']){
  const args={path:{zone_id:zone,dns_record_id:id}};assert(valid('dns_records_delete',args));assert(valid('dns_records_get',args));
 }
 for(const name of ['dns_records_create','dns_records_edit','dns_records_update']){
@@ -62,7 +66,7 @@ for(const name of ['dns_records_create','dns_records_edit','dns_records_update']
 const git=argsFor('pages_deployments_create');assert(valid('pages_deployments_create',git));expect('pages_deployments_create',git,approved,'satisfied');
 for(const field of DIRECT_UPLOAD_FIELDS)for(const value of ['payload',{content:'payload'},null]){
  const args={...git,body:{...git.body,[field]:value}};
- assert(!valid('pages_deployments_create',args),field);
+ assert.equal(valid('pages_deployments_create',args),typeof value==='string'||(typeof value==='object'&&value!==null&&!['manifest','pages_build_output_dir','wrangler_config_hash'].includes(field)),field);
  for(const who of ['proposer','muse','grok'])expect('pages_deployments_create',args,approved,'rejected',who);
 }
 // All multipart/file fields from the capture are covered, not only Worker JS.
@@ -71,31 +75,35 @@ for(const [field,schema]of Object.entries(deploymentBody))if(schema.anyOf?.some(
 for(const name of ['pages_create','pages_edit'])for(const env of ['preview','production']){
  for(const entry of [{type:'plain_text',value:'public setting'},null]){
   const args=argsFor(name);args.body.deployment_configs={[env]:{env_vars:{ANY_NEW_NAME:entry}}};
-  assert(valid(name,args),JSON.stringify(args));expect(name,args,approved,'satisfied');
+  assert(valid(name,args),JSON.stringify(args));expect(name,args,approved,'rejected');
  }
- for(const entry of [{type:'secret_text',value:'TEST_SENTINEL'},{type:'secret_text'},{value:'unclassified'},{type:'plain_text',value:7}]){
+ for(const entry of [{type:'secret_text'},{value:'unclassified'},{type:'plain_text',value:7},{type:'other',value:'x'},[],7]){
   const args=argsFor(name);args.body.deployment_configs={[env]:{env_vars:{'new/name~key':entry}}};assert(!valid(name,args));
  }
  for(const field of ['build_command','web_analytics_token']){
-  const args=argsFor(name);args.body.build_config={[field]:'TEST_SENTINEL'};assert(!valid(name,args));
+  const args=argsFor(name);args.body.build_config={[field]:'TEST_SENTINEL'};assert(valid(name,args));
   for(const who of ['proposer','muse','grok'])expect(name,args,approved,'rejected',who);
  }
 }
-// Documented deliberate overrides: restore captured schemas and remove matching
-// policy reject rules, while keeping the configured signer/target requirements.
-const override=structuredClone(plugin),overridePolicy=structuredClone(config.policy);
-for(const name of ['pages_create','pages_edit','pages_deployments_create']){
- const args=override.operations[name].executionPayloadSchema.properties.arguments;
- const source=snapshot.tools.find(t=>t.name===name).inputSchema;
- if(name==='pages_deployments_create')for(const f of DIRECT_UPLOAD_FIELDS)args.properties.body.properties[f]=structuredClone(source.properties.body.properties[f]);
- else {
-  for(const f of ['build_command','web_analytics_token'])args.properties.body.properties.build_config.properties[f]=structuredClone(source.properties.body.properties.build_config.properties[f]);
-  args.$defs.pages_deployment_config_values_request.properties.env_vars.additionalProperties={anyOf:[{type:'object',required:['type','value'],properties:{type:{enum:['plain_text','secret_text']},value:{type:'string'}}},{type:'null'}]};
+// All arbitrary-name environment writes are denied, including plaintext.
+for(const name of blocked){
+ assert(config.policy.policies[name].some(r=>r.reject===true&&!r.match));
+ for(const env of ['preview','production'])for(const key of ['ANY_NEW_NAME','new/name~key','__proto__','constructor'])for(const type of ['plain_text','secret_text']){
+  const args=argsFor(name);args.body.deployment_configs={[env]:{env_vars:{[key]:{type,value:'fixture'}}}};
+  assert(valid(name,args));
+  for(const who of ['proposer','muse','grok','unknown'])for(const ap of [[],approved])expect(name,args,ap,'rejected',who);
  }
- overridePolicy.policies[name]=overridePolicy.policies[name].filter(r=>!r.match?.conditions?.some(c=>c.path.startsWith('/arguments/body/')));
+}
+// Mechanical override test only, NOT a recommended release configuration:
+// removing the blanket denial enables secret writes too; the released engine
+// cannot selectively inspect arbitrary keys. Transport must not decide policy.
+const before=JSON.stringify(plugin),overridePolicy=structuredClone(config.policy);
+for(const name of [...blocked,'pages_deployments_create']) {
+ overridePolicy.policies[name]=overridePolicy.policies[name].filter(r=>!(r.reject&&!r.match)&&!r.match?.conditions?.some(c=>c.path.startsWith('/arguments/body/')));
 }
 for(const [name,args] of [
  ['pages_deployments_create',{...git,body:{branch:'main',manifest:'{}','_worker.js':'reviewed code'}}],
  ['pages_edit',{...argsFor('pages_edit'),body:{build_config:{build_command:'reviewed command'},deployment_configs:{production:{env_vars:{SECRET:{type:'secret_text',value:'known to caller'}}}}}}],
-]){assert(valid(name,args,override));assert.equal(status(name,args,approved,'proposer',overridePolicy),'satisfied');}
-console.log(`Cloudflare: ${count} policy/path cases; all DNS types; upload/secret defaults, plaintext/null support and deliberate schema/policy overrides passed.`);
+]){assert(valid(name,args));assert.equal(status(name,args,approved),'rejected');assert.equal(status(name,args,[],'proposer',overridePolicy),'additionalApprovalsRequired');assert.equal(status(name,args,approved,'proposer',overridePolicy),'satisfied');}
+assert.equal(JSON.stringify(plugin),before);
+console.log(`Cloudflare restricted v1: ${count} policy/path cases; Pages create/edit denied for all proposers; Git deployments allowed; provider-valid schemas and config-only authorization passed.`);

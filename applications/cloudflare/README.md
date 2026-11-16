@@ -5,6 +5,20 @@ Restricted MPAS bridge for the **official hosted Cloudflare MCP server** at
 server is implemented. The adapter launches pinned `mcp-remote@0.1.38` against
 that URL. The proposer uses only this MPAS bridge.
 
+## Restricted v1 scope
+
+This release uses plugin schema **version 1**, no `display` metadata, and the
+unchanged released `@oma3/mpas@0.1.0-alpha.15` dependency. No SDK/CLI implementation
+change, collection-inspection extension or custom secret-provisioning API is needed.
+
+The example policy unconditionally rejects **`pages_create` and `pages_edit` for
+all proposers, regardless of approvals**. Both remain governed and visible; they
+are not pass-through. Project creation, project settings and all environment-variable
+writes (including plaintext updates and null deletions) must use another
+operator-controlled workflow outside this bridge. Plaintext environment reads,
+DNS operations and Git deployments remain available under existing scope/approval
+rules. Direct uploads remain denied by field-presence policy rules.
+
 ## Surface and provenance
 
 The operator supplied an authenticated hosted capture at
@@ -39,13 +53,15 @@ The proposer bridge preserves all 26 reviewed hosted Tool definitions. The
 Credential Adapter validates each request against the **plugin schema**, then
 applies the **deployment policy** and signer requirements before dispatch.
 `passThrough: "deny"` and the attested selected surface reject unselected tools,
-including credential-minting APIs. Approval cannot override schema or policy
-rejection. Impact labels alone do not establish approval counts.
+including credential-minting APIs. Schema validation checks the provider input contract, not deployment authorization.
+The plugin supplies publisher analysis, risk classifications and the default governed
+surface. The deployment configuration is the final authorization authority.
+A well-formed forbidden input passes validation and receives a policy rejection;
+additional approvals cannot override a matching rejection. Impact labels alone do not establish approval counts.
 
 The credential-side transport has a different job: **sanitize upstream results
 before they leave the CA**. It forwards MCP requests and discovers live selected
-tools, but has **no argument-level authorization checks**. Input overrides require
-plugin/configuration changes, not hidden transport edits. Selected-name routing
+tools, but has **no argument-level authorization checks**. Authorization overrides require configuration changes only, not plugin or transport edits. Selected-name routing
 still excludes unknown operations so they cannot evade the selected response
 handling. Do not install this transport as an ungoverned MCP connection.
 
@@ -62,6 +78,8 @@ All selected path arguments have plugin constraints:
 
 - Account, zone and DNS record IDs: nonempty URL-safe identifier tokens, at most
   32 characters (the source contract's limit), not an enumerated ID list.
+  Unreserved characters such as embedded dots and tildes are not excluded merely
+  because they are absent from example IDs; standalone dot segments remain invalid.
 - Deployment IDs: explicit UUID pattern and length, not reliance on an optional
   JSON Schema `format` validator.
 - Project names: the source's lowercase letter/digit followed by lowercase
@@ -94,8 +112,7 @@ unknown request properties remain rejected.
 ### Git deployment default; direct uploads disabled
 
 `pages_deployments_create` retains Git deployment inputs (`branch`, `commit_hash`,
-`commit_message`, `commit_dirty`). Both plugin schemas and explicit policy reject
-rules disable these captured direct-upload fields, regardless of approval:
+`commit_message`, `commit_dirty`). Explicit deployment-policy rejection rules disable these captured direct-upload fields, regardless of approval:
 
 - `_worker.js`, `_worker.bundle`, `manifest`
 - `_headers`, `_redirects`, `_routes.json`
@@ -105,8 +122,8 @@ rules disable these captured direct-upload fields, regardless of approval:
 The first six file fields are forwarded as multipart parts by the reviewed
 request builder; the manifest references uploaded asset hashes. The metadata
 fields accompany the upload configuration. No other selected tool provides a
-file/multipart upload entry point. Project/source configuration and Git deployments
-remain governed writes, not direct file uploads.
+file/multipart upload entry point. Source-connection operations and Git deployments remain governed writes, not
+direct file uploads. Project creation/editing remains governed but denied.
 
 Operators must maintain an **external code-review process**, such as reviewed
 GitHub changes, for deployed code and repository build scripts. Git deployment
@@ -117,30 +134,47 @@ process and operator-controlled secret isolation.
 
 ### Environment variables and build configuration
 
-The plugin allows `plain_text` environment values, including creation, updates
-and deletion via a `null` map entry, in both preview and production configuration.
-Reads expose values only when explicitly classified `plain_text`. MPAS follows
-Cloudflare's classification; it does not identify secrets mislabeled as plaintext.
+Provider-valid `plain_text`, `secret_text` and `null` deletion entries remain
+structurally valid in preview and production. Build-command and analytics-token
+inputs also retain their provider schemas. These well-formed calls receive
+**policy rejection**, not malformed-input errors: the blanket `pages_create` and
+`pages_edit` denials apply regardless of which fields are present or who approves.
 
-The plugin rejects `secret_text` writes by default. Cloudflare's native Pages API
-requires the caller to supply the actual value: an agent submitting a secret
-therefore already knows it. There is no secret generation, vault-reference
-resolution or custom secret-installation API here. Those need a separate MPAS
-architectural decision.
+Reads return explicitly classified plaintext values; secret values remain filtered.
+MPAS does not detect secrets an operator incorrectly stores as plaintext. The native
+secret-write API requires the caller to supply the actual value, so an agent
+submitting it already knows it. No vault resolution or custom provisioning is added.
 
-**Pinned policy-engine limitation:** its conditions use exact JSON Pointers and
-cannot quantify over arbitrary environment-variable names. Consequently the
-secret-type prohibition is enforced by the plugin bound by the deployment's
-artifact DID, not by a fictitious wildcard policy rule. The blanket `env_vars`
-policy ban has been removed. Independent arbitrary-key rejection in the policy
-engine remains unresolved and needs an SDK policy capability; exact rules for a
-few variable names would not cover this requirement.
+Do not remove the blanket denials as a way to enable only plaintext writes: the
+released policy engine cannot selectively inspect `secret_text` classifications
+under arbitrary variable names. Exact-name rules would leave other names uncovered.
+Approval of build commands also cannot prove scripts will not export server secrets;
+operator-controlled review and secret isolation remain necessary.
 
-Build-command and analytics-token writes remain rejected by **both** plugin and
-policy. Approval of a shell command cannot prove that scripts/dependencies will
-not export server secrets. Configure builds through a trusted process. The
-transport does not repeat these input bans. Omitting build-log tools does not
-prevent network exfiltration from a builder.
+### Deferred coordinated migration
+
+A later coordinated SDK/CLI release and plugin-v2 review/presentation migration is
+planned to replace blanket Pages denials with finer configuration rules. It must
+supply **both** arbitrary-entry policy inspection and compatible v2 plugin consumers;
+support for one does not imply support for the other. Minimum future versions remain
+pending assignment. Neither feature is available or required in this v1 release.
+
+Before future activation, upgrade affected Verifiers, execution-side plugin consumers
+(including bridges where applicable) and reviewers; generate/review migrated artifacts,
+recompute artifact DIDs and align deployment/application-local/central registry
+references with published content, preferably at immutable locations. Compatible v1
+deployments need not migrate together, and upstream Cloudflare MCP needs no MPAS SDK
+upgrade. Cloudflare still needs a central registry entry at release time; plugin v2
+does not itself change the registry schema.
+
+The current CA validates configurations before startup: one unsupported policy or
+plugin can prevent the entire daemon from starting, including other applications.
+Operation-level isolation is not implemented. Upgrade compatible consumers or restore
+a previous compatible artifact/configuration set; never delete safety rules, strip
+review metadata or relabel v2 as v1 to make startup succeed. Future rollout must test
+v1 compatibility, visible rejection of unsupported inputs, restriction enforcement,
+matching artifact hashes and rollback. The restricted configuration here uses only
+released policy syntax and does not depend on that future rollout.
 
 ### Credential-side Pages response filtering
 
@@ -188,33 +222,24 @@ plugin validation, authorization and policy rejection remain in force.
   and update snapshots/restrictions deliberately; do not assume matching schemas
   prove behavioral equivalence.
 
-### Deliberate overrides
+### Authorization changes and production preparation
 
-Defaults are intentionally not transport authorization rules. To enable an
-otherwise restricted input, the operator must:
+The deployment configuration is the authority; changing an authorization decision
+must not require schema, artifact DID or transport edits. Rejection takes precedence
+over approvals. Keep the blanket Pages denials for this restricted release: removing
+them also enables secret writes, because the current engine cannot distinguish
+arbitrary-name secret entries. Finer rules are deferred to the coordinated migration.
 
-1. Review its risks and establish a suitable review/protection process. Direct
-   upload content is not automatically covered by GitHub review. Review the exact
-   uploaded code/assets or enforce another appropriate protection mechanism.
-2. Edit `scripts/request-restrictions.mjs` (the reproducible plugin restriction
-   source) and regenerate offline. For direct uploads, remove the applicable
-   `false` field schemas so captured schemas remain; for `secret_text`, expand
-   the environment-entry union to include the native `{type:"secret_text",value}`
-   shape while retaining a single unambiguous `null` deletion alternative.
-   Build-command overrides likewise restore the captured field schema.
-3. Modify the deployment configuration: remove the corresponding direct-upload
-   or build-command rejection rules and provide suitable signer requirements.
-   A secret-text override requires updating the pinned plugin artifact reference;
-   any additional operator-authored exact-name secret rejection rules must also
-   be deliberately changed. No wildcard secret policy support is claimed.
-4. Recompute the plugin artifact DID, refresh `registry-entry.json` and
-   `adapter-config.example.json`, and install the reviewed plugin/configuration
-   together through the operator's deployment process. Generation refreshes the
-   example reference while preserving its policy choices. Verify publisher trust
-   and configuration references match the new artifact.
-5. Run the tests with the intended defaults/overrides. No transport input-check
-   edits are required. Response filtering remains active even when secret writes
-   are enabled; it cannot erase the submitting agent's prior knowledge of a value.
+Direct uploads are not automatically covered by GitHub review. Any deliberate future
+policy change enabling them needs a review/protection process for the exact uploaded
+content and appropriate approval requirements. External review of repository code
+and build scripts remains the operator's responsibility even for Git deployments.
+The transport continues response filtering and does not impose hidden input bans.
+
+Relative to the earlier schema-restricted release, this revision changes the plugin artifact DID because it corrects previously
+restricted schemas (and normalizes equivalent provider shapes). Future policy-only
+changes do **not** change that artifact. Generation refreshes the example artifact
+reference without replacing its reviewed policy choices.
 
 The example remains a **template, not an installed configuration**. The adapter's
 current token is the broad read token used for discovery, not a production-scoped
@@ -226,7 +251,11 @@ this change. Uncertain write outcomes require state verification before retrying
 ## Reproduction and validation
 
 Preserve the recorded capture; this revision requires no fresh discovery. From
-an MPAS checkout with the generator built at the recorded revision:
+a clean isolated MPAS checkout at `c7ffdd9a635dc66539fc74252a9641255029f7a6`,
+build `bridge-generator` with `npm ci` and `npm run build` in that directory.
+The replay verifies the revision, rejects tracked generator edits, checks emitted
+plugin version 1/no display and requires the unchanged dependency manifest. Do not
+use the ongoing v2 generator or relabel its output. Then run:
 
 ```sh
 node applications/cloudflare/scripts/generate.mjs \
@@ -236,10 +265,13 @@ node applications/cloudflare/scripts/generate.mjs \
 The capture directory contains original `metadata.json` and
 `tools-list.snapshot.json`. Source hash/count/mode must match the recorded capture;
 selected Tool objects remain unchanged. The generator applies the versioned
-request restrictions, refreshes artifact DIDs and copies the reviewed policy
+provider-schema normalization, refreshes artifact DIDs and copies the reviewed policy
 with its updated plugin reference. Response/transport code and documentation are
-maintained separately. Do not enable restrictions only in a manually edited plugin
-that the next replay would overwrite.
+maintained separately. Keep authorization decisions in deployment configuration, not manually edited schemas.
+If only the committed selected capture is available, pass its `build-artifacts`
+directory and append `--selected-snapshot`. This verifies all selected definitions
+and the recorded original source hash/count; it does not re-verify or invent the
+unavailable full 3,042-tool inventory.
 
 ```sh
 cd applications/cloudflare/bridge
@@ -252,6 +284,7 @@ python3 scripts/validate-applications.py
 python3 scripts/test_validate_applications.py
 python3 scripts/test_discover_bridges.py
 node applications/cloudflare/scripts/test-policy.mjs
+node applications/cloudflare/scripts/test-generation.mjs /path/to/pinned-mpas/bridge-generator
 node applications/cloudflare/scripts/test-responses.mjs
 node applications/cloudflare/scripts/test-transport.mjs
 node scripts/probe-bridge-protocols.mjs applications/cloudflare applications/cloudflare/tool-selection.json
@@ -259,8 +292,12 @@ node scripts/probe-bridge-protocols.mjs applications/cloudflare applications/clo
 
 Tests use local fixtures and a fake upstream, never live Cloudflare mutations.
 They cover path formats/traversal, all DNS types, upload denial versus Git inputs,
-secret/plaintext/null handling, sanitization channels, truncation, selected-only
-warning diagnostics, and plugin/policy overrides passing through unchanged
+schema-valid secret/plaintext/null writes being denied, plaintext reads, sanitization channels, truncation, selected-only
+warning diagnostics, and configuration-only overrides passing through unchanged
 transport code. They are not live CA/provider verification. The unchanged pinned
 dependency tree has two high-severity npm advisories; this is not an audit-clean
 claim. Dependency upgrades remain a separate shared-generator/SDK change.
+
+Provider contract references: [DNS record identifiers](https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/delete/)
+and [Pages deployment arguments](https://developers.cloudflare.com/api/resources/pages/subresources/projects/subresources/deployments/methods/create/).
+These are contract references, not a claim of fresh hosted discovery.

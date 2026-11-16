@@ -41,7 +41,7 @@ createInterface({input:process.stdin}).on('line',line=>{
    const init=await call('initialize',{protocolVersion:'2024-11-05',capabilities:{},clientInfo:{name:'test',version:'1'}});assert.deepEqual(init.result.capabilities,{tools:{}});
    const list=await call('tools/list');assert.equal(list.result.tools.length,mode==='same'?26:25);assert(!list.result.tools.some(t=>t.name==='unrelated_new_tool'));
    if(mode==='same')assert.deepEqual(list.result.tools,reviewed);else assert.equal(list.result.tools[0].description,'live changed contract');
-   // Deliberate plugin/config overrides must not hit hidden transport argument
+   // Deliberate config-only overrides must not hit hidden transport argument
    // restrictions. This wrapper alone is NOT an authorization engine.
    for(const [name,args]of [
     ['pages_get',{}],['pages_edit',{body:{build_config:{build_command:'reviewed command'},deployment_configs:{production:{env_vars:{SECRET:{type:'secret_text',value:'operator supplied'}}}}}}],

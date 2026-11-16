@@ -8,7 +8,7 @@
   "plugin": {
     "pluginDid": "did:web:wivity.com:plugins:cloudflare-mcp-server",
     "pluginVersion": "0.1.0",
-    "artifactDid": "did:artifact:bafkreigg7itx3ldprhistqpewyferllnxspnmf34jya3htw4qiggn43nim",
+    "artifactDid": "did:artifact:bafkreiaans7k4yaje4vxwpcjxeni3twdivcqn6ynp4uoqp76oikn6wk4nm",
     "path": "/absolute/path/to/mpas-applications/applications/cloudflare/plugin.json"
   },
   "passThrough": "deny",
@@ -576,6 +576,10 @@
         }
       ],
       "pages_create": [
+        {
+          "reject": true,
+          "description": "Restricted v1 release: project creation/editing and all environment-variable writes are unavailable to every proposer. Finer secret_text rules require a later policy-engine migration."
+        },
         {
           "description": "Reject unknown proposer identities.",
           "reject": true,
@@ -1723,6 +1727,10 @@
         }
       ],
       "pages_edit": [
+        {
+          "reject": true,
+          "description": "Restricted v1 release: project creation/editing and all environment-variable writes are unavailable to every proposer. Finer secret_text rules require a later policy-engine migration."
+        },
         {
           "description": "Reject unknown proposer identities.",
           "reject": true,

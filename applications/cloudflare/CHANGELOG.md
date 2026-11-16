@@ -1,5 +1,22 @@
 # Changelog — Cloudflare
 
+## Unreleased — restricted v1 release
+
+- Restore provider-valid uploads, secret-text entries, build commands and analytics
+  tokens to plugin schemas; retain path validity and composition normalization.
+- Move default prohibitions exclusively into deployment configuration. Config-only
+  overrides do not change the plugin artifact or transport.
+- Unconditionally deny Pages creation/editing (including all environment writes)
+  through released configuration syntax; keep Git deployments and plaintext reads.
+- Defer collection-inspection policy, SDK/CLI updates and plugin v2. Keep alpha.15
+  and all dependency versions unchanged; pin/check v1 generation.
+- Refresh the artifact DID for this schema correction, not for future policy edits.
+- Preserve response filtering, plaintext support, truncation notices and warning-only
+  selected-tool drift diagnostics; add configuration-only override regressions.
+- Earlier entries below describe superseded historical restrictions, not current
+  authorization behavior.
+
+
 ## Design hardening — 2026-11-15
 
 - Validate all selected path parameters in plugin schemas.

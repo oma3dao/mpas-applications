@@ -2,7 +2,7 @@
   "version": "1",
   "application": {
     "name": "Cloudflare DNS and Pages MCP MPAS Bridge",
-    "description": "Restricted DNS and Pages subset of the official Cloudflare MCP non-Code-Mode interface.",
+    "description": "Restricted v1 DNS and Pages bridge; project create/edit and direct uploads are denied by the example policy.",
     "applicationDid": "did:web:wivity.com:applications:cloudflare-mcp-server"
   },
   "native": false,
@@ -20,7 +20,7 @@
   "plugin": {
     "repository": "https://github.com/signerset/mpas-applications/blob/feat/cloudflare-no-code/applications/cloudflare/plugin.json",
     "pluginDid": "did:web:wivity.com:plugins:cloudflare-mcp-server",
-    "artifactDid": "did:artifact:bafkreigg7itx3ldprhistqpewyferllnxspnmf34jya3htw4qiggn43nim"
+    "artifactDid": "did:artifact:bafkreiaans7k4yaje4vxwpcjxeni3twdivcqn6ynp4uoqp76oikn6wk4nm"
   },
   "publisher": {
     "name": "Wivity",
