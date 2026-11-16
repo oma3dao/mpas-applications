@@ -1,0 +1,2191 @@
+{
+  "version": "1",
+  "type": "MpasAdapterDeploymentConfig",
+  "name": "cloudflare-dns-pages",
+  "target": {
+    "applicationDid": "did:web:wivity.com:applications:cloudflare-mcp-server"
+  },
+  "plugin": {
+    "pluginDid": "did:web:wivity.com:plugins:cloudflare-mcp-server",
+    "pluginVersion": "0.1.0",
+    "artifactDid": "did:artifact:bafkreiaans7k4yaje4vxwpcjxeni3twdivcqn6ynp4uoqp76oikn6wk4nm",
+    "path": "/absolute/path/to/mpas-applications/applications/cloudflare/plugin.json"
+  },
+  "passThrough": "deny",
+  "credentialBindings": [
+    {
+      "credentialHandle": "cloudflareApiToken",
+      "provider": "file"
+    }
+  ],
+  "executionTarget": {
+    "type": "mcp.stdio",
+    "command": "node",
+    "args": [
+      "/absolute/path/to/mpas-applications/applications/cloudflare/adapter/transport.mjs"
+    ],
+    "env": {
+      "CLOUDFLARE_API_TOKEN": "{{credential:cloudflareApiToken}}"
+    }
+  },
+  "policy": {
+    "version": "1",
+    "type": "MpasApplicationPolicy",
+    "policyProfileUrl": "https://github.com/oma3dao/mpas/blob/main/specs/mpas-profile-policy-json.md",
+    "applicationDid": "did:web:wivity.com:applications:cloudflare-mcp-server",
+    "executionProfile": {
+      "id": "did:web:profiles.oma3.org:mcp",
+      "format": "mcp.toolsCall"
+    },
+    "defaultRequirement": {
+      "type": "threshold",
+      "threshold": 1,
+      "eligibleSignerGroup": "approvers",
+      "decision": "approve"
+    },
+    "signerGroups": {
+      "all": [
+        "REPLACE_WITH_PROPOSER_DID",
+        "REPLACE_WITH_MUSE_DID",
+        "REPLACE_WITH_GROK_DID",
+        "REPLACE_WITH_APPROVER_DID"
+      ],
+      "proposers": [
+        "REPLACE_WITH_PROPOSER_DID",
+        "REPLACE_WITH_MUSE_DID",
+        "REPLACE_WITH_GROK_DID"
+      ],
+      "trustedWriters": [
+        "REPLACE_WITH_MUSE_DID",
+        "REPLACE_WITH_GROK_DID"
+      ],
+      "approvers": [
+        "REPLACE_WITH_APPROVER_DID"
+      ]
+    },
+    "policies": {
+      "accounts_get": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        }
+      ],
+      "dns_records_create": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "dns_records_delete": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "dns_records_edit": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "dns_records_get": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        }
+      ],
+      "dns_records_list": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        }
+      ],
+      "dns_records_update": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "pages_create": [
+        {
+          "reject": true,
+          "description": "Restricted v1 release: project creation/editing and all environment-variable writes are unavailable to every proposer. Finer secret_text rules require a later policy-engine migration."
+        },
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        },
+        {
+          "description": "Reject build-command and analytics-token writes even with approval.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/build_config/build_command",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject build-command and analytics-token writes even with approval.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/build_config/web_analytics_token",
+                "op": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_delete": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "pages_deployments_create": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/_headers",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/_redirects",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/_routes.json",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/_worker.bundle",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/_worker.js",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/functions-filepath-routing-config.json",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/manifest",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/pages_build_output_dir",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Direct upload and upload metadata disabled by default; approvals cannot override rejection.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/wrangler_config_hash",
+                "op": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_deployments_delete": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "pages_deployments_get": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        }
+      ],
+      "pages_deployments_list": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        }
+      ],
+      "pages_deployments_retry": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "pages_deployments_rollback": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "pages_domains_create": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "pages_domains_delete": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "pages_domains_get": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        }
+      ],
+      "pages_domains_list": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        }
+      ],
+      "pages_domains_validation_retry": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "pages_edit": [
+        {
+          "reject": true,
+          "description": "Restricted v1 release: project creation/editing and all environment-variable writes are unavailable to every proposer. Finer secret_text rules require a later policy-engine migration."
+        },
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        },
+        {
+          "description": "Reject build-command and analytics-token writes even with approval.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/build_config/build_command",
+                "op": "exists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Reject build-command and analytics-token writes even with approval.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/body/build_config/web_analytics_token",
+                "op": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "pages_get": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        }
+      ],
+      "pages_list": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        }
+      ],
+      "pages_source_connect": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "pages_source_disconnect": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/account_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ACCOUNT_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Muse and Grok use their own verified proposer signature.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "in",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        },
+        {
+          "description": "Other proposers need an independent approver.",
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          },
+          "requirements": {
+            "type": "threshold",
+            "threshold": 1,
+            "eligibleSignerGroup": "approvers",
+            "decision": "approve"
+          }
+        }
+      ],
+      "zones_get": [
+        {
+          "description": "Reject unknown proposer identities.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "actionEnvelope",
+                "path": "/proposer/did",
+                "op": "notIn",
+                "value": [
+                  "REPLACE_WITH_PROPOSER_DID",
+                  "REPLACE_WITH_MUSE_DID",
+                  "REPLACE_WITH_GROK_DID"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "notExists"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Account/zone boundary; no hostname or record-ID pin.",
+          "reject": true,
+          "match": {
+            "conditions": [
+              {
+                "source": "executionPayload",
+                "path": "/arguments/path/zone_id",
+                "op": "neq",
+                "value": "REPLACE_WITH_ZONE_ID"
+              }
+            ]
+          }
+        },
+        {
+          "description": "Read: proposer signature only; Pages secrets removed on CA host.",
+          "requirements": {
+            "type": "proposerOnly"
+          }
+        }
+      ],
+      "execute": [
+        {
+          "reject": true,
+          "description": "Arbitrary code tool is not supported."
+        }
+      ]
+    }
+  },
+  "signerKeys": []
+}

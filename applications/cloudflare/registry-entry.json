@@ -1,0 +1,31 @@
+{
+  "version": "1",
+  "application": {
+    "name": "Cloudflare DNS and Pages MCP MPAS Bridge",
+    "description": "Restricted v1 DNS and Pages bridge; project create/edit and direct uploads are denied by the example policy.",
+    "applicationDid": "did:web:wivity.com:applications:cloudflare-mcp-server"
+  },
+  "native": false,
+  "protocol": "mcp",
+  "upstream": {
+    "name": "cloudflare-api",
+    "protocolVersion": "2024-11-05",
+    "toolSurface": {
+      "alg": "sha-256",
+      "value": "xuqSHXoBnOTFMaNU5nxaTRDOaXppT5ZMhv0cegaMS-s"
+    },
+    "repository": "https://github.com/cloudflare/mcp",
+    "distributionUrl": "https://mcp.cloudflare.com/mcp?codemode=false"
+  },
+  "plugin": {
+    "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/cloudflare/plugin.json",
+    "pluginDid": "did:web:wivity.com:plugins:cloudflare-mcp-server",
+    "artifactDid": "did:artifact:bafkreiaans7k4yaje4vxwpcjxeni3twdivcqn6ynp4uoqp76oikn6wk4nm"
+  },
+  "publisher": {
+    "name": "Wivity",
+    "githubOrg": "wivity",
+    "publisherDid": "did:web:wivity.com"
+  },
+  "status": "beta"
+}

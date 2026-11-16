@@ -1,0 +1,59 @@
+{
+  "dns_records_create": [
+    {
+      "description": "Optional tighter hostname allowlist for named writes; not the default.",
+      "reject": true,
+      "match": {
+        "conditions": [
+          {
+            "source": "executionPayload",
+            "path": "/arguments/body/name",
+            "op": "notIn",
+            "value": [
+              "www.example.com",
+              "api.example.com"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "dns_records_edit": [
+    {
+      "description": "Optional tighter hostname allowlist for named writes; not the default.",
+      "reject": true,
+      "match": {
+        "conditions": [
+          {
+            "source": "executionPayload",
+            "path": "/arguments/body/name",
+            "op": "notIn",
+            "value": [
+              "www.example.com",
+              "api.example.com"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "dns_records_update": [
+    {
+      "description": "Optional tighter hostname allowlist for named writes; not the default.",
+      "reject": true,
+      "match": {
+        "conditions": [
+          {
+            "source": "executionPayload",
+            "path": "/arguments/body/name",
+            "op": "notIn",
+            "value": [
+              "www.example.com",
+              "api.example.com"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

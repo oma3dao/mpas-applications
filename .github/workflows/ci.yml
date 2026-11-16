@@ -80,3 +80,13 @@ jobs:
 
       - name: Probe Tasks and conventional MCP surfaces
         run: node scripts/probe-bridge-protocols.mjs applications/${{ matrix.application }}
+
+      # Optional application-owned offline checks; new bridges need no CI edits.
+      - name: Run application-specific checks
+        env:
+          APPLICATION: ${{ matrix.application }}
+        run: |
+          hook="applications/$APPLICATION/scripts/test-ci.mjs"
+          if [ -f "$hook" ]; then
+            node "$hook"
+          fi

@@ -1,0 +1,111 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "accounts_get": {
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+    },
+    "dns_records_create": {
+      "impact": "critical",
+      "rationale": "Governed: Govern all captured DNS types, including NS delegation, inside the pinned zone. PATCH may omit type; conservatively critical for all DNS writes."
+    },
+    "dns_records_delete": {
+      "impact": "critical",
+      "rationale": "Governed: Delete a single DNS record by explicit zone and record ID; verify record identity before approval."
+    },
+    "dns_records_edit": {
+      "impact": "critical",
+      "rationale": "Governed: Govern all captured DNS types, including NS delegation, inside the pinned zone. PATCH may omit type; conservatively critical for all DNS writes."
+    },
+    "dns_records_get": {
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+    },
+    "dns_records_list": {
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+    },
+    "dns_records_update": {
+      "impact": "critical",
+      "rationale": "Governed: Govern all captured DNS types, including NS delegation, inside the pinned zone. PATCH may omit type; conservatively critical for all DNS writes."
+    },
+    "pages_create": {
+      "impact": "high",
+      "rationale": "Governed: Create a Pages project; build commands, source integration and deployment configuration can enable executable automation."
+    },
+    "pages_delete": {
+      "impact": "critical",
+      "rationale": "Governed: Delete a project and its deployments."
+    },
+    "pages_deployments_create": {
+      "impact": "high",
+      "rationale": "Governed: Create a Git-branch or direct-manifest deployment; branch uses HEAD, not necessarily commit_hash as a pinned revision. Body may contain executable Worker content."
+    },
+    "pages_deployments_delete": {
+      "impact": "critical",
+      "rationale": "Governed: Delete a deployment, potentially affecting available rollback targets."
+    },
+    "pages_deployments_get": {
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+    },
+    "pages_deployments_list": {
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+    },
+    "pages_deployments_retry": {
+      "impact": "high",
+      "rationale": "Governed: Retry a deployment; executes build/deploy automation again."
+    },
+    "pages_deployments_rollback": {
+      "impact": "high",
+      "rationale": "Governed: Change production to a previous deployment."
+    },
+    "pages_domains_create": {
+      "impact": "high",
+      "rationale": "Governed: Attach a custom hostname to a Pages project."
+    },
+    "pages_domains_delete": {
+      "impact": "critical",
+      "rationale": "Governed: Remove a custom hostname from a Pages project."
+    },
+    "pages_domains_get": {
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+    },
+    "pages_domains_list": {
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+    },
+    "pages_domains_validation_retry": {
+      "impact": "high",
+      "rationale": "Governed: Retry domain validation; an operational action, not a pure getter."
+    },
+    "pages_edit": {
+      "impact": "high",
+      "rationale": "Governed: Change build/source/deployment settings; setting an environment variable key to null deletes it."
+    },
+    "pages_get": {
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+    },
+    "pages_list": {
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+    },
+    "pages_source_connect": {
+      "impact": "high",
+      "rationale": "Governed: Connect a preauthorized Git provider repository and configure automatic deployments and PR comments."
+    },
+    "pages_source_disconnect": {
+      "impact": "high",
+      "rationale": "Governed: Disconnect the repository and stop Git-based deployment integration."
+    },
+    "zones_get": {
+      "impact": "low",
+      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+    }
+  }
+}

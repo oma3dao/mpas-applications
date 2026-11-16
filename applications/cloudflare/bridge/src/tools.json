@@ -1,0 +1,5643 @@
+[
+  {
+    "name": "accounts_get",
+    "title": "Account Details",
+    "description": "Get information about a specific account that you are a member of.\n\nGET /accounts/{account_id}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            }
+          },
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true,
+      "title": "Account Details"
+    }
+  },
+  {
+    "name": "dns_records_create",
+    "title": "Create DNS Record",
+    "description": "Create a new DNS record for a zone.\n\nNotes:\n- A/AAAA records cannot exist on the same name as CNAME records.\n- NS records cannot exist on the same name as any other record type.\n- Domain names are always represented in Punycode, even if Unicode\n  characters were used when creating the record.\n\nPOST /zones/{zone_id}/dns_records",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "$ref": "#/$defs/dns-records_dns-record-post"
+        },
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "zone_id": {
+              "description": "Identifier.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "zone_id"
+          ],
+          "type": "object"
+        },
+        "query": {
+          "additionalProperties": false,
+          "properties": {
+            "include_shadow_metadata": {
+              "default": false,
+              "description": "Whether to include shadow metadata in the `meta` field of each record in the response. See [Shadowed records](https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records).",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "path",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "dns-records_AAAARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid IPv6 address.",
+                  "type": "string"
+                },
+                "private_routing": {
+                  "default": false,
+                  "description": "Enables private network routing to the origin.",
+                  "type": "boolean"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "AAAA"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "AAAA Record"
+        },
+        "dns-records_ARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid IPv4 address.",
+                  "type": "string"
+                },
+                "private_routing": {
+                  "default": false,
+                  "description": "Enables private network routing to the origin.",
+                  "type": "boolean"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "A"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "A Record"
+        },
+        "dns-records_CAARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a CAA record.",
+                  "properties": {
+                    "flags": {
+                      "description": "Flags for the CAA record.",
+                      "type": "number"
+                    },
+                    "tag": {
+                      "description": "Name of the property controlled by this record (e.g.: issue, issuewild, iodef).",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "Value of the record. This field's semantics depend on the chosen tag.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "CAA"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "CAA Record"
+        },
+        "dns-records_CERTRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a CERT record.",
+                  "properties": {
+                    "algorithm": {
+                      "description": "Algorithm.",
+                      "type": "number"
+                    },
+                    "certificate": {
+                      "description": "Certificate.",
+                      "type": "string"
+                    },
+                    "key_tag": {
+                      "description": "Key Tag.",
+                      "type": "number"
+                    },
+                    "type": {
+                      "description": "Type.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "CERT"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "CERT Record"
+        },
+        "dns-records_CNAMERecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid hostname. Must not match the record's name.",
+                  "type": "string"
+                },
+                "settings": {
+                  "properties": {
+                    "flatten_cname": {
+                      "default": false,
+                      "description": "If enabled, causes the CNAME record to be resolved externally and the resulting address records (e.g., A and AAAA) to be returned instead of the CNAME record itself. This setting is unavailable for proxied records, since they are always flattened.",
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "CNAME"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "CNAME Record"
+        },
+        "dns-records_DNSKEYRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a DNSKEY record.",
+                  "properties": {
+                    "algorithm": {
+                      "description": "Algorithm.",
+                      "type": "number"
+                    },
+                    "flags": {
+                      "description": "Flags.",
+                      "type": "number"
+                    },
+                    "protocol": {
+                      "description": "Protocol.",
+                      "type": "number"
+                    },
+                    "public_key": {
+                      "description": "Public Key.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "DNSKEY"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "DNSKEY Record"
+        },
+        "dns-records_DSRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a DS record.",
+                  "properties": {
+                    "algorithm": {
+                      "description": "Algorithm.",
+                      "type": "number"
+                    },
+                    "digest": {
+                      "description": "Digest.",
+                      "type": "string"
+                    },
+                    "digest_type": {
+                      "description": "Digest Type.",
+                      "type": "number"
+                    },
+                    "key_tag": {
+                      "description": "Key Tag.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "DS"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "DS Record"
+        },
+        "dns-records_HTTPSRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a HTTPS record.",
+                  "properties": {
+                    "priority": {
+                      "description": "Priority.",
+                      "type": "number"
+                    },
+                    "target": {
+                      "description": "Target.",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "Value.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "HTTPS"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "HTTPS Record"
+        },
+        "dns-records_LOCRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a LOC record.",
+                  "properties": {
+                    "altitude": {
+                      "description": "Altitude of location in meters.",
+                      "type": "number"
+                    },
+                    "lat_degrees": {
+                      "description": "Degrees of latitude.",
+                      "type": "number"
+                    },
+                    "lat_direction": {
+                      "description": "Latitude direction.",
+                      "enum": [
+                        "N",
+                        "S"
+                      ],
+                      "type": "string"
+                    },
+                    "lat_minutes": {
+                      "description": "Minutes of latitude.",
+                      "type": "number"
+                    },
+                    "lat_seconds": {
+                      "description": "Seconds of latitude.",
+                      "type": "number"
+                    },
+                    "long_degrees": {
+                      "description": "Degrees of longitude.",
+                      "type": "number"
+                    },
+                    "long_direction": {
+                      "description": "Longitude direction.",
+                      "enum": [
+                        "E",
+                        "W"
+                      ],
+                      "type": "string"
+                    },
+                    "long_minutes": {
+                      "description": "Minutes of longitude.",
+                      "type": "number"
+                    },
+                    "long_seconds": {
+                      "description": "Seconds of longitude.",
+                      "type": "number"
+                    },
+                    "precision_horz": {
+                      "description": "Horizontal precision of location.",
+                      "type": "number"
+                    },
+                    "precision_vert": {
+                      "description": "Vertical precision of location.",
+                      "type": "number"
+                    },
+                    "size": {
+                      "description": "Size of location in meters.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "LOC"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "LOC Record"
+        },
+        "dns-records_MXRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid mail server hostname.",
+                  "type": "string"
+                },
+                "priority": {
+                  "description": "Required for MX and URI records; ignored for other record types (but may still be returned by the API). Records with lower priorities are preferred. This field is to be deprecated in favor of the priority field within the data map.",
+                  "type": "number"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "MX"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "MX Record"
+        },
+        "dns-records_NAPTRRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a NAPTR record.",
+                  "properties": {
+                    "flags": {
+                      "description": "Flags.",
+                      "type": "string"
+                    },
+                    "order": {
+                      "description": "Order.",
+                      "type": "number"
+                    },
+                    "preference": {
+                      "description": "Preference.",
+                      "type": "number"
+                    },
+                    "regex": {
+                      "description": "Regex.",
+                      "type": "string"
+                    },
+                    "replacement": {
+                      "description": "Replacement.",
+                      "type": "string"
+                    },
+                    "service": {
+                      "description": "Service.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "NAPTR"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "NAPTR Record"
+        },
+        "dns-records_NSRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid name server host name.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "NS"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "NS Record"
+        },
+        "dns-records_OPENPGPKEYRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A single Base64-encoded OpenPGP Transferable Public Key (RFC 4880 Section 11.1)",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "OPENPGPKEY"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "OPENPGPKEY Record"
+        },
+        "dns-records_PTRRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "Domain name pointing to the address.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "PTR"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "PTR Record"
+        },
+        "dns-records_SMIMEARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a SMIMEA record.",
+                  "properties": {
+                    "certificate": {
+                      "description": "Certificate.",
+                      "type": "string"
+                    },
+                    "matching_type": {
+                      "description": "Matching Type.",
+                      "type": "number"
+                    },
+                    "selector": {
+                      "description": "Selector.",
+                      "type": "number"
+                    },
+                    "usage": {
+                      "description": "Usage.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "SMIMEA"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "SMIMEA Record"
+        },
+        "dns-records_SRVRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a SRV record.",
+                  "properties": {
+                    "port": {
+                      "description": "The port of the service.",
+                      "type": "number"
+                    },
+                    "priority": {
+                      "description": "Required for MX and URI records; ignored for other record types (but may still be returned by the API). Records with lower priorities are preferred. This field is to be deprecated in favor of the priority field within the data map.",
+                      "type": "number"
+                    },
+                    "target": {
+                      "description": "A valid hostname.",
+                      "type": "string"
+                    },
+                    "weight": {
+                      "description": "The record weight.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "SRV"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "SRV Record"
+        },
+        "dns-records_SSHFPRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a SSHFP record.",
+                  "properties": {
+                    "algorithm": {
+                      "description": "Algorithm.",
+                      "type": "number"
+                    },
+                    "fingerprint": {
+                      "description": "Fingerprint.",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "Type.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "SSHFP"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "SSHFP Record"
+        },
+        "dns-records_SVCBRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a SVCB record.",
+                  "properties": {
+                    "priority": {
+                      "description": "Priority.",
+                      "type": "number"
+                    },
+                    "target": {
+                      "description": "Target.",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "Value.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "SVCB"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "SVCB Record"
+        },
+        "dns-records_TLSARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a TLSA record.",
+                  "properties": {
+                    "certificate": {
+                      "description": "Certificate.",
+                      "type": "string"
+                    },
+                    "matching_type": {
+                      "description": "Matching Type.",
+                      "type": "number"
+                    },
+                    "selector": {
+                      "description": "Selector.",
+                      "type": "number"
+                    },
+                    "usage": {
+                      "description": "Usage.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "TLSA"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "TLSA Record"
+        },
+        "dns-records_TXTRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "Text content for the record. The content must consist of quoted \"character strings\" (RFC 1035), each with a length of up to 255 bytes. Strings exceeding this allowed maximum length are automatically split.\n\nLearn more at <https://www.cloudflare.com/learning/dns/dns-records/dns-txt-record/>.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "TXT"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "TXT Record"
+        },
+        "dns-records_URIRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a URI record.",
+                  "properties": {
+                    "target": {
+                      "description": "The record content.",
+                      "type": "string"
+                    },
+                    "weight": {
+                      "description": "The record weight.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "priority": {
+                  "description": "Required for MX and URI records; ignored for other record types (but may still be returned by the API). Records with lower priorities are preferred. This field is to be deprecated in favor of the priority field within the data map.",
+                  "type": "number"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "URI"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "URI Record"
+        },
+        "dns-records_dns-record-post": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-without-data"
+            },
+            {
+              "$ref": "#/$defs/dns-records_dns-record-with-data"
+            }
+          ]
+        },
+        "dns-records_dns-record-shared-fields": {
+          "properties": {
+            "comment": {
+              "description": "Comments or notes about the DNS record. This field has no effect on DNS responses.",
+              "type": "string"
+            },
+            "name": {
+              "description": "Complete DNS record name, including the zone name, in Punycode.",
+              "type": "string"
+            },
+            "proxied": {
+              "default": false,
+              "description": "Whether the record is receiving the performance and security benefits of Cloudflare.",
+              "type": "boolean"
+            },
+            "settings": {
+              "$ref": "#/$defs/dns-records_settings",
+              "description": "Settings for the DNS record."
+            },
+            "tags": {
+              "$ref": "#/$defs/dns-records_tags",
+              "default": [],
+              "description": "Custom tags for the DNS record. This field has no effect on DNS responses."
+            },
+            "ttl": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "enum": [
+                    1
+                  ],
+                  "type": "integer"
+                }
+              ],
+              "default": 1,
+              "description": "Time To Live (TTL) of the DNS record in seconds. Setting to 1 means 'automatic'. Value must be between 60 and 86400, with the minimum reduced to 30 for Enterprise zones."
+            }
+          },
+          "type": "object"
+        },
+        "dns-records_dns-record-with-data": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dns-records_CAARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_CERTRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_DNSKEYRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_DSRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_HTTPSRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_LOCRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_NAPTRRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_SMIMEARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_SRVRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_SSHFPRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_SVCBRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_TLSARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_URIRecord"
+            }
+          ]
+        },
+        "dns-records_dns-record-without-data": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dns-records_ARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_AAAARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_CNAMERecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_MXRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_NSRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_OPENPGPKEYRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_PTRRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_TXTRecord"
+            }
+          ]
+        },
+        "dns-records_settings": {
+          "description": "Settings for the DNS record.",
+          "properties": {
+            "ipv4_only": {
+              "default": false,
+              "description": "When enabled, only A records will be generated, and AAAA records will not be created. This setting is intended for exceptional cases. Note that this option only applies to proxied records and it has no effect on whether Cloudflare communicates with the origin using IPv4 or IPv6.",
+              "type": "boolean"
+            },
+            "ipv6_only": {
+              "default": false,
+              "description": "When enabled, only AAAA records will be generated, and A records will not be created. This setting is intended for exceptional cases. Note that this option only applies to proxied records and it has no effect on whether Cloudflare communicates with the origin using IPv4 or IPv6.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "dns-records_tags": {
+          "description": "Custom tags for the DNS record. This field has no effect on DNS responses.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      }
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Create DNS Record"
+    }
+  },
+  {
+    "name": "dns_records_delete",
+    "title": "Delete DNS Record",
+    "description": "Permanently removes a DNS record from the zone.\n\nDELETE /zones/{zone_id}/dns_records/{dns_record_id}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "dns_record_id": {
+              "description": "Identifier.",
+              "type": "string"
+            },
+            "zone_id": {
+              "description": "Identifier.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "zone_id",
+            "dns_record_id"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Delete DNS Record"
+    }
+  },
+  {
+    "name": "dns_records_edit",
+    "title": "Update DNS Record",
+    "description": "Update an existing DNS record.\n\nNotes:\n- A/AAAA records cannot exist on the same name as CNAME records.\n- NS records cannot exist on the same name as any other record type.\n- Domain names are always represented in Punycode, even if Unicode\n  characters were used when creating the record.\n\nPATCH /zones/{zone_id}/dns_records/{dns_record_id}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "$ref": "#/$defs/dns-records_dns-record-patch"
+        },
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "dns_record_id": {
+              "description": "Identifier.",
+              "type": "string"
+            },
+            "zone_id": {
+              "description": "Identifier.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "zone_id",
+            "dns_record_id"
+          ],
+          "type": "object"
+        },
+        "query": {
+          "additionalProperties": false,
+          "properties": {
+            "include_shadow_metadata": {
+              "default": false,
+              "description": "Whether to include shadow metadata in the `meta` field of each record in the response. See [Shadowed records](https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records).",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "path",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "dns-records_AAAARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid IPv6 address.",
+                  "type": "string"
+                },
+                "private_routing": {
+                  "default": false,
+                  "description": "Enables private network routing to the origin.",
+                  "type": "boolean"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "AAAA"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "AAAA Record"
+        },
+        "dns-records_ARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid IPv4 address.",
+                  "type": "string"
+                },
+                "private_routing": {
+                  "default": false,
+                  "description": "Enables private network routing to the origin.",
+                  "type": "boolean"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "A"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "A Record"
+        },
+        "dns-records_CAARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a CAA record.",
+                  "properties": {
+                    "flags": {
+                      "description": "Flags for the CAA record.",
+                      "type": "number"
+                    },
+                    "tag": {
+                      "description": "Name of the property controlled by this record (e.g.: issue, issuewild, iodef).",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "Value of the record. This field's semantics depend on the chosen tag.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "CAA"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "CAA Record"
+        },
+        "dns-records_CERTRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a CERT record.",
+                  "properties": {
+                    "algorithm": {
+                      "description": "Algorithm.",
+                      "type": "number"
+                    },
+                    "certificate": {
+                      "description": "Certificate.",
+                      "type": "string"
+                    },
+                    "key_tag": {
+                      "description": "Key Tag.",
+                      "type": "number"
+                    },
+                    "type": {
+                      "description": "Type.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "CERT"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "CERT Record"
+        },
+        "dns-records_CNAMERecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid hostname. Must not match the record's name.",
+                  "type": "string"
+                },
+                "settings": {
+                  "properties": {
+                    "flatten_cname": {
+                      "default": false,
+                      "description": "If enabled, causes the CNAME record to be resolved externally and the resulting address records (e.g., A and AAAA) to be returned instead of the CNAME record itself. This setting is unavailable for proxied records, since they are always flattened.",
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "CNAME"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "CNAME Record"
+        },
+        "dns-records_DNSKEYRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a DNSKEY record.",
+                  "properties": {
+                    "algorithm": {
+                      "description": "Algorithm.",
+                      "type": "number"
+                    },
+                    "flags": {
+                      "description": "Flags.",
+                      "type": "number"
+                    },
+                    "protocol": {
+                      "description": "Protocol.",
+                      "type": "number"
+                    },
+                    "public_key": {
+                      "description": "Public Key.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "DNSKEY"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "DNSKEY Record"
+        },
+        "dns-records_DSRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a DS record.",
+                  "properties": {
+                    "algorithm": {
+                      "description": "Algorithm.",
+                      "type": "number"
+                    },
+                    "digest": {
+                      "description": "Digest.",
+                      "type": "string"
+                    },
+                    "digest_type": {
+                      "description": "Digest Type.",
+                      "type": "number"
+                    },
+                    "key_tag": {
+                      "description": "Key Tag.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "DS"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "DS Record"
+        },
+        "dns-records_HTTPSRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a HTTPS record.",
+                  "properties": {
+                    "priority": {
+                      "description": "Priority.",
+                      "type": "number"
+                    },
+                    "target": {
+                      "description": "Target.",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "Value.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "HTTPS"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "HTTPS Record"
+        },
+        "dns-records_LOCRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a LOC record.",
+                  "properties": {
+                    "altitude": {
+                      "description": "Altitude of location in meters.",
+                      "type": "number"
+                    },
+                    "lat_degrees": {
+                      "description": "Degrees of latitude.",
+                      "type": "number"
+                    },
+                    "lat_direction": {
+                      "description": "Latitude direction.",
+                      "enum": [
+                        "N",
+                        "S"
+                      ],
+                      "type": "string"
+                    },
+                    "lat_minutes": {
+                      "description": "Minutes of latitude.",
+                      "type": "number"
+                    },
+                    "lat_seconds": {
+                      "description": "Seconds of latitude.",
+                      "type": "number"
+                    },
+                    "long_degrees": {
+                      "description": "Degrees of longitude.",
+                      "type": "number"
+                    },
+                    "long_direction": {
+                      "description": "Longitude direction.",
+                      "enum": [
+                        "E",
+                        "W"
+                      ],
+                      "type": "string"
+                    },
+                    "long_minutes": {
+                      "description": "Minutes of longitude.",
+                      "type": "number"
+                    },
+                    "long_seconds": {
+                      "description": "Seconds of longitude.",
+                      "type": "number"
+                    },
+                    "precision_horz": {
+                      "description": "Horizontal precision of location.",
+                      "type": "number"
+                    },
+                    "precision_vert": {
+                      "description": "Vertical precision of location.",
+                      "type": "number"
+                    },
+                    "size": {
+                      "description": "Size of location in meters.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "LOC"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "LOC Record"
+        },
+        "dns-records_MXRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid mail server hostname.",
+                  "type": "string"
+                },
+                "priority": {
+                  "description": "Required for MX and URI records; ignored for other record types (but may still be returned by the API). Records with lower priorities are preferred. This field is to be deprecated in favor of the priority field within the data map.",
+                  "type": "number"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "MX"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "MX Record"
+        },
+        "dns-records_NAPTRRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a NAPTR record.",
+                  "properties": {
+                    "flags": {
+                      "description": "Flags.",
+                      "type": "string"
+                    },
+                    "order": {
+                      "description": "Order.",
+                      "type": "number"
+                    },
+                    "preference": {
+                      "description": "Preference.",
+                      "type": "number"
+                    },
+                    "regex": {
+                      "description": "Regex.",
+                      "type": "string"
+                    },
+                    "replacement": {
+                      "description": "Replacement.",
+                      "type": "string"
+                    },
+                    "service": {
+                      "description": "Service.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "NAPTR"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "NAPTR Record"
+        },
+        "dns-records_NSRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid name server host name.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "NS"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "NS Record"
+        },
+        "dns-records_OPENPGPKEYRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A single Base64-encoded OpenPGP Transferable Public Key (RFC 4880 Section 11.1)",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "OPENPGPKEY"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "OPENPGPKEY Record"
+        },
+        "dns-records_PTRRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "Domain name pointing to the address.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "PTR"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "PTR Record"
+        },
+        "dns-records_SMIMEARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a SMIMEA record.",
+                  "properties": {
+                    "certificate": {
+                      "description": "Certificate.",
+                      "type": "string"
+                    },
+                    "matching_type": {
+                      "description": "Matching Type.",
+                      "type": "number"
+                    },
+                    "selector": {
+                      "description": "Selector.",
+                      "type": "number"
+                    },
+                    "usage": {
+                      "description": "Usage.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "SMIMEA"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "SMIMEA Record"
+        },
+        "dns-records_SRVRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a SRV record.",
+                  "properties": {
+                    "port": {
+                      "description": "The port of the service.",
+                      "type": "number"
+                    },
+                    "priority": {
+                      "description": "Required for MX and URI records; ignored for other record types (but may still be returned by the API). Records with lower priorities are preferred. This field is to be deprecated in favor of the priority field within the data map.",
+                      "type": "number"
+                    },
+                    "target": {
+                      "description": "A valid hostname.",
+                      "type": "string"
+                    },
+                    "weight": {
+                      "description": "The record weight.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "SRV"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "SRV Record"
+        },
+        "dns-records_SSHFPRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a SSHFP record.",
+                  "properties": {
+                    "algorithm": {
+                      "description": "Algorithm.",
+                      "type": "number"
+                    },
+                    "fingerprint": {
+                      "description": "Fingerprint.",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "Type.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "SSHFP"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "SSHFP Record"
+        },
+        "dns-records_SVCBRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a SVCB record.",
+                  "properties": {
+                    "priority": {
+                      "description": "Priority.",
+                      "type": "number"
+                    },
+                    "target": {
+                      "description": "Target.",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "Value.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "SVCB"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "SVCB Record"
+        },
+        "dns-records_TLSARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a TLSA record.",
+                  "properties": {
+                    "certificate": {
+                      "description": "Certificate.",
+                      "type": "string"
+                    },
+                    "matching_type": {
+                      "description": "Matching Type.",
+                      "type": "number"
+                    },
+                    "selector": {
+                      "description": "Selector.",
+                      "type": "number"
+                    },
+                    "usage": {
+                      "description": "Usage.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "TLSA"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "TLSA Record"
+        },
+        "dns-records_TXTRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "Text content for the record. The content must consist of quoted \"character strings\" (RFC 1035), each with a length of up to 255 bytes. Strings exceeding this allowed maximum length are automatically split.\n\nLearn more at <https://www.cloudflare.com/learning/dns/dns-records/dns-txt-record/>.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "TXT"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "TXT Record"
+        },
+        "dns-records_URIRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a URI record.",
+                  "properties": {
+                    "target": {
+                      "description": "The record content.",
+                      "type": "string"
+                    },
+                    "weight": {
+                      "description": "The record weight.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "priority": {
+                  "description": "Required for MX and URI records; ignored for other record types (but may still be returned by the API). Records with lower priorities are preferred. This field is to be deprecated in favor of the priority field within the data map.",
+                  "type": "number"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "URI"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "URI Record"
+        },
+        "dns-records_dns-record-patch": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-without-data"
+            },
+            {
+              "$ref": "#/$defs/dns-records_dns-record-with-data"
+            }
+          ]
+        },
+        "dns-records_dns-record-shared-fields": {
+          "properties": {
+            "comment": {
+              "description": "Comments or notes about the DNS record. This field has no effect on DNS responses.",
+              "type": "string"
+            },
+            "name": {
+              "description": "Complete DNS record name, including the zone name, in Punycode.",
+              "type": "string"
+            },
+            "proxied": {
+              "default": false,
+              "description": "Whether the record is receiving the performance and security benefits of Cloudflare.",
+              "type": "boolean"
+            },
+            "settings": {
+              "$ref": "#/$defs/dns-records_settings",
+              "description": "Settings for the DNS record."
+            },
+            "tags": {
+              "$ref": "#/$defs/dns-records_tags",
+              "default": [],
+              "description": "Custom tags for the DNS record. This field has no effect on DNS responses."
+            },
+            "ttl": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "enum": [
+                    1
+                  ],
+                  "type": "integer"
+                }
+              ],
+              "default": 1,
+              "description": "Time To Live (TTL) of the DNS record in seconds. Setting to 1 means 'automatic'. Value must be between 60 and 86400, with the minimum reduced to 30 for Enterprise zones."
+            }
+          },
+          "type": "object"
+        },
+        "dns-records_dns-record-with-data": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dns-records_CAARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_CERTRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_DNSKEYRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_DSRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_HTTPSRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_LOCRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_NAPTRRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_SMIMEARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_SRVRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_SSHFPRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_SVCBRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_TLSARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_URIRecord"
+            }
+          ]
+        },
+        "dns-records_dns-record-without-data": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dns-records_ARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_AAAARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_CNAMERecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_MXRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_NSRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_OPENPGPKEYRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_PTRRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_TXTRecord"
+            }
+          ]
+        },
+        "dns-records_settings": {
+          "description": "Settings for the DNS record.",
+          "properties": {
+            "ipv4_only": {
+              "default": false,
+              "description": "When enabled, only A records will be generated, and AAAA records will not be created. This setting is intended for exceptional cases. Note that this option only applies to proxied records and it has no effect on whether Cloudflare communicates with the origin using IPv4 or IPv6.",
+              "type": "boolean"
+            },
+            "ipv6_only": {
+              "default": false,
+              "description": "When enabled, only AAAA records will be generated, and A records will not be created. This setting is intended for exceptional cases. Note that this option only applies to proxied records and it has no effect on whether Cloudflare communicates with the origin using IPv4 or IPv6.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "dns-records_tags": {
+          "description": "Custom tags for the DNS record. This field has no effect on DNS responses.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      }
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Update DNS Record"
+    }
+  },
+  {
+    "name": "dns_records_get",
+    "title": "DNS Record Details",
+    "description": "Retrieves details for a specific DNS record in the zone.\n\nGET /zones/{zone_id}/dns_records/{dns_record_id}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "dns_record_id": {
+              "description": "Identifier.",
+              "type": "string"
+            },
+            "zone_id": {
+              "description": "Identifier.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "zone_id",
+            "dns_record_id"
+          ],
+          "type": "object"
+        },
+        "query": {
+          "additionalProperties": false,
+          "properties": {
+            "include_shadow_metadata": {
+              "default": false,
+              "description": "Whether to include shadow metadata in the `meta` field of each record in the response. See [Shadowed records](https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records).",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true,
+      "title": "DNS Record Details"
+    }
+  },
+  {
+    "name": "dns_records_list",
+    "title": "List DNS Records",
+    "description": "List, search, sort, and filter a zones' DNS records.\n\nGET /zones/{zone_id}/dns_records",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "zone_id": {
+              "description": "Identifier.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "zone_id"
+          ],
+          "type": "object"
+        },
+        "query": {
+          "additionalProperties": false,
+          "properties": {
+            "comment": {
+              "description": "Exact value of the DNS record comment. This is a convenience alias for `comment.exact`.",
+              "type": "string"
+            },
+            "comment.absent": {
+              "description": "If this parameter is present, only records *without* a comment are returned.",
+              "type": "string"
+            },
+            "comment.contains": {
+              "description": "Substring of the DNS record comment. Comment filters are case-insensitive.",
+              "type": "string"
+            },
+            "comment.endswith": {
+              "description": "Suffix of the DNS record comment. Comment filters are case-insensitive.",
+              "type": "string"
+            },
+            "comment.exact": {
+              "description": "Exact value of the DNS record comment. Comment filters are case-insensitive.",
+              "type": "string"
+            },
+            "comment.present": {
+              "description": "If this parameter is present, only records *with* a comment are returned.",
+              "type": "string"
+            },
+            "comment.startswith": {
+              "description": "Prefix of the DNS record comment. Comment filters are case-insensitive.",
+              "type": "string"
+            },
+            "content": {
+              "description": "Exact value of the DNS record content. This is a convenience alias for `content.exact`.",
+              "type": "string"
+            },
+            "content.contains": {
+              "description": "Substring of the DNS record content. Content filters are case-insensitive.",
+              "type": "string"
+            },
+            "content.endswith": {
+              "description": "Suffix of the DNS record content. Content filters are case-insensitive.",
+              "type": "string"
+            },
+            "content.exact": {
+              "description": "Exact value of the DNS record content. Content filters are case-insensitive.",
+              "type": "string"
+            },
+            "content.startswith": {
+              "description": "Prefix of the DNS record content. Content filters are case-insensitive.",
+              "type": "string"
+            },
+            "direction": {
+              "default": "asc",
+              "description": "Direction to order DNS records in.",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            },
+            "include_shadow_metadata": {
+              "default": false,
+              "description": "Whether to include shadow metadata in the `meta` field of each record in the response. See [Shadowed records](https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records).",
+              "type": "boolean"
+            },
+            "match": {
+              "default": "all",
+              "description": "Whether to match all search requirements or at least one (any). If set to `all`, acts like a logical AND between filters. If set to `any`, acts like a logical OR instead. Note that the interaction between tag filters is controlled by the `tag-match` parameter instead.",
+              "enum": [
+                "any",
+                "all"
+              ],
+              "type": "string"
+            },
+            "name": {
+              "description": "Exact value of the DNS record name. This is a convenience alias for `name.exact`.",
+              "type": "string"
+            },
+            "name.contains": {
+              "description": "Substring of the DNS record name. Name filters are case-insensitive.",
+              "type": "string"
+            },
+            "name.endswith": {
+              "description": "Suffix of the DNS record name. Name filters are case-insensitive.",
+              "type": "string"
+            },
+            "name.exact": {
+              "description": "Exact value of the DNS record name. Name filters are case-insensitive.",
+              "type": "string"
+            },
+            "name.startswith": {
+              "description": "Prefix of the DNS record name. Name filters are case-insensitive.",
+              "type": "string"
+            },
+            "order": {
+              "default": "type",
+              "description": "Field to order DNS records by.",
+              "enum": [
+                "type",
+                "name",
+                "content",
+                "ttl",
+                "proxied"
+              ],
+              "type": "string"
+            },
+            "page": {
+              "default": 1,
+              "description": "Page number of paginated results.",
+              "type": "number"
+            },
+            "per_page": {
+              "default": 100,
+              "description": "Number of DNS records per page.",
+              "type": "number"
+            },
+            "proxied": {
+              "default": false,
+              "description": "Whether the record is receiving the performance and security benefits of Cloudflare.",
+              "type": "boolean"
+            },
+            "search": {
+              "description": "Allows searching in multiple properties of a DNS record simultaneously. This parameter is intended for human users, not automation. Its exact behavior is intentionally left unspecified and is subject to change in the future. This parameter works independently of the `match` setting. For automated searches, please use the other available parameters.",
+              "type": "string"
+            },
+            "shadowed_by_name": {
+              "description": "Filters the response to records at or below the specified NS delegation name. NS, DS, and NSEC records at the delegation name are excluded because they are not shadowed by that delegation. Those record types are included only when they exist below the delegation. The value must be a non-apex subdomain of the zone. Requires `include_shadow_metadata=true`. See [Shadowed records](https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records).",
+              "type": "string"
+            },
+            "shadowing_name": {
+              "description": "Returns NS records that shadow the given name, searching at the name itself and each of its ancestor names within the zone, excluding the zone apex. The value must be a subdomain of the zone; the zone apex is not accepted. See [Shadowed records](https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records).",
+              "type": "string"
+            },
+            "tag": {
+              "description": "Condition on the DNS record tag.\n\nParameter values can be of the form `<tag-name>:<tag-value>` to search for an exact `name:value` pair, or just `<tag-name>` to search for records with a specific tag name regardless of its value.\n\nThis is a convenience shorthand for the more powerful `tag.<predicate>` parameters.\nExamples:\n- `tag=important` is equivalent to `tag.present=important`\n- `tag=team:DNS` is equivalent to `tag.exact=team:DNS`",
+              "type": "string"
+            },
+            "tag.absent": {
+              "description": "Name of a tag which must *not* be present on the DNS record. Tag filters are case-insensitive.",
+              "type": "string"
+            },
+            "tag.contains": {
+              "description": "A tag and value, of the form `<tag-name>:<tag-value>`. The API will only return DNS records that have a tag named `<tag-name>` whose value contains `<tag-value>`. Tag filters are case-insensitive.",
+              "type": "string"
+            },
+            "tag.endswith": {
+              "description": "A tag and value, of the form `<tag-name>:<tag-value>`. The API will only return DNS records that have a tag named `<tag-name>` whose value ends with `<tag-value>`. Tag filters are case-insensitive.",
+              "type": "string"
+            },
+            "tag.exact": {
+              "description": "A tag and value, of the form `<tag-name>:<tag-value>`. The API will only return DNS records that have a tag named `<tag-name>` whose value is `<tag-value>`. Tag filters are case-insensitive.",
+              "type": "string"
+            },
+            "tag.present": {
+              "description": "Name of a tag which must be present on the DNS record. Tag filters are case-insensitive.",
+              "type": "string"
+            },
+            "tag.startswith": {
+              "description": "A tag and value, of the form `<tag-name>:<tag-value>`. The API will only return DNS records that have a tag named `<tag-name>` whose value starts with `<tag-value>`. Tag filters are case-insensitive.",
+              "type": "string"
+            },
+            "tag_match": {
+              "default": "all",
+              "description": "Whether to match all tag search requirements or at least one (any). If set to `all`, acts like a logical AND between tag filters. If set to `any`, acts like a logical OR instead. Note that the regular `match` parameter is still used to combine the resulting condition with other filters that aren't related to tags.",
+              "enum": [
+                "any",
+                "all"
+              ],
+              "type": "string"
+            },
+            "type": {
+              "description": "Record type.",
+              "enum": [
+                "A",
+                "AAAA",
+                "CAA",
+                "CERT",
+                "CNAME",
+                "DNSKEY",
+                "DS",
+                "HTTPS",
+                "LOC",
+                "MX",
+                "NAPTR",
+                "NS",
+                "OPENPGPKEY",
+                "PTR",
+                "SMIMEA",
+                "SRV",
+                "SSHFP",
+                "SVCB",
+                "TLSA",
+                "TXT",
+                "URI"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true,
+      "title": "List DNS Records"
+    }
+  },
+  {
+    "name": "dns_records_update",
+    "title": "Overwrite DNS Record",
+    "description": "Overwrite an existing DNS record.\n\nNotes:\n- A/AAAA records cannot exist on the same name as CNAME records.\n- NS records cannot exist on the same name as any other record type.\n- Domain names are always represented in Punycode, even if Unicode\n  characters were used when creating the record.\n\nPUT /zones/{zone_id}/dns_records/{dns_record_id}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "$ref": "#/$defs/dns-records_dns-record-post"
+        },
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "dns_record_id": {
+              "description": "Identifier.",
+              "type": "string"
+            },
+            "zone_id": {
+              "description": "Identifier.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "zone_id",
+            "dns_record_id"
+          ],
+          "type": "object"
+        },
+        "query": {
+          "additionalProperties": false,
+          "properties": {
+            "include_shadow_metadata": {
+              "default": false,
+              "description": "Whether to include shadow metadata in the `meta` field of each record in the response. See [Shadowed records](https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records).",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "path",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "dns-records_AAAARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid IPv6 address.",
+                  "type": "string"
+                },
+                "private_routing": {
+                  "default": false,
+                  "description": "Enables private network routing to the origin.",
+                  "type": "boolean"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "AAAA"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "AAAA Record"
+        },
+        "dns-records_ARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid IPv4 address.",
+                  "type": "string"
+                },
+                "private_routing": {
+                  "default": false,
+                  "description": "Enables private network routing to the origin.",
+                  "type": "boolean"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "A"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "A Record"
+        },
+        "dns-records_CAARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a CAA record.",
+                  "properties": {
+                    "flags": {
+                      "description": "Flags for the CAA record.",
+                      "type": "number"
+                    },
+                    "tag": {
+                      "description": "Name of the property controlled by this record (e.g.: issue, issuewild, iodef).",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "Value of the record. This field's semantics depend on the chosen tag.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "CAA"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "CAA Record"
+        },
+        "dns-records_CERTRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a CERT record.",
+                  "properties": {
+                    "algorithm": {
+                      "description": "Algorithm.",
+                      "type": "number"
+                    },
+                    "certificate": {
+                      "description": "Certificate.",
+                      "type": "string"
+                    },
+                    "key_tag": {
+                      "description": "Key Tag.",
+                      "type": "number"
+                    },
+                    "type": {
+                      "description": "Type.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "CERT"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "CERT Record"
+        },
+        "dns-records_CNAMERecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid hostname. Must not match the record's name.",
+                  "type": "string"
+                },
+                "settings": {
+                  "properties": {
+                    "flatten_cname": {
+                      "default": false,
+                      "description": "If enabled, causes the CNAME record to be resolved externally and the resulting address records (e.g., A and AAAA) to be returned instead of the CNAME record itself. This setting is unavailable for proxied records, since they are always flattened.",
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "CNAME"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "CNAME Record"
+        },
+        "dns-records_DNSKEYRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a DNSKEY record.",
+                  "properties": {
+                    "algorithm": {
+                      "description": "Algorithm.",
+                      "type": "number"
+                    },
+                    "flags": {
+                      "description": "Flags.",
+                      "type": "number"
+                    },
+                    "protocol": {
+                      "description": "Protocol.",
+                      "type": "number"
+                    },
+                    "public_key": {
+                      "description": "Public Key.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "DNSKEY"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "DNSKEY Record"
+        },
+        "dns-records_DSRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a DS record.",
+                  "properties": {
+                    "algorithm": {
+                      "description": "Algorithm.",
+                      "type": "number"
+                    },
+                    "digest": {
+                      "description": "Digest.",
+                      "type": "string"
+                    },
+                    "digest_type": {
+                      "description": "Digest Type.",
+                      "type": "number"
+                    },
+                    "key_tag": {
+                      "description": "Key Tag.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "DS"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "DS Record"
+        },
+        "dns-records_HTTPSRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a HTTPS record.",
+                  "properties": {
+                    "priority": {
+                      "description": "Priority.",
+                      "type": "number"
+                    },
+                    "target": {
+                      "description": "Target.",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "Value.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "HTTPS"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "HTTPS Record"
+        },
+        "dns-records_LOCRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a LOC record.",
+                  "properties": {
+                    "altitude": {
+                      "description": "Altitude of location in meters.",
+                      "type": "number"
+                    },
+                    "lat_degrees": {
+                      "description": "Degrees of latitude.",
+                      "type": "number"
+                    },
+                    "lat_direction": {
+                      "description": "Latitude direction.",
+                      "enum": [
+                        "N",
+                        "S"
+                      ],
+                      "type": "string"
+                    },
+                    "lat_minutes": {
+                      "description": "Minutes of latitude.",
+                      "type": "number"
+                    },
+                    "lat_seconds": {
+                      "description": "Seconds of latitude.",
+                      "type": "number"
+                    },
+                    "long_degrees": {
+                      "description": "Degrees of longitude.",
+                      "type": "number"
+                    },
+                    "long_direction": {
+                      "description": "Longitude direction.",
+                      "enum": [
+                        "E",
+                        "W"
+                      ],
+                      "type": "string"
+                    },
+                    "long_minutes": {
+                      "description": "Minutes of longitude.",
+                      "type": "number"
+                    },
+                    "long_seconds": {
+                      "description": "Seconds of longitude.",
+                      "type": "number"
+                    },
+                    "precision_horz": {
+                      "description": "Horizontal precision of location.",
+                      "type": "number"
+                    },
+                    "precision_vert": {
+                      "description": "Vertical precision of location.",
+                      "type": "number"
+                    },
+                    "size": {
+                      "description": "Size of location in meters.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "LOC"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "LOC Record"
+        },
+        "dns-records_MXRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid mail server hostname.",
+                  "type": "string"
+                },
+                "priority": {
+                  "description": "Required for MX and URI records; ignored for other record types (but may still be returned by the API). Records with lower priorities are preferred. This field is to be deprecated in favor of the priority field within the data map.",
+                  "type": "number"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "MX"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "MX Record"
+        },
+        "dns-records_NAPTRRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a NAPTR record.",
+                  "properties": {
+                    "flags": {
+                      "description": "Flags.",
+                      "type": "string"
+                    },
+                    "order": {
+                      "description": "Order.",
+                      "type": "number"
+                    },
+                    "preference": {
+                      "description": "Preference.",
+                      "type": "number"
+                    },
+                    "regex": {
+                      "description": "Regex.",
+                      "type": "string"
+                    },
+                    "replacement": {
+                      "description": "Replacement.",
+                      "type": "string"
+                    },
+                    "service": {
+                      "description": "Service.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "NAPTR"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "NAPTR Record"
+        },
+        "dns-records_NSRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A valid name server host name.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "NS"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "NS Record"
+        },
+        "dns-records_OPENPGPKEYRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "A single Base64-encoded OpenPGP Transferable Public Key (RFC 4880 Section 11.1)",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "OPENPGPKEY"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "OPENPGPKEY Record"
+        },
+        "dns-records_PTRRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "Domain name pointing to the address.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "PTR"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "PTR Record"
+        },
+        "dns-records_SMIMEARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a SMIMEA record.",
+                  "properties": {
+                    "certificate": {
+                      "description": "Certificate.",
+                      "type": "string"
+                    },
+                    "matching_type": {
+                      "description": "Matching Type.",
+                      "type": "number"
+                    },
+                    "selector": {
+                      "description": "Selector.",
+                      "type": "number"
+                    },
+                    "usage": {
+                      "description": "Usage.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "SMIMEA"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "SMIMEA Record"
+        },
+        "dns-records_SRVRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a SRV record.",
+                  "properties": {
+                    "port": {
+                      "description": "The port of the service.",
+                      "type": "number"
+                    },
+                    "priority": {
+                      "description": "Required for MX and URI records; ignored for other record types (but may still be returned by the API). Records with lower priorities are preferred. This field is to be deprecated in favor of the priority field within the data map.",
+                      "type": "number"
+                    },
+                    "target": {
+                      "description": "A valid hostname.",
+                      "type": "string"
+                    },
+                    "weight": {
+                      "description": "The record weight.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "SRV"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "SRV Record"
+        },
+        "dns-records_SSHFPRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a SSHFP record.",
+                  "properties": {
+                    "algorithm": {
+                      "description": "Algorithm.",
+                      "type": "number"
+                    },
+                    "fingerprint": {
+                      "description": "Fingerprint.",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "Type.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "SSHFP"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "SSHFP Record"
+        },
+        "dns-records_SVCBRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a SVCB record.",
+                  "properties": {
+                    "priority": {
+                      "description": "Priority.",
+                      "type": "number"
+                    },
+                    "target": {
+                      "description": "Target.",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "Value.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "SVCB"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "SVCB Record"
+        },
+        "dns-records_TLSARecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a TLSA record.",
+                  "properties": {
+                    "certificate": {
+                      "description": "Certificate.",
+                      "type": "string"
+                    },
+                    "matching_type": {
+                      "description": "Matching Type.",
+                      "type": "number"
+                    },
+                    "selector": {
+                      "description": "Selector.",
+                      "type": "number"
+                    },
+                    "usage": {
+                      "description": "Usage.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "TLSA"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "TLSA Record"
+        },
+        "dns-records_TXTRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "content": {
+                  "description": "Text content for the record. The content must consist of quoted \"character strings\" (RFC 1035), each with a length of up to 255 bytes. Strings exceeding this allowed maximum length are automatically split.\n\nLearn more at <https://www.cloudflare.com/learning/dns/dns-records/dns-txt-record/>.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "TXT"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "TXT Record"
+        },
+        "dns-records_URIRecord": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-shared-fields"
+            },
+            {
+              "properties": {
+                "data": {
+                  "description": "Components of a URI record.",
+                  "properties": {
+                    "target": {
+                      "description": "The record content.",
+                      "type": "string"
+                    },
+                    "weight": {
+                      "description": "The record weight.",
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "priority": {
+                  "description": "Required for MX and URI records; ignored for other record types (but may still be returned by the API). Records with lower priorities are preferred. This field is to be deprecated in favor of the priority field within the data map.",
+                  "type": "number"
+                },
+                "type": {
+                  "description": "Record type.",
+                  "enum": [
+                    "URI"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "description": "URI Record"
+        },
+        "dns-records_dns-record-post": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/dns-records_dns-record-without-data"
+            },
+            {
+              "$ref": "#/$defs/dns-records_dns-record-with-data"
+            }
+          ]
+        },
+        "dns-records_dns-record-shared-fields": {
+          "properties": {
+            "comment": {
+              "description": "Comments or notes about the DNS record. This field has no effect on DNS responses.",
+              "type": "string"
+            },
+            "name": {
+              "description": "Complete DNS record name, including the zone name, in Punycode.",
+              "type": "string"
+            },
+            "proxied": {
+              "default": false,
+              "description": "Whether the record is receiving the performance and security benefits of Cloudflare.",
+              "type": "boolean"
+            },
+            "settings": {
+              "$ref": "#/$defs/dns-records_settings",
+              "description": "Settings for the DNS record."
+            },
+            "tags": {
+              "$ref": "#/$defs/dns-records_tags",
+              "default": [],
+              "description": "Custom tags for the DNS record. This field has no effect on DNS responses."
+            },
+            "ttl": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "enum": [
+                    1
+                  ],
+                  "type": "integer"
+                }
+              ],
+              "default": 1,
+              "description": "Time To Live (TTL) of the DNS record in seconds. Setting to 1 means 'automatic'. Value must be between 60 and 86400, with the minimum reduced to 30 for Enterprise zones."
+            }
+          },
+          "type": "object"
+        },
+        "dns-records_dns-record-with-data": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dns-records_CAARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_CERTRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_DNSKEYRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_DSRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_HTTPSRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_LOCRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_NAPTRRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_SMIMEARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_SRVRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_SSHFPRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_SVCBRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_TLSARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_URIRecord"
+            }
+          ]
+        },
+        "dns-records_dns-record-without-data": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dns-records_ARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_AAAARecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_CNAMERecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_MXRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_NSRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_OPENPGPKEYRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_PTRRecord"
+            },
+            {
+              "$ref": "#/$defs/dns-records_TXTRecord"
+            }
+          ]
+        },
+        "dns-records_settings": {
+          "description": "Settings for the DNS record.",
+          "properties": {
+            "ipv4_only": {
+              "default": false,
+              "description": "When enabled, only A records will be generated, and AAAA records will not be created. This setting is intended for exceptional cases. Note that this option only applies to proxied records and it has no effect on whether Cloudflare communicates with the origin using IPv4 or IPv6.",
+              "type": "boolean"
+            },
+            "ipv6_only": {
+              "default": false,
+              "description": "When enabled, only AAAA records will be generated, and A records will not be created. This setting is intended for exceptional cases. Note that this option only applies to proxied records and it has no effect on whether Cloudflare communicates with the origin using IPv4 or IPv6.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "dns-records_tags": {
+          "description": "Custom tags for the DNS record. This field has no effect on DNS responses.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      }
+    },
+    "annotations": {
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Overwrite DNS Record"
+    }
+  },
+  {
+    "name": "pages_create",
+    "title": "Create a Cloudflare Pages project",
+    "description": "Create a Cloudflare Pages project for configuring and deploying a site or application.\n\nPOST /accounts/{account_id}/pages/projects",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "properties": {
+            "build_config": {
+              "description": "Configs for the project build process.",
+              "properties": {
+                "build_caching": {
+                  "description": "Enable build caching for the project.",
+                  "type": "boolean"
+                },
+                "build_command": {
+                  "description": "Command used to build project.",
+                  "type": "string"
+                },
+                "destination_dir": {
+                  "description": "Output directory of the build.",
+                  "type": "string"
+                },
+                "root_dir": {
+                  "description": "Directory to run the command.",
+                  "type": "string"
+                },
+                "web_analytics_tag": {
+                  "description": "The classifying tag for analytics.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "web_analytics_token": {
+                  "description": "The auth token for analytics.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "type": "object"
+            },
+            "deployment_configs": {
+              "description": "Configs for deployments in a project.",
+              "properties": {
+                "preview": {
+                  "$ref": "#/$defs/pages_deployment_config_values_request",
+                  "description": "Configs for preview deploys."
+                },
+                "production": {
+                  "$ref": "#/$defs/pages_deployment_config_values_request",
+                  "description": "Configs for production deploys."
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name for the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            },
+            "production_branch": {
+              "description": "Production branch of the project. Used to identify production deployments.",
+              "type": "string"
+            },
+            "source": {
+              "description": "Configs for the project source control.",
+              "properties": {
+                "config": {
+                  "properties": {
+                    "deployments_enabled": {
+                      "deprecated": true,
+                      "description": "Whether to enable automatic deployments when pushing to the source repository.\nWhen disabled, no deployments (production or preview) will be triggered automatically.",
+                      "type": "boolean"
+                    },
+                    "owner": {
+                      "description": "The owner of the repository.",
+                      "type": "string"
+                    },
+                    "owner_id": {
+                      "description": "The owner ID of the repository.",
+                      "type": "string"
+                    },
+                    "path_excludes": {
+                      "description": "A list of paths that should be excluded from triggering a preview deployment. Wildcard syntax (`*`) is supported.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "path_includes": {
+                      "description": "A list of paths that should be watched to trigger a preview deployment. Wildcard syntax (`*`) is supported.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "pr_comments_enabled": {
+                      "description": "Whether to enable PR comments.",
+                      "type": "boolean"
+                    },
+                    "preview_branch_excludes": {
+                      "description": "A list of branches that should not trigger a preview deployment. Wildcard syntax (`*`) is supported. Must be used with `preview_deployment_setting` set to `custom`.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "preview_branch_includes": {
+                      "description": "A list of branches that should trigger a preview deployment. Wildcard syntax (`*`) is supported. Must be used with `preview_deployment_setting` set to `custom`.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "preview_deployment_setting": {
+                      "description": "Controls whether commits to preview branches trigger a preview deployment.",
+                      "enum": [
+                        "all",
+                        "none",
+                        "custom"
+                      ],
+                      "type": "string"
+                    },
+                    "production_branch": {
+                      "description": "The production branch of the repository.",
+                      "type": "string"
+                    },
+                    "production_deployments_enabled": {
+                      "description": "Whether to trigger a production deployment on commits to the production branch.",
+                      "type": "boolean"
+                    },
+                    "repo_id": {
+                      "description": "The ID of the repository.",
+                      "type": "string"
+                    },
+                    "repo_name": {
+                      "description": "The name of the repository.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "The source control management provider.",
+                  "enum": [
+                    "github",
+                    "gitlab"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "config",
+                "type"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "name",
+            "production_branch"
+          ],
+          "type": "object"
+        },
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            }
+          },
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "$defs": {
+        "pages_deployment_config_values_request": {
+          "properties": {
+            "ai_bindings": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "project_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "project_id"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Constellation bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "always_use_latest_compatibility_date": {
+              "default": false,
+              "description": "Whether to always use the latest compatibility date for Pages Functions.",
+              "type": "boolean"
+            },
+            "analytics_engine_datasets": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "dataset": {
+                        "description": "Name of the dataset.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "dataset"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Analytics Engine bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "browsers": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Browser bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "build_image_major_version": {
+              "default": 3,
+              "description": "The major version of the build image to use for Pages Functions. Version 1 is retired and its projects are moved to version 3. Once a project's builds have been moved, a request that sets version 1 is rejected.",
+              "type": "integer"
+            },
+            "compatibility_date": {
+              "description": "Compatibility date used for Pages Functions.",
+              "type": "string"
+            },
+            "compatibility_flags": {
+              "description": "Compatibility flags used for Pages Functions.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "d1_databases": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "id": {
+                        "description": "UUID of the D1 database.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "D1 databases used for Pages Functions.",
+              "type": "object"
+            },
+            "durable_object_namespaces": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "namespace_id": {
+                        "description": "ID of the Durable Object namespace.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "namespace_id"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Durable Object namespaces used for Pages Functions.",
+              "type": "object"
+            },
+            "env_vars": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "oneOf": [
+                      {
+                        "$ref": "#/$defs/pages_plain_text_env_var"
+                      },
+                      {
+                        "$ref": "#/$defs/pages_secret_text_env_var"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Environment variables used for builds and Pages Functions.",
+              "type": "object"
+            },
+            "fail_open": {
+              "default": true,
+              "description": "Whether to fail open when the deployment config cannot be applied.",
+              "type": "boolean"
+            },
+            "hyperdrive_bindings": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Hyperdrive bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "kv_namespaces": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "namespace_id": {
+                        "description": "ID of the KV namespace.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "namespace_id"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "KV namespaces used for Pages Functions.",
+              "type": "object"
+            },
+            "limits": {
+              "description": "Limits for Pages Functions.",
+              "properties": {
+                "cpu_ms": {
+                  "description": "CPU time limit in milliseconds.",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "cpu_ms"
+              ],
+              "type": "object"
+            },
+            "mtls_certificates": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "certificate_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "certificate_id"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "mTLS bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "placement": {
+              "description": "Placement setting used for Pages Functions.",
+              "properties": {
+                "mode": {
+                  "description": "Placement mode.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "mode"
+              ],
+              "type": "object"
+            },
+            "queue_producers": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "name": {
+                        "description": "Name of the Queue.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Queue Producer bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "r2_buckets": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "jurisdiction": {
+                        "description": "Jurisdiction of the R2 bucket.",
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "name": {
+                        "description": "Name of the R2 bucket.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "R2 buckets used for Pages Functions.",
+              "type": "object"
+            },
+            "services": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "entrypoint": {
+                        "description": "The entrypoint to bind to.",
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "environment": {
+                        "description": "The Service environment.",
+                        "type": "string"
+                      },
+                      "service": {
+                        "description": "The Service name.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "service"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Services used for Pages Functions.",
+              "type": "object"
+            },
+            "usage_model": {
+              "default": "standard",
+              "deprecated": true,
+              "description": "The usage model for Pages Functions.",
+              "enum": [
+                "standard",
+                "bundled",
+                "unbound"
+              ],
+              "type": "string"
+            },
+            "vectorize_bindings": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "index_name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "index_name"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Vectorize bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "wrangler_config_hash": {
+              "description": "Hash of the Wrangler configuration used for the deployment.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "pages_plain_text_env_var": {
+          "description": "A plaintext environment variable.",
+          "oneOf": [
+            {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "plain_text"
+                  ],
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Environment variable value.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "value"
+              ],
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pages_secret_text_env_var": {
+          "description": "An encrypted environment variable.",
+          "oneOf": [
+            {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "secret_text"
+                  ],
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Secret value.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "value"
+              ],
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "body"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Create a Cloudflare Pages project"
+    }
+  },
+  {
+    "name": "pages_delete",
+    "title": "Delete a Cloudflare Pages project",
+    "description": "Permanently delete a Cloudflare Pages project and its deployments.\n\nDELETE /accounts/{account_id}/pages/projects/{project_name}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Delete a Cloudflare Pages project"
+    }
+  },
+  {
+    "name": "pages_deployments_create",
+    "title": "Create a Pages deployment",
+    "description": "Create a Cloudflare Pages deployment from a Git branch or Direct Upload manifest. Git repositories must already be authorized in Cloudflare Pages.\n\nPOST /accounts/{account_id}/pages/projects/{project_name}/deployments",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "properties": {
+            "_headers": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object"
+                }
+              ],
+              "description": "Headers configuration file for the deployment."
+            },
+            "_redirects": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object"
+                }
+              ],
+              "description": "Redirects configuration file for the deployment."
+            },
+            "_routes.json": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object"
+                }
+              ],
+              "description": "Routes configuration file defining routing rules."
+            },
+            "_worker.bundle": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object"
+                }
+              ],
+              "description": "Worker bundle file in multipart/form-data format. Mutually exclusive with `_worker.js`.\nCannot specify both `_worker.js` and `_worker.bundle` in the same request.\nMaximum size: 25 MiB."
+            },
+            "_worker.js": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object"
+                }
+              ],
+              "description": "Worker JavaScript file. Mutually exclusive with `_worker.bundle`.\nCannot specify both `_worker.js` and `_worker.bundle` in the same request."
+            },
+            "branch": {
+              "description": "Git branch to deploy. Uses the branch's `HEAD`; defaults to the project's production branch.",
+              "type": "string"
+            },
+            "commit_dirty": {
+              "description": "Whether the associated Git working tree has uncommitted changes. Provide `true` or `false`.",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "type": "string"
+            },
+            "commit_hash": {
+              "description": "Git commit SHA associated with the deployment.",
+              "type": "string"
+            },
+            "commit_message": {
+              "description": "Git commit message associated with the deployment.",
+              "type": "string"
+            },
+            "functions-filepath-routing-config.json": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "filename": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content"
+                  ],
+                  "type": "object"
+                }
+              ],
+              "description": "Functions routing configuration file."
+            },
+            "manifest": {
+              "description": "JSON-encoded object mapping deployment file paths to their uploaded content hashes.\nRequired for Direct Upload deployments. Maximum 20,000 entries.",
+              "type": "string"
+            },
+            "pages_build_output_dir": {
+              "description": "The build output directory path.",
+              "type": "string"
+            },
+            "wrangler_config_hash": {
+              "description": "Hash of the Wrangler configuration file used for this deployment.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "body"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Create a Pages deployment"
+    }
+  },
+  {
+    "name": "pages_deployments_delete",
+    "title": "Delete a Pages deployment",
+    "description": "Remove a deployment from a Cloudflare Pages project.\n\nDELETE /accounts/{account_id}/pages/projects/{project_name}/deployments/{deployment_id}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "deployment_id": {
+              "description": "UUID of the Pages deployment, as returned by deployment list or create operations.",
+              "format": "uuid",
+              "type": "string"
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name",
+            "deployment_id"
+          ]
+        },
+        "query": {
+          "additionalProperties": false,
+          "properties": {
+            "force": {
+              "description": "Allow deletion when a non-production deployment has an active alias.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Delete a Pages deployment"
+    }
+  },
+  {
+    "name": "pages_deployments_get",
+    "title": "Get a Pages deployment",
+    "description": "Retrieve the status and details of a Cloudflare Pages deployment.\n\nGET /accounts/{account_id}/pages/projects/{project_name}/deployments/{deployment_id}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "deployment_id": {
+              "description": "UUID of the Pages deployment, as returned by deployment list or create operations.",
+              "format": "uuid",
+              "type": "string"
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name",
+            "deployment_id"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true,
+      "title": "Get a Pages deployment"
+    }
+  },
+  {
+    "name": "pages_deployments_list",
+    "title": "List Pages deployments",
+    "description": "List the production or preview deployments for a Cloudflare Pages project.\n\nGET /accounts/{account_id}/pages/projects/{project_name}/deployments",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name"
+          ]
+        },
+        "query": {
+          "additionalProperties": false,
+          "properties": {
+            "env": {
+              "description": "Deployment environment to return. Valid values are `production` and `preview`.",
+              "enum": [
+                "production",
+                "preview"
+              ],
+              "type": "string"
+            },
+            "page": {
+              "description": "Page number of results to return.",
+              "type": "integer"
+            },
+            "per_page": {
+              "description": "Number of results to return per page.",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true,
+      "title": "List Pages deployments"
+    }
+  },
+  {
+    "name": "pages_deployments_retry",
+    "title": "Retry a Pages deployment",
+    "description": "Retry a previous Cloudflare Pages deployment.\n\nPOST /accounts/{account_id}/pages/projects/{project_name}/deployments/{deployment_id}/retry",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "deployment_id": {
+              "description": "UUID of the Pages deployment, as returned by deployment list or create operations.",
+              "format": "uuid",
+              "type": "string"
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name",
+            "deployment_id"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Retry a Pages deployment"
+    }
+  },
+  {
+    "name": "pages_deployments_rollback",
+    "title": "Roll back a Pages deployment",
+    "description": "Roll back production to a previous successful Cloudflare Pages deployment.\n\nConfirm with the user before calling this tool. This operation rolls back the production deployment to an earlier deployment.\n\nPOST /accounts/{account_id}/pages/projects/{project_name}/deployments/{deployment_id}/rollback",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "deployment_id": {
+              "description": "UUID of the Pages deployment, as returned by deployment list or create operations.",
+              "format": "uuid",
+              "type": "string"
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name",
+            "deployment_id"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": true,
+      "idempotentHint": false,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Roll back a Pages deployment"
+    }
+  },
+  {
+    "name": "pages_domains_create",
+    "title": "Add a Pages custom domain",
+    "description": "Attach a custom domain to a Cloudflare Pages project.\n\nPOST /accounts/{account_id}/pages/projects/{project_name}/domains",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "properties": {
+            "name": {
+              "description": "Fully qualified domain name for the Pages project, such as `example.com`.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "body"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Add a Pages custom domain"
+    }
+  },
+  {
+    "name": "pages_domains_delete",
+    "title": "Delete a Pages custom domain",
+    "description": "Remove a custom domain from a Cloudflare Pages project.\n\nDELETE /accounts/{account_id}/pages/projects/{project_name}/domains/{domain_name}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "domain_name": {
+              "description": "Fully qualified domain name for the Pages project, such as `example.com`.",
+              "type": "string"
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name",
+            "domain_name"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Delete a Pages custom domain"
+    }
+  },
+  {
+    "name": "pages_domains_get",
+    "title": "Get a Pages custom domain",
+    "description": "Retrieve the configuration and validation status of a custom domain attached to a Cloudflare Pages project.\n\nGET /accounts/{account_id}/pages/projects/{project_name}/domains/{domain_name}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "domain_name": {
+              "description": "Fully qualified domain name for the Pages project, such as `example.com`.",
+              "type": "string"
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name",
+            "domain_name"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true,
+      "title": "Get a Pages custom domain"
+    }
+  },
+  {
+    "name": "pages_domains_list",
+    "title": "List Pages custom domains",
+    "description": "List the custom domains associated with a Cloudflare Pages project.\n\nGET /accounts/{account_id}/pages/projects/{project_name}/domains",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true,
+      "title": "List Pages custom domains"
+    }
+  },
+  {
+    "name": "pages_domains_validation_retry",
+    "title": "Retry custom domain validation",
+    "description": "Retry validation for a custom domain attached to a Cloudflare Pages project.\n\nPATCH /accounts/{account_id}/pages/projects/{project_name}/domains/{domain_name}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "domain_name": {
+              "description": "Fully qualified domain name for the Pages project, such as `example.com`.",
+              "type": "string"
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name",
+            "domain_name"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Retry custom domain validation"
+    }
+  },
+  {
+    "name": "pages_edit",
+    "title": "Update a Cloudflare Pages project",
+    "description": "Update the build, deployment, source, or environment settings for a Cloudflare Pages project. To delete an environment variable, set its key to `null`.\n\nPATCH /accounts/{account_id}/pages/projects/{project_name}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "properties": {
+            "build_config": {
+              "description": "Configs for the project build process.",
+              "properties": {
+                "build_caching": {
+                  "description": "Enable build caching for the project.",
+                  "type": "boolean"
+                },
+                "build_command": {
+                  "description": "Command used to build project.",
+                  "type": "string"
+                },
+                "destination_dir": {
+                  "description": "Output directory of the build.",
+                  "type": "string"
+                },
+                "root_dir": {
+                  "description": "Directory to run the command.",
+                  "type": "string"
+                },
+                "web_analytics_tag": {
+                  "description": "The classifying tag for analytics.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "web_analytics_token": {
+                  "description": "The auth token for analytics.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "type": "object"
+            },
+            "deployment_configs": {
+              "description": "Configs for deployments in a project.",
+              "properties": {
+                "preview": {
+                  "$ref": "#/$defs/pages_deployment_config_values_request",
+                  "description": "Configs for preview deploys."
+                },
+                "production": {
+                  "$ref": "#/$defs/pages_deployment_config_values_request",
+                  "description": "Configs for production deploys."
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "description": "Name for the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            },
+            "production_branch": {
+              "description": "Production branch of the project. Used to identify production deployments.",
+              "type": "string"
+            },
+            "source": {
+              "description": "Configs for the project source control.",
+              "properties": {
+                "config": {
+                  "properties": {
+                    "deployments_enabled": {
+                      "deprecated": true,
+                      "description": "Whether to enable automatic deployments when pushing to the source repository.\nWhen disabled, no deployments (production or preview) will be triggered automatically.",
+                      "type": "boolean"
+                    },
+                    "owner": {
+                      "description": "The owner of the repository.",
+                      "type": "string"
+                    },
+                    "owner_id": {
+                      "description": "The owner ID of the repository.",
+                      "type": "string"
+                    },
+                    "path_excludes": {
+                      "description": "A list of paths that should be excluded from triggering a preview deployment. Wildcard syntax (`*`) is supported.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "path_includes": {
+                      "description": "A list of paths that should be watched to trigger a preview deployment. Wildcard syntax (`*`) is supported.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "pr_comments_enabled": {
+                      "description": "Whether to enable PR comments.",
+                      "type": "boolean"
+                    },
+                    "preview_branch_excludes": {
+                      "description": "A list of branches that should not trigger a preview deployment. Wildcard syntax (`*`) is supported. Must be used with `preview_deployment_setting` set to `custom`.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "preview_branch_includes": {
+                      "description": "A list of branches that should trigger a preview deployment. Wildcard syntax (`*`) is supported. Must be used with `preview_deployment_setting` set to `custom`.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "preview_deployment_setting": {
+                      "description": "Controls whether commits to preview branches trigger a preview deployment.",
+                      "enum": [
+                        "all",
+                        "none",
+                        "custom"
+                      ],
+                      "type": "string"
+                    },
+                    "production_branch": {
+                      "description": "The production branch of the repository.",
+                      "type": "string"
+                    },
+                    "production_deployments_enabled": {
+                      "description": "Whether to trigger a production deployment on commits to the production branch.",
+                      "type": "boolean"
+                    },
+                    "repo_id": {
+                      "description": "The ID of the repository.",
+                      "type": "string"
+                    },
+                    "repo_name": {
+                      "description": "The name of the repository.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": {
+                  "description": "The source control management provider.",
+                  "enum": [
+                    "github",
+                    "gitlab"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "config",
+                "type"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "$defs": {
+        "pages_deployment_config_values_request": {
+          "properties": {
+            "ai_bindings": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "project_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "project_id"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Constellation bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "always_use_latest_compatibility_date": {
+              "default": false,
+              "description": "Whether to always use the latest compatibility date for Pages Functions.",
+              "type": "boolean"
+            },
+            "analytics_engine_datasets": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "dataset": {
+                        "description": "Name of the dataset.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "dataset"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Analytics Engine bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "browsers": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Browser bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "build_image_major_version": {
+              "default": 3,
+              "description": "The major version of the build image to use for Pages Functions. Version 1 is retired and its projects are moved to version 3. Once a project's builds have been moved, a request that sets version 1 is rejected.",
+              "type": "integer"
+            },
+            "compatibility_date": {
+              "description": "Compatibility date used for Pages Functions.",
+              "type": "string"
+            },
+            "compatibility_flags": {
+              "description": "Compatibility flags used for Pages Functions.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "d1_databases": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "id": {
+                        "description": "UUID of the D1 database.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "D1 databases used for Pages Functions.",
+              "type": "object"
+            },
+            "durable_object_namespaces": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "namespace_id": {
+                        "description": "ID of the Durable Object namespace.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "namespace_id"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Durable Object namespaces used for Pages Functions.",
+              "type": "object"
+            },
+            "env_vars": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "oneOf": [
+                      {
+                        "$ref": "#/$defs/pages_plain_text_env_var"
+                      },
+                      {
+                        "$ref": "#/$defs/pages_secret_text_env_var"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Environment variables used for builds and Pages Functions.",
+              "type": "object"
+            },
+            "fail_open": {
+              "default": true,
+              "description": "Whether to fail open when the deployment config cannot be applied.",
+              "type": "boolean"
+            },
+            "hyperdrive_bindings": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Hyperdrive bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "kv_namespaces": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "namespace_id": {
+                        "description": "ID of the KV namespace.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "namespace_id"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "KV namespaces used for Pages Functions.",
+              "type": "object"
+            },
+            "limits": {
+              "description": "Limits for Pages Functions.",
+              "properties": {
+                "cpu_ms": {
+                  "description": "CPU time limit in milliseconds.",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "cpu_ms"
+              ],
+              "type": "object"
+            },
+            "mtls_certificates": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "certificate_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "certificate_id"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "mTLS bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "placement": {
+              "description": "Placement setting used for Pages Functions.",
+              "properties": {
+                "mode": {
+                  "description": "Placement mode.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "mode"
+              ],
+              "type": "object"
+            },
+            "queue_producers": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "name": {
+                        "description": "Name of the Queue.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Queue Producer bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "r2_buckets": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "jurisdiction": {
+                        "description": "Jurisdiction of the R2 bucket.",
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "name": {
+                        "description": "Name of the R2 bucket.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "R2 buckets used for Pages Functions.",
+              "type": "object"
+            },
+            "services": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "entrypoint": {
+                        "description": "The entrypoint to bind to.",
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "environment": {
+                        "description": "The Service environment.",
+                        "type": "string"
+                      },
+                      "service": {
+                        "description": "The Service name.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "service"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Services used for Pages Functions.",
+              "type": "object"
+            },
+            "usage_model": {
+              "default": "standard",
+              "deprecated": true,
+              "description": "The usage model for Pages Functions.",
+              "enum": [
+                "standard",
+                "bundled",
+                "unbound"
+              ],
+              "type": "string"
+            },
+            "vectorize_bindings": {
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "index_name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "index_name"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": "Vectorize bindings used for Pages Functions.",
+              "type": "object"
+            },
+            "wrangler_config_hash": {
+              "description": "Hash of the Wrangler configuration used for the deployment.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "pages_plain_text_env_var": {
+          "description": "A plaintext environment variable.",
+          "oneOf": [
+            {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "plain_text"
+                  ],
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Environment variable value.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "value"
+              ],
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pages_secret_text_env_var": {
+          "description": "An encrypted environment variable.",
+          "oneOf": [
+            {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "secret_text"
+                  ],
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Secret value.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "value"
+              ],
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "body"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Update a Cloudflare Pages project"
+    }
+  },
+  {
+    "name": "pages_get",
+    "title": "Get a Cloudflare Pages project",
+    "description": "Retrieve the configuration and deployment settings for a Cloudflare Pages project.\n\nGET /accounts/{account_id}/pages/projects/{project_name}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true,
+      "title": "Get a Cloudflare Pages project"
+    }
+  },
+  {
+    "name": "pages_list",
+    "title": "List Cloudflare Pages projects",
+    "description": "List the Cloudflare Pages projects in an account.\n\nGET /accounts/{account_id}/pages/projects",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            }
+          },
+          "type": "object"
+        },
+        "query": {
+          "additionalProperties": false,
+          "properties": {
+            "page": {
+              "description": "Page number of results to return.",
+              "type": "integer"
+            },
+            "per_page": {
+              "description": "Number of results to return per page.",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true,
+      "title": "List Cloudflare Pages projects"
+    }
+  },
+  {
+    "name": "pages_source_connect",
+    "title": "Connect a Git repository",
+    "description": "Connect a GitHub or GitLab repository to a Cloudflare Pages project to enable Git-based deployments.\n\nPOST /accounts/{account_id}/pages/projects/{project_name}/source",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "$ref": "#/$defs/pages_source_connect_request"
+        },
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "$defs": {
+        "pages_source_config": {
+          "properties": {
+            "deployments_enabled": {
+              "deprecated": true,
+              "description": "Whether to enable automatic deployments when pushing to the source repository.\nWhen disabled, no deployments (production or preview) will be triggered automatically.",
+              "type": "boolean"
+            },
+            "owner": {
+              "description": "The owner of the repository.",
+              "type": "string"
+            },
+            "owner_id": {
+              "description": "The owner ID of the repository.",
+              "type": "string"
+            },
+            "path_excludes": {
+              "description": "A list of paths that should be excluded from triggering a preview deployment. Wildcard syntax (`*`) is supported.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "path_includes": {
+              "description": "A list of paths that should be watched to trigger a preview deployment. Wildcard syntax (`*`) is supported.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "pr_comments_enabled": {
+              "description": "Whether to enable PR comments.",
+              "type": "boolean"
+            },
+            "preview_branch_excludes": {
+              "description": "A list of branches that should not trigger a preview deployment. Wildcard syntax (`*`) is supported. Must be used with `preview_deployment_setting` set to `custom`.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "preview_branch_includes": {
+              "description": "A list of branches that should trigger a preview deployment. Wildcard syntax (`*`) is supported. Must be used with `preview_deployment_setting` set to `custom`.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "preview_deployment_setting": {
+              "description": "Controls whether commits to preview branches trigger a preview deployment.",
+              "enum": [
+                "all",
+                "none",
+                "custom"
+              ],
+              "type": "string"
+            },
+            "production_branch": {
+              "description": "The production branch of the repository.",
+              "type": "string"
+            },
+            "production_deployments_enabled": {
+              "description": "Whether to trigger a production deployment on commits to the production branch.",
+              "type": "boolean"
+            },
+            "repo_id": {
+              "description": "The ID of the repository.",
+              "type": "string"
+            },
+            "repo_name": {
+              "description": "The name of the repository.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "deployments_enabled",
+            "owner",
+            "owner_id",
+            "path_excludes",
+            "path_includes",
+            "pr_comments_enabled",
+            "preview_branch_excludes",
+            "preview_branch_includes",
+            "preview_deployment_setting",
+            "production_branch",
+            "production_deployments_enabled",
+            "repo_id",
+            "repo_name"
+          ],
+          "type": "object"
+        },
+        "pages_source_connect_request": {
+          "description": "Repository and deployment settings for connecting a Git repository to a Pages project.",
+          "properties": {
+            "config": {
+              "$ref": "#/$defs/pages_source_config"
+            },
+            "type": {
+              "description": "The source control management provider.",
+              "enum": [
+                "github",
+                "gitlab"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "config",
+            "type"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "path",
+        "body"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Connect a Git repository"
+    }
+  },
+  {
+    "name": "pages_source_disconnect",
+    "title": "Disconnect a Git repository",
+    "description": "Disconnect the Git repository from a Cloudflare Pages project to stop Git-based deployments.\n\nDELETE /accounts/{account_id}/pages/projects/{project_name}/source",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "account_id": {
+              "type": "string",
+              "description": "Cloudflare account ID. Optional when the session is authorized for exactly one account; otherwise required. Call the accounts_list tool to discover available accounts."
+            },
+            "project_name": {
+              "description": "Name of the Pages project. Must begin with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens.",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "project_name"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ]
+    },
+    "annotations": {
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": false,
+      "title": "Disconnect a Git repository"
+    }
+  },
+  {
+    "name": "zones_get",
+    "title": "Zone Details",
+    "description": "Retrieves detailed information about a specific zone identified by its zone ID.\n\nReturns zone configuration, status, nameservers, and associated metadata.\n\nGET /zones/{zone_id}",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "additionalProperties": false,
+          "properties": {
+            "zone_id": {
+              "description": "Identifier",
+              "type": "string"
+            }
+          },
+          "required": [
+            "zone_id"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true,
+      "title": "Zone Details"
+    }
+  }
+]
