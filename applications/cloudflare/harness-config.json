@@ -60,7 +60,7 @@
         "extensionCapabilities": []
       }
     },
-    "note": "The bridge auto-detects MCP Tasks or the conventional MPAS wait-tool compatibility surface. Tasks mode preserves upstream tool definitions. This is a selected subset, not the complete hosted inventory. Selected upstream Tool objects are unchanged; omitted operations are not pass-through.",
+    "note": "The bridge auto-detects MCP Tasks or the conventional MPAS wait-tool compatibility surface. Tasks mode preserves upstream tool definitions. This is a selected subset, not the complete hosted inventory. Selected upstream Tool objects are unchanged. Of the 24 attested tools, 10 reads pass through and 14 writes are governed. Tools outside that attested surface, including Pages create/edit, are not eligible for pass-through. Routing is determined by the plugin and deployment policy, not this descriptive note.",
     "selectedToolNames": [
       "accounts_get",
       "dns_records_create",
