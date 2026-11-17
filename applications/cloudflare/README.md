@@ -31,6 +31,8 @@ tool names, and omitted from this bridge's advertised subset. The official hoste
 server may still advertise them. With no operator policy entry for them, direct
 submissions to the CA are rejected as `OPERATION_NOT_ATTESTED`. Project creation,
 settings and all environment writes must use another operator-controlled workflow.
+Their supported reintroduction is deferred to the coordinated SDK/CLI and plugin-v2
+upgrade described below; this is not a configuration-only enablement.
 Token-minting tools and `execute` are also unattested; `execute` is absent from the
 recorded native upstream surface and has no example-policy entry.
 
@@ -147,16 +149,37 @@ rules with suitable approval requirements, provided another process reviews the
 exact uploaded content. GitHub review does not automatically cover direct uploads.
 Policy-only changes do not change the plugin artifact DID.
 
-Adding excluded project tools is a different change: it requires reviewing and
-regenerating the attested surface, governed schemas, bridge and filter routing,
-then updating artifact references. Removing them from `operations` alone would
-exempt them, not disable them, if they remained attested. An operator policy entry
-can also extend governance beyond plugin membership; do not add a policy entry
-for an excluded tool unless intentionally authorizing that surface extension.
-The released policy engine cannot inspect secret classifications under arbitrary
-environment-variable names. Do not re-enable these tools assuming plaintext-only
-writes can be enforced by exact-name rules. The native secret API requires the
-caller to supply the actual value; no secret provisioning API is added here.
+### Why Pages create/edit need the later upgrade
+
+`pages_create` and `pages_edit` can write environment maps with arbitrary variable
+names in both preview and production. The released policy engine cannot express
+“reject if any entry is `secret_text`” while allowing plaintext and `null` deletion
+entries. Exact-name rules would miss other variable names. Response filtering
+cannot solve this input-authorization problem: the native secret-write API requires
+the caller to supply, and therefore know, the actual secret value.
+
+Supported reintroduction is planned with a coordinated release, not by adding a
+policy entry or changing an approval threshold on the current runtime:
+
+1. Release an SDK with generic collection-inspection policy support, then a CLI/CA
+   that uses it, so configuration can enforce the secret-write prohibition across
+   arbitrary names. Keep these restrictions out of provider input schemas and
+   transport argument checks.
+2. In the same planned rollout, adopt plugin schema v2 review/presentation metadata
+   and upgrade affected plugin consumers and reviewer clients. This is a separate
+   compatibility requirement; v2 metadata alone does not add the policy capability.
+3. Review and regenerate the expanded attested surface, governed schemas, bridge
+   and filter routing; add the finer deployment rules and update artifact DIDs,
+   registry entries and installed references before enabling the tools.
+
+Minimum release versions are **pending**; neither deferred capability is provided
+by this restricted v1 release. Until that migration is available, keep project
+creation/settings/environment writes in another operator-controlled workflow.
+Do not add a policy entry to enable these excluded tools: explicit operator policy
+can extend governance beyond plugin membership, but cannot supply the missing
+collection inspection. Removing them from `operations` while keeping them attested
+would exempt them rather than disable them. No custom secret-provisioning API is
+introduced or planned by this change.
 
 This revision changes plugin membership and the attested surface, so it changes
 the artifact DID. The operator must install the reviewed plugin/bridge/transport
@@ -165,9 +188,7 @@ The checked-in config is only a template. This work does not inspect or change
 installed credentials or configurations. Verify token scope on the credential
 host; do not assume the earlier discovery token is suitable for production.
 
-A later coordinated policy-engine/plugin-v2 migration may permit finer project
-write rules; no unreleased capability is required or claimed here. Central registry
-and deployment references must match published artifacts. Retain a compatible
+Central registry and deployment references must match published artifacts. Retain a compatible
 artifact/configuration set for rollback; an invalid config can prevent the whole
 CA daemon from starting.
 
