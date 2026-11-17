@@ -5,7 +5,7 @@
   "operations": {
     "accounts_get": {
       "impact": "low",
-      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+      "rationale": "Pass-through (read): Read data within credential scope; Pages results are sanitized on the credential host."
     },
     "dns_records_create": {
       "impact": "critical",
@@ -21,19 +21,15 @@
     },
     "dns_records_get": {
       "impact": "low",
-      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+      "rationale": "Pass-through (read): Read data within credential scope; Pages results are sanitized on the credential host."
     },
     "dns_records_list": {
       "impact": "low",
-      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+      "rationale": "Pass-through (read): Read data within credential scope; Pages results are sanitized on the credential host."
     },
     "dns_records_update": {
       "impact": "critical",
       "rationale": "Governed: Govern all captured DNS types, including NS delegation, inside the pinned zone. PATCH may omit type; conservatively critical for all DNS writes."
-    },
-    "pages_create": {
-      "impact": "high",
-      "rationale": "Governed: Create a Pages project; build commands, source integration and deployment configuration can enable executable automation."
     },
     "pages_delete": {
       "impact": "critical",
@@ -49,11 +45,11 @@
     },
     "pages_deployments_get": {
       "impact": "low",
-      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+      "rationale": "Pass-through (read): Read data within credential scope; Pages results are sanitized on the credential host."
     },
     "pages_deployments_list": {
       "impact": "low",
-      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+      "rationale": "Pass-through (read): Read data within credential scope; Pages results are sanitized on the credential host."
     },
     "pages_deployments_retry": {
       "impact": "high",
@@ -73,27 +69,23 @@
     },
     "pages_domains_get": {
       "impact": "low",
-      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+      "rationale": "Pass-through (read): Read data within credential scope; Pages results are sanitized on the credential host."
     },
     "pages_domains_list": {
       "impact": "low",
-      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+      "rationale": "Pass-through (read): Read data within credential scope; Pages results are sanitized on the credential host."
     },
     "pages_domains_validation_retry": {
       "impact": "high",
       "rationale": "Governed: Retry domain validation; an operational action, not a pure getter."
     },
-    "pages_edit": {
-      "impact": "high",
-      "rationale": "Governed: Change build/source/deployment settings; setting an environment variable key to null deletes it."
-    },
     "pages_get": {
       "impact": "low",
-      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+      "rationale": "Pass-through (read): Read data within credential scope; Pages results are sanitized on the credential host."
     },
     "pages_list": {
       "impact": "low",
-      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+      "rationale": "Pass-through (read): Read data within credential scope; Pages results are sanitized on the credential host."
     },
     "pages_source_connect": {
       "impact": "high",
@@ -105,7 +97,7 @@
     },
     "zones_get": {
       "impact": "low",
-      "rationale": "Governed: Read metadata/status without independent approval; Pages results are projected at the credential-side guard before leaving the adapter."
+      "rationale": "Pass-through (read): Read data within credential scope; Pages results are sanitized on the credential host."
     }
   }
 }

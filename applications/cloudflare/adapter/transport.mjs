@@ -22,7 +22,7 @@ createInterface({input:process.stdin}).on('line',line=>{
   if(!Object.hasOwn(m,'id'))return;
   if(m.method==='ping'){send({jsonrpc:'2.0',id:m.id,result:{}});return;}
   if(!['initialize','tools/list','tools/call'].includes(m.method)){send({jsonrpc:'2.0',id:m.id,error:{code:-32601,message:'Unsupported method'}});return;}
-  // The CA rejects unsupported operations using the plugin and passThrough:deny.
+  // The CA rejects unsupported operations using publisher attestation (or explicit deployment policy).
   // Selected-name routing is also necessary to choose the correct response filter.
   if(m.method==='tools/call'&&!selected.has(m.params?.name)){fail(m.id);return;}
   if(m.method==='tools/list'){

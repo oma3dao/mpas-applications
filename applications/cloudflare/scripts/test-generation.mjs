@@ -24,7 +24,8 @@ try {
  assert.throws(()=>assertV1Plugin(display),/metadata is deferred/);
  const config=JSON.parse(await fs.readFile(path.join(output,'adapter-config.example.json')));
  assert.equal(validatePolicyConfig(config.policy).ok,true);
- for(const name of ['pages_create','pages_edit'])assert(config.policy.policies[name].some(r=>r.reject&&!r.match));
+ for(const name of ['pages_create','pages_edit']){assert(!Object.hasOwn(config.policy.policies,name));assert(!Object.hasOwn(plugin.operations,name));assert(!plugin.toolSurface.toolNames.includes(name));}
+ assert.equal(Object.keys(plugin.operations).length,14);assert.equal(plugin.toolSurface.toolNames.length,24);assert.equal(config.passThrough,undefined);
  const registry=JSON.parse(await fs.readFile(path.join(output,'registry-entry.json')));
  assert.equal(config.plugin.artifactDid,registry.plugin.artifactDid);
  const wrong=spawnSync(process.execPath,[path.join(root,'scripts/generate.mjs'),path.join(root,'bridge'),path.join(root,'build-artifacts'),path.join(tmp,'wrong'),'--selected-snapshot'],{encoding:'utf8'});

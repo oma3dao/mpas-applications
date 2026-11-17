@@ -1,3 +1,12 @@
+## Unreleased — governance split
+
+- Attest 24 tools, govern 14 writes and leave 10 ordinary reads pass-through.
+- Exclude Pages create/edit from attestation instead of blanket policy denials.
+- Remove stale execute/read/proposer/approval entries and pass-through denial;
+  use default approvals with account/zone and direct-upload exceptions only.
+- Refresh plugin artifact DID and selected surface binding; preserve credential-side
+  response sanitization. Installed configs require coordinated artifact updates.
+
 # Changelog — Cloudflare
 
 ## Unreleased — restricted v1 release

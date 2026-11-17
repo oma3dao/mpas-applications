@@ -185,7 +185,7 @@ export class GeneratedBridge {
         actionEndpoint,
         coordinationService,
         proposerDid: keyManager.did,
-        upstreamBinding: {"toolSurface":{"alg":"sha-256","value":"xuqSHXoBnOTFMaNU5nxaTRDOaXppT5ZMhv0cegaMS-s"}},
+        upstreamBinding: {"toolSurface":{"alg":"sha-256","value":"_puiHPysBFAAnYCKt-R3D1BfHDWoQO9Db-R69iyAm_M"}},
         resultRetentionSeconds: workflow.resultRetentionSeconds ?? 86_400,
         ...(workflow.pollIntervalMs !== undefined ? { pollIntervalMs: workflow.pollIntervalMs } : {}),
         ...(workflow.taskPollIntervalMs !== undefined ? { taskPollIntervalMs: workflow.taskPollIntervalMs } : {}),

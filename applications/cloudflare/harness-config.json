@@ -69,7 +69,6 @@
       "dns_records_get",
       "dns_records_list",
       "dns_records_update",
-      "pages_create",
       "pages_delete",
       "pages_deployments_create",
       "pages_deployments_delete",
@@ -82,7 +81,6 @@
       "pages_domains_get",
       "pages_domains_list",
       "pages_domains_validation_retry",
-      "pages_edit",
       "pages_get",
       "pages_list",
       "pages_source_connect",
@@ -90,7 +88,7 @@
       "zones_get"
     ],
     "pluginSchemaRestrictions": [
-      "DNS object allOf intersections are flattened for SDK fail-closed validation; every captured subtype and field remains available. Plugin validates resource path formats and normalizes environment-variable unions; provider-valid upload, secret, build and analytics inputs remain valid. Deployment policy alone controls their authorization. Transport sanitizes responses only; plaintext environment variables are supported."
+      "DNS object allOf intersections are flattened for SDK fail-closed validation; every captured subtype and field remains available. Plugin validates governed write path formats and provider-valid upload inputs. Ten attested reads pass through without operation-schema checks; Pages create/edit are excluded from attestation. Deployment policy supplies default write approvals and parameter-specific exceptions. Transport sanitizes responses only; plaintext environment variables are supported."
     ]
   }
 }
