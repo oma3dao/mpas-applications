@@ -39,19 +39,19 @@ createInterface({input:process.stdin}).on('line',line=>{
   const call=(method,params={})=>new Promise((resolve,reject)=>{const key=++id,timer=setTimeout(()=>reject(new Error('Transport timeout')),5000);pending.set(key,m=>{clearTimeout(timer);resolve(m);});child.stdin.write(JSON.stringify({jsonrpc:'2.0',id:key,method,params})+'\n');});
   try{
    const init=await call('initialize',{protocolVersion:'2024-11-05',capabilities:{},clientInfo:{name:'test',version:'1'}});assert.deepEqual(init.result.capabilities,{tools:{}});
-   const list=await call('tools/list');assert.equal(list.result.tools.length,mode==='same'?26:25);assert(!list.result.tools.some(t=>t.name==='unrelated_new_tool'));
+   const list=await call('tools/list');assert.equal(list.result.tools.length,mode==='same'?24:23);assert(!list.result.tools.some(t=>t.name==='unrelated_new_tool'));
    if(mode==='same')assert.deepEqual(list.result.tools,reviewed);else assert.equal(list.result.tools[0].description,'live changed contract');
    // Deliberate config-only overrides must not hit hidden transport argument
    // restrictions. This wrapper alone is NOT an authorization engine.
    for(const [name,args]of [
-    ['pages_get',{}],['pages_edit',{body:{build_config:{build_command:'reviewed command'},deployment_configs:{production:{env_vars:{SECRET:{type:'secret_text',value:'operator supplied'}}}}}}],
+    ['pages_get',{}],
     ['pages_deployments_create',{body:{manifest:'{}','_worker.js':'reviewed code','_headers':'reviewed headers'}}],
    ]){
     const r=await call('tools/call',{name,arguments:args});assert(!r.result.isError);assert(JSON.stringify(r).includes('kept-id'));assert(JSON.stringify(r).includes('public'));assert(r.result.content[1].text.includes('partial result'));
    }
    // Drift/missing definition does not gate a selected operation's execution.
    const missing='pages_get';assert(!(await call('tools/call',{name:missing,arguments:{}})).result.isError);
-   for(const name of ['accounts_tokens_create','user_tokens_create','builds_tokens_create','execute'])assert((await call('tools/call',{name,arguments:{}})).result.isError);
+   for(const name of ['accounts_tokens_create','user_tokens_create','builds_tokens_create','execute','pages_create','pages_edit'])assert((await call('tools/call',{name,arguments:{}})).result.isError);
    assert((await call('tools/call',{name:'pages_get',arguments:{malformed:true}})).result.isError);
    assert((await call('resources/read')).error);
    // Wait for process exit to drain stderr before diagnostic assertions.

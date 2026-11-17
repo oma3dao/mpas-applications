@@ -60,7 +60,7 @@
         "extensionCapabilities": []
       }
     },
-    "note": "The bridge auto-detects MCP Tasks or the conventional MPAS wait-tool compatibility surface. Tasks mode preserves upstream tool definitions. This is a selected subset, not the complete hosted inventory. Selected upstream Tool objects are unchanged; omitted operations are not pass-through.",
+    "note": "The bridge auto-detects MCP Tasks or the conventional MPAS wait-tool compatibility surface. Tasks mode preserves upstream tool definitions. This is a selected subset, not the complete hosted inventory. Selected upstream Tool objects are unchanged. Of the 24 attested tools, 10 reads pass through and 14 writes are governed. Tools outside that attested surface, including Pages create/edit, are not eligible for pass-through. Routing is determined by the plugin and deployment policy, not this descriptive note.",
     "selectedToolNames": [
       "accounts_get",
       "dns_records_create",
@@ -69,7 +69,6 @@
       "dns_records_get",
       "dns_records_list",
       "dns_records_update",
-      "pages_create",
       "pages_delete",
       "pages_deployments_create",
       "pages_deployments_delete",
@@ -82,7 +81,6 @@
       "pages_domains_get",
       "pages_domains_list",
       "pages_domains_validation_retry",
-      "pages_edit",
       "pages_get",
       "pages_list",
       "pages_source_connect",
@@ -90,7 +88,7 @@
       "zones_get"
     ],
     "pluginSchemaRestrictions": [
-      "DNS object allOf intersections are flattened for SDK fail-closed validation; every captured subtype and field remains available. Plugin validates resource path formats and normalizes environment-variable unions; provider-valid upload, secret, build and analytics inputs remain valid. Deployment policy alone controls their authorization. Transport sanitizes responses only; plaintext environment variables are supported."
+      "DNS object allOf intersections are flattened for SDK fail-closed validation; every captured subtype and field remains available. Plugin validates governed write path formats and provider-valid upload inputs. Ten attested reads pass through without operation-schema checks; Pages create/edit are excluded from attestation. Deployment policy supplies default write approvals and parameter-specific exceptions. Transport sanitizes responses only; plaintext environment variables are supported."
     ]
   }
 }

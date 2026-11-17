@@ -1,180 +1,99 @@
 # Cloudflare DNS and Pages (no Code Mode)
 
-Restricted MPAS bridge for the **official hosted Cloudflare MCP server** at
-`https://mcp.cloudflare.com/mcp?codemode=false`. No replacement Cloudflare API
-server is implemented. The adapter launches pinned `mcp-remote@0.1.38` against
-that URL. The proposer uses only this MPAS bridge.
+Restricted MPAS bridge for the official hosted Cloudflare MCP server at
+`https://mcp.cloudflare.com/mcp?codemode=false`, using `mcp-remote@0.1.38`.
+No replacement Cloudflare API or secret-provisioning API is implemented.
+For the shared security model and setup, see the [repository README](../../README.md#operating-a-generated-bridge).
 
-## Restricted v1 scope
+## Governed and attested surfaces
 
-This release uses plugin schema **version 1**, no `display` metadata, and the
-unchanged released `@oma3/mpas@0.1.0-alpha.15` dependency. No SDK/CLI implementation
-change, collection-inspection extension or custom secret-provisioning API is needed.
+Plugin schema version **1** and released `@oma3/mpas@0.1.0-alpha.15` are unchanged.
+The selected surface contains **24 tools: 10 pass-through reads and 14 governed writes**.
 
-The example policy unconditionally rejects **`pages_create` and `pages_edit` for
-all proposers, regardless of approvals**. Both remain governed and visible; they
-are not pass-through. Project creation, project settings and all environment-variable
-writes (including plaintext updates and null deletions) must use another
-operator-controlled workflow outside this bridge. Plaintext environment reads,
-DNS operations and Git deployments remain available under existing scope/approval
-rules. Direct uploads remain denied by field-presence policy rules.
+The following reads are in `toolSurface.toolNames`, but not `operations` or the
+example policy: `accounts_get`, `zones_get`, `dns_records_get`, `dns_records_list`,
+`pages_get`, `pages_list`, `pages_deployments_get`, `pages_deployments_list`,
+`pages_domains_get`, `pages_domains_list`.
+They execute on an eligible proposer's verified signature without operation-schema
+validation or policy evaluation. Their resource boundary is the upstream token's
+scope, not the write-only account/zone policy below. Pages results still pass
+through credential-side response filtering before leaving the host.
+
+The 14 governed tools are the four DNS writes; Pages project delete; deployment
+create/delete/retry/rollback; domain create/delete/validation-retry; and source
+connect/disconnect. These change state and require policy evaluation. DNS writes,
+including NS delegation and PATCH without a type, remain critical. All 21 captured
+DNS types are representable; schemas normalize object intersections without a
+four-type allowlist.
+
+`pages_create` and `pages_edit` are excluded from **both** operations and attested
+tool names, and omitted from this bridge's advertised subset. The official hosted
+server may still advertise them. With no operator policy entry for them, direct
+submissions to the CA are rejected as `OPERATION_NOT_ATTESTED`. Project creation,
+settings and all environment writes must use another operator-controlled workflow.
+Their supported reintroduction is deferred to the coordinated SDK/CLI and plugin-v2
+upgrade described below; this is not a configuration-only enablement.
+Token-minting tools and `execute` are also unattested; `execute` is absent from the
+recorded native upstream surface and has no example-policy entry.
+
+## Deployment-policy exceptions
+
+The example config omits `passThrough: "deny"`, which would block the intended
+reads. `signerGroups.proposers` gates eligible callers before routing, including
+pass-through. `defaultRequirement` requires one member of `approvers` for every
+governed call that matches no exception. The example uses only the standard
+`all`, `proposers`, and `approvers` groups, with placeholder DIDs. It does not copy
+per-operation proposer/approver requirements or grant identity-specific exemptions.
+
+The only per-operation entries reject parameter-dependent cases:
+
+- DNS writes outside the two approved zone IDs. Replace
+  `REPLACE_WITH_ZONE_ID_1` and `REPLACE_WITH_ZONE_ID_2` with the real
+  IDs for the operator’s zones; **domain names are not zone IDs**.
+- Pages writes outside `REPLACE_WITH_ACCOUNT_ID`; replace it with the operator-approved account ID.
+- Deployment creation containing any direct-upload argument: `_worker.js`,
+  `_worker.bundle`, `manifest`, `_headers`, `_redirects`, `_routes.json`,
+  `functions-filepath-routing-config.json`, `pages_build_output_dir`, or
+  `wrangler_config_hash`.
+
+Keep deployment-specific account and zone IDs only in the installed configuration
+(for example, `~/.mpas/config/cloudflare-dns-pages-adapter-config.json`), not in
+this published template.
+
+An in-scope Git deployment matches no rejection and falls through to the default
+approver requirement. Approvals cannot override a matching rejection. Optional
+hostname restrictions are shown in `optional-hostnames.policy-fragment.json`;
+merge them with existing rules, not instead of them. ID-only writes require a
+trusted lookup for any hostname-based restriction; record IDs are not hostnames.
+
+The plugin validates legitimate path formats on **governed writes only**:
+nonempty URL-safe account/zone/record IDs (up to 32 characters), UUID deployment
+IDs, project-name grammar and DNS domain labels. Empty/dot segments, separators
+and encoded traversal are rejected. In particular, `dns_record_id: ".."` cannot
+normalize a record DELETE into a zone-level DELETE. New valid IDs remain usable
+without modifying an allowlist. Pass-through reads intentionally do not get these
+operation-schema checks; provider credential scope must be correct.
+
+Repository code, source-connection changes and build scripts require an external
+operator-controlled review process. Git deployment alone is not proof of review;
+branch deployment uses HEAD, and `commit_hash` metadata does not pin execution.
+Plaintext environment reads remain available. Values explicitly classified as
+secret and analytics tokens are withheld; MPAS does not detect secrets an operator
+misclassifies as plaintext.
 
 ## Surface and provenance
 
-The operator supplied an authenticated hosted capture at
-`2026-11-14T17:11:01.217Z`, reporting `cloudflare-api` `0.1.0`, MCP `2024-11-05`
-and generator `0.2.0`. It contains 3,042 tools and **no `execute`**. Complete
-`tools.json` and snapshot definitions were compared, and the snapshot hash was
-verified before selection. The full source hash and count are retained in
-`tool-selection.json` and metadata; the operator retains the full capture.
+The operator capture at `2026-11-14T17:11:01.217Z` contained 3,042 tools, no
+`execute`, server `cloudflare-api` `0.1.0`, and MCP `2024-11-05`. Original source
+hash/count remain in `tool-selection.json` and metadata. This revision selects
+24 unchanged hosted Tool definitions from that same capture, not a new discovery.
+The committed snapshot is the selected subset. Plugin, bridge binding and registry
+hashes are regenerated together. The operator retains the full original capture.
 
-This application selects **26 tools**, explicitly named and individually reviewed
-in `tool-selection.json`: single-record DNS CRUD/list, zone/account metadata,
-Pages projects, deployments, source connections and custom domains. No bulk DNS
-batch/import/export/scan, token creation/rotation, arbitrary code executor,
-unrelated Cloudflare API or generic API-request tool is exposed.
-
-The committed `build-artifacts/tools-list.snapshot.json` is explicitly the
-**selected** surface, not the entire hosted capture. Selected MCP Tool objects
-are preserved, including schemas and extension fields. The plugin and bridge
-attest/bind the selected hash. This is an intentional subset deviation.
-Source semantics were reviewed at official Cloudflare commit
-`7eb0b5258c4265503b3fce8842b96adc5422fa69` (not a hosted version guarantee).
-
-Local generation uses rebuilt MPAS bridge-generator at
-`c7ffdd9a635dc66539fc74252a9641255029f7a6`, SDK `0.1.0-alpha.15`, with the
-operator snapshot injected into `runGenerate`; it is offline replay, not a
-second authenticated capture. That revision was requested in the operator's
-capture handoff; metadata's generatorCommit identifies local generation.
-
-## Enforcement responsibilities
-
-The proposer bridge preserves all 26 reviewed hosted Tool definitions. The
-Credential Adapter validates each request against the **plugin schema**, then
-applies the **deployment policy** and signer requirements before dispatch.
-`passThrough: "deny"` and the attested selected surface reject unselected tools,
-including credential-minting APIs. Schema validation checks the provider input contract, not deployment authorization.
-The plugin supplies publisher analysis, risk classifications and the default governed
-surface. The deployment configuration is the final authorization authority.
-A well-formed forbidden input passes validation and receives a policy rejection;
-additional approvals cannot override a matching rejection. Impact labels alone do not establish approval counts.
-
-The credential-side transport has a different job: **sanitize upstream results
-before they leave the CA**. It forwards MCP requests and discovers live selected
-tools, but has **no argument-level authorization checks**. Authorization overrides require configuration changes only, not plugin or transport edits. Selected-name routing
-still excludes unknown operations so they cannot evade the selected response
-handling. Do not install this transport as an ungoverned MCP connection.
-
-### Account/zone scope and path validation
-
-The example requires explicit pinned `account_id` and `zone_id`. It does not pin
-hostnames, record IDs or projects. New resource IDs returned by create operations
-can immediately be used without changing an allowlist. Reads require only the
-verified proposer signature. The existing trusted-writer group retains its
-proposer-only write authorization; other proposers need an independent approval.
-Signer membership has not changed in this revision.
-
-All selected path arguments have plugin constraints:
-
-- Account, zone and DNS record IDs: nonempty URL-safe identifier tokens, at most
-  32 characters (the source contract's limit), not an enumerated ID list.
-  Unreserved characters such as embedded dots and tildes are not excluded merely
-  because they are absent from example IDs; standalone dot segments remain invalid.
-- Deployment IDs: explicit UUID pattern and length, not reliance on an optional
-  JSON Schema `format` validator.
-- Project names: the source's lowercase letter/digit followed by lowercase
-  letters, digits or hyphens grammar.
-- Domain names: bounded ASCII/Punycode DNS labels, with an optional trailing dot.
-
-Empty values, `.` and `..`, path separators, percent-encoded traversal, query/
-fragment delimiters and whitespace are rejected. This matters because the
-reviewed upstream request builder URL-encodes path arguments and constructs a
-URL: standalone dot segments still normalize. In particular, a record DELETE
-with `dns_record_id: ".."` must not authorize a different resource's DELETE.
-These restrictions are **in the plugin**, not in the transport.
-
-An optional tighter hostname form is provided in
-`optional-hostnames.policy-fragment.json`; merge it only if wanted. It is not
-the default and does not restrict reads. Strict hostname isolation for ID-only
-writes also needs a trusted record-ID/name lookup; record IDs are not hostnames.
-
-### DNS types and schema composition
-
-All 21 captured DNS types remain supported, including NS, MX and CAA. All DNS
-writes are conservatively critical, including PATCH without `type`, so NS
-delegation cannot escape critical classification by omitting its discriminator.
-
-The plugin flattens captured object `allOf` intersections for SDK fail-closed
-validation, preserves subtype fields, removes unused definitions and compacts
-schema annotations to fit SDK resource limits. Hosted Tool schemas are unchanged;
-unknown request properties remain rejected.
-
-### Git deployment default; direct uploads disabled
-
-`pages_deployments_create` retains Git deployment inputs (`branch`, `commit_hash`,
-`commit_message`, `commit_dirty`). Explicit deployment-policy rejection rules disable these captured direct-upload fields, regardless of approval:
-
-- `_worker.js`, `_worker.bundle`, `manifest`
-- `_headers`, `_redirects`, `_routes.json`
-- `functions-filepath-routing-config.json`
-- accompanying upload metadata `pages_build_output_dir`, `wrangler_config_hash`
-
-The first six file fields are forwarded as multipart parts by the reviewed
-request builder; the manifest references uploaded asset hashes. The metadata
-fields accompany the upload configuration. No other selected tool provides a
-file/multipart upload entry point. Source-connection operations and Git deployments remain governed writes, not
-direct file uploads. Project creation/editing remains governed but denied.
-
-Operators must maintain an **external code-review process**, such as reviewed
-GitHub changes, for deployed code and repository build scripts. Git deployment
-alone is **not evidence of review**. Branch deployment uses HEAD; `commit_hash`
-is associated metadata, not proof that execution is pinned to a reviewed commit.
-Source/repository changes, retries and existing builds also depend on that review
-process and operator-controlled secret isolation.
-
-### Environment variables and build configuration
-
-Provider-valid `plain_text`, `secret_text` and `null` deletion entries remain
-structurally valid in preview and production. Build-command and analytics-token
-inputs also retain their provider schemas. These well-formed calls receive
-**policy rejection**, not malformed-input errors: the blanket `pages_create` and
-`pages_edit` denials apply regardless of which fields are present or who approves.
-
-Reads return explicitly classified plaintext values; secret values remain filtered.
-MPAS does not detect secrets an operator incorrectly stores as plaintext. The native
-secret-write API requires the caller to supply the actual value, so an agent
-submitting it already knows it. No vault resolution or custom provisioning is added.
-
-Do not remove the blanket denials as a way to enable only plaintext writes: the
-released policy engine cannot selectively inspect `secret_text` classifications
-under arbitrary variable names. Exact-name rules would leave other names uncovered.
-Approval of build commands also cannot prove scripts will not export server secrets;
-operator-controlled review and secret isolation remain necessary.
-
-### Deferred coordinated migration
-
-A later coordinated SDK/CLI release and plugin-v2 review/presentation migration is
-planned to replace blanket Pages denials with finer configuration rules. It must
-supply **both** arbitrary-entry policy inspection and compatible v2 plugin consumers;
-support for one does not imply support for the other. Minimum future versions remain
-pending assignment. Neither feature is available or required in this v1 release.
-
-Before future activation, upgrade affected Verifiers, execution-side plugin consumers
-(including bridges where applicable) and reviewers; generate/review migrated artifacts,
-recompute artifact DIDs and align deployment/application-local/central registry
-references with published content, preferably at immutable locations. Compatible v1
-deployments need not migrate together, and upstream Cloudflare MCP needs no MPAS SDK
-upgrade. Cloudflare still needs a central registry entry at release time; plugin v2
-does not itself change the registry schema.
-
-The current CA validates configurations before startup: one unsupported policy or
-plugin can prevent the entire daemon from starting, including other applications.
-Operation-level isolation is not implemented. Upgrade compatible consumers or restore
-a previous compatible artifact/configuration set; never delete safety rules, strip
-review metadata or relabel v2 as v1 to make startup succeed. Future rollout must test
-v1 compatibility, visible rejection of unsupported inputs, restriction enforcement,
-matching artifact hashes and rollback. The restricted configuration here uses only
-released policy syntax and does not depend on that future rollout.
+Offline generation uses clean MPAS revision
+`c7ffdd9a635dc66539fc74252a9641255029f7a6`. Source semantics were reviewed at
+Cloudflare commit `7eb0b5258c4265503b3fce8842b96adc5422fa69`; neither that reference
+nor the pinned connection client controls Cloudflare's hosted implementation.
 
 ### Credential-side Pages response filtering
 
@@ -222,31 +141,56 @@ plugin validation, authorization and policy rejection remain in force.
   and update snapshots/restrictions deliberately; do not assume matching schemas
   prove behavioral equivalence.
 
-### Authorization changes and production preparation
+### Deliberate changes and deployment
 
-The deployment configuration is the authority; changing an authorization decision
-must not require schema, artifact DID or transport edits. Rejection takes precedence
-over approvals. Keep the blanket Pages denials for this restricted release: removing
-them also enables secret writes, because the current engine cannot distinguish
-arbitrary-name secret entries. Finer rules are deferred to the coordinated migration.
+Direct uploads are denied by the example's field-presence rules, not by narrowed
+schemas or transport argument checks. An operator may consciously replace those
+rules with suitable approval requirements, provided another process reviews the
+exact uploaded content. GitHub review does not automatically cover direct uploads.
+Policy-only changes do not change the plugin artifact DID.
 
-Direct uploads are not automatically covered by GitHub review. Any deliberate future
-policy change enabling them needs a review/protection process for the exact uploaded
-content and appropriate approval requirements. External review of repository code
-and build scripts remains the operator's responsibility even for Git deployments.
-The transport continues response filtering and does not impose hidden input bans.
+### Why Pages create/edit need the later upgrade
 
-Relative to the earlier schema-restricted release, this revision changes the plugin artifact DID because it corrects previously
-restricted schemas (and normalizes equivalent provider shapes). Future policy-only
-changes do **not** change that artifact. Generation refreshes the example artifact
-reference without replacing its reviewed policy choices.
+`pages_create` and `pages_edit` can write environment maps with arbitrary variable
+names in both preview and production. The released policy engine cannot express
+“reject if any entry is `secret_text`” while allowing plaintext and `null` deletion
+entries. Exact-name rules would miss other variable names. Response filtering
+cannot solve this input-authorization problem: the native secret-write API requires
+the caller to supply, and therefore know, the actual secret value.
 
-The example remains a **template, not an installed configuration**. The adapter's
-current token is the broad read token used for discovery, not a production-scoped
-credential. Operators provision production account/zone permissions separately;
-never grant credential-minting permissions or put token values in the proposer,
-configuration examples or command arguments. No live installation is part of
-this change. Uncertain write outcomes require state verification before retrying.
+Supported reintroduction is planned with a coordinated release, not by adding a
+policy entry or changing an approval threshold on the current runtime:
+
+1. Release an SDK with generic collection-inspection policy support, then a CLI/CA
+   that uses it, so configuration can enforce the secret-write prohibition across
+   arbitrary names. Keep these restrictions out of provider input schemas and
+   transport argument checks.
+2. In the same planned rollout, adopt plugin schema v2 review/presentation metadata
+   and upgrade affected plugin consumers and reviewer clients. This is a separate
+   compatibility requirement; v2 metadata alone does not add the policy capability.
+3. Review and regenerate the expanded attested surface, governed schemas, bridge
+   and filter routing; add the finer deployment rules and update artifact DIDs,
+   registry entries and installed references before enabling the tools.
+
+Minimum release versions are **pending**; neither deferred capability is provided
+by this restricted v1 release. Until that migration is available, keep project
+creation/settings/environment writes in another operator-controlled workflow.
+Do not add a policy entry to enable these excluded tools: explicit operator policy
+can extend governance beyond plugin membership, but cannot supply the missing
+collection inspection. Removing them from `operations` while keeping them attested
+would exempt them rather than disable them. No custom secret-provisioning API is
+introduced or planned by this change.
+
+This revision changes plugin membership and the attested surface, so it changes
+the artifact DID. The operator must install the reviewed plugin/bridge/transport
+set and update the installed configuration's artifact reference before activation.
+The checked-in config is only a template. This work does not inspect or change
+installed credentials or configurations. Verify token scope on the credential
+host; do not assume the earlier discovery token is suitable for production.
+
+Central registry and deployment references must match published artifacts. Retain a compatible
+artifact/configuration set for rollback; an invalid config can prevent the whole
+CA daemon from starting.
 
 ## Reproduction and validation
 
@@ -292,7 +236,7 @@ node scripts/probe-bridge-protocols.mjs applications/cloudflare applications/clo
 
 Tests use local fixtures and a fake upstream, never live Cloudflare mutations.
 They cover path formats/traversal, all DNS types, upload denial versus Git inputs,
-schema-valid secret/plaintext/null writes being denied, plaintext reads, sanitization channels, truncation, selected-only
+attestation exclusions, default write approvals, pass-through read membership, plaintext reads, sanitization channels, truncation, selected-only
 warning diagnostics, and configuration-only overrides passing through unchanged
 transport code. They are not live CA/provider verification. The unchanged pinned
 dependency tree has two high-severity npm advisories; this is not an audit-clean
