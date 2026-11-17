@@ -10,9 +10,16 @@ const plugin=loaded.plugin,selection=await read('tool-selection.json'),snapshot=
 assert.equal(plugin.version,'1');
 assert(Object.values(plugin.operations).every(op=>!Object.hasOwn(op,'display')));
 const blocked=new Set(['pages_create','pages_edit']);
-const account='001b9143470825a03a15dc7192b0b946',zone='b'.repeat(32),record='c'.repeat(32),deployment='12345678-1234-1234-1234-123456789abc';
-let config=JSON.stringify(await read('adapter-config.example.json'));
-for(const [key,val] of Object.entries({PROPOSER_DID:'did:example:proposer',APPROVER_DID:'did:example:approver',SIGNERSET_ZONE_ID:zone,OXRUNNER_ZONE_ID:'e'.repeat(32)}))config=config.replaceAll('REPLACE_WITH_'+key,val);
+const account='a'.repeat(32),zone='b'.repeat(32),record='c'.repeat(32),deployment='12345678-1234-1234-1234-123456789abc';
+const template=await read('adapter-config.example.json');
+for(const [name,rules] of Object.entries(template.policy.policies)){
+ const scope=rules[0].match.conditions[0];
+ assert.equal(scope.path,name.startsWith('dns_')?'/arguments/path/zone_id':'/arguments/path/account_id');
+ if(name.startsWith('dns_'))assert.deepEqual(scope.value,['REPLACE_WITH_ZONE_ID_1','REPLACE_WITH_ZONE_ID_2']);
+ else assert.equal(scope.value,'REPLACE_WITH_ACCOUNT_ID');
+}
+let config=JSON.stringify(template);
+for(const [key,val] of Object.entries({ACCOUNT_ID:account,PROPOSER_DID:'did:example:proposer',APPROVER_DID:'did:example:approver',ZONE_ID_1:zone,ZONE_ID_2:'e'.repeat(32)}))config=config.replaceAll('REPLACE_WITH_'+key,val);
 config=JSON.parse(config);assert.equal(config.passThrough,undefined);assert.equal(validatePolicyConfig(config.policy).ok,true,'Restricted v1 config must validate with the released SDK');
 assert.equal(Object.keys(plugin.operations).length,14);assert.equal(plugin.toolSurface.toolNames.length,24);assert.deepEqual(Object.keys(plugin.operations).sort(),Object.keys(selection.tools).filter(n=>!selection.passThroughReads.includes(n)).sort());assert.deepEqual(Object.keys(config.policy.policies).sort(),Object.keys(plugin.operations).sort());assert.deepEqual(Object.keys(config.policy.signerGroups).sort(),['all','approvers','proposers']);assert.deepEqual(plugin.toolSurface.hash,computeToolSurfaceHash(snapshot.tools));
 const approved=[{signerDid:'did:example:approver',decision:'approve'}];let count=0;
@@ -88,7 +95,7 @@ for(const name of [...blocked,'execute','accounts_tokens_create']){
 // Both approved zone IDs work; names must never be substituted for IDs.
 for(const name of Object.keys(plugin.operations).filter(n=>n.startsWith('dns_'))){
  const args=argsFor(name);args.path.zone_id='e'.repeat(32);expect(name,args,approved,'satisfied');
- args.path.zone_id='signerset.com';expect(name,args,approved,'rejected');
+ args.path.zone_id='example.com';expect(name,args,approved,'rejected');
 }
 // Config-only direct-upload override keeps the same plugin bytes and schemas.
 const before=JSON.stringify(plugin),overridePolicy=structuredClone(config.policy);

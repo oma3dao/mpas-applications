@@ -57,7 +57,7 @@
     "policies": {
       "dns_records_create": [
         {
-          "description": "Restrict writes to the operator-approved signerset.com and oxrunner.com zone IDs (not domain names).",
+          "description": "Restrict writes to the operator-approved zone IDs (not domain names).",
           "reject": true,
           "match": {
             "conditions": [
@@ -66,8 +66,8 @@
                 "path": "/arguments/path/zone_id",
                 "op": "notIn",
                 "value": [
-                  "REPLACE_WITH_SIGNERSET_ZONE_ID",
-                  "REPLACE_WITH_OXRUNNER_ZONE_ID"
+                  "REPLACE_WITH_ZONE_ID_1",
+                  "REPLACE_WITH_ZONE_ID_2"
                 ]
               }
             ]
@@ -76,7 +76,7 @@
       ],
       "dns_records_delete": [
         {
-          "description": "Restrict writes to the operator-approved signerset.com and oxrunner.com zone IDs (not domain names).",
+          "description": "Restrict writes to the operator-approved zone IDs (not domain names).",
           "reject": true,
           "match": {
             "conditions": [
@@ -85,8 +85,8 @@
                 "path": "/arguments/path/zone_id",
                 "op": "notIn",
                 "value": [
-                  "REPLACE_WITH_SIGNERSET_ZONE_ID",
-                  "REPLACE_WITH_OXRUNNER_ZONE_ID"
+                  "REPLACE_WITH_ZONE_ID_1",
+                  "REPLACE_WITH_ZONE_ID_2"
                 ]
               }
             ]
@@ -95,7 +95,7 @@
       ],
       "dns_records_edit": [
         {
-          "description": "Restrict writes to the operator-approved signerset.com and oxrunner.com zone IDs (not domain names).",
+          "description": "Restrict writes to the operator-approved zone IDs (not domain names).",
           "reject": true,
           "match": {
             "conditions": [
@@ -104,8 +104,8 @@
                 "path": "/arguments/path/zone_id",
                 "op": "notIn",
                 "value": [
-                  "REPLACE_WITH_SIGNERSET_ZONE_ID",
-                  "REPLACE_WITH_OXRUNNER_ZONE_ID"
+                  "REPLACE_WITH_ZONE_ID_1",
+                  "REPLACE_WITH_ZONE_ID_2"
                 ]
               }
             ]
@@ -114,7 +114,7 @@
       ],
       "dns_records_update": [
         {
-          "description": "Restrict writes to the operator-approved signerset.com and oxrunner.com zone IDs (not domain names).",
+          "description": "Restrict writes to the operator-approved zone IDs (not domain names).",
           "reject": true,
           "match": {
             "conditions": [
@@ -123,8 +123,8 @@
                 "path": "/arguments/path/zone_id",
                 "op": "notIn",
                 "value": [
-                  "REPLACE_WITH_SIGNERSET_ZONE_ID",
-                  "REPLACE_WITH_OXRUNNER_ZONE_ID"
+                  "REPLACE_WITH_ZONE_ID_1",
+                  "REPLACE_WITH_ZONE_ID_2"
                 ]
               }
             ]
@@ -141,7 +141,7 @@
                 "source": "executionPayload",
                 "path": "/arguments/path/account_id",
                 "op": "neq",
-                "value": "001b9143470825a03a15dc7192b0b946"
+                "value": "REPLACE_WITH_ACCOUNT_ID"
               }
             ]
           }
@@ -157,7 +157,7 @@
                 "source": "executionPayload",
                 "path": "/arguments/path/account_id",
                 "op": "neq",
-                "value": "001b9143470825a03a15dc7192b0b946"
+                "value": "REPLACE_WITH_ACCOUNT_ID"
               }
             ]
           }
@@ -290,7 +290,7 @@
                 "source": "executionPayload",
                 "path": "/arguments/path/account_id",
                 "op": "neq",
-                "value": "001b9143470825a03a15dc7192b0b946"
+                "value": "REPLACE_WITH_ACCOUNT_ID"
               }
             ]
           }
@@ -306,7 +306,7 @@
                 "source": "executionPayload",
                 "path": "/arguments/path/account_id",
                 "op": "neq",
-                "value": "001b9143470825a03a15dc7192b0b946"
+                "value": "REPLACE_WITH_ACCOUNT_ID"
               }
             ]
           }
@@ -322,7 +322,7 @@
                 "source": "executionPayload",
                 "path": "/arguments/path/account_id",
                 "op": "neq",
-                "value": "001b9143470825a03a15dc7192b0b946"
+                "value": "REPLACE_WITH_ACCOUNT_ID"
               }
             ]
           }
@@ -338,7 +338,7 @@
                 "source": "executionPayload",
                 "path": "/arguments/path/account_id",
                 "op": "neq",
-                "value": "001b9143470825a03a15dc7192b0b946"
+                "value": "REPLACE_WITH_ACCOUNT_ID"
               }
             ]
           }
@@ -354,7 +354,7 @@
                 "source": "executionPayload",
                 "path": "/arguments/path/account_id",
                 "op": "neq",
-                "value": "001b9143470825a03a15dc7192b0b946"
+                "value": "REPLACE_WITH_ACCOUNT_ID"
               }
             ]
           }
@@ -370,7 +370,7 @@
                 "source": "executionPayload",
                 "path": "/arguments/path/account_id",
                 "op": "neq",
-                "value": "001b9143470825a03a15dc7192b0b946"
+                "value": "REPLACE_WITH_ACCOUNT_ID"
               }
             ]
           }
@@ -386,7 +386,7 @@
                 "source": "executionPayload",
                 "path": "/arguments/path/account_id",
                 "op": "neq",
-                "value": "001b9143470825a03a15dc7192b0b946"
+                "value": "REPLACE_WITH_ACCOUNT_ID"
               }
             ]
           }
@@ -402,7 +402,7 @@
                 "source": "executionPayload",
                 "path": "/arguments/path/account_id",
                 "op": "neq",
-                "value": "001b9143470825a03a15dc7192b0b946"
+                "value": "REPLACE_WITH_ACCOUNT_ID"
               }
             ]
           }

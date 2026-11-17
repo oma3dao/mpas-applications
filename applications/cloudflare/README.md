@@ -46,13 +46,17 @@ per-operation proposer/approver requirements or grant identity-specific exemptio
 The only per-operation entries reject parameter-dependent cases:
 
 - DNS writes outside the two approved zone IDs. Replace
-  `REPLACE_WITH_SIGNERSET_ZONE_ID` and `REPLACE_WITH_OXRUNNER_ZONE_ID` with the real
-  IDs for signerset.com and oxrunner.com; **domain names are not zone IDs**.
-- Pages writes outside account `001b9143470825a03a15dc7192b0b946`.
+  `REPLACE_WITH_ZONE_ID_1` and `REPLACE_WITH_ZONE_ID_2` with the real
+  IDs for the operator’s zones; **domain names are not zone IDs**.
+- Pages writes outside `REPLACE_WITH_ACCOUNT_ID`; replace it with the operator-approved account ID.
 - Deployment creation containing any direct-upload argument: `_worker.js`,
   `_worker.bundle`, `manifest`, `_headers`, `_redirects`, `_routes.json`,
   `functions-filepath-routing-config.json`, `pages_build_output_dir`, or
   `wrangler_config_hash`.
+
+Keep deployment-specific account and zone IDs only in the installed configuration
+(for example, `~/.mpas/config/cloudflare-dns-pages-adapter-config.json`), not in
+this published template.
 
 An in-scope Git deployment matches no rejection and falls through to the default
 approver requirement. Approvals cannot override a matching rejection. Optional
