@@ -83,7 +83,7 @@ This segment covers marketing, customer communications, collaboration, and publi
 | Gmail | Gmail MCP Server | TBD | 💡 Requested | Protect sending, deleting, labeling, and account-level email operations |
 | Discord | Discord MCP Server | TBD | 📋 Planned | Protect community messages, roles, channels, and moderation |
 | Microsoft Teams | Teams MCP Server | TBD | 📋 Planned | Protect enterprise messaging and collaboration actions |
-| LinkedIn | LinkedIn MCP Server | TBD | 📋 Planned | Protect professional publishing and engagement |
+| LinkedIn | Wivity Link | [LinkedIn](applications/linkedin) | 🧪 Local integration | Account lookup and governed text posts; operator capture replay, live OAuth/execution verification pending |
 | YouTube | YouTube MCP Server | TBD | 📋 Planned | Protect content publishing and channel management |
 
 ## Financial

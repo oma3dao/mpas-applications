@@ -1,0 +1,99 @@
+{
+  "version": "1",
+  "type": "MpasApplicationPlugin",
+  "pluginDid": "did:web:wivity.com:plugins:linkedin-mcp-server",
+  "pluginVersion": "0.1.0",
+  "publisherDid": "did:web:wivity.com",
+  "applicationDid": "did:web:wivity.com:applications:linkedin-mcp-server",
+  "executionProfile": {
+    "id": "did:web:profiles.oma3.org:mcp",
+    "format": "mcp.toolsCall",
+    "protocolVersion": "2024-11-05"
+  },
+  "credentialRequirements": [
+    {
+      "type": "linkedinMcpOAuthAccessToken",
+      "description": "Wivity Link OAuth access token stored and refreshed only by the Credential Adapter; not a raw LinkedIn token."
+    }
+  ],
+  "toolSurface": {
+    "hash": {
+      "alg": "sha-256",
+      "value": "kg78aWG9b83k9w4H6yyinTenD8SSAZ1Sc_GNDiP-lmo"
+    },
+    "toolNames": [
+      "linkedin_create_post",
+      "linkedin_get_account"
+    ]
+  },
+  "operations": {
+    "linkedin_create_post": {
+      "description": "Publish exactly the supplied text as the connected LinkedIn member with PUBLIC or CONNECTIONS visibility. If the outcome is unknown, check LinkedIn before repeating; another call can publish twice.",
+      "impact": "high",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "linkedin_create_post"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 3000
+              },
+              "visibility": {
+                "type": "string",
+                "enum": [
+                  "PUBLIC",
+                  "CONNECTIONS"
+                ]
+              },
+              "expectedAccountId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256,
+                "description": "The accountId (from the account tool) this write is meant for. A different connected account refuses the call."
+              }
+            },
+            "required": [
+              "text",
+              "visibility",
+              "expectedAccountId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "linkedin_get_account": {
+      "description": "Return the connected LinkedIn account's display name, accountId, organization, granted scopes, token expiry and available tools. Use accountId as expectedAccountId when posting.",
+      "impact": "medium",
+      "executionPayloadSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
+        "properties": {
+          "name": {
+            "const": "linkedin_get_account"
+          },
+          "arguments": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

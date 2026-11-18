@@ -1,0 +1,29 @@
+{
+  "version": "1",
+  "application": {
+    "name": "LinkedIn via Wivity Link",
+    "description": "Governed LinkedIn member account discovery and text publishing through Wivity Link.",
+    "applicationDid": "did:web:wivity.com:applications:linkedin-mcp-server"
+  },
+  "native": false,
+  "protocol": "mcp",
+  "upstream": {
+    "name": "wivity-link-linkedin (operator metadata unavailable)",
+    "protocolVersion": "2024-11-05",
+    "toolSurface": {
+      "alg": "sha-256",
+      "value": "kg78aWG9b83k9w4H6yyinTenD8SSAZ1Sc_GNDiP-lmo"
+    }
+  },
+  "plugin": {
+    "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/linkedin/plugin.json",
+    "pluginDid": "did:web:wivity.com:plugins:linkedin-mcp-server",
+    "artifactDid": "did:artifact:bafkreibyqiiifmqqyvgpfcnmr3uwep54yaeeaygttdlvkef4f75cmpif5e"
+  },
+  "publisher": {
+    "name": "Wivity",
+    "githubOrg": "wivity",
+    "publisherDid": "did:web:wivity.com"
+  },
+  "status": "beta"
+}

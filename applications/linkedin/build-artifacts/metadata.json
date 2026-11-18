@@ -1,0 +1,29 @@
+{
+  "version": "1",
+  "type": "McpDiscoveryMetadata",
+  "serverInfo": {
+    "name": "wivity-link-linkedin (operator metadata unavailable)"
+  },
+  "protocolVersion": "2024-11-05",
+  "upstreamCommand": [
+    "npx",
+    "-y",
+    "mcp-remote@0.1.38",
+    "https://link.wivity.com/mcp/linkedin",
+    "--header",
+    "Authorization: Bearer ${LINKEDIN_MCP_ACCESS_TOKEN}"
+  ],
+  "generatorVersion": "0.2.0",
+  "generationMode": "offline-replay",
+  "generatedAt": "2026-11-17T07:56:42.083Z",
+  "generatorCommit": "c7ffdd9a635dc66539fc74252a9641255029f7a6",
+  "captureProvenance": {
+    "source": "Operator-supplied snapshot and tools.json",
+    "captureTime": null,
+    "generatorCommit": null,
+    "transportVersion": null,
+    "serverInfo": null,
+    "negotiatedProtocolVersion": null
+  },
+  "discoveryNotes": "No live discovery performed locally. upstreamCommand is a proposed replay transport, not a verified capture command. protocolVersion 2024-11-05 is the existing application-profile baseline, not a claimed negotiated capture version. generatedAt is local replay time. Operator metadata remains required before claiming hosted handshake parity."
+}
