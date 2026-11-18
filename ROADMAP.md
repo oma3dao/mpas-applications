@@ -44,7 +44,7 @@ database data planes are separate MPAS surfaces and should be bridged independen
 | GitHub | Official GitHub MCP Server | [github/github-mcp-server](https://github.com/github/github-mcp-server) | 🟢 In Production | Protect merges, branch deletion, releases, and other repository mutations |
 | Netlify | Official hosted Netlify MCP Server | [netlify/netlify-mcp](https://github.com/netlify/netlify-mcp) | 🟢 In Production | Protect deployments, visitor access controls, environment variables, extension management, and project operations |
 | Render | Official Render MCP Server | [render-oss/render-mcp-server](https://github.com/render-oss/render-mcp-server) | 🔧 Implemented | Official hosted endpoint with pinned transport client; authenticated operator schema capture matches existing definitions. Protect resource creation, deploys, environment updates, workspace re-targeting and SQL execution. No plan-update tool; end-to-end execution validation pending |
-| Cloudflare | Official hosted Cloudflare API MCP Server (`codemode=false`) | [cloudflare/mcp](https://github.com/cloudflare/mcp) | 🔧 Implemented | Restricted 26-tool DNS/Pages bridge; all calls governed; scoped deny-pass-through operator example. Offline checks only; live installation/execution pending |
+| Cloudflare | Official hosted Cloudflare API MCP Server (`codemode=false`) | [cloudflare/mcp](https://github.com/cloudflare/mcp) | 🔧 Implemented; not in production | DNS/Pages integration with governed writes and pass-through reads; production rollout pending |
 | Railway | Official Railway MCP Server | [railwayapp/cli](https://github.com/railwayapp/cli) | 🟢 In Production | Protect projects, services, deployments, variables, volumes, and backups |
 | PostgreSQL | Reference PostgreSQL MCP Server | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers/tree/main/src/postgres) | ✅ Tested | Generic data-plane bridge. Protect SQL, DDL, migrations, and destructive writes |
 | BigQuery | Google MCP Toolbox for Databases | [googleapis/mcp-toolbox](https://github.com/googleapis/mcp-toolbox) | ✅ Tested | Protect arbitrary SQL, billable analytics, forecasting, and caller-selected data processing |
@@ -83,7 +83,7 @@ This segment covers marketing, customer communications, collaboration, and publi
 | Gmail | Gmail MCP Server | TBD | 💡 Requested | Protect sending, deleting, labeling, and account-level email operations |
 | Discord | Discord MCP Server | TBD | 📋 Planned | Protect community messages, roles, channels, and moderation |
 | Microsoft Teams | Teams MCP Server | TBD | 📋 Planned | Protect enterprise messaging and collaboration actions |
-| LinkedIn | LinkedIn MCP Server | TBD | 📋 Planned | Protect professional publishing and engagement |
+| LinkedIn | Wivity Link | [LinkedIn](applications/linkedin) | 🧪 Local integration | Account lookup and governed text posts; operator capture replay, live OAuth/execution verification pending |
 | YouTube | YouTube MCP Server | TBD | 📋 Planned | Protect content publishing and channel management |
 
 ## Financial

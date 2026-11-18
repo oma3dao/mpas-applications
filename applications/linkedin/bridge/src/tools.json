@@ -1,0 +1,56 @@
+[
+  {
+    "name": "linkedin_get_account",
+    "description": "Return the connected LinkedIn account's display name, accountId, organization, granted scopes, token expiry and available tools. Use accountId as expectedAccountId when posting.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "linkedin_create_post",
+    "description": "Publish exactly the supplied text as the connected LinkedIn member with PUBLIC or CONNECTIONS visibility. If the outcome is unknown, check LinkedIn before repeating; another call can publish twice.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 3000
+        },
+        "visibility": {
+          "type": "string",
+          "enum": [
+            "PUBLIC",
+            "CONNECTIONS"
+          ]
+        },
+        "expectedAccountId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "description": "The accountId (from the account tool) this write is meant for. A different connected account refuses the call."
+        }
+      },
+      "required": [
+        "text",
+        "visibility",
+        "expectedAccountId"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": true
+    }
+  }
+]

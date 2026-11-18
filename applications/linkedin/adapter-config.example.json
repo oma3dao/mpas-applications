@@ -1,0 +1,74 @@
+{
+  "version": "1",
+  "type": "MpasAdapterDeploymentConfig",
+  "name": "linkedin",
+  "target": {
+    "applicationDid": "did:web:wivity.com:applications:linkedin-mcp-server"
+  },
+  "plugin": {
+    "pluginDid": "did:web:wivity.com:plugins:linkedin-mcp-server",
+    "pluginVersion": "0.1.0",
+    "artifactDid": "did:artifact:bafkreielk6vrgryh7blhpw4q2gqchjkqbqkk4r6hucdnv3y43rbswf2auq",
+    "path": "/absolute/path/to/mpas-applications/applications/linkedin/plugin.json"
+  },
+  "credentialBindings": [
+    {
+      "credentialHandle": "linkedinMcpOAuthAccessToken",
+      "provider": "file"
+    }
+  ],
+  "executionTarget": {
+    "type": "mcp.http",
+    "url": "https://link.wivity.com/mcp/linkedin",
+    "auth": {
+      "type": "oauth2",
+      "session": "linkedin",
+      "scopes": [
+        "offline_access"
+      ],
+      "client": {
+        "type": "cimd",
+        "clientIdMetadataDocument": "https://api.signerset.com/REPLACE_WITH_ENROLLED_ADAPTER_CLIENT_DOCUMENT"
+      }
+    }
+  },
+  "policy": {
+    "version": "1",
+    "type": "MpasApplicationPolicy",
+    "policyProfileUrl": "https://github.com/oma3dao/mpas/blob/main/specs/mpas-profile-policy-json.md",
+    "applicationDid": "did:web:wivity.com:applications:linkedin-mcp-server",
+    "executionProfile": {
+      "id": "did:web:profiles.oma3.org:mcp",
+      "format": "mcp.toolsCall"
+    },
+    "defaultRequirement": {
+      "type": "threshold",
+      "threshold": 1,
+      "eligibleSignerGroup": "approvers",
+      "decision": "approve"
+    },
+    "signerGroups": {
+      "all": [
+        "REPLACE_WITH_PROPOSER_DID",
+        "REPLACE_WITH_APPROVER_DID"
+      ],
+      "proposers": [
+        "REPLACE_WITH_PROPOSER_DID"
+      ],
+      "approvers": [
+        "REPLACE_WITH_APPROVER_DID"
+      ]
+    },
+    "policies": {}
+  },
+  "signerKeys": [
+    {
+      "did": "REPLACE_WITH_PROPOSER_DID",
+      "label": "Proposer Signer"
+    },
+    {
+      "did": "REPLACE_WITH_APPROVER_DID",
+      "label": "Approver Signer"
+    }
+  ]
+}

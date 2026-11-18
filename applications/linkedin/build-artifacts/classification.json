@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "type": "ImpactClassificationDraft",
+  "draft": false,
+  "operations": {
+    "linkedin_create_post": {
+      "impact": "high",
+      "rationale": "Publishes externally visible professional content as the connected member; non-idempotent, with duplicate-post risk after uncertain outcomes."
+    },
+    "linkedin_get_account": {
+      "impact": "low",
+      "rationale": "Pass-through (read): Returns connected member identity, scopes and expiry metadata, not credential values. Account privacy alone does not justify governance."
+    }
+  }
+}

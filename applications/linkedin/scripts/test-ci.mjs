@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import {loadPlugin,validatePayloadAgainstPlugin,evaluatePolicy,validatePolicyConfig,computeToolSurfaceHash,checkProposerAuthorization} from '../bridge/node_modules/@oma3/mpas/dist/index.js';
+const read=async p=>JSON.parse(await readFile(new URL('../'+p,import.meta.url),'utf8'));
+const loaded=await loadPlugin(fileURLToPath(new URL('../plugin.json',import.meta.url)));
+assert.equal(loaded.ok,true,JSON.stringify(loaded));
+const plugin=loaded.plugin,snapshot=await read('build-artifacts/tools-list.snapshot.json');
+assert.deepEqual(computeToolSurfaceHash(snapshot.tools),snapshot.toolSurface);
+assert.deepEqual(plugin.toolSurface.hash,snapshot.toolSurface);
+const sort=x=>x.toSorted((a,b)=>a.name.localeCompare(b.name));
+assert.deepEqual(sort(await read('bridge/src/tools.json')),sort(snapshot.tools));
+let config=JSON.stringify(await read('adapter-config.example.json')).replaceAll('REPLACE_WITH_PROPOSER_DID','did:example:proposer').replaceAll('REPLACE_WITH_APPROVER_DID','did:example:approver');
+config=JSON.parse(config);
+assert.equal(validatePolicyConfig(config.policy).ok,true);
+assert.equal(config.passThrough,undefined);
+assert.deepEqual(Object.keys(plugin.operations),['linkedin_create_post']);
+assert.deepEqual(plugin.toolSurface.toolNames.toSorted(),snapshot.tools.map(t=>t.name).toSorted());
+assert(!Object.hasOwn(config.policy.policies,'linkedin_get_account'));
+assert.equal(checkProposerAuthorization('did:example:proposer',config.policy).allowed,true);
+assert.equal(checkProposerAuthorization('did:example:unknown',config.policy).allowed,false);
+assert(!plugin.toolSurface.toolNames.includes('unattested_tool'));
+// Attested reads bypass governed payload/policy evaluation, not signature verification.
+assert.equal(validatePayloadAgainstPlugin({name:'linkedin_get_account',arguments:{}},plugin).error.code,'UNKNOWN_OPERATION');
+const valid=(name,args)=>validatePayloadAgainstPlugin({name,arguments:args},plugin).ok;
+const post={text:'Reviewed text',visibility:'PUBLIC',expectedAccountId:'member-123'};
+for(const visibility of ['PUBLIC','CONNECTIONS'])assert(valid('linkedin_create_post',{...post,visibility}));
+for(const key of Object.keys(post)){const args={...post};delete args[key];assert(!valid('linkedin_create_post',args),key+' required');}
+for(const patch of [{text:''},{text:'x'.repeat(3001)},{text:1},{visibility:'PRIVATE'},{expectedAccountId:''},{expectedAccountId:'x'.repeat(257)},{extra:true}])assert(!valid('linkedin_create_post',{...post,...patch}));
+assert(valid('linkedin_create_post',{...post,text:'x'.repeat(3000),expectedAccountId:'x'.repeat(256)}));
+const status=(name,approvals)=>evaluatePolicy({executionPayload:{name,arguments:name==='linkedin_create_post'?post:{}},actionEnvelope:{proposer:{did:'did:example:proposer'}}},{approvals},config.policy).status;
+for(const approvals of [[],[{signerDid:'did:example:proposer',decision:'approve'}],[{signerDid:'did:example:other',decision:'approve'}],[{signerDid:'did:example:approver',decision:'reject'}]])assert.equal(status('linkedin_create_post',approvals),'additionalApprovalsRequired');
+assert.equal(status('linkedin_create_post',[{signerDid:'did:example:approver',decision:'approve'}]),'satisfied');
+console.log('LinkedIn capture integrity, SDK payload validation attested-read membership, proposer eligibility and independent-approval checks passed');
