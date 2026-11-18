@@ -72,28 +72,6 @@
         },
         "additionalProperties": false
       }
-    },
-    "linkedin_get_account": {
-      "description": "Return the connected LinkedIn account's display name, accountId, organization, granted scopes, token expiry and available tools. Use accountId as expectedAccountId when posting.",
-      "impact": "medium",
-      "executionPayloadSchema": {
-        "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
-        "properties": {
-          "name": {
-            "const": "linkedin_get_account"
-          },
-          "arguments": {
-            "type": "object",
-            "properties": {},
-            "additionalProperties": false
-          }
-        },
-        "additionalProperties": false
-      }
     }
   }
 }

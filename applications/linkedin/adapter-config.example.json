@@ -8,7 +8,7 @@
   "plugin": {
     "pluginDid": "did:web:wivity.com:plugins:linkedin-mcp-server",
     "pluginVersion": "0.1.0",
-    "artifactDid": "did:artifact:bafkreibyqiiifmqqyvgpfcnmr3uwep54yaeeaygttdlvkef4f75cmpif5e",
+    "artifactDid": "did:artifact:bafkreielk6vrgryh7blhpw4q2gqchjkqbqkk4r6hucdnv3y43rbswf2auq",
     "path": "/absolute/path/to/mpas-applications/applications/linkedin/plugin.json"
   },
   "credentialBindings": [
@@ -59,16 +59,7 @@
         "REPLACE_WITH_APPROVER_DID"
       ]
     },
-    "policies": {
-      "linkedin_get_account": [
-        {
-          "description": "Account metadata requires the configured proposer signature.",
-          "requirements": {
-            "type": "proposerOnly"
-          }
-        }
-      ]
-    }
+    "policies": {}
   },
   "signerKeys": [
     {
@@ -79,6 +70,5 @@
       "did": "REPLACE_WITH_APPROVER_DID",
       "label": "Approver Signer"
     }
-  ],
-  "passThrough": "deny"
+  ]
 }

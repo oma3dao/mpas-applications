@@ -2,7 +2,7 @@
   "version": "1",
   "application": {
     "name": "LinkedIn via Wivity Link",
-    "description": "Governed LinkedIn member account discovery and text publishing through Wivity Link.",
+    "description": "Attested LinkedIn member account discovery and governed text publishing through Wivity Link.",
     "applicationDid": "did:web:wivity.com:applications:linkedin-mcp-server"
   },
   "native": false,
@@ -18,7 +18,7 @@
   "plugin": {
     "repository": "https://github.com/oma3dao/mpas-applications/blob/main/applications/linkedin/plugin.json",
     "pluginDid": "did:web:wivity.com:plugins:linkedin-mcp-server",
-    "artifactDid": "did:artifact:bafkreibyqiiifmqqyvgpfcnmr3uwep54yaeeaygttdlvkef4f75cmpif5e"
+    "artifactDid": "did:artifact:bafkreielk6vrgryh7blhpw4q2gqchjkqbqkk4r6hucdnv3y43rbswf2auq"
   },
   "publisher": {
     "name": "Wivity",

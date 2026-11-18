@@ -18,8 +18,10 @@ canonical tool-surface hash verifies:
   `CONNECTIONS` visibility, and required `expectedAccountId` (1–256 characters).
 
 Comments, reactions, organization-page publishing and other members' post reads
-are not included. Both tools remain governed; this template denies pass-through.
-Account reads require the proposer signature. Posting requires one independent
+are not included. Account lookup is attested pass-through, not a governed operation; it returns
+metadata, not credential values. Proposer eligibility and signature verification
+still apply, and unattested tools remain blocked under the default configuration.
+Posting requires one independent
 maintainer from `approvers`; keep that group disjoint from proposers. The high
 impact label is advisory classification, **not approval enforcement**. Enrollment
 proves possession of an enrolled adapter key, not approval of each post.
@@ -146,7 +148,7 @@ node applications/linkedin/scripts/test-ci.mjs
 
 The application-specific hook is picked up automatically by repository CI.
 These checks cover artifact integrity, payload constraints, independent-approval
-policy, and both bridge protocol modes, not authenticated hosted execution.
+policy, attested-read membership and proposer eligibility, and both bridge protocol modes, not authenticated hosted execution.
 
 Application/plugin DIDs follow existing Wivity repository conventions. Their live
 DID resolution and registration have not been verified. `registry-entry.json` is a
